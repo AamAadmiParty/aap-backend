@@ -1,0 +1,27 @@
+<pretty-config xmlns="http://ocpsoft.com/prettyfaces/3.3.3" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+               xsi:schemaLocation="http://ocpsoft.com/prettyfaces/3.3.3
+                                   http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.3.3.xsd">
+  
+  <!--  explicit requests for index.jsf should go to /home so user detection kicks in -->
+  
+  <rewrite match="^/$" substitute="/home" redirect="301" />
+
+  <url-mapping id="error">
+	   <pattern value="/error" />
+	   <view-id value="/WEB-INF/jsf/error/error500.jsf" />
+  </url-mapping>
+  <url-mapping id="notfound">
+	   <pattern value="/notfound" />
+	   <view-id value="/WEB-INF/jsf/error/error404.jsf" />
+  </url-mapping>  
+  <url-mapping id="noaccess">
+	   <pattern value="/forbidden" />
+	   <view-id value="/WEB-INF/jsf/error/error403.jsf" />
+  </url-mapping>  
+  <url-mapping id="accessdenied">
+	   <pattern value="/accessdenied" />
+	   <view-id value="/WEB-INF/jsf/restrictedpage/restrictedpage.jsf" />
+  </url-mapping>
+   
+</pretty-config>

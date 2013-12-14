@@ -1,10 +1,12 @@
 package com.next.aap.core.persistance;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -104,16 +106,50 @@ public class User {
     private ParliamentConstituency parliamentConstituencyVoting;
 	@Column(name="voting_pc_id", insertable=false,updatable=false)
 	private Long parliamentConstituencyVotingId;
-
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "user_user_devices",
+	
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_state_roles",
 	joinColumns = {
 	@JoinColumn(name="user_id") 
 	},
 	inverseJoinColumns = {
-	@JoinColumn(name="user_device_id")
+	@JoinColumn(name="role_id")
 	})
+	Set<Role> stateRoles;
 	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_district_roles",
+	joinColumns = {
+	@JoinColumn(name="user_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="role_id")
+	})
+	Set<Role> districtRoles;
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_ac_roles",
+	joinColumns = {
+	@JoinColumn(name="user_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="role_id")
+	})
+	Set<Role> acRoles;
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_pc_roles",
+	joinColumns = {
+	@JoinColumn(name="user_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="role_id")
+	})
+	Set<Role> pcRoles;
+
+	
+
 	public Long getId() {
 		return id;
 	}
@@ -184,6 +220,14 @@ public class User {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public Date getDateOfBith() {
+		return dateOfBith;
+	}
+
+	public void setDateOfBith(Date dateOfBith) {
+		this.dateOfBith = dateOfBith;
 	}
 
 	public String getPassword() {
@@ -259,6 +303,24 @@ public class User {
 		this.assemblyConstituencyLivingId = assemblyConstituencyLivingId;
 	}
 
+	public ParliamentConstituency getParliamentConstituencyLiving() {
+		return parliamentConstituencyLiving;
+	}
+
+	public void setParliamentConstituencyLiving(
+			ParliamentConstituency parliamentConstituencyLiving) {
+		this.parliamentConstituencyLiving = parliamentConstituencyLiving;
+	}
+
+	public Long getParliamentConstituencyLivingId() {
+		return parliamentConstituencyLivingId;
+	}
+
+	public void setParliamentConstituencyLivingId(
+			Long parliamentConstituencyLivingId) {
+		this.parliamentConstituencyLivingId = parliamentConstituencyLivingId;
+	}
+
 	public State getStateVoting() {
 		return stateVoting;
 	}
@@ -308,32 +370,6 @@ public class User {
 		this.assemblyConstituencyVotingId = assemblyConstituencyVotingId;
 	}
 
-	public Date getDateOfBith() {
-		return dateOfBith;
-	}
-
-	public void setDateOfBith(Date dateOfBith) {
-		this.dateOfBith = dateOfBith;
-	}
-
-	public ParliamentConstituency getParliamentConstituencyLiving() {
-		return parliamentConstituencyLiving;
-	}
-
-	public void setParliamentConstituencyLiving(
-			ParliamentConstituency parliamentConstituencyLiving) {
-		this.parliamentConstituencyLiving = parliamentConstituencyLiving;
-	}
-
-	public Long getParliamentConstituencyLivingId() {
-		return parliamentConstituencyLivingId;
-	}
-
-	public void setParliamentConstituencyLivingId(
-			Long parliamentConstituencyLivingId) {
-		this.parliamentConstituencyLivingId = parliamentConstituencyLivingId;
-	}
-
 	public ParliamentConstituency getParliamentConstituencyVoting() {
 		return parliamentConstituencyVoting;
 	}
@@ -350,6 +386,38 @@ public class User {
 	public void setParliamentConstituencyVotingId(
 			Long parliamentConstituencyVotingId) {
 		this.parliamentConstituencyVotingId = parliamentConstituencyVotingId;
+	}
+
+	public Set<Role> getStateRoles() {
+		return stateRoles;
+	}
+
+	public void setStateRoles(Set<Role> stateRoles) {
+		this.stateRoles = stateRoles;
+	}
+
+	public Set<Role> getDistrictRoles() {
+		return districtRoles;
+	}
+
+	public void setDistrictRoles(Set<Role> districtRoles) {
+		this.districtRoles = districtRoles;
+	}
+
+	public Set<Role> getAcRoles() {
+		return acRoles;
+	}
+
+	public void setAcRoles(Set<Role> acRoles) {
+		this.acRoles = acRoles;
+	}
+
+	public Set<Role> getPcRoles() {
+		return pcRoles;
+	}
+
+	public void setPcRoles(Set<Role> pcRoles) {
+		this.pcRoles = pcRoles;
 	}
 
 	@Override

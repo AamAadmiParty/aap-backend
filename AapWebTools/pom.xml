@@ -12,14 +12,13 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- <org.springframework.version>3.0.5.RELEASE</org.springframework.version> -->
 		<org.springframework.version>3.2.5.RELEASE</org.springframework.version>
 		<hibernate.version>4.2.6.Final</hibernate.version>
 		<jackson.version>2.2.3</jackson.version>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<spring.social.version>1.0.3.RELEASE</spring.social.version>
-
+		<social-google-version>1.0.0.M3</social-google-version>
 	</properties>
 
 	<dependencies>
@@ -319,6 +318,12 @@
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>4.3.0.CR1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-google</artifactId>
+			<version>${social-google-version}</version>
+		</dependency>
+
 	</dependencies>
 	<repositories>
 		<repository>
@@ -340,7 +345,7 @@
 		<repository>
 			<id>spring-social-google</id>
 			<name>Spring Social Google</name>
-			<url>http://gabiaxel.github.io/maven/</url>
+			<url>https://github.com/GabiAxel/maven/raw/master/</url>
 		</repository>
 	</repositories>
 </project>

@@ -13,9 +13,8 @@
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:spring/voting-web.xml</param-value>
+		<param-value>classpath:spring/aap-web.xml</param-value>
 	</context-param>
-
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
 		<param-value>black-tie</param-value>
@@ -53,7 +52,7 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet>
-		<servlet-name>voting</servlet-name>
+		<servlet-name>aap</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -74,51 +73,22 @@
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
+		<servlet-name>aap</servlet-name>
 		<url-pattern>/login/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
+		<servlet-name>aap</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
+		<servlet-name>aap</servlet-name>
 		<url-pattern>/logout</url-pattern>
 	</servlet-mapping>
 		
 	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
+		<servlet-name>aap</servlet-name>
 		<url-pattern>/home</url-pattern>
 	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
-		<url-pattern>/basic/main</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
-		<url-pattern>/v1/main</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
-		<url-pattern>/v2/main</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
-		<url-pattern>/myconstituency</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
-		<url-pattern>/voting/**</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
-		<url-pattern>/stats/delhi</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>voting</servlet-name>
-		<url-pattern>/stats/*</url-pattern>
-	</servlet-mapping>
-			
 	<session-config>
 		<session-timeout>30</session-timeout>
 	</session-config>

@@ -50,9 +50,6 @@ public class User {
 	@Column(name = "date_of_birth")
 	private Date dateOfBith;
 
-	@Column(name = "password")
-	private String password;
-
 	@Column(name = "voting_state")
 	private String votingState;
 	
@@ -228,14 +225,6 @@ public class User {
 
 	public void setDateOfBith(Date dateOfBith) {
 		this.dateOfBith = dateOfBith;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getVotingState() {

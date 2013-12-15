@@ -14,6 +14,9 @@
 		<org.springframework.version>3.2.5.RELEASE</org.springframework.version>
 		<org.hibernate.version>4.2.6.Final</org.hibernate.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<spring.social.version>1.0.3.RELEASE</spring.social.version>
 	</properties>
 
 	<dependencies>
@@ -168,6 +171,25 @@
 			<artifactId>core</artifactId>
 			<version>1.47.1</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-core</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-facebook</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-twitter</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-web</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
 	</dependencies>
 </project>

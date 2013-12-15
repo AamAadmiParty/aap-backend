@@ -13,11 +13,13 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- <org.springframework.version>3.0.5.RELEASE</org.springframework.version> -->
-		<org.springframework.version>3.2.4.RELEASE</org.springframework.version>
-		<hibernate.version>4.2.5.Final</hibernate.version>
+		<org.springframework.version>3.2.5.RELEASE</org.springframework.version>
+		<hibernate.version>4.2.6.Final</hibernate.version>
 		<jackson.version>2.2.3</jackson.version>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		<spring.social.version>1.0.3.RELEASE</spring.social.version>
+
 	</properties>
 
 	<dependencies>
@@ -182,8 +184,8 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>3.6.3.Final</version>
-			<!-- <version>${hibernate.version}</version> -->
+			<version>${hibernate.version}</version>
+			<!-- <version>3.6.3.Final</version> -->
 		</dependency>
 
 		<dependency>
@@ -281,26 +283,41 @@
 			<version>1.6.4</version>
 		</dependency>
 
-
+		<!-- <dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-java</artifactId> 
+			<version>2.35.0</version> </dependency> <dependency> <groupId>com.restfb</groupId> 
+			<artifactId>restfb</artifactId> <version>1.6.12</version> </dependency> <dependency> 
+			<groupId>org.twitter4j</groupId> <artifactId>twitter4j-core</artifactId> 
+			<version>3.0.4</version> </dependency> -->
 		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<version>2.35.0</version>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-core</artifactId>
+			<version>${spring.social.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.restfb</groupId>
-			<artifactId>restfb</artifactId>
-			<version>1.6.12</version>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-facebook</artifactId>
+			<version>${spring.social.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.twitter4j</groupId>
-			<artifactId>twitter4j-core</artifactId>
-			<version>3.0.4</version>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-twitter</artifactId>
+			<version>${spring.social.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-web</artifactId>
+			<version>${spring.social.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.next.aap</groupId>
 			<artifactId>AapCoreDomain</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>4.3.0.CR1</version>
 		</dependency>
 	</dependencies>
 	<repositories>
@@ -309,6 +326,21 @@
 			<name>PrimeFaces Maven Repository</name>
 			<url>http://repository.primefaces.org</url>
 			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+		</repository>
+		<repository>
+			<id>org.springframework.maven.snapshot</id>
+			<name>Spring Maven Snapshot Repository</name>
+			<url>http://maven.springframework.org/snapshot</url>
+		</repository>
+		<repository>
+			<id>spring-social-google</id>
+			<name>Spring Social Google</name>
+			<url>http://gabiaxel.github.io/maven/</url>
 		</repository>
 	</repositories>
 </project>

@@ -18,7 +18,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 @Entity
 @Table(name="facebook_account")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region="Account", include="all")
+//@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE,region="Account", include="all")
 public class FacebookAccount {
 
 	@Id
@@ -41,11 +41,17 @@ public class FacebookAccount {
 	@Column(name = "token", nullable = false, length=256)
 	private String token;
 	
-	@Column(name = "user_name", nullable = false, length=256)
+	@Column(name = "user_name", length=256)
 	private String userName;
 
 	@Column(name = "facebook_user_id", nullable = false)
 	private String facebookUserId;
+
+	@Column(name = "image_url", nullable = false)
+	private String imageUrl;
+
+	@Column(name = "expire_time", nullable = false)
+	private Date expireTime;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
@@ -119,6 +125,18 @@ public class FacebookAccount {
 	}
 	public void setFacebookUserId(String facebookUserId) {
 		this.facebookUserId = facebookUserId;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+	public Date getExpireTime() {
+		return expireTime;
+	}
+	public void setExpireTime(Date expireTime) {
+		this.expireTime = expireTime;
 	}
 
 }

@@ -1,9 +1,689 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+	version="2.0">
+	<application>
+	<!-- 
+		<variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>
+		--> 
+			<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+			
+	</application>
+	<!-- 
+	<lifecycle>
+		<phase-listener>com.next.restaurant.core.web.jsf.managed.beans.LoginErrorPhaseListener</phase-listener>
+	</lifecycle>
+	
+	<managed-bean>
+        <managed-bean-name>searchSupplierBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.common.beans.SearchSupplierBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+        <managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+    </managed-bean>
+    
+	<managed-bean>
+        <managed-bean-name>searchCashierBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.common.beans.SearchRestaurantEmployeeBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+        <managed-property>
+			<property-name>roleName</property-name>
+			<value>EMPLOYEE_CASHIER</value>
+		</managed-property>
+        <managed-property>
+			<property-name>restaurantCoreServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+    </managed-bean>
+    
+    <managed-bean>
+        <managed-bean-name>searchEmployeeBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.common.beans.SearchRestaurantEmployeeBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+        <managed-property>
+			<property-name>restaurantCoreServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+    </managed-bean>
 
-<faces-config
-    xmlns="http://java.sun.com/xml/ns/javaee"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
-    version="2.1">
+	<managed-bean>
+        <managed-bean-name>supplierTransactionBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.common.beans.SupplierTransactionBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+        <managed-property>
+			<property-name>accountServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+    </managed-bean>
+    
+	<managed-bean>
+        <managed-bean-name>restaurantAccountBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.common.beans.RestaurantAccountBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+        <managed-property>
+			<property-name>accountServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+    </managed-bean>
+    
+	
+	<managed-bean>
+        <managed-bean-name>viewMrnBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.report.beans.ViewMrnBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+        
+		 <managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		 <managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		 
+    </managed-bean>
+    
+	<managed-bean>
+        <managed-bean-name>viewIdtBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.report.beans.ViewIdtBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+        
+		 <managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		 <managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		 
+    </managed-bean>
+    
+	<managed-bean>
+        <managed-bean-name>viewPurchaseOrderBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.report.beans.ViewPurchaseOrderBean</managed-bean-class>
+        <managed-bean-scope>none</managed-bean-scope>
+        
+		 <managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		 <managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		 
+    </managed-bean>
+    
+	<managed-bean>
+        <managed-bean-name>loginBean</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.core.web.jsf.managed.beans.LoginBean</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+        
+        <managed-property>
+			<property-name>authenticationManager</property-name>
+			<value>#{authenticationManager}</value>
+		</managed-property>
+        
+    </managed-bean>
+	<managed-bean>
+        <managed-bean-name>guestPreferences</managed-bean-name>
+        <managed-bean-class>com.next.restaurant.web.jsf.managed.beans.GuestPreferences</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+	<managed-bean>
+		<managed-bean-name>themeSwitcherBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.web.jsf.managed.beans.ThemeSwitcherBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>licenseBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.LicesnseBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>licenseService</property-name>
+			<value>#{LicenseService}</value>
+		</managed-property>
+	</managed-bean>
+	 <managed-bean>
+		<managed-bean-name>paymentDetailBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.billing.web.jsf.managed.beans.PaymentDetailBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>billingReportServices</property-name>
+			<value>#{BillingReportServices}</value>
+		</managed-property>
+		
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>alertSetupBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.alert.web.jsf.managed.beans.AlertSetupBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		 <managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>alertServices</property-name>
+			<value>#{AlertServices}</value>
+		</managed-property>
+		
+	</managed-bean>
 
+	<managed-bean>
+		<managed-bean-name>employeeAlertBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.alert.web.jsf.managed.beans.EmployeeAlertBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		 <managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>alertServices</property-name>
+			<value>#{AlertServices}</value>
+		</managed-property>
+		
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>billDetailBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.billing.web.jsf.managed.beans.BillDetailBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>billingReportServices</property-name>
+			<value>#{BillingReportServices}</value>
+		</managed-property>
+		
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>rawItemBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.RawItemBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>saleServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>currentStockBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.CurrentStockBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>storeTransactionsBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.StoreTransactionsBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>purchaseOrderBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.PurchaseOrderBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>saleServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>supplierBean</property-name>
+			<value>#{supplierBean}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>viewPurchaseOrderBean</property-name>
+			<value>#{viewPurchaseOrderBean}</value>
+		</managed-property>
+				
+		
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>mrnBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.MrnBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>saleServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>viewMrnBean</property-name>
+			<value>#{viewMrnBean}</value>
+		</managed-property>
+				
+		
+	</managed-bean>
+	
+	
+	<managed-bean>
+		<managed-bean-name>supplierBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.person.web.jsf.managed.beans.SupplierBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>saleServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>accountServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>rawItemBean</property-name>
+			<value>#{rawItemBean}</value>
+		</managed-property>
+
+		<managed-property>
+			<property-name>supplierTransactionBean</property-name>
+			<value>#{supplierTransactionBean}</value>
+		</managed-property>
+				
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>takeawayKotBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.person.web.jsf.managed.beans.TakeawayKotBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>kotCreator</property-name>
+			<value>#{PdfTakeAwayKotCreator}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>fsrKotBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.person.web.jsf.managed.beans.FsrKotBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>kotCreator</property-name>
+			<value>#{PdfFsrKotCreator}</value>
+		</managed-property>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>deliveryKotBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.person.web.jsf.managed.beans.DeliveryKotBean</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+		
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>kotCreator</property-name>
+			<value>#{PdfDeliveryKotCreator}</value>
+		</managed-property>
+	</managed-bean>
+	
+	
+	<managed-bean>
+		<managed-bean-name>branchBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.person.web.jsf.managed.beans.BranchBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>saleServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>accountServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>roleBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.person.web.jsf.managed.beans.RoleBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>impressMoneyBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.account.web.jsf.managed.beans.ImpressMoneyBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>accountServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>restaurantCoreServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>searchCashierBean</property-name>
+			<value>#{searchCashierBean}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>receiveSaleMoneyBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.account.web.jsf.managed.beans.ReceiveSaleMoneyBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>accountServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>restaurantCoreServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>searchCashierBean</property-name>
+			<value>#{searchCashierBean}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>taskBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.core.web.jsf.managed.beans.TasksBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>taskManager</property-name>
+			<value>#{taskManager}</value>
+		</managed-property>
+		
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>posItemBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.core.web.jsf.managed.beans.PosItemBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>restaurantCoreServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>saleServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>employeeBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.core.web.jsf.managed.beans.EmployeeBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		<managed-property>
+			<property-name>restaurantCoreServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+	</managed-bean>
+	
+	
+	
+	
+	<managed-bean>
+		<managed-bean-name>counterBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.core.web.jsf.managed.beans.CounterBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>restaurantCoreServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+	</managed-bean>
+
+	<managed-bean>
+		<managed-bean-name>itemCategoryBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.core.web.jsf.managed.beans.ItemCategoryBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>restaurantCoreServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>personServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>storeBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.StoreBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>rawItemBean</property-name>
+			<value>#{rawItemBean}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>issueItemBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.IssueItemBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>viewIdtBean</property-name>
+			<value>#{viewIdtBean}</value>
+		</managed-property>
+			</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>physicalStockEntryBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.PhysicalStockEntryBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>productionEntryBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.ProductionEntryBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>purchaseOrderListBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.PurchaseOrderListBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>supplierPaymentBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.store.web.jsf.managed.beans.SupplierPaymentBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>storeServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>accountServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>searchSupplierBean</property-name>
+			<value>#{searchSupplierBean}</value>
+		</managed-property>
+				
+		<managed-property>
+			<property-name>restaurantAccountBean</property-name>
+			<value>#{restaurantAccountBean}</value>
+		</managed-property>
+				
+	</managed-bean>
+	
+	<managed-bean>
+		<managed-bean-name>addAccountTransactionBean</managed-bean-name>
+		<managed-bean-class>com.next.restaurant.account.web.jsf.managed.beans.AddAccountTransactionBean</managed-bean-class>
+		<managed-bean-scope>view</managed-bean-scope>
+		 
+		<managed-property>
+			<property-name>accountServicesWeb</property-name>
+			<value>#{StoreServicesWeb}</value>
+		</managed-property>
+		
+		<managed-property>
+			<property-name>searchSupplierBean</property-name>
+			<value>#{searchSupplierBean}</value>
+		</managed-property>
+				
+		<managed-property>
+			<property-name>restaurantAccountBean</property-name>
+			<value>#{restaurantAccountBean}</value>
+		</managed-property>
+		<managed-property>
+			<property-name>searchEmployeeBean</property-name>
+			<value>#{searchEmployeeBean}</value>
+		</managed-property>
+				
+	</managed-bean>
+	
+	
+	
+	<converter>
+	    <converter-id>supplierConvertor</converter-id>
+	    <converter-class>com.next.restaurant.web.jsf.managed.common.beans.SupplierConvertor</converter-class>
+	</converter>
+	<converter>
+	    <converter-id>restaurantEmployeeConvertor</converter-id>
+	    <converter-class>com.next.restaurant.web.jsf.managed.common.beans.RestaurantEmployeeConvertor</converter-class>
+	</converter>
+	<converter>
+	    <converter-id>rawItemConvertor</converter-id>
+	    <converter-class>com.next.restaurant.store.web.jsf.managed.beans.RawItemConvertor</converter-class>
+	</converter>
+	<converter>
+	    <converter-id>purchaseOrderConvertor</converter-id>
+	    <converter-class>com.next.restaurant.store.web.jsf.managed.beans.PurchaseOrderConvertor</converter-class>
+	</converter>
+	<converter>
+	    <converter-id>mrnPurchaseOrderConvertor</converter-id>
+	    <converter-class>com.next.restaurant.store.web.jsf.managed.beans.MrnPurchaseOrderConvertor</converter-class>
+	</converter>
+	
+	<converter>
+	    <converter-id>mrnConvertor</converter-id>
+	    <converter-class>com.next.restaurant.store.web.jsf.managed.beans.MrnConvertor</converter-class>
+	</converter>
+	
+	<converter>
+	    <converter-id>roleConvertor</converter-id>
+	    <converter-class>com.next.restaurant.person.web.jsf.managed.beans.RoleConvertor</converter-class>
+	</converter>
+	
+	<converter>
+	    <converter-id>functionConvertor</converter-id>
+	    <converter-class>com.next.restaurant.person.web.jsf.managed.beans.FunctionConvertor</converter-class>
+	</converter>
+	 -->
 </faces-config>

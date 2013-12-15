@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+ 
+<hibernate-configuration>
+    <session-factory>
+        <mapping class="com.next.aap.core.persistance.AssemblyConstituency" />
+        <mapping class="com.next.aap.core.persistance.AapAccount" />
+		 <mapping class="com.next.aap.core.persistance.Blog" />
+ 		<mapping class="com.next.aap.core.persistance.District" />
+ 		<mapping class="com.next.aap.core.persistance.Email" />
+		<mapping class="com.next.aap.core.persistance.FacebookAccount" />
+		<mapping class="com.next.aap.core.persistance.GoogleAccount" />
+		<mapping class="com.next.aap.core.persistance.News" />
+		<mapping class="com.next.aap.core.persistance.ParliamentConstituency" />
+		<mapping class="com.next.aap.core.persistance.Permission" />
+		<mapping class="com.next.aap.core.persistance.Phone" />
+		<mapping class="com.next.aap.core.persistance.Role" />
+		<mapping class="com.next.aap.core.persistance.State" />
+		<mapping class="com.next.aap.core.persistance.Tweet" />
+		<mapping class="com.next.aap.core.persistance.TwitterAccount" />
+		<mapping class="com.next.aap.core.persistance.User" />
+		<mapping class="com.next.aap.core.persistance.Video" />
+        </session-factory>
+</hibernate-configuration>

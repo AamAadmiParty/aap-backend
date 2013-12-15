@@ -2,8 +2,11 @@ package com.next.aap.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.next.aap.core.service.AapService;
 
 public class BaseController {
 
@@ -12,6 +15,9 @@ public class BaseController {
 	public static final String FINAL_REDIRECT_URL_PARAM_ID = "fru";
 	
 	public static final String defaultVersion = "v2";
+
+	@Autowired
+	protected AapService aapService;
 
 	protected void passRedirectUrl(HttpServletRequest httpServletRequest, ModelAndView mv){
 		String redirectUrl = httpServletRequest.getParameter(REDIRECT_URL_PARAM_ID);

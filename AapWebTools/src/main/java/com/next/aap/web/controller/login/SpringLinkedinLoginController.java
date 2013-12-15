@@ -1,15 +1,15 @@
 package com.next.aap.web.controller.login;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionFactoryLocator;
-import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.connect.FacebookConnectionFactory;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.linkedin.api.LinkedIn;
+import org.springframework.social.linkedin.connect.LinkedInConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.GrantType;
 import org.springframework.social.oauth2.OAuth2Operations;
@@ -25,25 +25,27 @@ import com.next.aap.core.util.EnvironmentUtil;
 import com.next.aap.web.dto.UserDto;
 
 @Controller
-public class SpringFacebookLoginController extends BaseSocialLoginController<Facebook> {
+public class SpringLinkedinLoginController extends BaseSocialLoginController<LinkedIn> {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private static final String localRedirectUrl = "http://localhost:8081/aap/login/facebooksuccess";
-	private static final String productionRedirectUrl = "http://www.vote4delhi.com/vote/login/facebooksuccess";
+	private static final String localRedirectUrl = "http://localhost:8081/aap/login/linkedinsuccess";
+	private static final String productionRedirectUrl = "http://www.vote4delhi.com/vote/login/linkedinsuccess";
 	//private static final String appPermissions = "email,user_birthday,user_hometown,user_location,user_photos,offline_access";
-	private static final String appPermissions = "email,user_birthday,offline_access";
+	private static final String appPermissions = "profile";
 
-	@RequestMapping(value = "/facebook", method = RequestMethod.GET)
+	@RequestMapping(value = "/linkedin", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		
-		FacebookConnectionFactory facebookConnectionFactory = (FacebookConnectionFactory)connectionFactoryLocator.getConnectionFactory(Facebook.class);
+		LinkedInConnectionFactory googleConnectionFactory = (LinkedInConnectionFactory)connectionFactoryLocator.getConnectionFactory(LinkedIn.class);
 
-		OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
+		OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
 		OAuth2Parameters params = new OAuth2Parameters();
 		params.setRedirectUri(getFacebookRedirectUrl(httpServletRequest));
-		params.setScope(appPermissions);
+		//params.setScope(appPermissions);
+		params.setState(UUID.randomUUID().toString());
+		
 		String authorizeUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, params);
 		
 		//setRedirectUrlInSessiom(httpServletRequest, getRedirectUrl(httpServletRequest));
@@ -53,31 +55,26 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 		mv.setView(rv);
 		return mv;
 	}
-	@RequestMapping(value = "/facebookfail", method = RequestMethod.GET)
+	@RequestMapping(value = "/linkedinfail", method = RequestMethod.GET)
 	@ResponseBody
 	public String loginFailed(HttpServletRequest httpServletRequest, ModelAndView mv) {
 		return "Please login to facebook and give permission";
 	}
-	@RequestMapping(value = "/facebooksuccess", method = RequestMethod.GET)
+	@RequestMapping(value = "/linkedinsuccess", method = RequestMethod.GET)
 	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, ModelAndView mv) {
 		try {
-			FacebookConnectionFactory facebookConnectionFactory = (FacebookConnectionFactory)connectionFactoryLocator.getConnectionFactory(Facebook.class);
-			OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
+			LinkedInConnectionFactory linkedinConnectionFactory = (LinkedInConnectionFactory)connectionFactoryLocator.getConnectionFactory(LinkedIn.class);
+			OAuth2Operations oauthOperations = linkedinConnectionFactory.getOAuthOperations();
 			String authorizationCode = httpServletRequest.getParameter("code");
 			System.out.println("authorizationCode="+authorizationCode);
 			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, getFacebookRedirectUrl(httpServletRequest), null);
-			Connection<Facebook> facebookConnection = facebookConnectionFactory.createConnection(accessGrant);
+			Connection<LinkedIn> connection = linkedinConnectionFactory.createConnection(accessGrant);
 			
-			afterSuccesfullLogin(httpServletRequest, facebookConnection);
+			//aapService.saveGoogleUser(null, connection);
 			
-			/*
-			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId());
-			facebookConnectionRepository.updateConnection(connection);
-			*/
-			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
-			RedirectView rv = new RedirectView(redirectUrl);
-			logger.info("url= {}", redirectUrl);
-			mv.setView(rv);
+			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository("ravi");
+			facebookConnectionRepository.addConnection(connection);
+			System.out.println(connection.getImageUrl());
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -93,16 +90,17 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 		return url;
 	}
 	@Override
-	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) {
+	protected UserDto saveSocialUser(Connection<LinkedIn> socialConnection,
+			UserDto loggedInUser) {
 		System.out.println("loggedInUser"+loggedInUser);
 		UserDto user;
 		if(loggedInUser == null){
-			user = aapService.saveFacebookUser(null, socialConnection);	
+			//user = aapService.saveLi(null, socialConnection);	
 		}else{
-			user = aapService.saveFacebookUser(loggedInUser.getId(), socialConnection);
+			//user = aapService.saveGoogleUser(loggedInUser.getId(), socialConnection);
 		}
-		System.out.println("user"+user);
-		return user;
+		//System.out.println("user"+user);
+		return null;
 	}
 
 	

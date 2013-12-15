@@ -26,7 +26,7 @@ public class BaseDaoHibernateSpring<T> {
 		return sessionFactory.getCurrentSession();
 	}
 	protected T saveObject(T object){
-		this.sessionFactory.getCurrentSession().save(object);
+		this.sessionFactory.getCurrentSession().saveOrUpdate(object);
 		return object;
 	}
 	protected void deleteObject(T object){

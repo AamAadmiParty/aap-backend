@@ -15,7 +15,7 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 
 	@Override
 	public User saveUser(User user) {
-		getCurrentSession().save(user);
+		user = saveObject(user);
 		return user;
 	}
 

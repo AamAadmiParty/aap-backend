@@ -19,6 +19,8 @@ import org.springframework.social.connect.web.ConnectController;
 import org.springframework.social.connect.web.ConnectInterceptor;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
+import org.springframework.social.google.connect.GoogleConnectionFactory;
+import org.springframework.social.linkedin.connect.LinkedInConnectionFactory;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.util.MultiValueMap;
@@ -37,6 +39,13 @@ public class SocialConfig {
 	private String twitterConsumerKey = "QwAtfFGQ4XyH2qSFX0UOg";
 	private String twitterConsumerSecret = "5fmM9fVoDTIgHqKb8OeZ9cZullLdbL0uSrcC3mrTyM";
 	
+	private String googleConsumerKey = "662676448711-fpah28e0auvm8unvq0skoa25006u5odq.apps.googleusercontent.com";
+	private String googleConsumerSecret = "jvLAiFhYDpqS1a4H6w-bKHKr";
+
+	private String linkedinConsumerKey = "77iix57w8j325q";
+	private String linkedinConsumerSecret = "eKRuijXF6RCiqbH5";
+	
+	
 	@Autowired
 	private DataSource dataSource;
 
@@ -50,6 +59,8 @@ public class SocialConfig {
         }
         
         registry.addConnectionFactory(new TwitterConnectionFactory(twitterConsumerKey, twitterConsumerSecret));
+        registry.addConnectionFactory(new GoogleConnectionFactory(googleConsumerKey,googleConsumerSecret));
+        registry.addConnectionFactory(new LinkedInConnectionFactory(linkedinConsumerKey, linkedinConsumerSecret));
         return registry;
     }
     

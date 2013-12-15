@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -98,12 +99,17 @@ public class User {
 	@Column(name="voting_ac_id", insertable=false,updatable=false)
 	private Long assemblyConstituencyVotingId;
 
-	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="voting_pc_id")
     private ParliamentConstituency parliamentConstituencyVoting;
 	@Column(name="voting_pc_id", insertable=false,updatable=false)
 	private Long parliamentConstituencyVotingId;
 	
+	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+	private Set<FacebookAccount> facebookAccounts;
+
+	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+	private Set<TwitterAccount> twitterAccounts; 
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinTable(name = "user_state_roles",
@@ -409,6 +415,22 @@ public class User {
 		this.pcRoles = pcRoles;
 	}
 
+	public Set<FacebookAccount> getFacebookAccounts() {
+		return facebookAccounts;
+	}
+
+	public void setFacebookAccounts(Set<FacebookAccount> facebookAccounts) {
+		this.facebookAccounts = facebookAccounts;
+	}
+
+	public Set<TwitterAccount> getTwitterAccounts() {
+		return twitterAccounts;
+	}
+
+	public void setTwitterAccounts(Set<TwitterAccount> twitterAccounts) {
+		this.twitterAccounts = twitterAccounts;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -432,6 +454,12 @@ public class User {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", ver=" + ver + ", externalId=" + externalId
+				+ ", name=" + name + ", dateOfBith=" + dateOfBith + "]";
 	}
 
 }

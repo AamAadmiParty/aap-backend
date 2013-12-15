@@ -308,6 +308,16 @@
 			<version>${spring.social.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-google</artifactId>
+			<version>${social-google-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-linkedin</artifactId>
+			<version>1.0.0.BUILD-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>com.next.aap</groupId>
 			<artifactId>AapCoreDomain</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
@@ -317,11 +327,6 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>4.3.0.CR1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.social</groupId>
-			<artifactId>spring-social-google</artifactId>
-			<version>${social-google-version}</version>
 		</dependency>
 
 	</dependencies>
@@ -346,6 +351,14 @@
 			<id>spring-social-google</id>
 			<name>Spring Social Google</name>
 			<url>https://github.com/GabiAxel/maven/raw/master/</url>
+		</repository>
+		<repository>
+			<id>spring-snapshots</id>
+			<name>Spring Snapshots</name>
+			<url>http://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 </project>

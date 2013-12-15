@@ -8,6 +8,9 @@
         <dependent-module archiveName="AapCoreDomain-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/AapCoreDomain/AapCoreDomain">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="AppWebDto-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/AppWebDto/AppWebDto">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="AapWebTools"/>
         <property name="java-output-path" value="/AapWebTools/target/classes"/>
     </wb-module>

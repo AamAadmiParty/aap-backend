@@ -40,7 +40,9 @@ public class TwitterAccount {
 	@Column(name="modifier_id")
 	private Long modifierId;
 
-	
+	@Column(name = "image_url", nullable = false)
+	private String imageUrl;
+
 	@Column(name = "token", nullable = false, length=256)
 	private String token;
 	
@@ -59,8 +61,6 @@ public class TwitterAccount {
 	private String screenName;
 	@Column(name="screen_name_cap")
 	private String screenNameCap;
-	@Column(name="last_message_id")
-	private Long lastMessageId;
 
 	
 	public Long getId() {
@@ -141,11 +141,11 @@ public class TwitterAccount {
 	public void setScreenNameCap(String screenNameCap) {
 		this.screenNameCap = screenNameCap;
 	}
-	public Long getLastMessageId() {
-		return lastMessageId;
+	public String getImageUrl() {
+		return imageUrl;
 	}
-	public void setLastMessageId(Long lastMessageId) {
-		this.lastMessageId = lastMessageId;
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 	
 	

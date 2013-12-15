@@ -2,11 +2,15 @@ package com.next.aap.web.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.next.aap.core.service.AapService;
+import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.UserDto;
 
 public class BaseController {
 
@@ -15,7 +19,13 @@ public class BaseController {
 	public static final String FINAL_REDIRECT_URL_PARAM_ID = "fru";
 	
 	public static final String defaultVersion = "v2";
+	
+	public static final String SESSION_USER_PARAM = "SESSION_USER_PARAM";
+	public static final String SESSION_LOGIN_ACCOUNT_PARAM = "SESSION_LOGIN_ACCOUNT_PARAM";
 
+	
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	protected AapService aapService;
 
@@ -68,6 +78,20 @@ public class BaseController {
 	*/
 	protected String getCurrentUrl(HttpServletRequest httpServletRequest){
 		return httpServletRequest.getRequestURL().toString();
+	}
+
+	protected void setLoggedInUserInSesion(HttpServletRequest httpServletRequest,UserDto user){
+		httpServletRequest.getSession(true).setAttribute(SESSION_USER_PARAM, user);
+	}
+	public static UserDto getLoggedInUserInSesion(HttpServletRequest httpServletRequest){
+		return (UserDto)httpServletRequest.getSession(true).getAttribute(SESSION_USER_PARAM);
+	}
+
+	protected void setLoggedInAccountsInSesion(HttpServletRequest httpServletRequest,LoginAccountDto loginAccountDto){
+		httpServletRequest.getSession(true).setAttribute(SESSION_LOGIN_ACCOUNT_PARAM, loginAccountDto);
+	}
+	public static LoginAccountDto getLoggedInAccountsInSesion(HttpServletRequest httpServletRequest){
+		return (LoginAccountDto)httpServletRequest.getSession(true).getAttribute(SESSION_LOGIN_ACCOUNT_PARAM);
 	}
 
 }

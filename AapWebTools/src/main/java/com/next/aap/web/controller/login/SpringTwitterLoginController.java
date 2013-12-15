@@ -1,26 +1,14 @@
 package com.next.aap.web.controller.login;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionFactoryLocator;
-import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.oauth1.AuthorizedRequestToken;
 import org.springframework.social.oauth1.OAuth1Operations;
 import org.springframework.social.oauth1.OAuth1Parameters;
 import org.springframework.social.oauth1.OAuthToken;
-import org.springframework.social.oauth2.AccessGrant;
-import org.springframework.social.oauth2.GrantType;
-import org.springframework.social.oauth2.OAuth2Operations;
-import org.springframework.social.oauth2.OAuth2Parameters;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.stereotype.Controller;
@@ -31,10 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.next.aap.core.util.EnvironmentUtil;
-import com.next.aap.web.controller.BaseController;
+import com.next.aap.web.dto.UserDto;
 
 @Controller
-public class SpringTwitterLoginController extends BaseController {
+public class SpringTwitterLoginController extends BaseSocialLoginController<Twitter> {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -42,12 +30,6 @@ public class SpringTwitterLoginController extends BaseController {
 	private static final String productionRedirectUrl = "http://www.vote4delhi.com/vote/login/twittersuccess";
 	//private static final String appPermissions = "email,user_birthday,user_hometown,user_location,user_photos,offline_access";
 
-	@Autowired 
-	private ConnectionFactoryLocator connectionFactoryLocator;
-	
-	@Autowired
-	private UsersConnectionRepository usersConnectionRepository ;
-	
 	@RequestMapping(value = "/twitter", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
@@ -62,13 +44,6 @@ public class SpringTwitterLoginController extends BaseController {
 
 		RedirectView rv = new RedirectView(authorizeUrl);
 		logger.info("url= {}", authorizeUrl);
-		try{
-			System.out.println(new Date(1387961052144L));
-			System.out.println(new Date(1387961052144L * 1000));
-			
-		}catch(Exception ex){
-			
-		}
 		mv.setView(rv);
 		return mv;
 	}
@@ -87,11 +62,23 @@ public class SpringTwitterLoginController extends BaseController {
 			String oauthVerifier = httpServletRequest.getParameter("oauth_verifier");
 			OAuthToken requestToken =  new OAuthToken(requestTokenValue, "5fmM9fVoDTIgHqKb8OeZ9cZullLdbL0uSrcC3mrTyM");
 			OAuthToken accessToken = oauthOperations.exchangeForAccessToken(new AuthorizedRequestToken(requestToken, oauthVerifier), null);
-			Connection<Twitter> connection = twitterConnectionFactory.createConnection(accessToken);
+			Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
 										
-			ConnectionRepository twitterConnectionRepository = usersConnectionRepository.createConnectionRepository("ravi");
-			twitterConnectionRepository.addConnection(connection);
+			
+			afterSuccesfullLogin(httpServletRequest, twitterConnection);
+			/*
+			ConnectionRepository twitterConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId());
+			twitterConnectionRepository.updateConnection(connection);
 			System.out.println(connection.getImageUrl());
+			*/
+			
+			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
+			RedirectView rv = new RedirectView(redirectUrl);
+			logger.info("url= {}", redirectUrl);
+			mv.setView(rv);
+			return mv;
+
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -104,6 +91,18 @@ public class SpringTwitterLoginController extends BaseController {
 			url = productionRedirectUrl;
 		}
 		return url;
+	}
+	@Override
+	protected UserDto saveSocialUser(Connection<Twitter> socialConnection, UserDto loggedInUser) {
+		System.out.println("loggedInUser"+loggedInUser);
+		UserDto user;
+		if(loggedInUser == null){
+			user = aapService.saveTwitterUser(null, socialConnection);	
+		}else{
+			user = aapService.saveTwitterUser(loggedInUser.getId(), socialConnection);
+		}
+		System.out.println("user"+user);
+		return user;
 	}
 
 	

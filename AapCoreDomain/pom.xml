@@ -17,6 +17,7 @@
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<spring.social.version>1.0.3.RELEASE</spring.social.version>
+		<social-google-version>1.0.0.M3</social-google-version>
 	</properties>
 
 	<dependencies>
@@ -191,5 +192,34 @@
 			<artifactId>spring-social-web</artifactId>
 			<version>${spring.social.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-google</artifactId>
+			<version>${social-google-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.next.aap.web</groupId>
+			<artifactId>AppWebDto</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
+	
+	<repositories>
+		<repository>
+			<id>org.springframework.maven.milestone</id>
+			<name>Spring Maven Milestone Repository</name>
+			<url>http://maven.springframework.org/milestone</url>
+		</repository>
+		<repository>
+			<id>org.springframework.maven.snapshot</id>
+			<name>Spring Maven Snapshot Repository</name>
+			<url>http://maven.springframework.org/snapshot</url>
+		</repository>
+		<repository>
+			<id>spring-social-google</id>
+			<name>Spring Social Google</name>
+			<url>https://github.com/GabiAxel/maven/raw/master/</url>
+		</repository>
+	</repositories>
 </project>

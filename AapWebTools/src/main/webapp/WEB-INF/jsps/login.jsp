@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -69,52 +68,47 @@
 </style>
 </head>
 <body>
+	<div style="width: 800px; margin: 0 auto;">
 
-	<table>
-		<tr>
-			<td width="300">
-				<ul>
-					<li style="list-style-type: none;"><a href="./login/twitter"
-						class="twitter"><sup>working</sup></a></li>
-					<li style="list-style-type: none;"><a href="./login/facebook"
-						class="facebook"><sup>working</sup></a></li>
-					<li style="list-style-type: none;"><a href="#" class="google"><sup>Under
-								Construction</sup></a></li>
-					<li style="list-style-type: none;"><a href="#"
-						class="linkedin"><sup>Under Construction</sup></a></li>
-					<li style="list-style-type: none;"><a href="#" class="yahoo"><sup>Under
-								Construction</sup></a></li>
-					<li style="list-style-type: none;"><a href="#" class="myspace"><sup>Under
-								Construction</sup></a></li>
-					<li style="list-style-type: none;"><a href="#" class="aol"><sup>Under
-								Construction</sup></a></li>
-				</ul>
-			</td>
-			<td>
-				<c:if test="${!empty loggedInUser}">
+		<table>
+			<tr>
+				<td width="300">
+					<ul>
+						<li style="list-style-type: none;"><a href="./login/twitter" class="twitter"></a></li>
+						<li style="list-style-type: none;"><a href="./login/facebook" class="facebook"></a></li>
+						<!-- 
+						<li style="list-style-type: none;"><a href="#" class="google"><sup>Under Construction</sup></a></li>
+						<li style="list-style-type: none;"><a href="#" class="linkedin"><sup>Under Construction</sup></a></li>
+						<li style="list-style-type: none;"><a href="#" class="yahoo"><sup>Under Construction</sup></a></li>
+						<li style="list-style-type: none;"><a href="#" class="myspace"><sup>Under Construction</sup></a></li>
+						<li style="list-style-type: none;"><a href="#" class="aol"><sup>Under Construction</sup></a></li>
+						 -->
+					</ul>
+				</td>
+				<td><c:if test="${!empty loggedInUser}">
                 	User logged in : <c:out value="${loggedInUser.name}" />
-                	<br>
+						<br>
                 	User Id : <c:out value="${loggedInUser.externalId}" />
-                	<br><br>
+						<br>
+						<br>
                 	You are connected with following accounts
                 	<br>
-                	<c:forEach items="${loginAccounts.twitterAccounts}" var="oneTwitterAccount">
-                	<img src="<c:out value='${oneTwitterAccount.imageUrl}' />" /> <c:out value="${oneTwitterAccount.screenName}" />
-                	<br>
-					</c:forEach>
-                	<c:forEach items="${loginAccounts.facebookAccounts}" var="oneFacebookAccount">
-                	<img src="<c:out value='${oneFacebookAccount.imageUrl}' />" /> <c:out value="${oneFacebookAccount.userName}" />
-                	<br>
-					</c:forEach>
-                </c:if>
-				<c:if test="${empty loggedInUser}">
+						<c:forEach items="${loginAccounts.twitterAccounts}" var="oneTwitterAccount">
+							<img src="<c:out value='${oneTwitterAccount.imageUrl}' />" />
+							<c:out value="${oneTwitterAccount.screenName}" />
+							<br>
+						</c:forEach>
+						<c:forEach items="${loginAccounts.facebookAccounts}" var="oneFacebookAccount">
+							<img src="<c:out value='${oneFacebookAccount.imageUrl}' />" />
+							<c:out value="${oneFacebookAccount.userName}" />
+							<br>
+						</c:forEach>
+					</c:if> <c:if test="${empty loggedInUser}">
                 	No User logged in
-                </c:if>
-				
-			</td>
-		</tr>
-	</table>
-
+                </c:if></td>
+			</tr>
+		</table>
+	</div>
 
 </body>
 </html>

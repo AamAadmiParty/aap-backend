@@ -21,7 +21,7 @@ public class UserDto implements Serializable{
 	
 	private String mobile;
 
-	private Date dateOfBith;
+	private Date dateOfBirth;
 
 	private Long stateLivingId;
 
@@ -114,12 +114,12 @@ public class UserDto implements Serializable{
 		this.mobile = mobile;
 	}
 
-	public Date getDateOfBith() {
-		return dateOfBith;
+	public Date getDateOfBirth() {
+		return dateOfBirth;
 	}
 
-	public void setDateOfBith(Date dateOfBith) {
-		this.dateOfBith = dateOfBith;
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public Long getStateLivingId() {

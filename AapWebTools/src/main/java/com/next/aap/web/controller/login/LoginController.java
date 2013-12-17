@@ -20,11 +20,11 @@ public class LoginController extends BaseController {
 		//httpServletRequest.getSession().invalidate();
 		String redirectUrlAfterLogin = httpServletRequest.getRequestURL().toString();
 		setRedirectUrlInSessiom(httpServletRequest, redirectUrlAfterLogin);
-		UserDto loggedInUser = getLoggedInUserInSesion(httpServletRequest);
-		LoginAccountDto loginAccountDto = getLoggedInAccountsInSesion(httpServletRequest);
+		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
+		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
 		mv.getModel().put("loggedInUser", loggedInUser);
 		mv.getModel().put("loginAccounts", loginAccountDto);
-		
+		System.out.println("httpServletRequest="+httpServletRequest.getServletContext().getRealPath("tmp"));
 		mv.setViewName("login");
 		return mv;
 	}

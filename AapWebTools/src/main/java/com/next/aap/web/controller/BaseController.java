@@ -83,14 +83,14 @@ public class BaseController {
 	protected void setLoggedInUserInSesion(HttpServletRequest httpServletRequest,UserDto user){
 		httpServletRequest.getSession(true).setAttribute(SESSION_USER_PARAM, user);
 	}
-	public static UserDto getLoggedInUserInSesion(HttpServletRequest httpServletRequest){
+	public UserDto getLoggedInUserFromSesion(HttpServletRequest httpServletRequest){
 		return (UserDto)httpServletRequest.getSession(true).getAttribute(SESSION_USER_PARAM);
 	}
 
 	protected void setLoggedInAccountsInSesion(HttpServletRequest httpServletRequest,LoginAccountDto loginAccountDto){
 		httpServletRequest.getSession(true).setAttribute(SESSION_LOGIN_ACCOUNT_PARAM, loginAccountDto);
 	}
-	public static LoginAccountDto getLoggedInAccountsInSesion(HttpServletRequest httpServletRequest){
+	public LoginAccountDto getLoggedInAccountsFromSesion(HttpServletRequest httpServletRequest){
 		return (LoginAccountDto)httpServletRequest.getSession(true).getAttribute(SESSION_LOGIN_ACCOUNT_PARAM);
 	}
 

@@ -1,5 +1,6 @@
 package com.next.aap.core.service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -17,24 +18,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.persistance.AssemblyConstituency;
+import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
 import com.next.aap.core.persistance.FacebookAccount;
+import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
+import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
+import com.next.aap.core.persistance.dao.DistrictDao;
 import com.next.aap.core.persistance.dao.EmailDao;
 import com.next.aap.core.persistance.dao.FacebookAccountDao;
+import com.next.aap.core.persistance.dao.StateDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
+import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
 
 
 @Service("aapService")
-public class AapServiceImpl implements AapService {
+public class AapServiceImpl implements AapService, Serializable{
 
+	private static final long serialVersionUID = 1L;
 	@Autowired
 	private UserDao userDao;
 	@Autowired
@@ -43,6 +54,12 @@ public class AapServiceImpl implements AapService {
 	private TwitterAccountDao twitterAccountDao;
 	@Autowired
 	private EmailDao emailDao;
+	@Autowired
+	private StateDao stateDao;
+	@Autowired
+	private DistrictDao districtDao;
+	@Autowired
+	private AssemblyConstituencyDao assemblyConstituencyDao;
 	
 	@Override
 	@Transactional
@@ -249,4 +266,80 @@ public class AapServiceImpl implements AapService {
 		return returnFacebookAccountDto;
 	}
 
+	@Override
+	@Transactional
+	public List<StateDto> getAllStates() {
+		List<State> allStates = stateDao.getAllStates();
+		List<StateDto> returnList = new ArrayList<StateDto>();
+		for(State oneState:allStates){
+			returnList.add(convertState(oneState));
+		}
+		return returnList;	
+	}
+	private StateDto convertState(State oneState){
+		if(oneState == null){
+			return null;
+		}
+		StateDto oneStateDto = new StateDto();
+		oneStateDto.setId(oneState.getId());
+		oneStateDto.setName(oneState.getName());
+		oneStateDto.setDistrictDataAvailable(oneState.getDistrictDataAvailable());
+		return oneStateDto;
+	}
+
+	@Override
+	@Transactional
+	public List<DistrictDto> getAllDistrictOfState(long stateId) {
+		List<District> allDistricts = districtDao.getDistrictOfState(stateId);
+		List<DistrictDto> returnList = new ArrayList<DistrictDto>();
+		for(District oneDistrict:allDistricts){
+			returnList.add(convertDistrict(oneDistrict));
+		}
+		return returnList;
+	}
+	private DistrictDto convertDistrict(District oneDistrict){
+		DistrictDto oneDistrictDto = new DistrictDto();
+		oneDistrictDto.setId(oneDistrict.getId());
+		oneDistrictDto.setName(oneDistrict.getName());
+		oneDistrictDto.setAcDataAvailable(oneDistrict.getAcDataAvailable());
+		return oneDistrictDto;
+	}
+
+	@Override
+	@Transactional
+	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfDistrict(
+			long districtId) {
+		List<AssemblyConstituency> allAssemblyConstituencies = assemblyConstituencyDao.getAssemblyConstituencyOfDistrict(districtId);
+		return convertAssemblyConstituencies(allAssemblyConstituencies);
+	}
+	private AssemblyConstituencyDto convertAssemblyConstituency(AssemblyConstituency oneAssemblyConstituency){
+		if(oneAssemblyConstituency == null){
+			return null;
+		}
+		AssemblyConstituencyDto oneAssemblyConstituencyDto = new AssemblyConstituencyDto();
+		BeanUtils.copyProperties(oneAssemblyConstituency, oneAssemblyConstituencyDto);
+		return oneAssemblyConstituencyDto;
+	}
+	private List<AssemblyConstituencyDto> convertAssemblyConstituencies(List<AssemblyConstituency> allAssemblyConstituencies){
+		List<AssemblyConstituencyDto> returnList = new ArrayList<AssemblyConstituencyDto>(allAssemblyConstituencies.size());
+		for(AssemblyConstituency oneAssemblyConstituency:allAssemblyConstituencies){
+			returnList.add(convertAssemblyConstituency(oneAssemblyConstituency));
+		}
+		return returnList;
+	}
+
+	@Override
+	@Transactional
+	public StateDto getStateById(Long stateId) {
+		State state = stateDao.getStateById(stateId);
+		return convertState(state);
+	}
+
+	@Override
+	@Transactional
+	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfState(long stateId) {
+		List<AssemblyConstituency> allAssemblyConstituencies = assemblyConstituencyDao.getAssemblyConstituencyOfState(stateId);
+		List<AssemblyConstituencyDto> returnList = convertAssemblyConstituencies(allAssemblyConstituencies);
+		return returnList;
+	}
 }

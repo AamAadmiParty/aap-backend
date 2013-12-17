@@ -23,7 +23,7 @@ public abstract class BaseSocialLoginController<T> extends BaseController {
 	protected abstract UserDto saveSocialUser(Connection<T> socialConnection, UserDto loggedInUser);
 
 	protected void afterSuccesfullLogin(HttpServletRequest httpServletRequest, Connection<T> socialConnection){
-		UserDto loggedInUser = getLoggedInUserInSesion(httpServletRequest);
+		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		UserDto user = saveSocialUser(socialConnection, loggedInUser);
 		setLoggedInUserInSesion(httpServletRequest, user);
 		

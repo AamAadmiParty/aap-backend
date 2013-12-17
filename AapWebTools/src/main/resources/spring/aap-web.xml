@@ -20,37 +20,9 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd
 http://www.springframework.org/schema/task
 http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
-    <!-- 
-    <import resource="classpath:spring/**/voting-core.xml" />
-		<mvc:annotation-driven />
+    <import resource="classpath:spring/**/aap-core.xml" />
+    	<mvc:annotation-driven />
 	<context:annotation-config />
-	<context:component-scan base-package="com.next.vote.server.controller.jsf" />
-    	 -->
-	
-	
-	
-	<!-- Package Related to Spring Controllers 
-	<import resource="./applicationContext.xml" />
-	
-	
-	
-	<task:annotation-driven executor="executorWithPoolSizeRange" scheduler="myScheduler"/>
-	<task:executor id="executorWithPoolSizeRange"
-	               pool-size="5-25"
-	               queue-capacity="100"/>
-	<task:executor id="httpRequestExecutor"
-	               pool-size="5-25"
-	               queue-capacity="100000"/>
-	<task:scheduler id="myScheduler" pool-size="10"/>
-		-->
-	
-	
-	<!--
-	
-						 
-	<mvc:interceptors>
-      <bean class="com.next.grocery.web.spring.interceptors.TimeCountInterceptor" />
-    </mvc:interceptors> 	
-     -->			  
-	
+    
+	<context:component-scan base-package="com.next.aap.web.jsf.beans" />	
 </beans>

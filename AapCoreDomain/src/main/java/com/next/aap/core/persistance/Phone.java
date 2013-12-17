@@ -36,6 +36,9 @@ public class Phone {
 	@Column(name = "phone_number", nullable = false)
 	private String phoneNumber;
 
+	@Column(name = "country_code", nullable = false)
+	private String countryCode;
+
 	@Column(name = "phone_type", nullable = false)
 	private String phoneType;
 	
@@ -44,6 +47,73 @@ public class Phone {
     private User user;
 	@Column(name="user_id", insertable=false,updatable=false)
 	private Long userId;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public int getVer() {
+		return ver;
+	}
+	public void setVer(int ver) {
+		this.ver = ver;
+	}
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public Date getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(Date dateModified) {
+		this.dateModified = dateModified;
+	}
+	public Long getCreatorId() {
+		return creatorId;
+	}
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
+	}
+	public Long getModifierId() {
+		return modifierId;
+	}
+	public void setModifierId(Long modifierId) {
+		this.modifierId = modifierId;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public String getCountryCode() {
+		return countryCode;
+	}
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+	public String getPhoneType() {
+		return phoneType;
+	}
+	public void setPhoneType(String phoneType) {
+		this.phoneType = phoneType;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 
 
 

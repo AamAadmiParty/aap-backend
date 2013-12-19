@@ -23,6 +23,7 @@ import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
 import com.next.aap.core.persistance.FacebookAccount;
+import com.next.aap.core.persistance.ParliamentConstituency;
 import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
@@ -30,6 +31,7 @@ import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
 import com.next.aap.core.persistance.dao.EmailDao;
 import com.next.aap.core.persistance.dao.FacebookAccountDao;
+import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
 import com.next.aap.core.persistance.dao.StateDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
@@ -37,6 +39,7 @@ import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -60,6 +63,8 @@ public class AapServiceImpl implements AapService, Serializable{
 	private DistrictDao districtDao;
 	@Autowired
 	private AssemblyConstituencyDao assemblyConstituencyDao;
+	@Autowired
+	private ParliamentConstituencyDao parliamentConstituencyDao;
 	
 	@Override
 	@Transactional
@@ -341,5 +346,34 @@ public class AapServiceImpl implements AapService, Serializable{
 		List<AssemblyConstituency> allAssemblyConstituencies = assemblyConstituencyDao.getAssemblyConstituencyOfState(stateId);
 		List<AssemblyConstituencyDto> returnList = convertAssemblyConstituencies(allAssemblyConstituencies);
 		return returnList;
+	}
+	
+	private List<ParliamentConstituencyDto> convertParliamentConstituencyList(List<ParliamentConstituency> parliamentConstituencies){
+		List<ParliamentConstituencyDto> returnList = new ArrayList<ParliamentConstituencyDto>();
+		if(parliamentConstituencies == null){
+			return returnList;	
+		}
+		for (ParliamentConstituency oneAssemblyConstituency : parliamentConstituencies) {
+			returnList
+					.add(convertParliamentConstituency(oneAssemblyConstituency));
+		}
+		return returnList;
+	}
+	
+	private ParliamentConstituencyDto convertParliamentConstituency(
+			ParliamentConstituency oneParliamentConstituency) {
+		ParliamentConstituencyDto oneParliamentConstituencyDto = new ParliamentConstituencyDto();
+		oneParliamentConstituencyDto.setId(oneParliamentConstituency.getId());
+		oneParliamentConstituencyDto.setName(oneParliamentConstituency.getName());
+		return oneParliamentConstituencyDto;
+
+	}
+
+	@Override
+	@Transactional
+	public List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(
+			long stateId) {
+		List<ParliamentConstituency> parliamentConstituencies = parliamentConstituencyDao.getParliamentConstituencyOfState(stateId);
+		return convertParliamentConstituencyList(parliamentConstituencies);
 	}
 }

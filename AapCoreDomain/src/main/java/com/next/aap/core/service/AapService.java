@@ -10,6 +10,7 @@ import org.springframework.social.twitter.api.Twitter;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
 
@@ -33,4 +34,5 @@ public interface AapService {
 	
 	List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfState(long stateId) ;
 
+	List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(long stateId) ;
 }

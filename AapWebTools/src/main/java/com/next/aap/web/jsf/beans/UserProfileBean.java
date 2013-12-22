@@ -95,50 +95,61 @@ public class UserProfileBean extends BaseJsfBean {
 	public void init() throws Exception {
 		System.out.println("init " + aapService);
 		loggedInUser = getLoggedInUser(true,buildLoginUrl("/profile"));
-		if(loggedInUser == null){
-			return;
-		}
-		selectedStateId = 10L;
 		if(stateList == null || stateList.isEmpty()){
 			livingStateList = stateList = aapService.getAllStates();
+		}
+		if(loggedInUser == null){
+			return;
 		}
 		if(loggedInUser != null){
 			selectedStateId = loggedInUser.getStateVotingId();
 			selectedDistrictId = loggedInUser.getDistrictVotingId();
 			selectedAssemblyConstituencyId = loggedInUser.getAssemblyConstituencyVotingId();
+			selectedParliamentConstituencyId = loggedInUser.getParliamentConstituencyVotingId();
 			if(selectedStateId != null){
+				enableDistrictCombo = true;
+				enableParliamentConstituencyCombo = true;
 				parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedStateId);
 				districtList = aapService.getAllDistrictOfState(selectedStateId);
 				if(selectedDistrictId != null){
+					enableAssemblyConstituencyCombo = true;
 					assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedDistrictId);
 				}
 			}
 			selectedLivingStateId = loggedInUser.getStateLivingId();
 			selectedLivingDistrictId = loggedInUser.getDistrictLivingId();
 			selectedLivingAssemblyConstituencyId = loggedInUser.getAssemblyConstituencyLivingId();
+			selectedLivingParliamentConstituencyId = loggedInUser.getParliamentConstituencyLivingId();
 			if(selectedLivingStateId != null){
+				enableLivingDistrictCombo = true;
+				enableLivingParliamentConstituencyCombo = true;
 				livingParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedLivingStateId);
 				livingDistrictList = aapService.getAllDistrictOfState(selectedLivingStateId);
 				if(selectedLivingDistrictId != null){
+					enableLivingAssemblyConstituencyCombo = true;
 					livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedLivingDistrictId);
 				}
 			}
 			//assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfState(selectedStateId);
 			//selectedAssemblyConstituencyId = loggedInUser.getAssemblyConstituencyVotingId();
+			System.out.println("loggedInUser.getDateOfBirth()="+loggedInUser.getDateOfBirth());
 			if(loggedInUser.getDateOfBirth() != null){
 				dateOfBirth = "";
 				if(loggedInUser.getDateOfBirth().getDate() < 10){
 					dateOfBirth = dateOfBirth+"0";
 				}
+				System.out.println("dateOfBirth="+dateOfBirth);
 				dateOfBirth = dateOfBirth + loggedInUser.getDateOfBirth().getDate() +"/";
-				if(loggedInUser.getDateOfBirth().getMonth() < 10){
+				if(loggedInUser.getDateOfBirth().getMonth() < 9){
 					dateOfBirth = dateOfBirth+"0";
 				}
-				dateOfBirth = dateOfBirth + loggedInUser.getDateOfBirth().getMonth() +"/";
+				dateOfBirth = dateOfBirth + (loggedInUser.getDateOfBirth().getMonth() + 1) +"/";
 				
 				dateOfBirth = dateOfBirth + (loggedInUser.getDateOfBirth().getYear() + 1900);
-				
+				System.out.println("dateOfBirth="+dateOfBirth);
 			}
+			name = loggedInUser.getName();
+			gender = loggedInUser.getGender();
 		}else{
 			enableAssemblyConstituencyCombo = false;
 		}
@@ -146,18 +157,31 @@ public class UserProfileBean extends BaseJsfBean {
 
 	public void saveProfile() {
 		if(sameAsLiving){
-			selectedLivingStateId = selectedStateId;
-			selectedLivingDistrictId = selectedDistrictId;
-			selectedLivingAssemblyConstituencyId = selectedAssemblyConstituencyId;
+			selectedStateId = selectedLivingStateId;
+			selectedDistrictId = selectedLivingDistrictId;
+			selectedAssemblyConstituencyId = selectedLivingAssemblyConstituencyId;
+			selectedParliamentConstituencyId = selectedLivingParliamentConstituencyId;
 		}
-		if(selectedLivingStateId == null || selectedLivingStateId ==0 ){
+		System.out.println("selectedLivingStateId="+selectedLivingStateId);
+		System.out.println("selectedLivingDistrictId="+selectedLivingDistrictId);
+		System.out.println("selectedAssemblyConstituencyId="+selectedAssemblyConstituencyId);
+		System.out.println("selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
+		System.out.println("selectedStateId="+selectedStateId);
+		System.out.println("selectedDistrictId="+selectedDistrictId);
+		System.out.println("selectedAssemblyConstituencyId="+selectedAssemblyConstituencyId);
+		System.out.println("selectedParliamentConstituencyId="+selectedParliamentConstituencyId);
+		
+		if(selectedLivingStateId == null || selectedLivingStateId == 0 ){
 			sendErrorMessageToJsfScreen("Please select State where you are living currently");
 		}
 		if(selectedLivingDistrictId == null || selectedLivingDistrictId ==0 ){
 			sendErrorMessageToJsfScreen("Please select District where you are living currently");
 		}
-		if(selectedAssemblyConstituencyId == null || selectedAssemblyConstituencyId ==0 ){
+		if(selectedLivingAssemblyConstituencyId == null || selectedLivingAssemblyConstituencyId ==0 ){
 			sendErrorMessageToJsfScreen("Please select Assembly Constituency where you are living currently");
+		}
+		if(selectedLivingParliamentConstituencyId == null || selectedLivingParliamentConstituencyId ==0 ){
+			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you are living currently");
 		}
 		if(selectedStateId == null || selectedStateId == 0){
 			sendErrorMessageToJsfScreen("Please select State where you are registered as Voter");
@@ -167,6 +191,9 @@ public class UserProfileBean extends BaseJsfBean {
 		}
 		if(selectedAssemblyConstituencyId == null || selectedAssemblyConstituencyId ==0 ){
 			sendErrorMessageToJsfScreen("Please select Assembly Constituency where you registered as Voter");
+		}
+		if(selectedParliamentConstituencyId == null || selectedParliamentConstituencyId ==0 ){
+			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you registered as Voter");
 		}
 		Calendar dobCalendar = getDateOfBirthAsDate();
 		if(dobCalendar == null){
@@ -186,19 +213,39 @@ public class UserProfileBean extends BaseJsfBean {
 		}
 		if(isValidInput()){
 			UserDto user = new UserDto();
-			loggedInUser.setAssemblyConstituencyVotingId(selectedAssemblyConstituencyId);
-			//loggedInUser.setStateVotingId(selectedStateId);
-			loggedInUser.setDateOfBirth(dobCalendar.getTime());
 			
-			//loggedInUser = aapService.saveUser(loggedInUser);
+			user.setAssemblyConstituencyLivingId(selectedLivingAssemblyConstituencyId);
+			user.setAssemblyConstituencyVotingId(selectedAssemblyConstituencyId);
+			
+			user.setDistrictLivingId(selectedLivingDistrictId);
+			user.setDistrictVotingId(selectedDistrictId);
+			
+			user.setParliamentConstituencyLivingId(selectedLivingParliamentConstituencyId);
+			user.setParliamentConstituencyVotingId(selectedParliamentConstituencyId);
+			
+			user.setStateLivingId(selectedLivingStateId);
+			user.setStateVotingId(selectedStateId);
+			
+			 
+			user.setExternalId(loggedInUser.getExternalId());
+			user.setId(loggedInUser.getId());
+			
+			user.setName(name);
+			user.setGender(gender);
+			//loggedInUser.setStateVotingId(selectedStateId);
+			user.setDateOfBirth(dobCalendar.getTime());
+			
+			loggedInUser = aapService.saveUser(user);
 			ssaveLoggedInUserInSession(loggedInUser);
-			sendInfoMessageToJsfScreen("Profile updated succesfully. If you have already voted and you have updated your location, then you may want to re vote.");
+			sendInfoMessageToJsfScreen("Profile saved succesfully.");
 		}
+		/*
 		String url = BaseController.getFinalRedirectUrlFromSesion(getHttpServletRequest());
 		if(!StringUtil.isEmpty(url)){
 			BaseController.clearFinalRedirectUrlInSesion(getHttpServletRequest());
 			redirect(buildUrl(url));
 		}
+		*/
 	}
 
 	public void handleStateChange(AjaxBehaviorEvent event) {

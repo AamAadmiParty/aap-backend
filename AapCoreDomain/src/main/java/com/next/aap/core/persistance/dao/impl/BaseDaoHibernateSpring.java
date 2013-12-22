@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.gdata.util.common.base.StringUtil;
 
-public class BaseDaoHibernateSpring<T> {
+public class BaseDaoHibernateSpring<T> implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	@Autowired
 	private SessionFactory sessionFactory;
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
@@ -44,11 +46,11 @@ import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
 
-
 @Service("aapService")
-public class AapServiceImpl implements AapService, Serializable{
+public class AapServiceImpl implements AapService, Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private UserDao userDao;
 	@Autowired
@@ -65,164 +67,161 @@ public class AapServiceImpl implements AapService, Serializable{
 	private AssemblyConstituencyDao assemblyConstituencyDao;
 	@Autowired
 	private ParliamentConstituencyDao parliamentConstituencyDao;
-	
+
 	@Override
 	@Transactional
-	public UserDto saveFacebookUser(Long existingUserId,Connection<Facebook> connection) {
+	public UserDto saveFacebookUser(Long existingUserId, Connection<Facebook> connection) {
 		User user = null;
-		//See if user exists
-		if(existingUserId != null && existingUserId > 0){
-			System.out.println("existingUserId="+existingUserId);
+		// See if user exists
+		if (existingUserId != null && existingUserId > 0) {
+			System.out.println("existingUserId=" + existingUserId);
 			user = userDao.getUserById(existingUserId);
 		}
-		
+
 		FacebookAccount dbFacebookAccount = null;
 		ConnectionData fbConnectionData = connection.createData();
 		dbFacebookAccount = facebookAccountDao.getFacebookAccountByFacebookUserId(fbConnectionData.getProviderUserId());
-		System.out.println("dbFacebookAccount="+dbFacebookAccount);
+		System.out.println("dbFacebookAccount=" + dbFacebookAccount);
 		String facebookAccountEmail = connection.getApi().userOperations().getUserProfile().getEmail();
 
-		if(dbFacebookAccount == null){
-			System.out.println("creating new dbFacebookAccount="+dbFacebookAccount);
-			//Account do not exists so create one now
+		if (dbFacebookAccount == null) {
+			System.out.println("creating new dbFacebookAccount=" + dbFacebookAccount);
+			// Account do not exists so create one now
 			dbFacebookAccount = new FacebookAccount();
 			dbFacebookAccount.setDateCreated(new Date());
 			dbFacebookAccount.setFacebookUserId(fbConnectionData.getProviderUserId());
-			if(fbConnectionData.getDisplayName() == null){
+			if (fbConnectionData.getDisplayName() == null) {
 				dbFacebookAccount.setUserName(facebookAccountEmail);
-			}else{
+			} else {
 				dbFacebookAccount.setUserName(connection.getDisplayName());
 			}
-			
-		}else{
+
+		} else {
 			user = dbFacebookAccount.getUser();
 		}
-		System.out.println("user="+user);
-		//First create/update user
-		if(user == null){
-			System.out.println("creating new user="+user);
+		System.out.println("user=" + user);
+		// First create/update user
+		if (user == null) {
+			System.out.println("creating new user=" + user);
 			user = new User();
-			if(fbConnectionData.getDisplayName() == null){
+			if (fbConnectionData.getDisplayName() == null) {
 				user.setName(facebookAccountEmail);
-			}else{
+			} else {
 				user.setName(fbConnectionData.getDisplayName());
 			}
-			
+
 			user.setDateCreated(new Date());
 			user.setExternalId(UUID.randomUUID().toString());
 		}
-		System.out.println("user="+user);
+		System.out.println("user=" + user);
 		user = userDao.saveUser(user);
-		
-		//check if this email already exists in our system
-		if(!StringUtil.isEmpty(facebookAccountEmail)){
+
+		// check if this email already exists in our system
+		if (!StringUtil.isEmpty(facebookAccountEmail)) {
 			Email email = emailDao.getEmailByEmail(facebookAccountEmail);
-			if(email == null){
-				//create a new Email in the system
+			if (email == null) {
+				// create a new Email in the system
 				email = new Email();
 				email.setEmail(facebookAccountEmail);
 				email.setConfirmationType(ConfirmationType.CONFIRMED_FACEBOOK_ACCOUNT);
 				email.setConfirmed(true);
 				email.setUser(user);
 				email.setDateCreated(new Date());
-			}else{
+			} else {
 				email.setDateModified(new Date());
-				if(email.isConfirmed()){
-					//if existing email was confirmed
-					//check if User are same
-					if(email.getUser().equals(user)){
-						//if same no need to merge ot detach user
-					}else{
-						//merge two users data
+				if (email.isConfirmed()) {
+					// if existing email was confirmed
+					// check if User are same
+					if (email.getUser().equals(user)) {
+						// if same no need to merge ot detach user
+					} else {
+						// merge two users data
 						mergeUser(user, email.getUser());
 						email.setUser(user);
 					}
-				}else{
-					if(email.getUser() != null){
-						//detach this email from this user.. Need to write more code here to 
-						//make sure we delete the detached user if that user do not have anything like email or mobile number etc
+				} else {
+					if (email.getUser() != null) {
+						// detach this email from this user.. Need to write more
+						// code here to
+						// make sure we delete the detached user if that user do
+						// not have anything like email or mobile number etc
 						email.setUser(user);
 					}
 				}
-				
+
 			}
 			email = emailDao.saveEmail(email);
 		}
-		
-		
-		
+
 		dbFacebookAccount.setDateModified(new Date());
 		dbFacebookAccount.setToken(fbConnectionData.getAccessToken());
 		dbFacebookAccount.setExpireTime(new Date(fbConnectionData.getExpireTime()));
 		dbFacebookAccount.setImageUrl(fbConnectionData.getImageUrl());
 		dbFacebookAccount.setUser(user);
 		dbFacebookAccount = facebookAccountDao.saveFacebookAccount(dbFacebookAccount);
-		
-		UserDto returnUser = new UserDto();
-		BeanUtils.copyProperties(user, returnUser);
-		returnUser.setExternalId(user.getExternalId());
-		return returnUser;
+
+		return connvertUser(user);
 	}
 	
-	private void mergeUser(User targetUser, User sourceUser){
-		
+	private UserDto connvertUser(User user){
+		UserDto returnUser = new UserDto();
+		BeanUtils.copyProperties(user, returnUser);
+		return returnUser;
+	}
+
+	private void mergeUser(User targetUser, User sourceUser) {
+
 	}
 
 	@Override
 	@Transactional
-	public UserDto saveTwitterUser(Long existingUserId,
-			Connection<Twitter> connection) {
+	public UserDto saveTwitterUser(Long existingUserId, Connection<Twitter> connection) {
 		User user = null;
-		//See if user exists
-		if(existingUserId != null && existingUserId > 0){
-			System.out.println("existingUserId="+existingUserId);
+		// See if user exists
+		if (existingUserId != null && existingUserId > 0) {
+			System.out.println("existingUserId=" + existingUserId);
 			user = userDao.getUserById(existingUserId);
 		}
-		
+
 		TwitterAccount dbTwitterAccount = null;
 		ConnectionData twitterConnectionData = connection.createData();
 		dbTwitterAccount = twitterAccountDao.getTwitterAccountByTwitterUserId(twitterConnectionData.getProviderUserId());
-		System.out.println("dbTwitterAccount="+dbTwitterAccount);
+		System.out.println("dbTwitterAccount=" + dbTwitterAccount);
 
-		if(dbTwitterAccount == null){
-			System.out.println("creating new dbTwitterAccount="+dbTwitterAccount);
-			//Account do not exists so create one now
+		if (dbTwitterAccount == null) {
+			System.out.println("creating new dbTwitterAccount=" + dbTwitterAccount);
+			// Account do not exists so create one now
 			dbTwitterAccount = new TwitterAccount();
 			dbTwitterAccount.setDateCreated(new Date());
 			dbTwitterAccount.setTwitterId(twitterConnectionData.getProviderUserId());
 			dbTwitterAccount.setScreenName(twitterConnectionData.getDisplayName());
-			
-		}else{
+
+		} else {
 			user = dbTwitterAccount.getUser();
 		}
-		System.out.println("user="+user);
-		//First create/update user
-		if(user == null){
-			System.out.println("creating new user="+user);
+		System.out.println("user=" + user);
+		// First create/update user
+		if (user == null) {
+			System.out.println("creating new user=" + user);
 			user = new User();
 			user.setName(twitterConnectionData.getDisplayName());
 			user.setDateCreated(new Date());
 			user.setExternalId(UUID.randomUUID().toString());
 		}
 		user = userDao.saveUser(user);
-		
-		
+
 		dbTwitterAccount.setDateModified(new Date());
 		dbTwitterAccount.setToken(twitterConnectionData.getAccessToken());
 		dbTwitterAccount.setTokenSecret(twitterConnectionData.getSecret());
 		dbTwitterAccount.setImageUrl(twitterConnectionData.getImageUrl());
 		dbTwitterAccount.setUser(user);
 		dbTwitterAccount = twitterAccountDao.saveTwitterAccount(dbTwitterAccount);
-		
-		UserDto returnUser = new UserDto();
-		BeanUtils.copyProperties(user, returnUser);
-		System.out.println("user.getId()="+user.getId());
-		return returnUser;
+
+		return connvertUser(user);
 	}
 
 	@Override
-	public UserDto saveGoogleUser(Long existingUserid,
-			Connection<Google> connection) {
+	public UserDto saveGoogleUser(Long existingUserid, Connection<Google> connection) {
 		return null;
 	}
 
@@ -235,35 +234,38 @@ public class AapServiceImpl implements AapService, Serializable{
 		loginAccountDto.setFacebookAccounts(convertFacebookAccounts(user.getFacebookAccounts()));
 		return loginAccountDto;
 	}
-	private List<TwitterAccountDto> convertTwitterAccounts(Collection<TwitterAccount> twitterAccounts){
+
+	private List<TwitterAccountDto> convertTwitterAccounts(Collection<TwitterAccount> twitterAccounts) {
 		List<TwitterAccountDto> returnTwitterAccounts = new ArrayList<>();
-		if(twitterAccounts != null){
-			for(TwitterAccount oneTwitterAccount:twitterAccounts){
+		if (twitterAccounts != null) {
+			for (TwitterAccount oneTwitterAccount : twitterAccounts) {
 				returnTwitterAccounts.add(convertTwitterAccount(oneTwitterAccount));
 			}
 		}
 		return returnTwitterAccounts;
 	}
-	private TwitterAccountDto convertTwitterAccount(TwitterAccount twitterAccount){
-		if(twitterAccount == null){
+
+	private TwitterAccountDto convertTwitterAccount(TwitterAccount twitterAccount) {
+		if (twitterAccount == null) {
 			return null;
 		}
 		TwitterAccountDto returnTwitterAccountDto = new TwitterAccountDto();
 		BeanUtils.copyProperties(twitterAccount, returnTwitterAccountDto);
 		return returnTwitterAccountDto;
 	}
-	
-	private List<FacebookAccountDto> convertFacebookAccounts(Collection<FacebookAccount> facebookAccounts){
+
+	private List<FacebookAccountDto> convertFacebookAccounts(Collection<FacebookAccount> facebookAccounts) {
 		List<FacebookAccountDto> returnTwitterAccounts = new ArrayList<>();
-		if(facebookAccounts != null){
-			for(FacebookAccount oneFacebookAccount:facebookAccounts){
+		if (facebookAccounts != null) {
+			for (FacebookAccount oneFacebookAccount : facebookAccounts) {
 				returnTwitterAccounts.add(convertFacebookAccount(oneFacebookAccount));
 			}
 		}
 		return returnTwitterAccounts;
 	}
-	private FacebookAccountDto convertFacebookAccount(FacebookAccount facebookAccount){
-		if(facebookAccount == null){
+
+	private FacebookAccountDto convertFacebookAccount(FacebookAccount facebookAccount) {
+		if (facebookAccount == null) {
 			return null;
 		}
 		FacebookAccountDto returnFacebookAccountDto = new FacebookAccountDto();
@@ -276,13 +278,14 @@ public class AapServiceImpl implements AapService, Serializable{
 	public List<StateDto> getAllStates() {
 		List<State> allStates = stateDao.getAllStates();
 		List<StateDto> returnList = new ArrayList<StateDto>();
-		for(State oneState:allStates){
+		for (State oneState : allStates) {
 			returnList.add(convertState(oneState));
 		}
-		return returnList;	
+		return returnList;
 	}
-	private StateDto convertState(State oneState){
-		if(oneState == null){
+
+	private StateDto convertState(State oneState) {
+		if (oneState == null) {
 			return null;
 		}
 		StateDto oneStateDto = new StateDto();
@@ -297,12 +300,13 @@ public class AapServiceImpl implements AapService, Serializable{
 	public List<DistrictDto> getAllDistrictOfState(long stateId) {
 		List<District> allDistricts = districtDao.getDistrictOfState(stateId);
 		List<DistrictDto> returnList = new ArrayList<DistrictDto>();
-		for(District oneDistrict:allDistricts){
+		for (District oneDistrict : allDistricts) {
 			returnList.add(convertDistrict(oneDistrict));
 		}
 		return returnList;
 	}
-	private DistrictDto convertDistrict(District oneDistrict){
+
+	private DistrictDto convertDistrict(District oneDistrict) {
 		DistrictDto oneDistrictDto = new DistrictDto();
 		oneDistrictDto.setId(oneDistrict.getId());
 		oneDistrictDto.setName(oneDistrict.getName());
@@ -312,22 +316,23 @@ public class AapServiceImpl implements AapService, Serializable{
 
 	@Override
 	@Transactional
-	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfDistrict(
-			long districtId) {
+	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfDistrict(long districtId) {
 		List<AssemblyConstituency> allAssemblyConstituencies = assemblyConstituencyDao.getAssemblyConstituencyOfDistrict(districtId);
 		return convertAssemblyConstituencies(allAssemblyConstituencies);
 	}
-	private AssemblyConstituencyDto convertAssemblyConstituency(AssemblyConstituency oneAssemblyConstituency){
-		if(oneAssemblyConstituency == null){
+
+	private AssemblyConstituencyDto convertAssemblyConstituency(AssemblyConstituency oneAssemblyConstituency) {
+		if (oneAssemblyConstituency == null) {
 			return null;
 		}
 		AssemblyConstituencyDto oneAssemblyConstituencyDto = new AssemblyConstituencyDto();
 		BeanUtils.copyProperties(oneAssemblyConstituency, oneAssemblyConstituencyDto);
 		return oneAssemblyConstituencyDto;
 	}
-	private List<AssemblyConstituencyDto> convertAssemblyConstituencies(List<AssemblyConstituency> allAssemblyConstituencies){
+
+	private List<AssemblyConstituencyDto> convertAssemblyConstituencies(List<AssemblyConstituency> allAssemblyConstituencies) {
 		List<AssemblyConstituencyDto> returnList = new ArrayList<AssemblyConstituencyDto>(allAssemblyConstituencies.size());
-		for(AssemblyConstituency oneAssemblyConstituency:allAssemblyConstituencies){
+		for (AssemblyConstituency oneAssemblyConstituency : allAssemblyConstituencies) {
 			returnList.add(convertAssemblyConstituency(oneAssemblyConstituency));
 		}
 		return returnList;
@@ -347,21 +352,19 @@ public class AapServiceImpl implements AapService, Serializable{
 		List<AssemblyConstituencyDto> returnList = convertAssemblyConstituencies(allAssemblyConstituencies);
 		return returnList;
 	}
-	
-	private List<ParliamentConstituencyDto> convertParliamentConstituencyList(List<ParliamentConstituency> parliamentConstituencies){
+
+	private List<ParliamentConstituencyDto> convertParliamentConstituencyList(List<ParliamentConstituency> parliamentConstituencies) {
 		List<ParliamentConstituencyDto> returnList = new ArrayList<ParliamentConstituencyDto>();
-		if(parliamentConstituencies == null){
-			return returnList;	
+		if (parliamentConstituencies == null) {
+			return returnList;
 		}
 		for (ParliamentConstituency oneAssemblyConstituency : parliamentConstituencies) {
-			returnList
-					.add(convertParliamentConstituency(oneAssemblyConstituency));
+			returnList.add(convertParliamentConstituency(oneAssemblyConstituency));
 		}
 		return returnList;
 	}
-	
-	private ParliamentConstituencyDto convertParliamentConstituency(
-			ParliamentConstituency oneParliamentConstituency) {
+
+	private ParliamentConstituencyDto convertParliamentConstituency(ParliamentConstituency oneParliamentConstituency) {
 		ParliamentConstituencyDto oneParliamentConstituencyDto = new ParliamentConstituencyDto();
 		oneParliamentConstituencyDto.setId(oneParliamentConstituency.getId());
 		oneParliamentConstituencyDto.setName(oneParliamentConstituency.getName());
@@ -371,9 +374,62 @@ public class AapServiceImpl implements AapService, Serializable{
 
 	@Override
 	@Transactional
-	public List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(
-			long stateId) {
+	public List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(long stateId) {
 		List<ParliamentConstituency> parliamentConstituencies = parliamentConstituencyDao.getParliamentConstituencyOfState(stateId);
 		return convertParliamentConstituencyList(parliamentConstituencies);
+	}
+
+	@Override
+	@Transactional
+	public UserDto saveUser(UserDto userDto) {
+		User dbUser = userDao.getUserById(userDto.getId());
+		if (dbUser == null) {
+			logger.error("User DO NOT Exists [id=" + userDto.getId() + "]");
+			return null;
+		}
+		// find out if we have facebook account with given user name
+		User user = userDao.getUserById(userDto.getId());
+		user.setDateModified(new Date());
+		//user.setEmail(userDto.getEmail());
+		//user.setMobile(userDto.getMobile());
+		user.setName(userDto.getName());
+		user.setDateOfBirth(userDto.getDateOfBirth());
+		if (userDto.getStateLivingId() != null && userDto.getStateLivingId() > 0) {
+			State stateLiving = stateDao.getStateById(userDto.getStateLivingId());
+			user.setStateLiving(stateLiving);
+		}
+		if (userDto.getDistrictLivingId() != null && userDto.getDistrictLivingId() > 0) {
+			District districtLiving = districtDao.getDistrictById(userDto.getDistrictLivingId());
+			user.setDistrictLiving(districtLiving);
+		}
+		if (userDto.getAssemblyConstituencyLivingId() != null && userDto.getAssemblyConstituencyLivingId() > 0) {
+			AssemblyConstituency assemblyConstituencyLiving = assemblyConstituencyDao.getAssemblyConstituencyById(userDto.getAssemblyConstituencyLivingId());
+			user.setAssemblyConstituencyLiving(assemblyConstituencyLiving);
+		}
+
+		if (userDto.getParliamentConstituencyLivingId() != null && userDto.getParliamentConstituencyLivingId() > 0) {
+			ParliamentConstituency parliamentConstituencyLiving = parliamentConstituencyDao.getParliamentConstituencyById(userDto.getParliamentConstituencyLivingId());
+			user.setParliamentConstituencyLiving(parliamentConstituencyLiving);
+		}
+
+		if (userDto.getStateVotingId() != null && userDto.getStateVotingId() > 0) {
+			State stateVoting = stateDao.getStateById(userDto.getStateVotingId());
+			user.setStateVoting(stateVoting);
+		}
+		if (userDto.getDistrictVotingId() != null && userDto.getDistrictVotingId() > 0) {
+			District districtVoting = districtDao.getDistrictById(userDto.getDistrictVotingId());
+			user.setDistrictVoting(districtVoting);
+		}
+		if (userDto.getAssemblyConstituencyVotingId() != null && userDto.getAssemblyConstituencyVotingId() > 0) {
+			AssemblyConstituency assemblyConstituencyVoting = assemblyConstituencyDao.getAssemblyConstituencyById(userDto.getAssemblyConstituencyVotingId());
+			user.setAssemblyConstituencyVoting(assemblyConstituencyVoting);
+		}
+		if (userDto.getParliamentConstituencyVotingId() != null && userDto.getParliamentConstituencyVotingId() > 0) {
+			ParliamentConstituency parliamentConstituencyVoting = parliamentConstituencyDao.getParliamentConstituencyById(userDto.getParliamentConstituencyVotingId());
+			user.setParliamentConstituencyVoting(parliamentConstituencyVoting);
+		}
+		user.setGender(userDto.getGender());
+		user = userDao.saveUser(user);
+		return connvertUser(user);
 	}
 }

@@ -45,18 +45,12 @@ public class User {
 	@Column(name = "name", nullable = false, length=256)
 	private String name;
 	
-	@Column(name = "mobile")
-	private String mobile;
+	@Column(name = "gender")
+	private String gender;
 
 	@Column(name = "date_of_birth")
-	private Date dateOfBith;
+	private Date dateOfBirth;
 
-	@Column(name = "voting_state")
-	private String votingState;
-	
-	@Column(name = "living_state")
-	private String livingState;
-	
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="living_state_id")
     private State stateLiving;
@@ -217,36 +211,12 @@ public class User {
 		this.name = name;
 	}
 
-	public String getMobile() {
-		return mobile;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
-	public Date getDateOfBith() {
-		return dateOfBith;
-	}
-
-	public void setDateOfBith(Date dateOfBith) {
-		this.dateOfBith = dateOfBith;
-	}
-
-	public String getVotingState() {
-		return votingState;
-	}
-
-	public void setVotingState(String votingState) {
-		this.votingState = votingState;
-	}
-
-	public String getLivingState() {
-		return livingState;
-	}
-
-	public void setLivingState(String livingState) {
-		this.livingState = livingState;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public State getStateLiving() {
@@ -431,6 +401,14 @@ public class User {
 		this.twitterAccounts = twitterAccounts;
 	}
 
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -459,7 +437,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", ver=" + ver + ", externalId=" + externalId
-				+ ", name=" + name + ", dateOfBith=" + dateOfBith + "]";
+				+ ", name=" + name + ", dateOfBith=" + dateOfBirth + "]";
 	}
 
 }

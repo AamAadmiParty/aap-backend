@@ -35,4 +35,6 @@ public interface AapService {
 	List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfState(long stateId) ;
 
 	List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(long stateId) ;
+	
+	UserDto saveUser(UserDto userDto);
 }

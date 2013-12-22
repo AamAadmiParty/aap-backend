@@ -19,8 +19,8 @@ public class UserDto implements Serializable{
 
 	private String name;
 	
-	private String mobile;
-
+	private String gender;
+	
 	private Date dateOfBirth;
 
 	private Long stateLivingId;
@@ -106,14 +106,6 @@ public class UserDto implements Serializable{
 		this.name = name;
 	}
 
-	public String getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-
 	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
@@ -186,6 +178,14 @@ public class UserDto implements Serializable{
 	public void setParliamentConstituencyVotingId(
 			Long parliamentConstituencyVotingId) {
 		this.parliamentConstituencyVotingId = parliamentConstituencyVotingId;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	@Override

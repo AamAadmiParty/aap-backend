@@ -145,6 +145,9 @@ public class User {
 	})
 	Set<Role> pcRoles;
 
+	@Column(name = "allow_tweets", nullable = false)
+	private boolean allowTweets;
+
 	
 
 	public Long getId() {
@@ -407,6 +410,14 @@ public class User {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public boolean isAllowTweets() {
+		return allowTweets;
+	}
+
+	public void setAllowTweets(boolean allowTweets) {
+		this.allowTweets = allowTweets;
 	}
 
 	@Override

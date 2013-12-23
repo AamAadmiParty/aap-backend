@@ -35,9 +35,6 @@ public class FacebookAccount {
 	private Long modifierId;
 
 	
-	@Column(name = "token", nullable = false, length=256)
-	private String token;
-	
 	@Column(name = "user_name", length=256)
 	private String userName;
 
@@ -47,16 +44,21 @@ public class FacebookAccount {
 	@Column(name = "image_url", nullable = false)
 	private String imageUrl;
 
-	@Column(name = "expire_time", nullable = false)
-	private Date expireTime;
-
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
     private User user;
 	@Column(name="user_id", insertable=false,updatable=false)
 	private Long userId;
 	
+	@Column(name = "voice_of_aap", nullable = false)
+	private boolean voiceOfAap;
 	
+	@Column(name = "allow_ddu", nullable = false)
+	private boolean allowDdu;
+
+	@Column(name = "allow_timeline", nullable = false)
+	private boolean allowTimeLine;
+
 	public Long getId() {
 		return id;
 	}
@@ -93,12 +95,6 @@ public class FacebookAccount {
 	public void setModifierId(Long modifierId) {
 		this.modifierId = modifierId;
 	}
-	public String getToken() {
-		return token;
-	}
-	public void setToken(String token) {
-		this.token = token;
-	}
 	public User getUser() {
 		return user;
 	}
@@ -129,11 +125,23 @@ public class FacebookAccount {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	public Date getExpireTime() {
-		return expireTime;
+	public boolean isVoiceOfAap() {
+		return voiceOfAap;
 	}
-	public void setExpireTime(Date expireTime) {
-		this.expireTime = expireTime;
+	public void setVoiceOfAap(boolean voiceOfAap) {
+		this.voiceOfAap = voiceOfAap;
+	}
+	public boolean isAllowDdu() {
+		return allowDdu;
+	}
+	public void setAllowDdu(boolean allowDdu) {
+		this.allowDdu = allowDdu;
+	}
+	public boolean isAllowTimeLine() {
+		return allowTimeLine;
+	}
+	public void setAllowTimeLine(boolean allowTimeLine) {
+		this.allowTimeLine = allowTimeLine;
 	}
 
 }

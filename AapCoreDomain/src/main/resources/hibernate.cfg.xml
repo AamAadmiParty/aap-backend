@@ -11,6 +11,12 @@
  		<mapping class="com.next.aap.core.persistance.District" />
  		<mapping class="com.next.aap.core.persistance.Email" />
 		<mapping class="com.next.aap.core.persistance.FacebookAccount" />
+		<mapping class="com.next.aap.core.persistance.FacebookApp" />
+		<mapping class="com.next.aap.core.persistance.FacebookAppPermission" />
+		<mapping class="com.next.aap.core.persistance.FacebookGroup" />
+		<mapping class="com.next.aap.core.persistance.FacebookGroupMembership" />
+		<mapping class="com.next.aap.core.persistance.FacebookPage" />
+		<mapping class="com.next.aap.core.persistance.FacebookPageAdmins" />
 		<mapping class="com.next.aap.core.persistance.GoogleAccount" />
 		<mapping class="com.next.aap.core.persistance.News" />
 		<mapping class="com.next.aap.core.persistance.ParliamentConstituency" />

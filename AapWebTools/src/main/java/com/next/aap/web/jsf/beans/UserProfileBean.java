@@ -5,36 +5,23 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.social.google.api.plus.Person.UrlType;
 import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
-import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
 import com.next.aap.core.service.AapService;
-import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
-import com.ocpsoft.pretty.faces.annotation.URLActions;
+import com.ocpsoft.pretty.faces.annotation.URLAction.PhaseId;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
-import com.ocpsoft.pretty.faces.annotation.URLMappings;
-import com.ocpsoft.pretty.faces.annotation.URLAction.PhaseId;
 
 /*
 @Component
@@ -91,7 +78,7 @@ public class UserProfileBean extends BaseJsfBean {
 	private AapService aapService;
 
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
-	@URLAction
+	@URLAction(onPostback=false)
 	public void init() throws Exception {
 		System.out.println("init " + aapService);
 		loggedInUser = getLoggedInUser(true,buildLoginUrl("/profile"));
@@ -120,6 +107,8 @@ public class UserProfileBean extends BaseJsfBean {
 			selectedLivingDistrictId = loggedInUser.getDistrictLivingId();
 			selectedLivingAssemblyConstituencyId = loggedInUser.getAssemblyConstituencyLivingId();
 			selectedLivingParliamentConstituencyId = loggedInUser.getParliamentConstituencyLivingId();
+			System.out.println("++selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
+			System.out.println("++selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
 			if(selectedLivingStateId != null){
 				enableLivingDistrictCombo = true;
 				enableLivingParliamentConstituencyCombo = true;
@@ -132,7 +121,7 @@ public class UserProfileBean extends BaseJsfBean {
 			}
 			//assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfState(selectedStateId);
 			//selectedAssemblyConstituencyId = loggedInUser.getAssemblyConstituencyVotingId();
-			System.out.println("loggedInUser.getDateOfBirth()="+loggedInUser.getDateOfBirth());
+			//System.out.println("loggedInUser.getDateOfBirth()="+loggedInUser.getDateOfBirth());
 			if(loggedInUser.getDateOfBirth() != null){
 				dateOfBirth = "";
 				if(loggedInUser.getDateOfBirth().getDate() < 10){
@@ -156,6 +145,8 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 
 	public void saveProfile() {
+		System.out.println("***selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
+		System.out.println("selectedParliamentConstituencyId="+selectedParliamentConstituencyId);
 		if(sameAsLiving){
 			selectedStateId = selectedLivingStateId;
 			selectedDistrictId = selectedLivingDistrictId;
@@ -248,6 +239,10 @@ public class UserProfileBean extends BaseJsfBean {
 		*/
 	}
 
+	
+	public void emptyCallToMakeItWork(AjaxBehaviorEvent event) {
+		//This fucntion doesnt do anything but 
+	}
 	public void handleStateChange(AjaxBehaviorEvent event) {
 		System.out.println("selected State Id = "+selectedStateId);
 		try {

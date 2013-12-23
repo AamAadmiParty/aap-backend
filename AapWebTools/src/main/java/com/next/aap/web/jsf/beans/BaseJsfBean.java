@@ -27,6 +27,18 @@ public class BaseJsfBean extends BaseController implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	public void buildAndRedirect(String url) {
+		try {
+			FacesContext.getCurrentInstance().getExternalContext().redirect(buildUrl(url));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void setFinalRedirectUrlInSesion(String url){
+		HttpServletRequest httpServletRequest = getHttpServletRequest();
+		setFinalRedirectUrlInSesion(httpServletRequest, url);
+	}
 
 	protected void ssaveLoggedInUserInSession(UserDto user) {
 		HttpServletRequest httpServletRequest = getHttpServletRequest();

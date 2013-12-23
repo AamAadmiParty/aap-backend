@@ -146,6 +146,8 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 
 	public void saveProfile() {
+		System.out.println("***selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
+		System.out.println("selectedParliamentConstituencyId="+selectedParliamentConstituencyId);
 		if(sameAsLiving){
 			selectedStateId = selectedLivingStateId;
 			selectedDistrictId = selectedLivingDistrictId;

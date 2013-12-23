@@ -151,7 +151,6 @@ public class User {
 	@Column(name = "profile_pic")
 	private String profilePic;
 
-	
 
 	public Long getId() {
 		return id;

@@ -153,6 +153,7 @@ public class VoiceOfAapBean extends BaseJsfBean {
 			selectedGroups = voiceOfAapData.getSelectedGroups();
 			beVoiceOfAap = voiceOfAapData.isBeVoiceOfAap();
 			postOnTimeLine = voiceOfAapData.isPostOnTimeLine();
+			tweetFromMyAccount = voiceOfAapData.isTweetFromMyAccount();
 			postOnGroup = !selectedGroups.isEmpty();
 		}
 	}

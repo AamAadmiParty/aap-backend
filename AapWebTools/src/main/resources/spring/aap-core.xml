@@ -17,6 +17,7 @@
 	<context:annotation-config />
 	<context:component-scan base-package="com.next.aap.core.persistance.dao.impl" />
 	<context:component-scan base-package="com.next.aap.core.service" />
+	<context:component-scan base-package="com.next.aap.core.util" />
     
 	<bean id="propertyPlaceholderConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

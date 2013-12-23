@@ -24,8 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.persistance.AcRole;
 import com.next.aap.core.persistance.AssemblyConstituency;
 import com.next.aap.core.persistance.District;
+import com.next.aap.core.persistance.DistrictRole;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
 import com.next.aap.core.persistance.FacebookAccount;
@@ -34,11 +36,20 @@ import com.next.aap.core.persistance.FacebookAppPermission;
 import com.next.aap.core.persistance.FacebookGroup;
 import com.next.aap.core.persistance.FacebookGroupMembership;
 import com.next.aap.core.persistance.ParliamentConstituency;
+import com.next.aap.core.persistance.PcRole;
+import com.next.aap.core.persistance.Permission;
+import com.next.aap.core.persistance.Phone;
+import com.next.aap.core.persistance.Phone.PhoneType;
+import com.next.aap.core.persistance.PlannedFacebookPost;
+import com.next.aap.core.persistance.Role;
 import com.next.aap.core.persistance.State;
+import com.next.aap.core.persistance.StateRole;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
+import com.next.aap.core.persistance.dao.AcRoleDao;
 import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
+import com.next.aap.core.persistance.dao.DistrictRoleDao;
 import com.next.aap.core.persistance.dao.EmailDao;
 import com.next.aap.core.persistance.dao.FacebookAccountDao;
 import com.next.aap.core.persistance.dao.FacebookAppDao;
@@ -46,18 +57,28 @@ import com.next.aap.core.persistance.dao.FacebookAppPermissionDao;
 import com.next.aap.core.persistance.dao.FacebookGroupDao;
 import com.next.aap.core.persistance.dao.FacebookGroupMembershipDao;
 import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
+import com.next.aap.core.persistance.dao.PcRoleDao;
+import com.next.aap.core.persistance.dao.PermissionDao;
+import com.next.aap.core.persistance.dao.PhoneDao;
+import com.next.aap.core.persistance.dao.PlannedFacebookPostDao;
+import com.next.aap.core.persistance.dao.RoleDao;
 import com.next.aap.core.persistance.dao.StateDao;
+import com.next.aap.core.persistance.dao.StateRoleDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
+import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
+import com.next.aap.web.dto.PlannedFacebookPostDto;
+import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.dto.VoiceOfAapData;
 
 @Service("aapService")
@@ -89,6 +110,22 @@ public class AapServiceImpl implements AapService, Serializable {
 	private FacebookGroupMembershipDao facebookGroupMembershipDao;
 	@Autowired
 	private FacebookGroupDao facebookGroupDao;
+	@Autowired
+	private PermissionDao permissionDao;
+	@Autowired
+	private RoleDao roleDao;
+	@Autowired
+	private PhoneDao phoneDao;
+	@Autowired
+	private PlannedFacebookPostDao plannedFacebookPostDao;
+	@Autowired
+	private StateRoleDao stateRoleDao;
+	@Autowired
+	private DistrictRoleDao districtRoleDao;
+	@Autowired
+	private AcRoleDao acRoleDao;
+	@Autowired
+	private PcRoleDao pcRoleDao;
 	
 	@Value("${voa.facebook.app.id}")
 	private String voiceOfAapAppId;
@@ -155,6 +192,8 @@ public class AapServiceImpl implements AapService, Serializable {
 			user.setDateCreated(new Date());
 			user.setExternalId(UUID.randomUUID().toString());
 		}
+		//always use facebook Image Url
+		user.setProfilePic(fbConnectionData.getImageUrl());
 		System.out.println("user=" + user);
 		user = userDao.saveUser(user);
 
@@ -206,6 +245,21 @@ public class AapServiceImpl implements AapService, Serializable {
 	private UserDto connvertUser(User user) {
 		UserDto returnUser = new UserDto();
 		BeanUtils.copyProperties(user, returnUser);
+		List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
+		Phone onePhone = null;
+		if(userPhones != null && !userPhones.isEmpty()){
+			for(Phone phone:userPhones){
+				if(phone.getPhoneType().equals(PhoneType.MOBILE)){
+					onePhone = phone;
+					break;
+				}
+			}
+			if(onePhone == null){
+				onePhone = userPhones.get(0);
+			}
+			returnUser.setCountryCode(onePhone.getCountryCode());
+			returnUser.setMobileNumber(onePhone.getPhoneNumber());
+		}
 		return returnUser;
 	}
 
@@ -247,6 +301,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			user.setName(twitterConnectionData.getDisplayName());
 			user.setDateCreated(new Date());
 			user.setExternalId(UUID.randomUUID().toString());
+			user.setProfilePic(twitterConnectionData.getImageUrl());
 		}
 		user = userDao.saveUser(user);
 
@@ -472,6 +527,39 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		user.setGender(userDto.getGender());
 		user = userDao.saveUser(user);
+		
+		if(!StringUtil.isEmpty(userDto.getMobileNumber())){
+			//save Mobile number
+			List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
+			Phone onePhone = null;
+			if(userPhones == null || userPhones.isEmpty()){
+				onePhone = new Phone();
+				onePhone.setCountryCode(userDto.getCountryCode());
+				onePhone.setDateCreated(new Date());
+				onePhone.setPhoneNumber(userDto.getMobileNumber());
+				onePhone.setPhoneType(PhoneType.MOBILE);
+				onePhone.setUser(user);
+				onePhone.setDateModified(new Date());
+				onePhone = phoneDao.savePhone(onePhone);
+			}else{
+				for(Phone phone:userPhones){
+					if(phone.getPhoneType().equals(PhoneType.MOBILE)){
+						onePhone = phone;
+						break;
+					}
+				}
+				if(onePhone == null){
+					onePhone = userPhones.get(0);
+				}
+				onePhone.setCountryCode(userDto.getCountryCode());
+				onePhone.setPhoneNumber(userDto.getMobileNumber());
+				onePhone.setPhoneType(PhoneType.MOBILE);
+				onePhone.setUser(user);
+				onePhone.setDateModified(new Date());
+				onePhone = phoneDao.savePhone(onePhone);
+			}
+		}
+		user = userDao.getUserById(user.getId());
 		return connvertUser(user);
 	}
 
@@ -583,5 +671,214 @@ public class AapServiceImpl implements AapService, Serializable {
 		voiceOfAapData.setSelectedGroups(groupIdsList);
 
 		return voiceOfAapData;
+	}
+
+	@Override
+	@Transactional
+	public void updateAllPermissionsAndRole() {
+		//Make sure all permission exists in Database
+		Permission onePermission;
+		for(AppPermission oneAppPermission:AppPermission.values()){
+			onePermission = permissionDao.getPermissionByName(oneAppPermission);
+			if(onePermission == null){
+				onePermission = new Permission();
+				onePermission.setPermission(oneAppPermission);
+				onePermission = permissionDao.savePermission(onePermission);
+			}
+		}
+		
+		//assign super admin role to Ravi's account
+		
+		Email email = emailDao.getEmailByEmail("ping2ravi@gmail.com");
+		User user = null;
+		if(email == null){
+			FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountByFacebookUserId("691358626");
+			if(facebookAccount == null){
+				TwitterAccount twitterAccount = twitterAccountDao.getTwitterAccountByTwitterUserId("287659262");
+				if(twitterAccount != null){
+					user = twitterAccount.getUser();
+				}
+			}else{
+				user = facebookAccount.getUser();
+			}
+		}else{
+			user = email.getUser();
+		}
+		if(user == null){
+			logger.error("No predefined user found to make a user Super Admin");			
+		}else{
+			user.setSuperAdmin(true);
+		}
+		
+		
+		//Now create all custom Roles
+		createRoleWithPermissions("VoiceOfAapFacebookAdminRole"," User of this role will be able to make Facebook post using voice of AAP Application", true, true,false,false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
+		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true, true,false, false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
+
+	}
+	private void createRoleWithPermissions(String name,String description,boolean addStateRoles, boolean addDistrictRoles,boolean addAcRoles,boolean addPcRoles,AppPermission...appPermissions){
+		Role role = roleDao.getRoleByName(name);
+		if(role == null){
+			role = new Role();
+			role.setName(name);
+			role.setDescription(description);
+			role = roleDao.saveRole(role);
+		}
+		if(role.getPermissions() == null){
+			role.setPermissions(new HashSet<Permission>());
+		}
+		Permission onePermission;
+		for(AppPermission oneAppPermission:appPermissions){
+			onePermission = permissionDao.getPermissionByName(oneAppPermission);
+			role.getPermissions().add(onePermission);
+		}
+		if(addStateRoles){
+			List<State> allStates  = stateDao.getAllStates();
+			StateRole oneStateRole;
+			for(State oneSate:allStates){
+				oneStateRole = stateRoleDao.getStateRoleByStateIdAndRoleId(oneSate.getId(), role.getId());
+				if(oneStateRole == null){
+					oneStateRole = new StateRole();
+					oneStateRole.setState(oneSate);
+					oneStateRole.setRole(role);
+					oneStateRole = stateRoleDao.saveStateRole(oneStateRole);
+				}
+			}
+		}
+		
+		if(addDistrictRoles){
+			List<District> allDistricts  = districtDao.getAllDistricts();
+			DistrictRole oneDistrictRole;
+			for(District oneDistrict:allDistricts){
+				oneDistrictRole = districtRoleDao.getDistrictRoleByDistrictIdAndRoleId(oneDistrict.getId(), role.getId());
+				if(oneDistrictRole == null){
+					oneDistrictRole = new DistrictRole();
+					oneDistrictRole.setDistrict(oneDistrict);
+					oneDistrictRole.setRole(role);
+					oneDistrictRole = districtRoleDao.saveDistrictRole(oneDistrictRole);
+				}
+			}
+		}
+		
+		if(addAcRoles){
+			List<AssemblyConstituency> allAcs  = assemblyConstituencyDao.getAllAssemblyConstituencys();
+			AcRole oneAcRole;
+			for(AssemblyConstituency oneAssemblyConstituency:allAcs){
+				oneAcRole = acRoleDao.getAcRoleByAcIdAndRoleId(oneAssemblyConstituency.getId(), role.getId());
+				if(oneAcRole == null){
+					oneAcRole = new AcRole();
+					oneAcRole.setAssemblyConstituency(oneAssemblyConstituency);
+					oneAcRole.setRole(role);
+					oneAcRole = acRoleDao.saveAcRole(oneAcRole);
+				}
+			}
+		}
+		
+		if(addPcRoles){
+			List<ParliamentConstituency> allPcs  = parliamentConstituencyDao.getAllParliamentConstituencys();
+			PcRole onePcRole;
+			for(ParliamentConstituency oneParliamentConstituency:allPcs){
+				onePcRole = pcRoleDao.getPcRoleByPcIdAndRoleId(oneParliamentConstituency.getId(), role.getId());
+				if(onePcRole == null){
+					onePcRole = new PcRole();
+					onePcRole.setParliamentConstituency(oneParliamentConstituency);
+					onePcRole.setRole(role);
+					onePcRole = pcRoleDao.savePcRole(onePcRole);
+				}
+			}
+		}
+	}
+
+	@Override
+	public PlannedFacebookPostDto savePlannedFacebookPost(PlannedFacebookPostDto plannedFacebookPostDto) {
+		PlannedFacebookPost plannedFacebookPost = null;
+		if(plannedFacebookPostDto.getId() != null && plannedFacebookPostDto.getId() > 0){
+			plannedFacebookPost = plannedFacebookPostDao.getPlannedFacebookPostById(plannedFacebookPostDto.getId());
+			if(plannedFacebookPost == null){
+				throw new RuntimeException("No such Post found[id="+plannedFacebookPostDto.getId()+"]");
+			}
+		}else{
+			plannedFacebookPost = new PlannedFacebookPost();
+			plannedFacebookPost.setDateCreated(new Date());
+			plannedFacebookPost.setStatus(PlannedPostStatus.PENDING);
+		}
+		plannedFacebookPost.setCaption(plannedFacebookPostDto.getCaption());
+		plannedFacebookPost.setDescription(plannedFacebookPostDto.getDescription());
+		plannedFacebookPost.setLink(plannedFacebookPostDto.getLink());
+		plannedFacebookPost.setMessage(plannedFacebookPostDto.getMessage());
+		plannedFacebookPost.setName(plannedFacebookPostDto.getName());
+		plannedFacebookPost.setPicture(plannedFacebookPostDto.getPicture());
+		plannedFacebookPost.setPostingTime(plannedFacebookPostDto.getPostingTime());
+		plannedFacebookPost.setPostType(plannedFacebookPostDto.getPostType());
+		plannedFacebookPost.setSource(plannedFacebookPostDto.getSource());
+		
+		plannedFacebookPost = plannedFacebookPostDao.savePlannedFacebookPost(plannedFacebookPost);
+		
+		return convertPlannedFacebookPost(plannedFacebookPost);
+	}
+
+	@Override
+	public List<PlannedFacebookPostDto> getPlannedFacebookPosts(int pageNumber, int pageSize) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private PlannedFacebookPostDto convertPlannedFacebookPost(PlannedFacebookPost plannedFacebookPost){
+		PlannedFacebookPostDto plannedFacebookPostDto = new PlannedFacebookPostDto();
+		BeanUtils.copyProperties(plannedFacebookPost, plannedFacebookPostDto);
+		return plannedFacebookPostDto;
+	}
+
+	@Override
+	public UserRolePermissionDto getUserRolePermissions(Long userId) {
+		User user = userDao.getUserById(userId);
+		UserRolePermissionDto userRolePermissionDto = new UserRolePermissionDto();
+		userRolePermissionDto.setSuperUser(user.isSuperAdmin());
+		
+		Set<Role> allUserRolesAtWorldLevel = user.getAllRoles();
+		if(allUserRolesAtWorldLevel != null && !allUserRolesAtWorldLevel.isEmpty()){
+			for(Role oneRole:allUserRolesAtWorldLevel){
+				if(!oneRole.getRolePermissions().isEmpty()){
+					userRolePermissionDto.addAllPermissions(oneRole.getRolePermissions());	
+				}
+			}
+		}
+		
+		Set<StateRole> stateRoles = user.getStateRoles();
+		if(stateRoles != null && !stateRoles.isEmpty()){
+			for(StateRole oneStateRole:stateRoles){
+				if(!oneStateRole.getRole().getRolePermissions().isEmpty()){
+					userRolePermissionDto.addStatePermissions(convertState(oneStateRole.getState()), oneStateRole.getRole().getRolePermissions());
+				}
+			}
+		}
+		
+		Set<DistrictRole> districtRoles = user.getDistrictRoles();
+		if(districtRoles != null && !districtRoles.isEmpty()){
+			for(DistrictRole oneDistrictRole:districtRoles){
+				if(!oneDistrictRole.getRole().getRolePermissions().isEmpty()){
+					userRolePermissionDto.addDistrictPermissions(convertDistrict(oneDistrictRole.getDistrict()), oneDistrictRole.getRole().getRolePermissions());
+				}
+			}
+		}
+		
+		Set<AcRole> acRoles = user.getAcRoles();
+		if(acRoles != null && !acRoles.isEmpty()){
+			for(AcRole oneAcRole:acRoles){
+				if(!oneAcRole.getRole().getRolePermissions().isEmpty()){
+					userRolePermissionDto.addAcPermissions(convertAssemblyConstituency(oneAcRole.getAssemblyConstituency()), oneAcRole.getRole().getRolePermissions());
+				}
+			}
+		}
+		
+		Set<PcRole> pcRoles = user.getPcRoles();
+		if(pcRoles != null && !pcRoles.isEmpty()){
+			for(PcRole onePcRole:pcRoles){
+				if(!onePcRole.getRole().getRolePermissions().isEmpty()){
+					userRolePermissionDto.addPcPermissions(convertParliamentConstituency(onePcRole.getParliamentConstituency()), onePcRole.getRole().getRolePermissions());
+				}
+			}
+		}
+		return userRolePermissionDto;
 	}
 }

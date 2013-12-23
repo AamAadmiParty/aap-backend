@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
-import com.ocpsoft.pretty.faces.annotation.URLAction.PhaseId;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
@@ -139,6 +137,9 @@ public class UserProfileBean extends BaseJsfBean {
 			}
 			name = loggedInUser.getName();
 			gender = loggedInUser.getGender();
+			countryCode = loggedInUser.getCountryCode();
+			mobileNumber = loggedInUser.getMobileNumber();
+
 		}else{
 			enableAssemblyConstituencyCombo = false;
 		}
@@ -153,14 +154,6 @@ public class UserProfileBean extends BaseJsfBean {
 			selectedAssemblyConstituencyId = selectedLivingAssemblyConstituencyId;
 			selectedParliamentConstituencyId = selectedLivingParliamentConstituencyId;
 		}
-		System.out.println("selectedLivingStateId="+selectedLivingStateId);
-		System.out.println("selectedLivingDistrictId="+selectedLivingDistrictId);
-		System.out.println("selectedAssemblyConstituencyId="+selectedAssemblyConstituencyId);
-		System.out.println("selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
-		System.out.println("selectedStateId="+selectedStateId);
-		System.out.println("selectedDistrictId="+selectedDistrictId);
-		System.out.println("selectedAssemblyConstituencyId="+selectedAssemblyConstituencyId);
-		System.out.println("selectedParliamentConstituencyId="+selectedParliamentConstituencyId);
 		
 		if(selectedLivingStateId == null || selectedLivingStateId == 0 ){
 			sendErrorMessageToJsfScreen("Please select State where you are living currently");
@@ -216,6 +209,9 @@ public class UserProfileBean extends BaseJsfBean {
 			
 			user.setStateLivingId(selectedLivingStateId);
 			user.setStateVotingId(selectedStateId);
+			
+			user.setCountryCode(countryCode);
+			user.setMobileNumber(mobileNumber);
 			
 			 
 			user.setExternalId(loggedInUser.getExternalId());

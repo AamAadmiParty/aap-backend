@@ -18,23 +18,33 @@ public class SocialAccountBean extends BaseJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private LoginAccountDto loginAccounts;
+	private boolean renderFacebookConnectionButton = true;
 
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
-	@URLAction
+	@URLAction(onPostback=false)
 	public void init() throws Exception {
 		HttpServletRequest httpServletRequest =  getHttpServletRequest();
 		String redirectUrlAfterLogin = httpServletRequest.getContextPath()+"/socialaccounts";
 		setRedirectUrlInSessiom(httpServletRequest, redirectUrlAfterLogin);
+		
+		LoginAccountDto loginAccounts = getLoggedInAccountsFromSesion();
+		if(loginAccounts == null || loginAccounts.getFacebookAccounts() == null || loginAccounts.getFacebookAccounts().isEmpty()){
+			renderFacebookConnectionButton = true;
+		}else{
+			renderFacebookConnectionButton = false;
+		}
 	}
 
 	public LoginAccountDto getLoginAccounts() {
-		loginAccounts = getLoggedInAccountsFromSesion();
-		return loginAccounts;
+		return getLoggedInAccountsFromSesion();
 	}
 
-	public void setLoginAccounts(LoginAccountDto loginAccounts) {
-		this.loginAccounts = loginAccounts;
+	public boolean isRenderFacebookConnectionButton() {
+		return renderFacebookConnectionButton;
+	}
+
+	public void setRenderFacebookConnectionButton(boolean renderFacebookConnectionButton) {
+		this.renderFacebookConnectionButton = renderFacebookConnectionButton;
 	}
 
 	

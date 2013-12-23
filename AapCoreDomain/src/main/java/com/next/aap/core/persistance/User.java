@@ -106,14 +106,24 @@ public class User {
 	private Set<TwitterAccount> twitterAccounts; 
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	@JoinTable(name = "user_state_roles",
+	@JoinTable(name = "user_all_roles",
 	joinColumns = {
 	@JoinColumn(name="user_id") 
 	},
 	inverseJoinColumns = {
 	@JoinColumn(name="role_id")
 	})
-	Set<Role> stateRoles;
+	Set<Role> allRoles;
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_state_roles",
+	joinColumns = {
+	@JoinColumn(name="user_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="state_role_id")
+	})
+	Set<StateRole> stateRoles;
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinTable(name = "user_district_roles",
@@ -121,9 +131,9 @@ public class User {
 	@JoinColumn(name="user_id") 
 	},
 	inverseJoinColumns = {
-	@JoinColumn(name="role_id")
+	@JoinColumn(name="district_role_id")
 	})
-	Set<Role> districtRoles;
+	Set<DistrictRole> districtRoles;
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinTable(name = "user_ac_roles",
@@ -131,9 +141,9 @@ public class User {
 	@JoinColumn(name="user_id") 
 	},
 	inverseJoinColumns = {
-	@JoinColumn(name="role_id")
+	@JoinColumn(name="ac_role_id")
 	})
-	Set<Role> acRoles;
+	Set<AcRole> acRoles;
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinTable(name = "user_pc_roles",
@@ -141,14 +151,18 @@ public class User {
 	@JoinColumn(name="user_id") 
 	},
 	inverseJoinColumns = {
-	@JoinColumn(name="role_id")
+	@JoinColumn(name="pc_role_id")
 	})
-	Set<Role> pcRoles;
+	Set<PcRole> pcRoles;
 
 	@Column(name = "allow_tweets", nullable = false)
 	private boolean allowTweets;
 
-	
+	@Column(name = "profile_pic")
+	private String profilePic;
+
+	@Column(name = "super_admin", nullable = false)
+	private boolean superAdmin;
 
 	public Long getId() {
 		return id;
@@ -222,6 +236,14 @@ public class User {
 		this.gender = gender;
 	}
 
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
 	public State getStateLiving() {
 		return stateLiving;
 	}
@@ -258,8 +280,7 @@ public class User {
 		return assemblyConstituencyLiving;
 	}
 
-	public void setAssemblyConstituencyLiving(
-			AssemblyConstituency assemblyConstituencyLiving) {
+	public void setAssemblyConstituencyLiving(AssemblyConstituency assemblyConstituencyLiving) {
 		this.assemblyConstituencyLiving = assemblyConstituencyLiving;
 	}
 
@@ -275,8 +296,7 @@ public class User {
 		return parliamentConstituencyLiving;
 	}
 
-	public void setParliamentConstituencyLiving(
-			ParliamentConstituency parliamentConstituencyLiving) {
+	public void setParliamentConstituencyLiving(ParliamentConstituency parliamentConstituencyLiving) {
 		this.parliamentConstituencyLiving = parliamentConstituencyLiving;
 	}
 
@@ -284,8 +304,7 @@ public class User {
 		return parliamentConstituencyLivingId;
 	}
 
-	public void setParliamentConstituencyLivingId(
-			Long parliamentConstituencyLivingId) {
+	public void setParliamentConstituencyLivingId(Long parliamentConstituencyLivingId) {
 		this.parliamentConstituencyLivingId = parliamentConstituencyLivingId;
 	}
 
@@ -325,8 +344,7 @@ public class User {
 		return assemblyConstituencyVoting;
 	}
 
-	public void setAssemblyConstituencyVoting(
-			AssemblyConstituency assemblyConstituencyVoting) {
+	public void setAssemblyConstituencyVoting(AssemblyConstituency assemblyConstituencyVoting) {
 		this.assemblyConstituencyVoting = assemblyConstituencyVoting;
 	}
 
@@ -342,8 +360,7 @@ public class User {
 		return parliamentConstituencyVoting;
 	}
 
-	public void setParliamentConstituencyVoting(
-			ParliamentConstituency parliamentConstituencyVoting) {
+	public void setParliamentConstituencyVoting(ParliamentConstituency parliamentConstituencyVoting) {
 		this.parliamentConstituencyVoting = parliamentConstituencyVoting;
 	}
 
@@ -351,41 +368,8 @@ public class User {
 		return parliamentConstituencyVotingId;
 	}
 
-	public void setParliamentConstituencyVotingId(
-			Long parliamentConstituencyVotingId) {
+	public void setParliamentConstituencyVotingId(Long parliamentConstituencyVotingId) {
 		this.parliamentConstituencyVotingId = parliamentConstituencyVotingId;
-	}
-
-	public Set<Role> getStateRoles() {
-		return stateRoles;
-	}
-
-	public void setStateRoles(Set<Role> stateRoles) {
-		this.stateRoles = stateRoles;
-	}
-
-	public Set<Role> getDistrictRoles() {
-		return districtRoles;
-	}
-
-	public void setDistrictRoles(Set<Role> districtRoles) {
-		this.districtRoles = districtRoles;
-	}
-
-	public Set<Role> getAcRoles() {
-		return acRoles;
-	}
-
-	public void setAcRoles(Set<Role> acRoles) {
-		this.acRoles = acRoles;
-	}
-
-	public Set<Role> getPcRoles() {
-		return pcRoles;
-	}
-
-	public void setPcRoles(Set<Role> pcRoles) {
-		this.pcRoles = pcRoles;
 	}
 
 	public Set<FacebookAccount> getFacebookAccounts() {
@@ -404,12 +388,44 @@ public class User {
 		this.twitterAccounts = twitterAccounts;
 	}
 
-	public Date getDateOfBirth() {
-		return dateOfBirth;
+	public Set<Role> getAllRoles() {
+		return allRoles;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
+	public void setAllRoles(Set<Role> allRoles) {
+		this.allRoles = allRoles;
+	}
+
+	public Set<StateRole> getStateRoles() {
+		return stateRoles;
+	}
+
+	public void setStateRoles(Set<StateRole> stateRoles) {
+		this.stateRoles = stateRoles;
+	}
+
+	public Set<DistrictRole> getDistrictRoles() {
+		return districtRoles;
+	}
+
+	public void setDistrictRoles(Set<DistrictRole> districtRoles) {
+		this.districtRoles = districtRoles;
+	}
+
+	public Set<AcRole> getAcRoles() {
+		return acRoles;
+	}
+
+	public void setAcRoles(Set<AcRole> acRoles) {
+		this.acRoles = acRoles;
+	}
+
+	public Set<PcRole> getPcRoles() {
+		return pcRoles;
+	}
+
+	public void setPcRoles(Set<PcRole> pcRoles) {
+		this.pcRoles = pcRoles;
 	}
 
 	public boolean isAllowTweets() {
@@ -418,6 +434,22 @@ public class User {
 
 	public void setAllowTweets(boolean allowTweets) {
 		this.allowTweets = allowTweets;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
+
+	public boolean isSuperAdmin() {
+		return superAdmin;
+	}
+
+	public void setSuperAdmin(boolean superAdmin) {
+		this.superAdmin = superAdmin;
 	}
 
 	@Override

@@ -39,7 +39,11 @@ public class UserDto implements Serializable{
 
 	private Long parliamentConstituencyVotingId;
 	
+	private String profilePic;
 	
+	private String countryCode;
+	
+	private String mobileNumber;
 
 
 	public Long getId() {
@@ -186,6 +190,30 @@ public class UserDto implements Serializable{
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 
 	@Override

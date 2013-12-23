@@ -10,6 +10,7 @@ import org.springframework.social.connect.UsersConnectionRepository;
 import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserRolePermissionDto;
 
 public abstract class BaseSocialLoginController<T> extends BaseController {
 
@@ -29,5 +30,8 @@ public abstract class BaseSocialLoginController<T> extends BaseController {
 		
 		LoginAccountDto userLoginAccounts = aapService.getUserLoginAccounts(user.getId());
 		setLoggedInAccountsInSesion(httpServletRequest, userLoginAccounts);
+		
+		UserRolePermissionDto userRolePermissionDto = aapService.getUserRolePermissions(user.getId());
+		setUserRolePermissionInSesion(httpServletRequest, userRolePermissionDto);
 	}
 }

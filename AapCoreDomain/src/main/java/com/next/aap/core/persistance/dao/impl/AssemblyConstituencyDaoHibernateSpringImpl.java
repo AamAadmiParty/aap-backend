@@ -12,6 +12,8 @@ import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
 @Repository
 public class AssemblyConstituencyDaoHibernateSpringImpl extends BaseDaoHibernateSpring<AssemblyConstituency> implements AssemblyConstituencyDao  {
 
+	private static final long serialVersionUID = 1L;
+
 	/* (non-Javadoc)
 	 * @see com.next.aap.server.persistance.dao.impl.AssemblyConstituencyDao#saveAssemblyConstituency(com.next.aap.server.persistance.AssemblyConstituency)
 	 */

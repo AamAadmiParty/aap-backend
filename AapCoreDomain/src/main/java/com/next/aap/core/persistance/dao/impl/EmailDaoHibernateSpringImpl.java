@@ -13,6 +13,8 @@ import com.next.aap.core.persistance.dao.EmailDao;
 public class EmailDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Email> implements EmailDao{
 
 
+	private static final long serialVersionUID = 1;
+
 	/* (non-Javadoc)
 	 * @see com.next.aap.server.persistance.dao.impl.EmailDao#saveEmail(com.next.aap.server.persistance.Email)
 	 */

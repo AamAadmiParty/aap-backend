@@ -11,6 +11,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserRolePermissionDto;
 
 public class BaseController {
 
@@ -22,6 +23,7 @@ public class BaseController {
 	
 	public static final String SESSION_USER_PARAM = "SESSION_USER_PARAM";
 	public static final String SESSION_LOGIN_ACCOUNT_PARAM = "SESSION_LOGIN_ACCOUNT_PARAM";
+	public static final String SESSION_USER_PERMISSIONS_PARAM = "SESSION_USER_PERMISSIONS_PARAM";
 
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -97,6 +99,14 @@ public class BaseController {
 	}
 	public LoginAccountDto getLoggedInAccountsFromSesion(HttpServletRequest httpServletRequest){
 		return (LoginAccountDto)httpServletRequest.getSession(true).getAttribute(SESSION_LOGIN_ACCOUNT_PARAM);
+	}
+
+	
+	protected void setUserRolePermissionInSesion(HttpServletRequest httpServletRequest,UserRolePermissionDto userRolePermissionDto){
+		httpServletRequest.getSession(true).setAttribute(SESSION_USER_PERMISSIONS_PARAM, userRolePermissionDto);
+	}
+	public UserRolePermissionDto getUserRolePermissionInSesion(HttpServletRequest httpServletRequest){
+		return (UserRolePermissionDto)httpServletRequest.getSession(true).getAttribute(SESSION_USER_PERMISSIONS_PARAM);
 	}
 
 }

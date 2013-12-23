@@ -13,8 +13,10 @@ import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
+import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.dto.VoiceOfAapData;
 
 public interface AapService {
@@ -50,4 +52,12 @@ public interface AapService {
 	void saveFacebookAccountGroups(Long facebookAccountId, List<GroupMembership> userGroupMembership);
 	
 	VoiceOfAapData getVoiceOfAapSetting(Long facebookAcountId);
+	
+	void updateAllPermissionsAndRole();
+	
+	PlannedFacebookPostDto savePlannedFacebookPost(PlannedFacebookPostDto plannedFacebookPostDto);
+	
+	List<PlannedFacebookPostDto> getPlannedFacebookPosts(int pageNumber, int pageSize);
+	
+	UserRolePermissionDto getUserRolePermissions(Long userId);
 }

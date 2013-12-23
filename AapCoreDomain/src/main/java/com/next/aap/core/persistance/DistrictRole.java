@@ -5,8 +5,6 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,45 +14,35 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
-@Table(name="phone")
-public class Phone {
+@Table(name = "district_role")
+public class DistrictRole {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Version
-	@Column(name="ver")
+	@Column(name = "ver")
 	private int ver;
-	
-	@Column(name="date_created")
+	@Column(name = "date_created")
 	private Date dateCreated;
-	@Column(name="date_modified")
+	@Column(name = "date_modified")
 	private Date dateModified;
-	@Column(name="creator_id")
+	@Column(name = "creator_id")
 	private Long creatorId;
-	@Column(name="modifier_id")
+	@Column(name = "modifier_id")
 	private Long modifierId;
-	
-	@Column(name = "phone_number", nullable = false)
-	private String phoneNumber;
 
-	@Column(name = "country_code", nullable = false)
-	private String countryCode;
-
-	@Column(name = "phone_type", nullable = false)
-	@Enumerated(EnumType.STRING)
-	private PhoneType phoneType;
-	
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
-    @JoinColumn(name="user_id")
-    private User user;
-	@Column(name="user_id", insertable=false,updatable=false)
-	private Long userId;
-	
-	public enum PhoneType{
-		MOBILE,
-		LANDLINE
-	}
+    @JoinColumn(name="district_id")
+    private District district;
+	@Column(name="district_id", insertable=false,updatable=false)
+	private Long districtId;
+
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="role_id")
+    private Role role;
+	@Column(name="role_id", insertable=false,updatable=false)
+	private Long roleId;
 	
 	public Long getId() {
 		return id;
@@ -92,37 +80,30 @@ public class Phone {
 	public void setModifierId(Long modifierId) {
 		this.modifierId = modifierId;
 	}
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public District getDistrict() {
+		return district;
 	}
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setDistrict(District district) {
+		this.district = district;
 	}
-	public String getCountryCode() {
-		return countryCode;
+	public Long getDistrictId() {
+		return districtId;
 	}
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
+	public void setDistrictId(Long districtId) {
+		this.districtId = districtId;
 	}
-	public PhoneType getPhoneType() {
-		return phoneType;
+	public Role getRole() {
+		return role;
 	}
-	public void setPhoneType(PhoneType phoneType) {
-		this.phoneType = phoneType;
+	public void setRole(Role role) {
+		this.role = role;
 	}
-	public User getUser() {
-		return user;
+	public Long getRoleId() {
+		return roleId;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setRoleId(Long roleId) {
+		this.roleId = roleId;
 	}
-	public Long getUserId() {
-		return userId;
-	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-
-
+	
+	
 }

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.next.aap.web.dto.AppPermission;
+
 @Entity
 @Table(name="permission")
 public class Permission {

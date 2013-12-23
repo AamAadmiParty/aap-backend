@@ -91,8 +91,11 @@
 }
 .ui-datagrid
 {
-background-color: #4099FF;
+background-color: #3B5998;
 vertical-align: top;
+}
+.facebook-data-row{
+background-color: #3B5998;
 }
 </style>
 
@@ -101,16 +104,16 @@ vertical-align: top;
 	<!-- menu starts -->
 	<p:dock position="top" maxWidth="100">
 
-		<p:menuitem value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="/" />
-		<p:menuitem value="Edit Profile" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/System%20Preferences.png" url="/profile" />
+		<p:menuitem value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="./home" />
+		<p:menuitem value="Edit Profile" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/System%20Preferences.png" url="./profile" />
 		<p:menuitem value="Login Accounts" icon="https://cdn1.iconfinder.com/data/icons/VistaICO_Toolbar-Icons/128/Login.png" url="#" />
-		<p:menuitem value="Voice Of AAP" icon="https://cdn1.iconfinder.com/data/icons/REALVISTA/communications/png/128/voice_chat.png" url="#" />
+		<p:menuitem value="Voice Of AAP" icon="https://cdn1.iconfinder.com/data/icons/REALVISTA/communications/png/128/voice_chat.png" url="./voiceofaap" />
 	</p:dock>
 	<br></br>
 	<br></br>
 	<!-- menu ends -->
 	<div style="width: 800px; margin: 0 auto;">
-		<h:panelGrid columns="2">
+		<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
 			<p:fieldset>
 				<f:facet name="legend">
 					<div class="topAlignDiv">
@@ -120,12 +123,14 @@ vertical-align: top;
 				</f:facet>
 
 				<p:dataGrid styleClass="topAlignPanelColumns" var="oneTwitterAccount" value="#{socialAccountBean.loginAccounts.twitterAccounts}" columns="2" paginator="false" emptyMessage="No Twitter Account connected">
-					<p:graphicImage value="#{oneTwitterAccount.imageUrl}" />
-					<h:outputText value="#{oneTwitterAccount.screenName}" />
+					<p:graphicImage value="#{oneTwitterAccount.imageUrl}" styleClass="facebook-data-row"/>
+					<h:outputText value="#{oneTwitterAccount.screenName}" style="font-size:18px;font-style:bold;"/>
 				</p:dataGrid>
 				<br></br>
-				Add Twitter Account
+				Add Twitter Account<br></br>
+				
 				<a href="./login/twitter" class="twitter"></a>
+				<em style="font-size:10px;">you can add multiple twitter accounts to your AAP account</em>
 			</p:fieldset>
 			<p:fieldset>
 				<f:facet name="legend">
@@ -140,8 +145,13 @@ vertical-align: top;
 					<h:outputText value="#{oneFacebookAccount.userName}" />
 				</p:dataGrid>
 				<br></br>
-				Add Facebook Account
-				<a href="./login/facebook" class="facebook"></a>
+				<p:outputPanel rendered="#{socialAccountBean.renderFacebookConnectionButton}">
+					Add Facebook Account
+					<a href="./login/facebook" class="facebook"></a>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{!socialAccountBean.renderFacebookConnectionButton}">
+				<em style="font-size:10px;">you can add only one facebook account to your AAP account</em>
+				</p:outputPanel>
 			</p:fieldset>
 		</h:panelGrid>
 
@@ -151,7 +161,7 @@ vertical-align: top;
 		<div class="footerWrapper">
 			<div class="container_24">
 				<div class="grid_24 panel footer">
-					Copyright &copy; 2013 <a href="#">www.vote4delhi.com</a>. All Rights Reserved.
+					Copyright &copy; 2013 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
 				</div>
 			</div>
 			<div class="clear"></div>

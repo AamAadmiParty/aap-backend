@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,13 +42,19 @@ public class Phone {
 	private String countryCode;
 
 	@Column(name = "phone_type", nullable = false)
-	private String phoneType;
+	@Enumerated(EnumType.STRING)
+	private PhoneType phoneType;
 	
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
     private User user;
 	@Column(name="user_id", insertable=false,updatable=false)
 	private Long userId;
+	
+	public enum PhoneType{
+		MOBILE,
+		LANDLINE
+	}
 	
 	public Long getId() {
 		return id;
@@ -96,10 +104,10 @@ public class Phone {
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
-	public String getPhoneType() {
+	public PhoneType getPhoneType() {
 		return phoneType;
 	}
-	public void setPhoneType(String phoneType) {
+	public void setPhoneType(PhoneType phoneType) {
 		this.phoneType = phoneType;
 	}
 	public User getUser() {

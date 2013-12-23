@@ -63,13 +63,18 @@ public class BaseController {
 	}
 	
 	protected void setFinalRedirectUrlInSesion(HttpServletRequest httpServletRequest,String url){
-		httpServletRequest.getSession(true).setAttribute(FINAL_REDIRECT_URL_PARAM_ID, url);
+		httpServletRequest.getSession().setAttribute(FINAL_REDIRECT_URL_PARAM_ID, url);
 	}
 	public static String getFinalRedirectUrlFromSesion(HttpServletRequest httpServletRequest){
-		return (String)httpServletRequest.getSession(true).getAttribute(FINAL_REDIRECT_URL_PARAM_ID);
+		return (String)httpServletRequest.getSession().getAttribute(FINAL_REDIRECT_URL_PARAM_ID);
 	}
 	public static void clearFinalRedirectUrlInSesion(HttpServletRequest httpServletRequest){
-		httpServletRequest.getSession(true).removeAttribute(FINAL_REDIRECT_URL_PARAM_ID);
+		httpServletRequest.getSession().removeAttribute(FINAL_REDIRECT_URL_PARAM_ID);
+	}
+	protected String getAndRemoveFinalRedirectUrlFromSession(HttpServletRequest httpServletRequest){
+		String redirectUrl = getFinalRedirectUrlFromSesion(httpServletRequest);
+		clearFinalRedirectUrlInSesion(httpServletRequest);
+		return redirectUrl; 
 	}
 	/*
 	protected UserDto getLoggedInUser(HttpServletRequest httpServletRequest){

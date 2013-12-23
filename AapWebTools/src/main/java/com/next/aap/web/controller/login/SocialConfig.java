@@ -3,6 +3,7 @@ package com.next.aap.web.controller.login;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -26,15 +27,18 @@ import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.request.WebRequest;
 
-import com.next.aap.core.util.EnvironmentUtil;
-
 @Configuration
 public class SocialConfig {
-	
+	/*
 	private static final String appId = "618283854899839";
 	private static final String appSecret = "4a8d9a3005c298dc9176b0990a996ea6";
 	private static final String localAppId = "372184272903954";
 	private static final String localAppSecret = "bec883d1ffb415fff01248f8c46f78f9";
+	*/
+	@Value("${aap.facebook.app.id}")
+	private String aapFacebookAppId;
+	@Value("${aap.facebook.app.secret}")
+	private String aapFacebookAppSecret;
 	
 	private String twitterConsumerKey = "QwAtfFGQ4XyH2qSFX0UOg";
 	private String twitterConsumerSecret = "5fmM9fVoDTIgHqKb8OeZ9cZullLdbL0uSrcC3mrTyM";
@@ -51,13 +55,11 @@ public class SocialConfig {
 
     @Bean
     public ConnectionFactoryLocator connectionFactoryLocator() {
+		System.out.println("ConnectionFactoryLocator:aapFacebookAppId="+aapFacebookAppId);
+		System.out.println("ConnectionFactoryLocator:aapFacebookAppSecret"+aapFacebookAppSecret);
+
         ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
-        if(EnvironmentUtil.isProductionEnv()){
-        	registry.addConnectionFactory(new FacebookConnectionFactory(appId,appSecret));
-        }else{
-            registry.addConnectionFactory(new FacebookConnectionFactory(localAppId,localAppSecret));
-        }
-        
+        registry.addConnectionFactory(new FacebookConnectionFactory(aapFacebookAppId,aapFacebookAppSecret));
         registry.addConnectionFactory(new TwitterConnectionFactory(twitterConsumerKey, twitterConsumerSecret));
         registry.addConnectionFactory(new GoogleConnectionFactory(googleConsumerKey,googleConsumerSecret));
         registry.addConnectionFactory(new LinkedInConnectionFactory(linkedinConsumerKey, linkedinConsumerSecret));

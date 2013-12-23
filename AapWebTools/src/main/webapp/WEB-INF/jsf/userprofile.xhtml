@@ -36,10 +36,10 @@
 	<!-- menu starts -->
 	<p:dock position="top" maxWidth="100">
 
-		<p:menuitem value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="#" />
+		<p:menuitem value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="./home" />
 		<p:menuitem value="Edit Profile" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/System%20Preferences.png" url="#" />
 		<p:menuitem value="Login Accounts" icon="https://cdn1.iconfinder.com/data/icons/VistaICO_Toolbar-Icons/128/Login.png" url="./socialaccounts" />
-		<p:menuitem value="Voice Of AAP" icon="https://cdn1.iconfinder.com/data/icons/REALVISTA/communications/png/128/voice_chat.png" url="#" />
+		<p:menuitem value="Voice Of AAP" icon="https://cdn1.iconfinder.com/data/icons/REALVISTA/communications/png/128/voice_chat.png" url="./voiceofaap" />
 		<p:menuitem value="Membership" icon="https://cdn1.iconfinder.com/data/icons/LUMINA/web_design/png/48/members.png" url="#" />
 		
 	</p:dock>
@@ -351,10 +351,15 @@
 					<p:ajax event="change" update=":userProfileForm:livingAssemblyConstituency" listener="#{userProfileBean.handleLivingDistrictChange}" />
 				</p:selectOneMenu>
 				<h:outputLabel for="livingParliamentConstituency" value="Parliament Constituency*" />
-				<p:selectOneMenu id="livingParliamentConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableLivingParliamentConstituencyCombo}" value="#{userProfileBean.selectedLivingParliamentConstituencyId}" effect="fold" editable="false">
+				
+				<p:selectOneMenu id="livingParliamentConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableLivingParliamentConstituencyCombo}"
+					value="#{userProfileBean.selectedLivingParliamentConstituencyId}" effect="fold" editable="false">
 					<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
 					<f:selectItems value="#{userProfileBean.livingParliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}" itemValue="#{oneParliamentConstituency.id}" />
+					
+					<p:ajax update="livingAssemblyConstituency" />
 				</p:selectOneMenu>
+				
 				<h:outputLabel for="livingAssemblyConstituency" value="Assembly Constituency*" />
 				<p:selectOneMenu id="livingAssemblyConstituency" disabled="#{!userProfileBean.enableLivingAssemblyConstituencyCombo}"
 					value="#{userProfileBean.selectedLivingAssemblyConstituencyId}" effect="fold" editable="false">

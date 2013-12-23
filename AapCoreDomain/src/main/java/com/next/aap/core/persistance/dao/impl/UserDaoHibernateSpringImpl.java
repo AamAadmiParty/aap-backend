@@ -13,6 +13,8 @@ import com.next.aap.core.persistance.dao.UserDao;
 public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> implements UserDao{
 
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public User saveUser(User user) {
 		user = saveObject(user);

@@ -4,16 +4,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.GroupMembership;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
@@ -24,8 +28,16 @@ import com.next.aap.core.persistance.AssemblyConstituency;
 import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
+import com.next.aap.core.persistance.Phone.PhoneType;
+import com.next.aap.core.persistance.AppPermission;
 import com.next.aap.core.persistance.FacebookAccount;
+import com.next.aap.core.persistance.FacebookApp;
+import com.next.aap.core.persistance.FacebookAppPermission;
+import com.next.aap.core.persistance.FacebookGroup;
+import com.next.aap.core.persistance.FacebookGroupMembership;
 import com.next.aap.core.persistance.ParliamentConstituency;
+import com.next.aap.core.persistance.Permission;
+import com.next.aap.core.persistance.Phone;
 import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
@@ -33,18 +45,26 @@ import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
 import com.next.aap.core.persistance.dao.EmailDao;
 import com.next.aap.core.persistance.dao.FacebookAccountDao;
+import com.next.aap.core.persistance.dao.FacebookAppDao;
+import com.next.aap.core.persistance.dao.FacebookAppPermissionDao;
+import com.next.aap.core.persistance.dao.FacebookGroupDao;
+import com.next.aap.core.persistance.dao.FacebookGroupMembershipDao;
 import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
+import com.next.aap.core.persistance.dao.PermissionDao;
+import com.next.aap.core.persistance.dao.PhoneDao;
 import com.next.aap.core.persistance.dao.StateDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
+import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.VoiceOfAapData;
 
 @Service("aapService")
 public class AapServiceImpl implements AapService, Serializable {
@@ -67,10 +87,26 @@ public class AapServiceImpl implements AapService, Serializable {
 	private AssemblyConstituencyDao assemblyConstituencyDao;
 	@Autowired
 	private ParliamentConstituencyDao parliamentConstituencyDao;
+	@Autowired
+	private FacebookAppDao facebookAppDao;
+	@Autowired
+	private FacebookAppPermissionDao facebookAppPermissionDao;
+	@Autowired
+	private FacebookGroupMembershipDao facebookGroupMembershipDao;
+	@Autowired
+	private FacebookGroupDao facebookGroupDao;
+	@Autowired
+	private PermissionDao permissionDao;
+	@Autowired
+	private PhoneDao phoneDao;
+	
+	@Value("${voa.facebook.app.id}")
+	private String voiceOfAapAppId;
+
 
 	@Override
 	@Transactional
-	public UserDto saveFacebookUser(Long existingUserId, Connection<Facebook> connection) {
+	public UserDto saveFacebookUser(Long existingUserId, Connection<Facebook> connection, String facebookAppId) {
 		User user = null;
 		// See if user exists
 		if (existingUserId != null && existingUserId > 0) {
@@ -99,6 +135,22 @@ public class AapServiceImpl implements AapService, Serializable {
 		} else {
 			user = dbFacebookAccount.getUser();
 		}
+
+		FacebookApp facebookApp = facebookAppDao.getFacebookAppByAppId(facebookAppId);
+		if (facebookApp == null) {
+			logger.error("Facebook Application " + facebookAppId + " is not saved in facebook_app table");
+		} else {
+			FacebookAppPermission facebookAppPermission = facebookAppPermissionDao.getFacebookAppPermissionByAppIdAndFacebookAccountId(facebookApp.getId(),
+					dbFacebookAccount.getId());
+			if (facebookAppPermission == null) {
+				facebookAppPermission = new FacebookAppPermission();
+			}
+			facebookAppPermission.setFacebookAccount(dbFacebookAccount);
+			facebookAppPermission.setFacebookApp(facebookApp);
+			facebookAppPermission.setToken(fbConnectionData.getAccessToken());
+			facebookAppPermission.setExpireTime(new Date(fbConnectionData.getExpireTime()));
+			facebookAppPermission = facebookAppPermissionDao.saveFacebookAppPermission(facebookAppPermission);
+		}
 		System.out.println("user=" + user);
 		// First create/update user
 		if (user == null) {
@@ -113,6 +165,8 @@ public class AapServiceImpl implements AapService, Serializable {
 			user.setDateCreated(new Date());
 			user.setExternalId(UUID.randomUUID().toString());
 		}
+		//always use facebook Image Url
+		user.setProfilePic(fbConnectionData.getImageUrl());
 		System.out.println("user=" + user);
 		user = userDao.saveUser(user);
 
@@ -154,18 +208,31 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 
 		dbFacebookAccount.setDateModified(new Date());
-		dbFacebookAccount.setToken(fbConnectionData.getAccessToken());
-		dbFacebookAccount.setExpireTime(new Date(fbConnectionData.getExpireTime()));
 		dbFacebookAccount.setImageUrl(fbConnectionData.getImageUrl());
 		dbFacebookAccount.setUser(user);
 		dbFacebookAccount = facebookAccountDao.saveFacebookAccount(dbFacebookAccount);
 
 		return connvertUser(user);
 	}
-	
-	private UserDto connvertUser(User user){
+
+	private UserDto connvertUser(User user) {
 		UserDto returnUser = new UserDto();
 		BeanUtils.copyProperties(user, returnUser);
+		List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
+		Phone onePhone = null;
+		if(userPhones != null && !userPhones.isEmpty()){
+			for(Phone phone:userPhones){
+				if(phone.getPhoneType().equals(PhoneType.MOBILE)){
+					onePhone = phone;
+					break;
+				}
+			}
+			if(onePhone == null){
+				onePhone = userPhones.get(0);
+			}
+			returnUser.setCountryCode(onePhone.getCountryCode());
+			returnUser.setMobileNumber(onePhone.getPhoneNumber());
+		}
 		return returnUser;
 	}
 
@@ -207,6 +274,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			user.setName(twitterConnectionData.getDisplayName());
 			user.setDateCreated(new Date());
 			user.setExternalId(UUID.randomUUID().toString());
+			user.setProfilePic(twitterConnectionData.getImageUrl());
 		}
 		user = userDao.saveUser(user);
 
@@ -390,8 +458,8 @@ public class AapServiceImpl implements AapService, Serializable {
 		// find out if we have facebook account with given user name
 		User user = userDao.getUserById(userDto.getId());
 		user.setDateModified(new Date());
-		//user.setEmail(userDto.getEmail());
-		//user.setMobile(userDto.getMobile());
+		// user.setEmail(userDto.getEmail());
+		// user.setMobile(userDto.getMobile());
 		user.setName(userDto.getName());
 		user.setDateOfBirth(userDto.getDateOfBirth());
 		if (userDto.getStateLivingId() != null && userDto.getStateLivingId() > 0) {
@@ -408,7 +476,8 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 
 		if (userDto.getParliamentConstituencyLivingId() != null && userDto.getParliamentConstituencyLivingId() > 0) {
-			ParliamentConstituency parliamentConstituencyLiving = parliamentConstituencyDao.getParliamentConstituencyById(userDto.getParliamentConstituencyLivingId());
+			ParliamentConstituency parliamentConstituencyLiving = parliamentConstituencyDao.getParliamentConstituencyById(userDto
+					.getParliamentConstituencyLivingId());
 			user.setParliamentConstituencyLiving(parliamentConstituencyLiving);
 		}
 
@@ -425,11 +494,171 @@ public class AapServiceImpl implements AapService, Serializable {
 			user.setAssemblyConstituencyVoting(assemblyConstituencyVoting);
 		}
 		if (userDto.getParliamentConstituencyVotingId() != null && userDto.getParliamentConstituencyVotingId() > 0) {
-			ParliamentConstituency parliamentConstituencyVoting = parliamentConstituencyDao.getParliamentConstituencyById(userDto.getParliamentConstituencyVotingId());
+			ParliamentConstituency parliamentConstituencyVoting = parliamentConstituencyDao.getParliamentConstituencyById(userDto
+					.getParliamentConstituencyVotingId());
 			user.setParliamentConstituencyVoting(parliamentConstituencyVoting);
 		}
 		user.setGender(userDto.getGender());
 		user = userDao.saveUser(user);
+		
+		if(!StringUtil.isEmpty(userDto.getMobileNumber())){
+			//save Mobile number
+			List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
+			Phone onePhone = null;
+			if(userPhones == null || userPhones.isEmpty()){
+				onePhone = new Phone();
+				onePhone.setCountryCode(userDto.getCountryCode());
+				onePhone.setDateCreated(new Date());
+				onePhone.setPhoneNumber(userDto.getMobileNumber());
+				onePhone.setPhoneType(PhoneType.MOBILE);
+				onePhone.setUser(user);
+				onePhone.setDateModified(new Date());
+				onePhone = phoneDao.savePhone(onePhone);
+			}else{
+				for(Phone phone:userPhones){
+					if(phone.getPhoneType().equals(PhoneType.MOBILE)){
+						onePhone = phone;
+						break;
+					}
+				}
+				if(onePhone == null){
+					onePhone = userPhones.get(0);
+				}
+				onePhone.setCountryCode(userDto.getCountryCode());
+				onePhone.setPhoneNumber(userDto.getMobileNumber());
+				onePhone.setPhoneType(PhoneType.MOBILE);
+				onePhone.setUser(user);
+				onePhone.setDateModified(new Date());
+				onePhone = phoneDao.savePhone(onePhone);
+			}
+		}
+		user = userDao.getUserById(user.getId());
 		return connvertUser(user);
+	}
+
+	@Override
+	@Transactional
+	public FacebookAppPermissionDto getFacebookPermission(long facebookAppId, long facebookAccountId) {
+		FacebookAppPermission facebookAppPermission = facebookAppPermissionDao.getFacebookAppPermissionByAppIdAndFacebookAccountId(facebookAppId,facebookAccountId);
+		return convertFacebookAppPermission(facebookAppPermission);
+	}
+	private FacebookAppPermissionDto convertFacebookAppPermission(FacebookAppPermission facebookAppPermission){
+		if(facebookAppPermission == null){
+			return null;
+		}
+		FacebookAppPermissionDto facebookAppPermissionDto = new FacebookAppPermissionDto();
+		BeanUtils.copyProperties(facebookAppPermission, facebookAppPermissionDto);
+		return facebookAppPermissionDto;
+	}
+
+	@Override
+	@Transactional
+	public FacebookAppPermissionDto getVoiceOfAapFacebookPermission(long facebookAccountId) {
+		FacebookAppPermission facebookAppPermission = facebookAppPermissionDao.getFacebookAppPermissionByFacebookAppIdAndFacebookAccountId(voiceOfAapAppId,facebookAccountId);
+		return convertFacebookAppPermission(facebookAppPermission);
+	}
+
+	@Override
+	@Transactional
+	public void saveVoiceOfAapSettings(Long facebookAccountId, boolean beVoiceOfAap, boolean postOnMyTimeLine, List<String> selectedGroups, List<String> selectedPages, boolean allowTweets) {
+		FacebookAccount dbFacebookAccount = facebookAccountDao.getFacebookAccountById(facebookAccountId);
+		if(dbFacebookAccount == null){
+			throw new RuntimeException("No such Facebook account found [id="+facebookAccountId+"]");
+		}
+		dbFacebookAccount.setAllowDdu(beVoiceOfAap);
+		dbFacebookAccount.setVoiceOfAap(beVoiceOfAap);
+		dbFacebookAccount.setAllowTimeLine(postOnMyTimeLine);
+		
+		dbFacebookAccount = facebookAccountDao.saveFacebookAccount(dbFacebookAccount);
+		
+		User user = dbFacebookAccount.getUser(); 
+		user.setAllowTweets(allowTweets);
+		
+		List<FacebookGroupMembership> facebookGroupMemberships = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookAccountId(facebookAccountId);
+		if(facebookGroupMemberships == null){
+			return;
+		}
+		Set<String> selectedGroupIds = new HashSet<>(selectedGroups);
+		
+		for(FacebookGroupMembership oneFacebookGroupMembership:facebookGroupMemberships){
+			if(selectedGroupIds.contains(oneFacebookGroupMembership.getFacebookGroup().getFacebookGroupExternalId())){
+				oneFacebookGroupMembership.setAllowDduPost(beVoiceOfAap);
+				oneFacebookGroupMembership.setAllowVoiceOfAapPost(beVoiceOfAap);
+			}else{
+				oneFacebookGroupMembership.setAllowDduPost(false);
+				oneFacebookGroupMembership.setAllowVoiceOfAapPost(false);
+			}
+		}
+	}
+
+	@Override
+	@Transactional
+	public void saveFacebookAccountGroups(Long facebookAccountId, List<GroupMembership> userGroupMembership) {
+		if(userGroupMembership == null || userGroupMembership.isEmpty()){
+			return;
+		}
+		FacebookAccount dbFacebookAccount = facebookAccountDao.getFacebookAccountById(facebookAccountId);
+		if(dbFacebookAccount == null){
+			throw new RuntimeException("No such Facebook account found [id="+facebookAccountId+"]");
+		}
+		FacebookGroupMembership oneFacebookGroupMembership;
+		FacebookGroup oneFacebookGroup;
+		for(GroupMembership oneGroupMembership:userGroupMembership){
+			oneFacebookGroup = facebookGroupDao.getFacebookGroupByFacebookGroupExternalId(oneGroupMembership.getId());
+			if(oneFacebookGroup == null){
+				oneFacebookGroup = new FacebookGroup();
+				oneFacebookGroup.setFacebookGroupExternalId(oneGroupMembership.getId());
+			}
+			oneFacebookGroup.setGroupName(oneGroupMembership.getName());
+			oneFacebookGroup = facebookGroupDao.saveFacebookGroup(oneFacebookGroup);
+			
+			oneFacebookGroupMembership = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookUserIdAndGroupId(facebookAccountId, oneFacebookGroup.getId());
+			if(oneFacebookGroupMembership == null){
+				oneFacebookGroupMembership = new FacebookGroupMembership();
+				oneFacebookGroupMembership.setFacebookAccount(dbFacebookAccount);
+				oneFacebookGroupMembership.setFacebookGroup(oneFacebookGroup);
+				oneFacebookGroupMembership = facebookGroupMembershipDao.saveFacebookGroupMembership(oneFacebookGroupMembership);
+			}
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public VoiceOfAapData getVoiceOfAapSetting(Long facebookAcountId) {
+		VoiceOfAapData voiceOfAapData = new VoiceOfAapData();
+		FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountById(facebookAcountId);
+		voiceOfAapData.setBeVoiceOfAap(facebookAccount.isVoiceOfAap());
+		voiceOfAapData.setPostOnTimeLine(facebookAccount.isAllowTimeLine());
+		voiceOfAapData.setTweetFromMyAccount(facebookAccount.getUser().isAllowTweets());
+		List<String> groupIdsList = new ArrayList<>();
+		
+		List<FacebookGroupMembership> groupMemberships = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookAccountId(facebookAcountId);
+		if(groupMemberships != null){
+			for(FacebookGroupMembership oneFacebookGroupMembership:groupMemberships){
+				if(oneFacebookGroupMembership.isAllowVoiceOfAapPost()){
+					groupIdsList.add(oneFacebookGroupMembership.getFacebookGroup().getFacebookGroupExternalId());
+				}
+			}
+		}
+		voiceOfAapData.setSelectedGroups(groupIdsList);
+
+		return voiceOfAapData;
+	}
+
+	@Override
+	@Transactional
+	public void updateAllPermissions() {
+		//Make sure all permission exists in Database
+		Permission onePermission;
+		for(AppPermission oneAppPermission:AppPermission.values()){
+			onePermission = permissionDao.getPermissionByName(oneAppPermission);
+			if(onePermission == null){
+				onePermission = new Permission();
+				onePermission.setPermission(oneAppPermission);
+				onePermission = permissionDao.savePermission(onePermission);
+			}
+		}
+
 	}
 }

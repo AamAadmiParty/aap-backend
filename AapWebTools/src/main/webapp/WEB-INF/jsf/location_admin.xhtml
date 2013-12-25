@@ -45,22 +45,19 @@
 			<h:form id="adminForm" rendered="#{menuBean.admin}">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<h3>Admin Panel</h3>
-				<p:outputPanel rendered="#{!menuBean.superUser and menuBean.admin}">
+				<p:panelGrid columns="3">
+					<f:facet name="header"> Select Operation</f:facet>
+					<p:commandButton value="Voice of AAP - FB" actionListener="#{locationAdminBean.goToVoiceOfAapAdminPageFb}" rendered="#{locationAdminBean.voiceOfAapFbAllowed}"
+						styleClass="ui-priority-primary">
+					</p:commandButton>
 
-					<p:panelGrid columns="3">
-						<f:facet name="header"> Select Operation</f:facet>
-						<p:commandButton value="Voice of AAP - FB" actionListener="#{locationAdminBean.goToVoiceOfAapAdminPageFb}" 
-						rendered="#{locationAdminBean.voiceOfAapFbAllowed}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						
-						<p:commandButton value="Voice of AAP - Twitter" actionListener="#{locationAdminBean.goToVoiceOfAapAdminPageTwitter}" 
-						rendered="#{locationAdminBean.voiceOfAapTwitterAllowed}" styleClass="ui-priority-primary">
-						</p:commandButton>
+					<p:commandButton value="Voice of AAP - Twitter" actionListener="#{locationAdminBean.goToVoiceOfAapAdminPageTwitter}" rendered="#{locationAdminBean.voiceOfAapTwitterAllowed}"
+						styleClass="ui-priority-primary">
+					</p:commandButton>
 
-					</p:panelGrid>
+				</p:panelGrid>
 
 
-				</p:outputPanel>
 			</h:form>
 			<!-- header ends -->
 

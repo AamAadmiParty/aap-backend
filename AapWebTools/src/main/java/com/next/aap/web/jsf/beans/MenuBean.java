@@ -77,6 +77,14 @@ public class MenuBean extends BaseJsfBean {
 		}
 		return userRolePermissionDto.isPcAdmin();
 	}
+	public boolean isGlobalAdmin() {
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		if(userRolePermissionDto == null){
+			return false;
+		}
+		return userRolePermissionDto.isAllAdmin();
+	}
+	
 
 	public boolean isAllAdmin() {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
@@ -108,6 +116,7 @@ public class MenuBean extends BaseJsfBean {
 
 	public void selectGlobal(ActionEvent event){
 		locationType = PostLocationType.Global;
+		adminSelectedLocationId = -1L;
 		buildAndRedirect("/locationadmin");
 	}
 	public void selectState(ActionEvent event){
@@ -131,6 +140,7 @@ public class MenuBean extends BaseJsfBean {
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("pcId");
 		buildAndRedirect("/locationadmin");
 	}
+	
 
 	public PostLocationType getLocationType() {
 		return locationType;

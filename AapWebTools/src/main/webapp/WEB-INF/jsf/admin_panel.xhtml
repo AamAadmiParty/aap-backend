@@ -53,6 +53,12 @@
 
 					<p:panelGrid columns="3">
 						<f:facet name="header"> Select Location</f:facet>
+						<p:panelGrid var="oneState" columns="1" rendered="#{menuBean.globalAdmin}">
+							<f:facet name="header"> Global</f:facet>
+								<p:commandButton value="Select" actionListener="#{menuBean.selectGlobal}" styleClass="ui-priority-primary">
+								</p:commandButton>
+						</p:panelGrid>
+						
 						<p:dataGrid var="oneState" value="#{menuBean.adminStates}" columns="1" rendered="#{menuBean.stateAdmin}">
 							<f:facet name="header"> State</f:facet>
 								<p:column><h:outputText value="#{oneState.name}" /></p:column>

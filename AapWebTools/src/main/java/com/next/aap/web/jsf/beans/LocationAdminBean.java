@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
@@ -45,11 +44,15 @@ public class LocationAdminBean extends BaseJsfBean {
 	public void goToVoiceOfAapAdminPageFb(){
 		if(isVoiceOfAapFbAllowed()){
 			buildAndRedirect("/admin/voiceofaapfb");
+		}else{
+			buildAndRedirect("/admin/notallowed");
 		}
 	}
 	public void goToVoiceOfAapAdminPageTwitter(){
 		if(isVoiceOfAapFbAllowed()){
 			buildAndRedirect("/admin/voiceofaaptwitter");
+		}else{
+			buildAndRedirect("/admin/notallowed");
 		}
 	}
 	public boolean isVoiceOfAapFbAllowed(){

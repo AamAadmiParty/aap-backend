@@ -12,6 +12,7 @@ import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserRolePermissionDto;
 
 public class BaseJsfBean extends BaseController implements Serializable {
 
@@ -129,6 +130,11 @@ public class BaseJsfBean extends BaseController implements Serializable {
 		}
 		return true;
 
+	}
+	
+	public UserRolePermissionDto getUserRolePermissionInSesion(){
+		HttpServletRequest httpServletRequest = getHttpServletRequest();
+		return (UserRolePermissionDto)httpServletRequest.getSession(true).getAttribute(SESSION_USER_PERMISSIONS_PARAM);
 	}
 
 }

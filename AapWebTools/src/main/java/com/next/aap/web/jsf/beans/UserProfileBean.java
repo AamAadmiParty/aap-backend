@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
@@ -65,12 +66,15 @@ public class UserProfileBean extends BaseJsfBean {
 	private boolean enableLivingParliamentConstituencyCombo = false;
 	
 	private boolean sameAsLiving;
+	private boolean nri;
+	private Long nriCountryId;
 	
 	private String dateOfBirth;
 	private String name;
 	private String countryCode;
 	private String mobileNumber;
 	private String gender;
+	private List<CountryDto> countries;
 
 	@Autowired
 	private AapService aapService;
@@ -82,6 +86,9 @@ public class UserProfileBean extends BaseJsfBean {
 		loggedInUser = getLoggedInUser(true,buildLoginUrl("/profile"));
 		if(stateList == null || stateList.isEmpty()){
 			livingStateList = stateList = aapService.getAllStates();
+		}
+		if(countries == null || countries.isEmpty()){
+			countries = aapService.getAllCountries();
 		}
 		if(loggedInUser == null){
 			return;
@@ -179,6 +186,9 @@ public class UserProfileBean extends BaseJsfBean {
 		if(selectedParliamentConstituencyId == null || selectedParliamentConstituencyId ==0 ){
 			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you registered as Voter");
 		}
+		if(nri && nriCountryId == 0){
+			sendErrorMessageToJsfScreen("Please select Country where you Live");
+		}
 		Calendar dobCalendar = getDateOfBirthAsDate();
 		if(dobCalendar == null){
 			sendErrorMessageToJsfScreen("Please enter your Date of Birth");
@@ -216,6 +226,9 @@ public class UserProfileBean extends BaseJsfBean {
 			 
 			user.setExternalId(loggedInUser.getExternalId());
 			user.setId(loggedInUser.getId());
+			
+			user.setNri(nri);
+			user.setNriCountryId(nriCountryId);
 			
 			user.setName(name);
 			user.setGender(gender);
@@ -306,7 +319,9 @@ public class UserProfileBean extends BaseJsfBean {
 			e.printStackTrace();
 		}
 	}
-	
+	public void onClickNri(){
+		System.out.println("nri"+nri);
+	}
 	public void onClickSameAsLiving(){
 		System.out.println("sameAsLiving"+sameAsLiving);
 	}
@@ -563,6 +578,30 @@ public class UserProfileBean extends BaseJsfBean {
 
 	public void setEnableParliamentConstituencyCombo(boolean enableParliamentConstituencyCombo) {
 		this.enableParliamentConstituencyCombo = enableParliamentConstituencyCombo;
+	}
+
+	public boolean isNri() {
+		return nri;
+	}
+
+	public void setNri(boolean nri) {
+		this.nri = nri;
+	}
+
+	public Long getNriCountryId() {
+		return nriCountryId;
+	}
+
+	public void setNriCountryId(Long nriCountryId) {
+		this.nriCountryId = nriCountryId;
+	}
+
+	public List<CountryDto> getCountries() {
+		return countries;
+	}
+
+	public void setCountries(List<CountryDto> countries) {
+		this.countries = countries;
 	}
 
 }

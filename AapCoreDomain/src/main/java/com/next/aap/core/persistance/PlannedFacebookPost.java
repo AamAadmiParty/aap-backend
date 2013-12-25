@@ -73,7 +73,7 @@ public class PlannedFacebookPost {
 
 	@Column(name = "location_id")
 	private Long locationId;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -201,4 +201,22 @@ public class PlannedFacebookPost {
 	public void setStatus(PlannedPostStatus status) {
 		this.status = status;
 	}
+
+	public PostLocationType getLocationType() {
+		return locationType;
+	}
+
+	public void setLocationType(PostLocationType locationType) {
+		this.locationType = locationType;
+	}
+
+	public Long getLocationId() {
+		return locationId;
+	}
+
+	public void setLocationId(Long locationId) {
+		this.locationId = locationId;
+	}
+	
+	
 }

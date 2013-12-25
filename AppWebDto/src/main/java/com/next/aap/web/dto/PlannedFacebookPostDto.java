@@ -96,5 +96,11 @@ public class PlannedFacebookPostDto {
 	public void setLocationId(Long locationId) {
 		this.locationId = locationId;
 	}
+	@Override
+	public String toString() {
+		return "PlannedFacebookPostDto [id=" + id + ", postType=" + postType + ", picture=" + picture + ", message=" + message + ", source=" + source
+				+ ", link=" + link + ", caption=" + caption + ", name=" + name + ", description=" + description + ", postingTime=" + postingTime + ", status="
+				+ status + ", locationType=" + locationType + ", locationId=" + locationId + "]";
+	}
 	
 }

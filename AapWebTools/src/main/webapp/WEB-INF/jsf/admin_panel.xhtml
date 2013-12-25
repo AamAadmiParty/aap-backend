@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Admin Panel</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 800px; margin: 0 auto;">
+		<div style="width: 800px; margin: 0;">
+
+			<p:outputPanel rendered="#{!menuBean.admin}">
+				You do not have access to Admin Panel
+			</p:outputPanel>
+			<!-- header starts -->
+			<h:form id="adminForm" rendered="#{menuBean.admin}">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<h3>Admin Panel</h3>
+				<h4>Please select your location</h4>
+				<p:outputPanel rendered="#{menuBean.superUser}">
+
+				</p:outputPanel>
+				<p:outputPanel rendered="#{!menuBean.superUser and menuBean.admin}">
+
+					<p:panelGrid columns="3">
+						<f:facet name="header"> Select Location</f:facet>
+						<p:dataGrid var="oneState" value="#{menuBean.adminStates}" columns="1" rendered="#{menuBean.stateAdmin}">
+							<f:facet name="header"> State</f:facet>
+								<p:column><h:outputText value="#{oneState.name}" /></p:column>
+								<p:column>
+								<p:commandButton value="Select" actionListener="#{menuBean.selectState}" styleClass="ui-priority-primary">
+									<f:attribute name="stateId" value="#{oneState.id}" />
+								</p:commandButton>
+								</p:column>
+						</p:dataGrid>
+						
+						<p:dataGrid var="oneDistrict" value="#{menuBean.adminDistricts}" columns="1" rendered="#{menuBean.districtAdmin}">
+							<f:facet name="header">District</f:facet>
+								<p:column><h:outputText value="#{oneDistrict.name}" /></p:column>
+								<p:column>
+								<p:commandButton value="Select" actionListener="#{menuBean.selectDistrict}" styleClass="ui-priority-primary">
+									<f:attribute name="districtId" value="#{oneDistrict.id}" />
+								</p:commandButton>
+								</p:column>
+						</p:dataGrid>
+						
+						<p:dataGrid var="oneAc" value="#{menuBean.adminAcs}" columns="1" rendered="#{menuBean.acAdmin}">
+							<f:facet name="header">Assembly Constituency</f:facet>
+								<p:column><h:outputText value="#{oneAc.name}" /></p:column>
+								<p:column>
+								<p:commandButton value="Select" actionListener="#{menuBean.selectAc}" styleClass="ui-priority-primary">
+									<f:attribute name="acId" value="#{oneAc.id}" />
+								</p:commandButton>
+								</p:column>
+						</p:dataGrid>
+
+						<p:dataGrid var="oneAc" value="#{menuBean.adminPcs}" columns="1" rendered="#{menuBean.pcAdmin}">
+							<f:facet name="header">Parliament Constituency</f:facet>
+								<p:column><h:outputText value="#{onePc.name}" /></p:column>
+								<p:column>
+								<p:commandButton value="Select" actionListener="#{menuBean.selectPc}" styleClass="ui-priority-primary">
+									<f:attribute name="pcId" value="#{onePc.id}" />
+								</p:commandButton>
+								</p:column>
+						</p:dataGrid>
+
+					</p:panelGrid>
+
+
+				</p:outputPanel>
+			</h:form>
+			<!-- header ends -->
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2013 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+		</div>
+	</div>
+
+</h:body>
+</html>

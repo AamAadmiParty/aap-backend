@@ -34,403 +34,176 @@
 </h:head>
 <h:body>
 	<!-- menu starts -->
-	<p:dock position="top" maxWidth="100">
-
-		<p:menuitem value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="./home" />
-		<p:menuitem value="Edit Profile" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/System%20Preferences.png" url="#" />
-		<p:menuitem value="Login Accounts" icon="https://cdn1.iconfinder.com/data/icons/VistaICO_Toolbar-Icons/128/Login.png" url="./socialaccounts" />
-		<p:menuitem value="Voice Of AAP" icon="https://cdn1.iconfinder.com/data/icons/REALVISTA/communications/png/128/voice_chat.png" url="./voiceofaap" />
-		<p:menuitem value="Membership" icon="https://cdn1.iconfinder.com/data/icons/LUMINA/web_design/png/48/members.png" url="#" />
-		
-	</p:dock>
+	<ui:include src="menu.xhtml" />
 	<!-- menu ends -->
 	<div style="width: 800px; margin: 0 auto;">
-	<div style="width: 800px; margin: 0;">
-	
-		<!-- header starts -->
-		<h5>Edit your Profile</h5>
-		<!-- http://www.ajaxload.info/ -->
-		<p:blockUI block="userProfileForm" trigger=":userProfileForm:saveProfile">
-			Saving Profile<br />
-			<p:graphicImage value="/images/ajax-loader.gif" />
-		</p:blockUI>
-		<p:blockUI block="userProfileForm" trigger=":userProfileForm:state,:userProfileForm:livingState">
-			Getting District List<br />
-			<p:graphicImage value="/images/ajax-loader.gif" />
-		</p:blockUI>
-		<p:blockUI block="userProfileForm" trigger=":userProfileForm:district,:userProfileForm:livingDistrict">
-			Getting Assembly Constituency List<br />
-			<p:graphicImage value="/images/ajax-loader.gif" />
-		</p:blockUI>
+		<div style="width: 800px; margin: 0;">
 
-		<h:form id="userProfileForm">
-			<p:messages id="messages" autoUpdate="true" closable="true" />
-			<h:panelGrid columns="2" cellpadding="5">
-				<!-- 
+			<!-- header starts -->
+			<h5>Edit your Profile</h5>
+			<!-- http://www.ajaxload.info/ -->
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:saveProfile">
+			Saving Profile<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:state,:userProfileForm:livingState">
+			Getting District List<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:district,:userProfileForm:livingDistrict">
+			Getting Assembly Constituency List<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+
+			<h:form id="userProfileForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<h:panelGrid columns="2" cellpadding="5">
+					<!-- 
 					<h:outputLabel value="" />
 					<p:graphicImage value="#{userProfileBean.loggedInUser.profilePic}" height="200" />
 					 -->
-				<h:outputLabel for="name" value="Name*" />
-				<p:inputText id="name" value="#{userProfileBean.name}" label="Name">
-				</p:inputText>
-				<h:outputText value="Gender : " />
-				<p:selectOneMenu value="#{userProfileBean.gender}">
-					<f:selectItem itemLabel="Not Specified" itemValue="NotSpecified" />
-					<f:selectItem itemLabel="Male" itemValue="Male" />
-					<f:selectItem itemLabel="Female" itemValue="Female" />
-				</p:selectOneMenu>
-				<h:outputLabel for="mobile" value="Mobile" />
-				<h:panelGrid columns="2">
-					<p:selectOneMenu value="#{userProfileBean.countryCode}">
-						<f:selectItem itemLabel="India - 91" itemValue="91" />
-						<f:selectItem itemLabel="Afghanistan - 93" itemValue="93" />
-						<f:selectItem itemLabel="Albania - 355" itemValue="355" />
-						<f:selectItem itemLabel="Algeria - 213" itemValue="213" />
-						<f:selectItem itemLabel="American Samoa - 1 684 " itemValue="1 684 " />
-						<f:selectItem itemLabel="Andorra - 376" itemValue="376" />
-						<f:selectItem itemLabel="Angola - 244" itemValue="244" />
-						<f:selectItem itemLabel="Anguilla - 1 264 " itemValue="1 264 " />
-						<f:selectItem itemLabel="Antarctica - 672" itemValue="672" />
-						<f:selectItem itemLabel="Antigua and Barbuda - 1 268 " itemValue="1 268 " />
-						<f:selectItem itemLabel="Argentina - 54" itemValue="54" />
-						<f:selectItem itemLabel="Armenia - 374" itemValue="374" />
-						<f:selectItem itemLabel="Aruba - 297" itemValue="297" />
-						<f:selectItem itemLabel="Australia - 61" itemValue="61" />
-						<f:selectItem itemLabel="Austria - 43" itemValue="43" />
-						<f:selectItem itemLabel="Azerbaijan - 994" itemValue="994" />
-						<f:selectItem itemLabel="Bahamas - 1 242 " itemValue="1 242 " />
-						<f:selectItem itemLabel="Bahrain - 973" itemValue="973" />
-						<f:selectItem itemLabel="Bangladesh - 880" itemValue="880" />
-						<f:selectItem itemLabel="Barbados - 1 246 " itemValue="1 246 " />
-						<f:selectItem itemLabel="Belarus - 375" itemValue="375" />
-						<f:selectItem itemLabel="Belgium - 32" itemValue="32" />
-						<f:selectItem itemLabel="Belize - 501" itemValue="501" />
-						<f:selectItem itemLabel="Benin - 229" itemValue="229" />
-						<f:selectItem itemLabel="Bermuda - 1 441 " itemValue="1 441 " />
-						<f:selectItem itemLabel="Bhutan - 975" itemValue="975" />
-						<f:selectItem itemLabel="Bolivia - 591" itemValue="591" />
-						<f:selectItem itemLabel="Bosnia and Herzegovina - 387" itemValue="387" />
-						<f:selectItem itemLabel="Botswana - 267" itemValue="267" />
-						<f:selectItem itemLabel="Brazil - 55" itemValue="55" />
-						<f:selectItem itemLabel="British Indian Ocean Territory -  " itemValue=" " />
-						<f:selectItem itemLabel="British Virgin Islands - 1 284 " itemValue="1 284 " />
-						<f:selectItem itemLabel="Brunei - 673" itemValue="673" />
-						<f:selectItem itemLabel="Bulgaria - 359" itemValue="359" />
-						<f:selectItem itemLabel="Burkina Faso - 226" itemValue="226" />
-						<f:selectItem itemLabel="Burma (Myanmar) - 95" itemValue="95" />
-						<f:selectItem itemLabel="Burundi - 257" itemValue="257" />
-						<f:selectItem itemLabel="Cambodia - 855" itemValue="855" />
-						<f:selectItem itemLabel="Cameroon - 237" itemValue="237" />
-						<f:selectItem itemLabel="Canada - 1" itemValue="1" />
-						<f:selectItem itemLabel="Cape Verde - 238" itemValue="238" />
-						<f:selectItem itemLabel="Cayman Islands - 1 345 " itemValue="1 345 " />
-						<f:selectItem itemLabel="Central African Republic - 236" itemValue="236" />
-						<f:selectItem itemLabel="Chad - 235" itemValue="235" />
-						<f:selectItem itemLabel="Chile - 56" itemValue="56" />
-						<f:selectItem itemLabel="China - 86" itemValue="86" />
-						<f:selectItem itemLabel="Christmas Island - 61" itemValue="61" />
-						<f:selectItem itemLabel="Cocos (Keeling) Islands - 61" itemValue="61" />
-						<f:selectItem itemLabel="Colombia - 57" itemValue="57" />
-						<f:selectItem itemLabel="Comoros - 269" itemValue="269" />
-						<f:selectItem itemLabel="Cook Islands - 682" itemValue="682" />
-						<f:selectItem itemLabel="Costa Rica - 506" itemValue="506" />
-						<f:selectItem itemLabel="Croatia - 385" itemValue="385" />
-						<f:selectItem itemLabel="Cuba - 53" itemValue="53" />
-						<f:selectItem itemLabel="Cyprus - 357" itemValue="357" />
-						<f:selectItem itemLabel="Czech Republic - 420" itemValue="420" />
-						<f:selectItem itemLabel="Democratic Republic of the Congo - 243" itemValue="243" />
-						<f:selectItem itemLabel="Denmark - 45" itemValue="45" />
-						<f:selectItem itemLabel="Djibouti - 253" itemValue="253" />
-						<f:selectItem itemLabel="Dominica - 1 767 " itemValue="1 767 " />
-						<f:selectItem itemLabel="Dominican Republic - 1 809 " itemValue="1 809 " />
-						<f:selectItem itemLabel="Ecuador - 593" itemValue="593" />
-						<f:selectItem itemLabel="Egypt - 20" itemValue="20" />
-						<f:selectItem itemLabel="El Salvador - 503" itemValue="503" />
-						<f:selectItem itemLabel="Equatorial Guinea - 240" itemValue="240" />
-						<f:selectItem itemLabel="Eritrea - 291" itemValue="291" />
-						<f:selectItem itemLabel="Estonia - 372" itemValue="372" />
-						<f:selectItem itemLabel="Ethiopia - 251" itemValue="251" />
-						<f:selectItem itemLabel="Falkland Islands - 500" itemValue="500" />
-						<f:selectItem itemLabel="Faroe Islands - 298" itemValue="298" />
-						<f:selectItem itemLabel="Fiji - 679" itemValue="679" />
-						<f:selectItem itemLabel="Finland - 358" itemValue="358" />
-						<f:selectItem itemLabel="France - 33" itemValue="33" />
-						<f:selectItem itemLabel="French Polynesia - 689" itemValue="689" />
-						<f:selectItem itemLabel="Gabon - 241" itemValue="241" />
-						<f:selectItem itemLabel="Gambia - 220" itemValue="220" />
-						<f:selectItem itemLabel="Gaza Strip - 970" itemValue="970" />
-						<f:selectItem itemLabel="Georgia - 995" itemValue="995" />
-						<f:selectItem itemLabel="Germany - 49" itemValue="49" />
-						<f:selectItem itemLabel="Ghana - 233" itemValue="233" />
-						<f:selectItem itemLabel="Gibraltar - 350" itemValue="350" />
-						<f:selectItem itemLabel="Greece - 30" itemValue="30" />
-						<f:selectItem itemLabel="Greenland - 299" itemValue="299" />
-						<f:selectItem itemLabel="Grenada - 1 473 " itemValue="1 473 " />
-						<f:selectItem itemLabel="Guam - 1 671 " itemValue="1 671 " />
-						<f:selectItem itemLabel="Guatemala - 502" itemValue="502" />
-						<f:selectItem itemLabel="Guinea - 224" itemValue="224" />
-						<f:selectItem itemLabel="Guinea-Bissau - 245" itemValue="245" />
-						<f:selectItem itemLabel="Guyana - 592" itemValue="592" />
-						<f:selectItem itemLabel="Haiti - 509" itemValue="509" />
-						<f:selectItem itemLabel="Holy See (Vatican City) - 39" itemValue="39" />
-						<f:selectItem itemLabel="Honduras - 504" itemValue="504" />
-						<f:selectItem itemLabel="Hong Kong - 852" itemValue="852" />
-						<f:selectItem itemLabel="Hungary - 36" itemValue="36" />
-						<f:selectItem itemLabel="Iceland - 354" itemValue="354" />
-						<f:selectItem itemLabel="Indonesia - 62" itemValue="62" />
-						<f:selectItem itemLabel="Iran - 98" itemValue="98" />
-						<f:selectItem itemLabel="Iraq - 964" itemValue="964" />
-						<f:selectItem itemLabel="Ireland - 353" itemValue="353" />
-						<f:selectItem itemLabel="Isle of Man - 44" itemValue="44" />
-						<f:selectItem itemLabel="Israel - 972" itemValue="972" />
-						<f:selectItem itemLabel="Italy - 39" itemValue="39" />
-						<f:selectItem itemLabel="Ivory Coast - 225" itemValue="225" />
-						<f:selectItem itemLabel="Jamaica - 1 876 " itemValue="1 876 " />
-						<f:selectItem itemLabel="Japan - 81" itemValue="81" />
-						<f:selectItem itemLabel="Jersey -  " itemValue=" " />
-						<f:selectItem itemLabel="Jordan - 962" itemValue="962" />
-						<f:selectItem itemLabel="Kazakhstan - 7" itemValue="7" />
-						<f:selectItem itemLabel="Kenya - 254" itemValue="254" />
-						<f:selectItem itemLabel="Kiribati - 686" itemValue="686" />
-						<f:selectItem itemLabel="Kosovo - 381" itemValue="381" />
-						<f:selectItem itemLabel="Kuwait - 965" itemValue="965" />
-						<f:selectItem itemLabel="Kyrgyzstan - 996" itemValue="996" />
-						<f:selectItem itemLabel="Laos - 856" itemValue="856" />
-						<f:selectItem itemLabel="Latvia - 371" itemValue="371" />
-						<f:selectItem itemLabel="Lebanon - 961" itemValue="961" />
-						<f:selectItem itemLabel="Lesotho - 266" itemValue="266" />
-						<f:selectItem itemLabel="Liberia - 231" itemValue="231" />
-						<f:selectItem itemLabel="Libya - 218" itemValue="218" />
-						<f:selectItem itemLabel="Liechtenstein - 423" itemValue="423" />
-						<f:selectItem itemLabel="Lithuania - 370" itemValue="370" />
-						<f:selectItem itemLabel="Luxembourg - 352" itemValue="352" />
-						<f:selectItem itemLabel="Macau - 853" itemValue="853" />
-						<f:selectItem itemLabel="Macedonia - 389" itemValue="389" />
-						<f:selectItem itemLabel="Madagascar - 261" itemValue="261" />
-						<f:selectItem itemLabel="Malawi - 265" itemValue="265" />
-						<f:selectItem itemLabel="Malaysia - 60" itemValue="60" />
-						<f:selectItem itemLabel="Maldives - 960" itemValue="960" />
-						<f:selectItem itemLabel="Mali - 223" itemValue="223" />
-						<f:selectItem itemLabel="Malta - 356" itemValue="356" />
-						<f:selectItem itemLabel="Marshall Islands - 692" itemValue="692" />
-						<f:selectItem itemLabel="Mauritania - 222" itemValue="222" />
-						<f:selectItem itemLabel="Mauritius - 230" itemValue="230" />
-						<f:selectItem itemLabel="Mayotte - 262" itemValue="262" />
-						<f:selectItem itemLabel="Mexico - 52" itemValue="52" />
-						<f:selectItem itemLabel="Micronesia - 691" itemValue="691" />
-						<f:selectItem itemLabel="Moldova - 373" itemValue="373" />
-						<f:selectItem itemLabel="Monaco - 377" itemValue="377" />
-						<f:selectItem itemLabel="Mongolia - 976" itemValue="976" />
-						<f:selectItem itemLabel="Montenegro - 382" itemValue="382" />
-						<f:selectItem itemLabel="Montserrat - 1 664 " itemValue="1 664 " />
-						<f:selectItem itemLabel="Morocco - 212" itemValue="212" />
-						<f:selectItem itemLabel="Mozambique - 258" itemValue="258" />
-						<f:selectItem itemLabel="Namibia - 264" itemValue="264" />
-						<f:selectItem itemLabel="Nauru - 674" itemValue="674" />
-						<f:selectItem itemLabel="Nepal - 977" itemValue="977" />
-						<f:selectItem itemLabel="Netherlands - 31" itemValue="31" />
-						<f:selectItem itemLabel="Netherlands Antilles - 599" itemValue="599" />
-						<f:selectItem itemLabel="New Caledonia - 687" itemValue="687" />
-						<f:selectItem itemLabel="New Zealand - 64" itemValue="64" />
-						<f:selectItem itemLabel="Nicaragua - 505" itemValue="505" />
-						<f:selectItem itemLabel="Niger - 227" itemValue="227" />
-						<f:selectItem itemLabel="Nigeria - 234" itemValue="234" />
-						<f:selectItem itemLabel="Niue - 683" itemValue="683" />
-						<f:selectItem itemLabel="Norfolk Island - 672" itemValue="672" />
-						<f:selectItem itemLabel="North Korea - 850" itemValue="850" />
-						<f:selectItem itemLabel="Northern Mariana Islands - 1 670 " itemValue="1 670 " />
-						<f:selectItem itemLabel="Norway - 47" itemValue="47" />
-						<f:selectItem itemLabel="Oman - 968" itemValue="968" />
-						<f:selectItem itemLabel="Pakistan - 92" itemValue="92" />
-						<f:selectItem itemLabel="Palau - 680" itemValue="680" />
-						<f:selectItem itemLabel="Panama - 507" itemValue="507" />
-						<f:selectItem itemLabel="Papua New Guinea - 675" itemValue="675" />
-						<f:selectItem itemLabel="Paraguay - 595" itemValue="595" />
-						<f:selectItem itemLabel="Peru - 51" itemValue="51" />
-						<f:selectItem itemLabel="Philippines - 63" itemValue="63" />
-						<f:selectItem itemLabel="Pitcairn Islands - 870" itemValue="870" />
-						<f:selectItem itemLabel="Poland - 48" itemValue="48" />
-						<f:selectItem itemLabel="Portugal - 351" itemValue="351" />
-						<f:selectItem itemLabel="Puerto Rico - 1" itemValue="1" />
-						<f:selectItem itemLabel="Qatar - 974" itemValue="974" />
-						<f:selectItem itemLabel="Republic of the Congo - 242" itemValue="242" />
-						<f:selectItem itemLabel="Romania - 40" itemValue="40" />
-						<f:selectItem itemLabel="Russia - 7" itemValue="7" />
-						<f:selectItem itemLabel="Rwanda - 250" itemValue="250" />
-						<f:selectItem itemLabel="Saint Barthelemy - 590" itemValue="590" />
-						<f:selectItem itemLabel="Saint Helena - 290" itemValue="290" />
-						<f:selectItem itemLabel="Saint Kitts and Nevis - 1 869 " itemValue="1 869 " />
-						<f:selectItem itemLabel="Saint Lucia - 1 758 " itemValue="1 758 " />
-						<f:selectItem itemLabel="Saint Martin - 1 599 " itemValue="1 599 " />
-						<f:selectItem itemLabel="Saint Pierre and Miquelon - 508" itemValue="508" />
-						<f:selectItem itemLabel="Saint Vincent and the Grenadines - 1 784 " itemValue="1 784 " />
-						<f:selectItem itemLabel="Samoa - 685" itemValue="685" />
-						<f:selectItem itemLabel="San Marino - 378" itemValue="378" />
-						<f:selectItem itemLabel="Sao Tome and Principe - 239" itemValue="239" />
-						<f:selectItem itemLabel="Saudi Arabia - 966" itemValue="966" />
-						<f:selectItem itemLabel="Senegal - 221" itemValue="221" />
-						<f:selectItem itemLabel="Serbia - 381" itemValue="381" />
-						<f:selectItem itemLabel="Seychelles - 248" itemValue="248" />
-						<f:selectItem itemLabel="Sierra Leone - 232" itemValue="232" />
-						<f:selectItem itemLabel="Singapore - 65" itemValue="65" />
-						<f:selectItem itemLabel="Slovakia - 421" itemValue="421" />
-						<f:selectItem itemLabel="Slovenia - 386" itemValue="386" />
-						<f:selectItem itemLabel="Solomon Islands - 677" itemValue="677" />
-						<f:selectItem itemLabel="Somalia - 252" itemValue="252" />
-						<f:selectItem itemLabel="South Africa - 27" itemValue="27" />
-						<f:selectItem itemLabel="South Korea - 82" itemValue="82" />
-						<f:selectItem itemLabel="Spain - 34" itemValue="34" />
-						<f:selectItem itemLabel="Sri Lanka - 94" itemValue="94" />
-						<f:selectItem itemLabel="Sudan - 249" itemValue="249" />
-						<f:selectItem itemLabel="Suriname - 597" itemValue="597" />
-						<f:selectItem itemLabel="Svalbard -  " itemValue=" " />
-						<f:selectItem itemLabel="Swaziland - 268" itemValue="268" />
-						<f:selectItem itemLabel="Sweden - 46" itemValue="46" />
-						<f:selectItem itemLabel="Switzerland - 41" itemValue="41" />
-						<f:selectItem itemLabel="Syria - 963" itemValue="963" />
-						<f:selectItem itemLabel="Taiwan - 886" itemValue="886" />
-						<f:selectItem itemLabel="Tajikistan - 992" itemValue="992" />
-						<f:selectItem itemLabel="Tanzania - 255" itemValue="255" />
-						<f:selectItem itemLabel="Thailand - 66" itemValue="66" />
-						<f:selectItem itemLabel="Timor-Leste - 670" itemValue="670" />
-						<f:selectItem itemLabel="Togo - 228" itemValue="228" />
-						<f:selectItem itemLabel="Tokelau - 690" itemValue="690" />
-						<f:selectItem itemLabel="Tonga - 676" itemValue="676" />
-						<f:selectItem itemLabel="Trinidad and Tobago - 1 868 " itemValue="1 868 " />
-						<f:selectItem itemLabel="Tunisia - 216" itemValue="216" />
-						<f:selectItem itemLabel="Turkey - 90" itemValue="90" />
-						<f:selectItem itemLabel="Turkmenistan - 993" itemValue="993" />
-						<f:selectItem itemLabel="Turks and Caicos Islands - 1 649 " itemValue="1 649 " />
-						<f:selectItem itemLabel="Tuvalu - 688" itemValue="688" />
-						<f:selectItem itemLabel="Uganda - 256" itemValue="256" />
-						<f:selectItem itemLabel="Ukraine - 380" itemValue="380" />
-						<f:selectItem itemLabel="United Arab Emirates - 971" itemValue="971" />
-						<f:selectItem itemLabel="United Kingdom - 44" itemValue="44" />
-						<f:selectItem itemLabel="United States - 1" itemValue="1" />
-						<f:selectItem itemLabel="Uruguay - 598" itemValue="598" />
-						<f:selectItem itemLabel="US Virgin Islands - 1 340 " itemValue="1 340 " />
-						<f:selectItem itemLabel="Uzbekistan - 998" itemValue="998" />
-						<f:selectItem itemLabel="Vanuatu - 678" itemValue="678" />
-						<f:selectItem itemLabel="Venezuela - 58" itemValue="58" />
-						<f:selectItem itemLabel="Vietnam - 84" itemValue="84" />
-						<f:selectItem itemLabel="Wallis and Futuna - 681" itemValue="681" />
-						<f:selectItem itemLabel="West Bank - 970" itemValue="970" />
-						<f:selectItem itemLabel="Western Sahara -  " itemValue=" " />
-						<f:selectItem itemLabel="Yemen - 967" itemValue="967" />
-						<f:selectItem itemLabel="Zambia - 260" itemValue="260" />
-						<f:selectItem itemLabel="Zimbabwe - 263" itemValue="263" />
-					</p:selectOneMenu>
-					<p:inputText id="mobile" value="#{userProfileBean.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+					<h:outputLabel for="name" value="Name*" />
+					<p:inputText id="name" value="#{userProfileBean.name}" label="Name">
 					</p:inputText>
+					<h:outputText value="Gender : " />
+					<p:selectOneMenu value="#{userProfileBean.gender}">
+						<f:selectItem itemLabel="Not Specified" itemValue="NotSpecified" />
+						<f:selectItem itemLabel="Male" itemValue="Male" />
+						<f:selectItem itemLabel="Female" itemValue="Female" />
+					</p:selectOneMenu>
+					<h:outputLabel for="mobile" value="Mobile" />
+					<h:panelGrid columns="2">
+						<p:selectOneMenu value="#{userProfileBean.countryCode}">
+							<f:selectItem itemLabel="India - 91" itemValue="91" />
+							<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
+						</p:selectOneMenu>
+						<p:inputText id="mobile" value="#{userProfileBean.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+						</p:inputText>
+					</h:panelGrid>
+
+
+					<h:outputText value="Date of Birth*" />
+					<p:inputMask id="dob" value="#{userProfileBean.dateOfBirth}" mask="99/99/9999" />
 				</h:panelGrid>
+				<p:watermark for="dob" value="DD/MM/YYYY" />
+				<p:watermark for="mobile" value="XXXXXXXXXX" />
 
-
-				<h:outputText value="Date of Birth*" />
-				<p:inputMask id="dob" value="#{userProfileBean.dateOfBirth}" mask="99/99/9999" />
-			</h:panelGrid>
-			<p:watermark for="dob" value="DD/MM/YYYY" />
-			<p:watermark for="mobile" value="XXXXXXXXXX" />
-
-			<p:panelGrid columns="2" cellpadding="5">
-				<f:facet name="header">  
+				<p:panelGrid columns="2" cellpadding="5">
+					<f:facet name="header">  
         		Select the place where you live  
     		</f:facet>
 
-				<h:outputLabel for="livingState" value="State*" />
-				<p:selectOneMenu id="livingState" value="#{userProfileBean.selectedLivingStateId}" effect="fold" editable="false">
-					<f:selectItem itemLabel="Select State" itemValue="0" />
-					<f:selectItems value="#{userProfileBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+					<h:outputLabel for="livingState" value="State*" />
+					<p:selectOneMenu id="livingState" value="#{userProfileBean.selectedLivingStateId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select State" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
 
-					<p:ajax event="change" update=":userProfileForm:livingDistrict,:userProfileForm:livingParliamentConstituency" listener="#{userProfileBean.handleLivingStateChange}" />
-				</p:selectOneMenu>
-				<h:outputLabel for="livingDistrict" value="District*" />
-				<p:selectOneMenu id="livingDistrict" disabled="#{!userProfileBean.enableLivingDistrictCombo}" value="#{userProfileBean.selectedLivingDistrictId}" effect="fold" editable="false">
-					<f:selectItem itemLabel="Select District" itemValue="0" />
-					<f:selectItems value="#{userProfileBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+						<p:ajax event="change" update=":userProfileForm:livingDistrict,:userProfileForm:livingParliamentConstituency" listener="#{userProfileBean.handleLivingStateChange}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="livingDistrict" value="District*" />
+					<p:selectOneMenu id="livingDistrict" disabled="#{!userProfileBean.enableLivingDistrictCombo}" value="#{userProfileBean.selectedLivingDistrictId}" effect="fold"
+						editable="false">
+						<f:selectItem itemLabel="Select District" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
 
-					<p:ajax event="change" update=":userProfileForm:livingAssemblyConstituency" listener="#{userProfileBean.handleLivingDistrictChange}" />
-				</p:selectOneMenu>
-				<h:outputLabel for="livingParliamentConstituency" value="Parliament Constituency*" />
-				
-				<p:selectOneMenu id="livingParliamentConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableLivingParliamentConstituencyCombo}"
-					value="#{userProfileBean.selectedLivingParliamentConstituencyId}" effect="fold" editable="false">
-					<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
-					<f:selectItems value="#{userProfileBean.livingParliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}" itemValue="#{oneParliamentConstituency.id}" />
-					
-					<p:ajax update="livingAssemblyConstituency" />
-				</p:selectOneMenu>
-				
-				<h:outputLabel for="livingAssemblyConstituency" value="Assembly Constituency*" />
-				<p:selectOneMenu id="livingAssemblyConstituency" disabled="#{!userProfileBean.enableLivingAssemblyConstituencyCombo}"
-					value="#{userProfileBean.selectedLivingAssemblyConstituencyId}" effect="fold" editable="false">
-					<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
-					<f:selectItems value="#{userProfileBean.livingAssemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
-						itemValue="#{oneAssemblyConstituency.id}" />
+						<p:ajax event="change" update=":userProfileForm:livingAssemblyConstituency" listener="#{userProfileBean.handleLivingDistrictChange}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="livingParliamentConstituency" value="Parliament Constituency*" />
 
-				</p:selectOneMenu>
+					<p:selectOneMenu id="livingParliamentConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableLivingParliamentConstituencyCombo}"
+						value="#{userProfileBean.selectedLivingParliamentConstituencyId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.livingParliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+							itemValue="#{oneParliamentConstituency.id}" />
 
+						<p:ajax update="livingAssemblyConstituency" />
+					</p:selectOneMenu>
 
-			</p:panelGrid>
+					<h:outputLabel for="livingAssemblyConstituency" value="Assembly Constituency*" />
+					<p:selectOneMenu id="livingAssemblyConstituency" disabled="#{!userProfileBean.enableLivingAssemblyConstituencyCombo}"
+						value="#{userProfileBean.selectedLivingAssemblyConstituencyId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.livingAssemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+							itemValue="#{oneAssemblyConstituency.id}" />
 
-			<p:panelGrid columns="2" cellpadding="5" id="votingLocation">
-				<f:facet name="header">
+					</p:selectOneMenu>
+
+					<p:outputPanel>
+						<h:outputLabel for="nri" value="I am NRI" />
+						<p:selectBooleanCheckbox id="nri" value="#{userProfileBean.nri}">
+							<p:ajax update=":userProfileForm:nriCountry" listener="#{userProfileBean.onClickNri}" />
+						</p:selectBooleanCheckbox>
+					</p:outputPanel>
+
+					<p:selectOneMenu id="nriCountry" value="#{userProfileBean.nriCountryId}" disabled="#{!userProfileBean.nri}">
+						<f:selectItem itemLabel="Select Country" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+
+				<p:panelGrid columns="2" cellpadding="5" id="votingLocation">
+					<f:facet name="header">
 					
         		Select the place where you registered as voter
         		<br></br>
-        		<p:selectBooleanCheckbox value="#{userProfileBean.sameAsLiving}">
-						<!-- <p:ajax update="msg" listener="#{userProfileBean.onClickSameAsLiving}" /> -->
-						<p:ajax update=":userProfileForm:votingLocation" listener="#{userProfileBean.onClickSameAsLiving}" />
-					</p:selectBooleanCheckbox> Same as Living Location  
+						<p:selectBooleanCheckbox value="#{userProfileBean.sameAsLiving}">
+							<!-- <p:ajax update="msg" listener="#{userProfileBean.onClickSameAsLiving}" /> -->
+							<p:ajax update=":userProfileForm:votingLocation" listener="#{userProfileBean.onClickSameAsLiving}" />
+						</p:selectBooleanCheckbox> Same as Living Location  
     		</f:facet>
 
-				<h:outputLabel for="state" value="State*" />
-				<p:selectOneMenu id="state" disabled="#{userProfileBean.sameAsLiving}" value="#{userProfileBean.selectedStateId}" effect="fold" editable="false">
-					<f:selectItem itemLabel="Select State" itemValue="0" />
-					<f:selectItems value="#{userProfileBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
-					<p:ajax event="change" update=":userProfileForm:district,:userProfileForm:parliamentConstituency" listener="#{userProfileBean.handleStateChange}" />
-				</p:selectOneMenu>
-				<h:outputLabel for="district" value="District*" />
-				<p:selectOneMenu id="district" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableDistrictCombo}" value="#{userProfileBean.selectedDistrictId}" effect="fold" editable="false">
-					<f:selectItem itemLabel="Select District" itemValue="0" />
-					<f:selectItems value="#{userProfileBean.districtList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+					<h:outputLabel for="state" value="State*" />
+					<p:selectOneMenu id="state" disabled="#{userProfileBean.sameAsLiving}" value="#{userProfileBean.selectedStateId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select State" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+						<p:ajax event="change" update=":userProfileForm:district,:userProfileForm:parliamentConstituency" listener="#{userProfileBean.handleStateChange}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="district" value="District*" />
+					<p:selectOneMenu id="district" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableDistrictCombo}" value="#{userProfileBean.selectedDistrictId}" effect="fold"
+						editable="false">
+						<f:selectItem itemLabel="Select District" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.districtList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
 
-					<p:ajax event="change" update=":userProfileForm:assemblyConstituency" listener="#{userProfileBean.handleDistrictChange}" />
-				</p:selectOneMenu>
-				<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
-				<p:selectOneMenu id="parliamentConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableParliamentConstituencyCombo}" value="#{userProfileBean.selectedParliamentConstituencyId}" effect="fold" editable="false">
-					<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
-					<f:selectItems value="#{userProfileBean.parliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}" itemValue="#{oneParliamentConstituency.id}" />
-				</p:selectOneMenu>
-				<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
-				<p:selectOneMenu id="assemblyConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableAssemblyConstituencyCombo}" value="#{userProfileBean.selectedAssemblyConstituencyId}"
-					effect="fold" editable="false">
-					<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
-					<f:selectItems value="#{userProfileBean.assemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
-						itemValue="#{oneAssemblyConstituency.id}" />
+						<p:ajax event="change" update=":userProfileForm:assemblyConstituency" listener="#{userProfileBean.handleDistrictChange}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
+					<p:selectOneMenu id="parliamentConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableParliamentConstituencyCombo}"
+						value="#{userProfileBean.selectedParliamentConstituencyId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.parliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+							itemValue="#{oneParliamentConstituency.id}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
+					<p:selectOneMenu id="assemblyConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableAssemblyConstituencyCombo}"
+						value="#{userProfileBean.selectedAssemblyConstituencyId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.assemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+							itemValue="#{oneAssemblyConstituency.id}" />
 
-				</p:selectOneMenu>
-
-
-			</p:panelGrid>
-			<p:commandButton id="saveProfile" value="Save Profile" actionListener="#{userProfileBean.saveProfile}" />
-			<p:tooltip for="saveProfile">Save profile</p:tooltip>
+					</p:selectOneMenu>
 
 
-		</h:form>
-		<!-- header ends -->
+				</p:panelGrid>
+				<p:commandButton id="saveProfile" value="Save Profile" actionListener="#{userProfileBean.saveProfile}" />
+				<p:tooltip for="saveProfile">Save profile</p:tooltip>
 
 
-		<!-- footer starts -->
-		<div class="footerWrapper">
-			<div class="container_24">
-				<div class="grid_24 panel footer">
-					Copyright &copy; 2013 <a href="#">www.vote4delhi.com</a>. All Rights Reserved.
+			</h:form>
+			<!-- header ends -->
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2013 <a href="#">www.vote4delhi.com</a>. All Rights Reserved.
+					</div>
 				</div>
+				<div class="clear"></div>
 			</div>
-			<div class="clear"></div>
+			<!-- footer ends -->
 		</div>
-		<!-- footer ends -->
-	</div>
 	</div>
 
 </h:body>

@@ -104,6 +104,10 @@ public class AcRole {
 	public void setRoleId(Long roleId) {
 		this.roleId = roleId;
 	}
+	@Override
+	public String toString() {
+		return "AcRole [id=" + id + ", assemblyConstituencyId=" + assemblyConstituencyId + ", roleId=" + roleId + "]";
+	}
 	
 	
 	

@@ -9,6 +9,7 @@ import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 
 import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.LoginAccountDto;
@@ -30,6 +31,8 @@ public interface AapService {
 	LoginAccountDto getUserLoginAccounts(Long userId);
 	
 	List<StateDto> getAllStates() ;
+	
+	List<CountryDto> getAllCountries() ;
 	
 	StateDto getStateById(Long stateId) ;
 	
@@ -54,6 +57,8 @@ public interface AapService {
 	VoiceOfAapData getVoiceOfAapSetting(Long facebookAcountId);
 	
 	void updateAllPermissionsAndRole();
+	
+	void saveAllCountries();
 	
 	PlannedFacebookPostDto savePlannedFacebookPost(PlannedFacebookPostDto plannedFacebookPostDto);
 	

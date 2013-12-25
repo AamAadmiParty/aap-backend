@@ -1,0 +1,16 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui" 
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+	<p:dock position="top" maxWidth="100">
+
+		<p:menuitem value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="./home" />
+		<p:menuitem value="Edit Profile" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/System%20Preferences.png" url="./profile" />
+		<p:menuitem value="Login Accounts" icon="https://cdn1.iconfinder.com/data/icons/VistaICO_Toolbar-Icons/128/Login.png" url="./socialaccounts" />
+		<p:menuitem value="Voice Of AAP" icon="https://cdn1.iconfinder.com/data/icons/REALVISTA/communications/png/128/voice_chat.png" url="./voiceofaap" />
+		<p:menuitem value="Membership" icon="https://cdn3.iconfinder.com/data/icons/mixed-3d-icons/512/membership-128.png" url="#" />
+		<p:menuitem value="Admin Panel" icon="https://cdn1.iconfinder.com/data/icons/free-large-boss-icon-set/128/Admin.png" url="/adminpanel" rendered="#{menuBean.admin}" />
+		
+	</p:dock></ui:composition>

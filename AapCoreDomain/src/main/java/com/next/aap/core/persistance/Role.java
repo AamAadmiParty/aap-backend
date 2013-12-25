@@ -4,9 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,8 +14,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-
-import com.next.aap.web.dto.AppPermission;
 
 @Entity
 @Table(name = "role")
@@ -48,11 +44,6 @@ public class Role {
 	@JoinTable(name = "role_permissions", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = { @JoinColumn(name = "permission_id") })
 	Set<Permission> permissions;
 
-	@ElementCollection
-    @CollectionTable(name="role_permissions", joinColumns=@JoinColumn(name="role_id"))
-    @Column(name="permission")
-    public Set<AppPermission> rolePermissions;	
-	
 	public Long getId() {
 		return id;
 	}
@@ -125,12 +116,9 @@ public class Role {
 		this.permissions = permissions;
 	}
 
-	public Set<AppPermission> getRolePermissions() {
-		return rolePermissions;
-	}
-
-	public void setRolePermissions(Set<AppPermission> rolePermissions) {
-		this.rolePermissions = rolePermissions;
+	@Override
+	public String toString() {
+		return "Role [id=" + id + ", name=" + name + "]";
 	}
 
 }

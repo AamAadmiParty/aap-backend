@@ -1,8 +1,10 @@
 package com.next.aap.web.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,12 +19,17 @@ public class UserRolePermissionDto implements Serializable{
 		districtPermissions = new HashMap<Long, Set<AppPermission>>();
 		acPermissions = new HashMap<Long, Set<AppPermission>>();
 		pcPermissions = new HashMap<Long, Set<AppPermission>>();
+		
+		adminStates = new ArrayList<StateDto>();
+		adminDistricts = new ArrayList<DistrictDto>();
+		adminAcs = new ArrayList<AssemblyConstituencyDto>();
+		adminPcs = new ArrayList<ParliamentConstituencyDto>();
 	}
 	private boolean superUser;
-	private Set<StateDto> adminStates;
-	private Set<DistrictDto> adminDistricts;
-	private Set<AssemblyConstituencyDto> adminAcs;
-	private Set<ParliamentConstituencyDto> adminPcs;
+	private List<StateDto> adminStates;
+	private List<DistrictDto> adminDistricts;
+	private List<AssemblyConstituencyDto> adminAcs;
+	private List<ParliamentConstituencyDto> adminPcs;
 	
 	private Set<AppPermission> allPermissions;
 	private Map<Long,Set<AppPermission>> statePermissions;
@@ -35,29 +42,40 @@ public class UserRolePermissionDto implements Serializable{
 	public void setSuperUser(boolean superUser) {
 		this.superUser = superUser;
 	}
-	public Set<StateDto> getAdminStates() {
+	public List<StateDto> getAdminStates() {
 		return adminStates;
 	}
 	public void addAdminStates(StateDto adminState) {
-		this.adminStates.add(adminState);
+		addAdminLocation(adminState, adminStates);
 	}
-	public Set<DistrictDto> getAdminDistricts() {
+	public List<DistrictDto> getAdminDistricts() {
 		return adminDistricts;
 	}
 	public void addAdminDistricts(DistrictDto adminDistrict) {
-		this.adminDistricts.add(adminDistrict);
+		addAdminLocation(adminDistrict, adminDistricts);
 	}
-	public Set<AssemblyConstituencyDto> getAdminAcs() {
+	/**
+	 * This function will make sure we don't add duplicate entries
+	 * @param adminLocation
+	 * @param adminLocations
+	 */
+	private <T> void addAdminLocation(T adminLocation, List<T> adminLocations){
+		Set<T> locations = new HashSet<T>(adminLocations);
+		locations.add(adminLocation);
+		adminLocations.clear();
+		adminLocations.addAll(locations);
+	}
+	public List<AssemblyConstituencyDto> getAdminAcs() {
 		return adminAcs;
 	}
 	public void addAdminAcs(AssemblyConstituencyDto adminAc) {
-		this.adminAcs.add(adminAc);
+		addAdminLocation(adminAc, adminAcs);
 	}
-	public Set<ParliamentConstituencyDto> getAdminPcs() {
+	public List<ParliamentConstituencyDto> getAdminPcs() {
 		return adminPcs;
 	}
 	public void addAdminPcs(ParliamentConstituencyDto adminPc) {
-		this.adminPcs.add(adminPc);
+		addAdminLocation(adminPc, adminPcs);
 	}
 	public Set<AppPermission> getAllPermissions() {
 		return allPermissions;
@@ -104,6 +122,25 @@ public class UserRolePermissionDto implements Serializable{
 	public void addPcPermissions(ParliamentConstituencyDto parliamentConstituencyDto, Set<AppPermission> onePcPermissions) {
 		addLocationPermision(parliamentConstituencyDto.getId(), onePcPermissions, this.pcPermissions);
 		adminPcs.add(parliamentConstituencyDto);
+	}
+	
+	public boolean isStateAdmin(){
+		return !statePermissions.isEmpty(); 
+	}
+	public boolean isDistrictAdmin(){
+		return !districtPermissions.isEmpty(); 
+	}
+	public boolean isAcAdmin(){
+		return !acPermissions.isEmpty(); 
+	}
+	public boolean isPcAdmin(){
+		return !acPermissions.isEmpty(); 
+	}
+	public boolean isAllAdmin(){
+		return !allPermissions.isEmpty(); 
+	}
+	public boolean isAdmin(){
+		return isSuperUser() || isStateAdmin() || isDistrictAdmin() || isAcAdmin() || isPcAdmin() || isAllAdmin();
 	}
 	
 	

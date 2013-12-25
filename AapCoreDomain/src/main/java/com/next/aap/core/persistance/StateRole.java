@@ -104,5 +104,9 @@ public class StateRole {
 	public void setRoleId(Long roleId) {
 		this.roleId = roleId;
 	}
+	@Override
+	public String toString() {
+		return "StateRole [id=" + id + ", stateId=" + stateId + ", roleId=" + roleId + "]";
+	}
 
 }

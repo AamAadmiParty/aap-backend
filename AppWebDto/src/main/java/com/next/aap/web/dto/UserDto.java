@@ -45,6 +45,10 @@ public class UserDto implements Serializable{
 	
 	private String mobileNumber;
 
+	private boolean nri;
+
+	private Long nriCountryId;
+
 
 	public Long getId() {
 		return id;
@@ -214,6 +218,22 @@ public class UserDto implements Serializable{
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public boolean isNri() {
+		return nri;
+	}
+
+	public void setNri(boolean nri) {
+		this.nri = nri;
+	}
+
+	public Long getNriCountryId() {
+		return nriCountryId;
+	}
+
+	public void setNriCountryId(Long nriCountryId) {
+		this.nriCountryId = nriCountryId;
 	}
 
 	@Override

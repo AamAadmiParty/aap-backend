@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.AcRole;
 import com.next.aap.core.persistance.AssemblyConstituency;
+import com.next.aap.core.persistance.Country;
 import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
 import com.next.aap.core.persistance.Email;
@@ -48,6 +49,7 @@ import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
 import com.next.aap.core.persistance.dao.AcRoleDao;
 import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
+import com.next.aap.core.persistance.dao.CountryDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
 import com.next.aap.core.persistance.dao.DistrictRoleDao;
 import com.next.aap.core.persistance.dao.EmailDao;
@@ -68,6 +70,7 @@ import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
@@ -126,6 +129,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private AcRoleDao acRoleDao;
 	@Autowired
 	private PcRoleDao pcRoleDao;
+	@Autowired
+	private CountryDao countryDao;
 	
 	@Value("${voa.facebook.app.id}")
 	private String voiceOfAapAppId;
@@ -526,6 +531,13 @@ public class AapServiceImpl implements AapService, Serializable {
 			user.setParliamentConstituencyVoting(parliamentConstituencyVoting);
 		}
 		user.setGender(userDto.getGender());
+		user.setNri(userDto.isNri());
+		if(user.isNri()){
+			if(userDto.getNriCountryId() != null && userDto.getNriCountryId() > 0){
+				Country country = countryDao.getCountryById(userDto.getNriCountryId());
+				user.setNriCountry(country);
+			}
+		}
 		user = userDao.saveUser(user);
 		
 		if(!StringUtil.isEmpty(userDto.getMobileNumber())){
@@ -707,7 +719,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		if(user == null){
 			logger.error("No predefined user found to make a user Super Admin");			
 		}else{
-			user.setSuperAdmin(true);
+			//user.setSuperAdmin(true);
 		}
 		
 		
@@ -790,6 +802,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	}
 
 	@Override
+	@Transactional
 	public PlannedFacebookPostDto savePlannedFacebookPost(PlannedFacebookPostDto plannedFacebookPostDto) {
 		PlannedFacebookPost plannedFacebookPost = null;
 		if(plannedFacebookPostDto.getId() != null && plannedFacebookPostDto.getId() > 0){
@@ -811,6 +824,8 @@ public class AapServiceImpl implements AapService, Serializable {
 		plannedFacebookPost.setPostingTime(plannedFacebookPostDto.getPostingTime());
 		plannedFacebookPost.setPostType(plannedFacebookPostDto.getPostType());
 		plannedFacebookPost.setSource(plannedFacebookPostDto.getSource());
+		plannedFacebookPost.setLocationType(plannedFacebookPostDto.getLocationType());
+		plannedFacebookPost.setLocationId(plannedFacebookPostDto.getLocationId());
 		
 		plannedFacebookPost = plannedFacebookPostDao.savePlannedFacebookPost(plannedFacebookPost);
 		
@@ -818,6 +833,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	}
 
 	@Override
+	@Transactional
 	public List<PlannedFacebookPostDto> getPlannedFacebookPosts(int pageNumber, int pageSize) {
 		// TODO Auto-generated method stub
 		return null;
@@ -828,57 +844,354 @@ public class AapServiceImpl implements AapService, Serializable {
 		BeanUtils.copyProperties(plannedFacebookPost, plannedFacebookPostDto);
 		return plannedFacebookPostDto;
 	}
+	
+	private Set<AppPermission> convertPermissionToAppPermission(Set<Permission> permissions){
+		Set<AppPermission> returnPermissions = new HashSet<>();
+		if(permissions != null){
+			for(Permission onePermission:permissions){
+				returnPermissions.add(onePermission.getPermission());
+			}
+		}
+		
+		return returnPermissions;
+	}
 
 	@Override
+	@Transactional
 	public UserRolePermissionDto getUserRolePermissions(Long userId) {
 		User user = userDao.getUserById(userId);
 		UserRolePermissionDto userRolePermissionDto = new UserRolePermissionDto();
 		userRolePermissionDto.setSuperUser(user.isSuperAdmin());
 		
 		Set<Role> allUserRolesAtWorldLevel = user.getAllRoles();
+		System.out.println("allUserRolesAtWorldLevel="+allUserRolesAtWorldLevel);
 		if(allUserRolesAtWorldLevel != null && !allUserRolesAtWorldLevel.isEmpty()){
 			for(Role oneRole:allUserRolesAtWorldLevel){
-				if(!oneRole.getRolePermissions().isEmpty()){
-					userRolePermissionDto.addAllPermissions(oneRole.getRolePermissions());	
+				if(!oneRole.getPermissions().isEmpty()){
+					userRolePermissionDto.addAllPermissions(convertPermissionToAppPermission(oneRole.getPermissions()));	
 				}
 			}
 		}
 		
 		Set<StateRole> stateRoles = user.getStateRoles();
+		System.out.println("stateRoles="+stateRoles);
 		if(stateRoles != null && !stateRoles.isEmpty()){
 			for(StateRole oneStateRole:stateRoles){
-				if(!oneStateRole.getRole().getRolePermissions().isEmpty()){
-					userRolePermissionDto.addStatePermissions(convertState(oneStateRole.getState()), oneStateRole.getRole().getRolePermissions());
+				System.out.println("oneStateRole="+oneStateRole);
+				System.out.println("!oneStateRole.getRole().getRolePermissions().isEmpty()="+!oneStateRole.getRole().getPermissions().isEmpty());
+				if(!oneStateRole.getRole().getPermissions().isEmpty()){
+					userRolePermissionDto.addStatePermissions(convertState(oneStateRole.getState()), convertPermissionToAppPermission(oneStateRole.getRole().getPermissions()));
 				}
+				System.out.println("userRolePermissionDto.isStateAdmin()="+userRolePermissionDto.isStateAdmin());
 			}
 		}
 		
 		Set<DistrictRole> districtRoles = user.getDistrictRoles();
+		System.out.println("districtRoles="+districtRoles);
 		if(districtRoles != null && !districtRoles.isEmpty()){
 			for(DistrictRole oneDistrictRole:districtRoles){
-				if(!oneDistrictRole.getRole().getRolePermissions().isEmpty()){
-					userRolePermissionDto.addDistrictPermissions(convertDistrict(oneDistrictRole.getDistrict()), oneDistrictRole.getRole().getRolePermissions());
+				if(!oneDistrictRole.getRole().getPermissions().isEmpty()){
+					userRolePermissionDto.addDistrictPermissions(convertDistrict(oneDistrictRole.getDistrict()), convertPermissionToAppPermission(oneDistrictRole.getRole().getPermissions()));
 				}
 			}
 		}
 		
 		Set<AcRole> acRoles = user.getAcRoles();
+		System.out.println("acRoles="+acRoles);
 		if(acRoles != null && !acRoles.isEmpty()){
 			for(AcRole oneAcRole:acRoles){
-				if(!oneAcRole.getRole().getRolePermissions().isEmpty()){
-					userRolePermissionDto.addAcPermissions(convertAssemblyConstituency(oneAcRole.getAssemblyConstituency()), oneAcRole.getRole().getRolePermissions());
+				if(!oneAcRole.getRole().getPermissions().isEmpty()){
+					userRolePermissionDto.addAcPermissions(convertAssemblyConstituency(oneAcRole.getAssemblyConstituency()), convertPermissionToAppPermission(oneAcRole.getRole().getPermissions()));
 				}
 			}
 		}
 		
 		Set<PcRole> pcRoles = user.getPcRoles();
+		System.out.println("pcRoles="+pcRoles);
 		if(pcRoles != null && !pcRoles.isEmpty()){
 			for(PcRole onePcRole:pcRoles){
-				if(!onePcRole.getRole().getRolePermissions().isEmpty()){
-					userRolePermissionDto.addPcPermissions(convertParliamentConstituency(onePcRole.getParliamentConstituency()), onePcRole.getRole().getRolePermissions());
+				if(!onePcRole.getRole().getPermissions().isEmpty()){
+					userRolePermissionDto.addPcPermissions(convertParliamentConstituency(onePcRole.getParliamentConstituency()), convertPermissionToAppPermission(onePcRole.getRole().getPermissions()));
 				}
 			}
 		}
 		return userRolePermissionDto;
+	}
+
+	@Override
+	@Transactional
+	public void saveAllCountries() {
+		saveCountry("Afghanistan","93");
+		saveCountry("Albania","355");
+		saveCountry("Algeria","213");
+		saveCountry("American Samoa","1 684 ");
+		saveCountry("Andorra","376");
+		saveCountry("Angola","244");
+		saveCountry("Anguilla","1 264 ");
+		saveCountry("Antarctica","672");
+		saveCountry("Antigua and Barbuda","1 268 ");
+		saveCountry("Argentina","54");
+		saveCountry("Armenia","374");
+		saveCountry("Aruba","297");
+		saveCountry("Australia","61");
+		saveCountry("Austria","43");
+		saveCountry("Azerbaijan","994");
+		saveCountry("Bahamas","1 242 ");
+		saveCountry("Bahrain","973");
+		saveCountry("Bangladesh","880");
+		saveCountry("Barbados","1 246 ");
+		saveCountry("Belarus","375");
+		saveCountry("Belgium","32");
+		saveCountry("Belize","501");
+		saveCountry("Benin","229");
+		saveCountry("Bermuda","1 441 ");
+		saveCountry("Bhutan","975");
+		saveCountry("Bolivia","591");
+		saveCountry("Bosnia and Herzegovina","387");
+		saveCountry("Botswana","267");
+		saveCountry("Brazil","55");
+		saveCountry("British Indian Ocean Territory"," ");
+		saveCountry("British Virgin Islands","1 284 ");
+		saveCountry("Brunei","673");
+		saveCountry("Bulgaria","359");
+		saveCountry("Burkina Faso","226");
+		saveCountry("Burma (Myanmar)","95");
+		saveCountry("Burundi","257");
+		saveCountry("Cambodia","855");
+		saveCountry("Cameroon","237");
+		saveCountry("Canada","1");
+		saveCountry("Cape Verde","238");
+		saveCountry("Cayman Islands","1 345 ");
+		saveCountry("Central African Republic","236");
+		saveCountry("Chad","235");
+		saveCountry("Chile","56");
+		saveCountry("China","86");
+		saveCountry("Christmas Island","61");
+		saveCountry("Cocos (Keeling) Islands","61");
+		saveCountry("Colombia","57");
+		saveCountry("Comoros","269");
+		saveCountry("Cook Islands","682");
+		saveCountry("Costa Rica","506");
+		saveCountry("Croatia","385");
+		saveCountry("Cuba","53");
+		saveCountry("Cyprus","357");
+		saveCountry("Czech Republic","420");
+		saveCountry("Democratic Republic of the Congo","243");
+		saveCountry("Denmark","45");
+		saveCountry("Djibouti","253");
+		saveCountry("Dominica","1 767 ");
+		saveCountry("Dominican Republic","1 809 ");
+		saveCountry("Ecuador","593");
+		saveCountry("Egypt","20");
+		saveCountry("El Salvador","503");
+		saveCountry("Equatorial Guinea","240");
+		saveCountry("Eritrea","291");
+		saveCountry("Estonia","372");
+		saveCountry("Ethiopia","251");
+		saveCountry("Falkland Islands","500");
+		saveCountry("Faroe Islands","298");
+		saveCountry("Fiji","679");
+		saveCountry("Finland","358");
+		saveCountry("France","33");
+		saveCountry("French Polynesia","689");
+		saveCountry("Gabon","241");
+		saveCountry("Gambia","220");
+		saveCountry("Gaza Strip","970");
+		saveCountry("Georgia","995");
+		saveCountry("Germany","49");
+		saveCountry("Ghana","233");
+		saveCountry("Gibraltar","350");
+		saveCountry("Greece","30");
+		saveCountry("Greenland","299");
+		saveCountry("Grenada","1 473 ");
+		saveCountry("Guam","1 671 ");
+		saveCountry("Guatemala","502");
+		saveCountry("Guinea","224");
+		saveCountry("Guinea-Bissau","245");
+		saveCountry("Guyana","592");
+		saveCountry("Haiti","509");
+		saveCountry("Holy See (Vatican City)","39");
+		saveCountry("Honduras","504");
+		saveCountry("Hong Kong","852");
+		saveCountry("Hungary","36");
+		saveCountry("Iceland","354");
+		saveCountry("India","91");
+		saveCountry("Indonesia","62");
+		saveCountry("Iran","98");
+		saveCountry("Iraq","964");
+		saveCountry("Ireland","353");
+		saveCountry("Isle of Man","44");
+		saveCountry("Israel","972");
+		saveCountry("Italy","39");
+		saveCountry("Ivory Coast","225");
+		saveCountry("Jamaica","1 876 ");
+		saveCountry("Japan","81");
+		saveCountry("Jersey"," ");
+		saveCountry("Jordan","962");
+		saveCountry("Kazakhstan","7");
+		saveCountry("Kenya","254");
+		saveCountry("Kiribati","686");
+		saveCountry("Kosovo","381");
+		saveCountry("Kuwait","965");
+		saveCountry("Kyrgyzstan","996");
+		saveCountry("Laos","856");
+		saveCountry("Latvia","371");
+		saveCountry("Lebanon","961");
+		saveCountry("Lesotho","266");
+		saveCountry("Liberia","231");
+		saveCountry("Libya","218");
+		saveCountry("Liechtenstein","423");
+		saveCountry("Lithuania","370");
+		saveCountry("Luxembourg","352");
+		saveCountry("Macau","853");
+		saveCountry("Macedonia","389");
+		saveCountry("Madagascar","261");
+		saveCountry("Malawi","265");
+		saveCountry("Malaysia","60");
+		saveCountry("Maldives","960");
+		saveCountry("Mali","223");
+		saveCountry("Malta","356");
+		saveCountry("Marshall Islands","692");
+		saveCountry("Mauritania","222");
+		saveCountry("Mauritius","230");
+		saveCountry("Mayotte","262");
+		saveCountry("Mexico","52");
+		saveCountry("Micronesia","691");
+		saveCountry("Moldova","373");
+		saveCountry("Monaco","377");
+		saveCountry("Mongolia","976");
+		saveCountry("Montenegro","382");
+		saveCountry("Montserrat","1 664 ");
+		saveCountry("Morocco","212");
+		saveCountry("Mozambique","258");
+		saveCountry("Namibia","264");
+		saveCountry("Nauru","674");
+		saveCountry("Nepal","977");
+		saveCountry("Netherlands","31");
+		saveCountry("Netherlands Antilles","599");
+		saveCountry("New Caledonia","687");
+		saveCountry("New Zealand","64");
+		saveCountry("Nicaragua","505");
+		saveCountry("Niger","227");
+		saveCountry("Nigeria","234");
+		saveCountry("Niue","683");
+		saveCountry("Norfolk Island","672");
+		saveCountry("North Korea","850");
+		saveCountry("Northern Mariana Islands","1 670 ");
+		saveCountry("Norway","47");
+		saveCountry("Oman","968");
+		saveCountry("Pakistan","92");
+		saveCountry("Palau","680");
+		saveCountry("Panama","507");
+		saveCountry("Papua New Guinea","675");
+		saveCountry("Paraguay","595");
+		saveCountry("Peru","51");
+		saveCountry("Philippines","63");
+		saveCountry("Pitcairn Islands","870");
+		saveCountry("Poland","48");
+		saveCountry("Portugal","351");
+		saveCountry("Puerto Rico","1");
+		saveCountry("Qatar","974");
+		saveCountry("Republic of the Congo","242");
+		saveCountry("Romania","40");
+		saveCountry("Russia","7");
+		saveCountry("Rwanda","250");
+		saveCountry("Saint Barthelemy","590");
+		saveCountry("Saint Helena","290");
+		saveCountry("Saint Kitts and Nevis","1 869 ");
+		saveCountry("Saint Lucia","1 758 ");
+		saveCountry("Saint Martin","1 599 ");
+		saveCountry("Saint Pierre and Miquelon","508");
+		saveCountry("Saint Vincent and the Grenadines","1 784 ");
+		saveCountry("Samoa","685");
+		saveCountry("San Marino","378");
+		saveCountry("Sao Tome and Principe","239");
+		saveCountry("Saudi Arabia","966");
+		saveCountry("Senegal","221");
+		saveCountry("Serbia","381");
+		saveCountry("Seychelles","248");
+		saveCountry("Sierra Leone","232");
+		saveCountry("Singapore","65");
+		saveCountry("Slovakia","421");
+		saveCountry("Slovenia","386");
+		saveCountry("Solomon Islands","677");
+		saveCountry("Somalia","252");
+		saveCountry("South Africa","27");
+		saveCountry("South Korea","82");
+		saveCountry("Spain","34");
+		saveCountry("Sri Lanka","94");
+		saveCountry("Sudan","249");
+		saveCountry("Suriname","597");
+		saveCountry("Svalbard"," ");
+		saveCountry("Swaziland","268");
+		saveCountry("Sweden","46");
+		saveCountry("Switzerland","41");
+		saveCountry("Syria","963");
+		saveCountry("Taiwan","886");
+		saveCountry("Tajikistan","992");
+		saveCountry("Tanzania","255");
+		saveCountry("Thailand","66");
+		saveCountry("Timor-Leste","670");
+		saveCountry("Togo","228");
+		saveCountry("Tokelau","690");
+		saveCountry("Tonga","676");
+		saveCountry("Trinidad and Tobago","1 868 ");
+		saveCountry("Tunisia","216");
+		saveCountry("Turkey","90");
+		saveCountry("Turkmenistan","993");
+		saveCountry("Turks and Caicos Islands","1 649 ");
+		saveCountry("Tuvalu","688");
+		saveCountry("Uganda","256");
+		saveCountry("Ukraine","380");
+		saveCountry("United Arab Emirates","971");
+		saveCountry("United Kingdom","44");
+		saveCountry("United States","1");
+		saveCountry("Uruguay","598");
+		saveCountry("US Virgin Islands","1 340 ");
+		saveCountry("Uzbekistan","998");
+		saveCountry("Vanuatu","678");
+		saveCountry("Venezuela","58");
+		saveCountry("Vietnam","84");
+		saveCountry("Wallis and Futuna","681");
+		saveCountry("West Bank","970");
+		saveCountry("Western Sahara"," ");
+		saveCountry("Yemen","967");
+		saveCountry("Zambia","260");
+		saveCountry("Zimbabwe","263");
+		
+	}
+	private void saveCountry(String name, String isdCode){
+		Country country = countryDao.getCountryByName(name);
+		if(country == null){
+			country = new Country();
+			country.setName(name);
+			country.setIsdCode(isdCode);
+			country.setDateCreated(new Date());
+			country.setDateModified(new Date());
+			country = countryDao.saveCountry(country);
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public List<CountryDto> getAllCountries() {
+		List<Country> countries = countryDao.getAllCountries();
+		return convertCountries(countries);
+	}
+	private List<CountryDto> convertCountries(List<Country> countries){
+		List<CountryDto> countryDtos = new ArrayList<>();
+		for(Country oneCountry:countries){
+			countryDtos.add(convertCountry(oneCountry));
+		}
+		return countryDtos;
+	}
+	private CountryDto convertCountry(Country country){
+		if(country == null){
+			return null;
+		}
+		CountryDto countryDto = new CountryDto();
+		BeanUtils.copyProperties(country, countryDto);
+		return countryDto;
 	}
 }

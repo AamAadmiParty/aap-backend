@@ -51,6 +51,15 @@ public class User {
 	@Column(name = "date_of_birth")
 	private Date dateOfBirth;
 
+	@Column(name = "nri")
+	private boolean nri;
+
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="nri_country_id")
+    private Country nriCountry;
+	@Column(name="nri_country_id", insertable=false,updatable=false)
+	private Long nriCountryId;
+
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="living_state_id")
     private State stateLiving;
@@ -450,6 +459,30 @@ public class User {
 
 	public void setSuperAdmin(boolean superAdmin) {
 		this.superAdmin = superAdmin;
+	}
+
+	public boolean isNri() {
+		return nri;
+	}
+
+	public void setNri(boolean nri) {
+		this.nri = nri;
+	}
+
+	public Country getNriCountry() {
+		return nriCountry;
+	}
+
+	public void setNriCountry(Country nriCountry) {
+		this.nriCountry = nriCountry;
+	}
+
+	public Long getNriCountryId() {
+		return nriCountryId;
+	}
+
+	public void setNriCountryId(Long nriCountryId) {
+		this.nriCountryId = nriCountryId;
 	}
 
 	@Override

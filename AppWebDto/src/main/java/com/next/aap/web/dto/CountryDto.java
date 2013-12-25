@@ -1,13 +1,13 @@
 package com.next.aap.web.dto;
 
-import java.io.Serializable;
 
-public class StateDto implements Serializable{
+public class CountryDto {
 
-	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String name;
-	private Boolean districtDataAvailable;
+	private String isdCode;
+
+	
 
 	public Long getId() {
 		return id;
@@ -25,12 +25,12 @@ public class StateDto implements Serializable{
 		this.name = name;
 	}
 
-	public Boolean getDistrictDataAvailable() {
-		return districtDataAvailable;
+	public String getIsdCode() {
+		return isdCode;
 	}
 
-	public void setDistrictDataAvailable(Boolean districtDataAvailable) {
-		this.districtDataAvailable = districtDataAvailable;
+	public void setIsdCode(String isdCode) {
+		this.isdCode = isdCode;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class StateDto implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StateDto other = (StateDto) obj;
+		CountryDto other = (CountryDto) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -57,11 +57,5 @@ public class StateDto implements Serializable{
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "StateDto [id=" + id + ", name=" + name + ", districtDataAvailable=" + districtDataAvailable + "]";
-	}
-	
 
 }

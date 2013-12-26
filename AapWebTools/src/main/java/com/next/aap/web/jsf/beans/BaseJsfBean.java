@@ -17,7 +17,6 @@ import com.next.aap.web.dto.UserRolePermissionDto;
 public class BaseJsfBean extends BaseController implements Serializable {
 
 	public static HttpServletRequest getHttpServletRequest() {
-		HttpServletRequest h;
 		return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	}
 

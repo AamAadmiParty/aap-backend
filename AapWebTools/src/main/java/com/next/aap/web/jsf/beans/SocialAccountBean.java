@@ -26,6 +26,7 @@ public class SocialAccountBean extends BaseJsfBean {
 		HttpServletRequest httpServletRequest =  getHttpServletRequest();
 		String redirectUrlAfterLogin = httpServletRequest.getContextPath()+"/socialaccounts";
 		setRedirectUrlInSessiom(httpServletRequest, redirectUrlAfterLogin);
+		System.out.println("SocialAccountBean.getRedirectUrlFromSession=" + getRedirectUrlFromSession(httpServletRequest));
 		
 		LoginAccountDto loginAccounts = getLoggedInAccountsFromSesion();
 		if(loginAccounts == null || loginAccounts.getFacebookAccounts() == null || loginAccounts.getFacebookAccounts().isEmpty()){

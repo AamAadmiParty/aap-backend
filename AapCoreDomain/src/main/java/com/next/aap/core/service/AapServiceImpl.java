@@ -1277,6 +1277,16 @@ public class AapServiceImpl implements AapService, Serializable {
 		BeanUtils.copyProperties(facebookPost, facebookPostDto);
 		return facebookPostDto;
 	}
+	private List<FacebookPostDto> convertFacebookPosts(List<FacebookPost> facebookPosts){
+		if(facebookPosts == null){
+			return null;
+		}
+		List<FacebookPostDto> returnFacebookPosts = new ArrayList<>(facebookPosts.size());
+		for(FacebookPost oneFacebookPost:facebookPosts){
+			returnFacebookPosts.add(convertFacebookPost(oneFacebookPost));	
+		}
+		return returnFacebookPosts;
+	}
 
 	@Override
 	@Transactional
@@ -1295,8 +1305,17 @@ public class AapServiceImpl implements AapService, Serializable {
 			facebookPost.setFacebookPage(facebookPage);
 		}
 		facebookPost.setFacebookPostExternalId(facebookPostDto.getFacebookPostExternalId());
+		facebookPost.setDateCreated(new Date());
+		facebookPost.setDateModified(new Date());
 		facebookPost = facebookPostDao.saveFacebookPost(facebookPost);
 		return convertFacebookPost(facebookPost);
+	}
+
+	@Override
+	@Transactional
+	public List<FacebookPostDto> getUserFacebookPosts(Long facebookAccountId) {
+		List<FacebookPost> facebookPosts = facebookPostDao.getFacebookPostByFacebookAccountId(facebookAccountId);
+		return convertFacebookPosts(facebookPosts);
 	}
 
 }

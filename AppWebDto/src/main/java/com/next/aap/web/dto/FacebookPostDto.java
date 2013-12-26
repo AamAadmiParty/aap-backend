@@ -9,6 +9,7 @@ public class FacebookPostDto {
 	private Long facebookGroupId;
 	private Long facebookAccountId;
 	private Long plannedFacebookPostId;
+	private String facebookShareLink;
 	public Long getId() {
 		return id;
 	}
@@ -20,6 +21,11 @@ public class FacebookPostDto {
 	}
 	public void setFacebookPostExternalId(String facebookPostExternalId) {
 		this.facebookPostExternalId = facebookPostExternalId;
+		if(facebookPostExternalId != null && facebookPostExternalId.indexOf("_") >= 0){
+			String[] postIds = facebookPostExternalId.split("_");
+			facebookShareLink = "http://www.facebook.com/permalink.php?story_fbid="+postIds[1]+"&id="+postIds[0];
+			
+		}
 	}
 	public Long getFacebookPageId() {
 		return facebookPageId;
@@ -44,6 +50,12 @@ public class FacebookPostDto {
 	}
 	public void setPlannedFacebookPostId(Long plannedFacebookPostId) {
 		this.plannedFacebookPostId = plannedFacebookPostId;
+	}
+	public String getFacebookShareLink() {
+		return facebookShareLink;
+	}
+	public void setFacebookShareLink(String facebookShareLink) {
+		this.facebookShareLink = facebookShareLink;
 	}
 	
 	

@@ -82,4 +82,6 @@ public interface AapService {
 	
 	FacebookPostDto saveFacebookPost(FacebookPostDto facebookPostDto);
 	
+	List<FacebookPostDto> getUserFacebookPosts(Long facebookAccountId);
+	
 }

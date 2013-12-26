@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.util.EnvironmentUtil;
 import com.next.aap.web.dto.UserDto;
 
@@ -76,6 +77,9 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			facebookConnectionRepository.updateConnection(connection);
 			*/
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
+			if(StringUtil.isEmpty(redirectUrl)){
+				redirectUrl = httpServletRequest.getContextPath()+"/socialaccounts";
+			}
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);
 			mv.setView(rv);

@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -45,6 +46,13 @@ public class FacebookPostDaoHibernateSpringImpl extends BaseDaoHibernateSpring<F
 		params.put("facebookAccountId", facebookAccountId);
 		FacebookPost facebookPost = executeQueryGetObject("from FacebookPost where plannedFacebookPostId = :plannedFacebookPostId and facebookAccountId = :facebookAccountId", params);
 		return facebookPost;
+	}
+
+	@Override
+	public List<FacebookPost> getFacebookPostByFacebookAccountId(Long facebookAccountId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("facebookAccountId", facebookAccountId);
+		return executeQueryGetList("from FacebookPost where facebookAccountId = :facebookAccountId order by dateCreated desc", params);
 	}
 
 

@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Voice of AAP</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+
+.google {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px -200px;
+}
+
+.yahoo {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 50px;
+}
+
+.facebook {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px -100px;
+}
+
+.myspace {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 250px;
+}
+
+.linkedin {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 350px;
+}
+
+.aol {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 0px;
+}
+
+.twitter {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 150px;
+}
+
+.ui-selectcheckboxmenu-label {
+	font-size: 16px;
+	padding: 4px;
+}
+
+.ui-button-text {
+	font-size: 20px;
+}
+</style>
+
+</h:head>
+<h:body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&amp;appId=211380395715462";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+	<!-- menu starts -->
+	<ui:include src="menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 800px; margin: 0 auto;">
+		<div style="width: 800px; margin: 0;">
+
+			<!-- http://www.ajaxload.info/ -->
+
+			<h:form id="voiceOfAapForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:fieldset>
+					<f:facet name="legend">
+						<div class="topAlignDiv">Facebook Activities</div>
+					</f:facet>
+					<p:dataTable id="listOfPosts" var="onePost" value="#{voiceOfAapActivityBean.userPosts}" paginator="true" rows="20"
+						paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Activity from your account yet"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<div class="fb-post" data-href="#{onePost.facebookShareLink}" data-width="750"></div>
+						</p:column>
+						
+					</p:dataTable>
+				</p:fieldset>
+
+
+			</h:form>
+			<!-- header ends -->
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2013 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+		</div>
+	</div>
+
+</h:body>
+</html>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.util.EnvironmentUtil;
 import com.next.aap.web.dto.UserDto;
 
@@ -40,7 +41,7 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 		OAuthToken requestToken = oauthOperations.fetchRequestToken(getTwitterRedirectUrl(httpServletRequest), null);
 		String authorizeUrl = oauthOperations.buildAuthenticateUrl(requestToken.getValue() , OAuth1Parameters.NONE);
 		
-		setRedirectUrlInSessiom(httpServletRequest, getRedirectUrl(httpServletRequest));
+		//setRedirectUrlInSessiom(httpServletRequest, getRedirectUrl(httpServletRequest));
 
 		RedirectView rv = new RedirectView(authorizeUrl);
 		logger.info("url= {}", authorizeUrl);
@@ -73,6 +74,9 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 			*/
 			
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
+			if(StringUtil.isEmpty(redirectUrl)){
+				redirectUrl = httpServletRequest.getContextPath()+"/socialaccounts";
+			}
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);
 			mv.setView(rv);

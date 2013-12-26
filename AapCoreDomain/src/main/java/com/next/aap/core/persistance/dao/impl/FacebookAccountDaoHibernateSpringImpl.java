@@ -13,6 +13,8 @@ import com.next.aap.core.persistance.dao.FacebookAccountDao;
 public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring<FacebookAccount> implements FacebookAccountDao{
 
 
+	private static final long serialVersionUID = 1L;
+
 	/* (non-Javadoc)
 	 * @see com.next.aap.server.persistance.dao.impl.FacebookAccountDao#saveFacebookAccount(com.next.aap.server.persistance.FacebookAccount)
 	 */
@@ -68,5 +70,54 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 		params.put("facebookUserId", facebookUserId);
 		FacebookAccount facebookAccount = executeQueryGetObject("from FacebookAccount where facebookUserId = :facebookUserId", params);
 		return facebookAccount;
+	}
+
+	@Override
+	public List<FacebookAccount> getAllFacebookAccountsForVoiceOfAapToPublishOnTimeLine() {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("voiceOfAap", true);
+		params.put("allowTimeLine", true);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine", params);
+		return list;
+	}
+
+	@Override
+	public List<FacebookAccount> getStateFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long stateId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("voiceOfAap", true);
+		params.put("allowTimeLine", true);
+		params.put("stateId", stateId);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.stateLivingId = :stateId or user.stateVotingId = :stateId)", params);
+		return list;
+	}
+
+	@Override
+	public List<FacebookAccount> getDistrictFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long districtId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("voiceOfAap", true);
+		params.put("allowTimeLine", true);
+		params.put("districtId", districtId);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.districtLivingId = :districtId or user.districtVotingId = :districtId)");
+		return list;
+	}
+
+	@Override
+	public List<FacebookAccount> getAcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long acId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("voiceOfAap", true);
+		params.put("allowTimeLine", true);
+		params.put("acId", acId);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.assemblyConstituencyLivingId = :acId or user.assemblyConstituencyVotingId = :acId)");
+		return list;
+	}
+
+	@Override
+	public List<FacebookAccount> getPcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("voiceOfAap", true);
+		params.put("allowTimeLine", true);
+		params.put("pcId", pcId);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.parliamentConstituencyLivingId = :pcId or user.parliamentConstituencyVotingId = :pcId)");
+		return list;
 	}
 }

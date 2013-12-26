@@ -34,47 +34,8 @@ public class FacebookPost {
 	private Long modifierId;
 
 	
-	@Column(name = "post_type")
-	private String postType;
-	
-	@Column(name = "picture")
-	private String picture;
-
-	@Column(name = "message", columnDefinition="text")
-	private String message;
-	
-	@Column(name = "source")
-	private String source;
-
 	@Column(name = "facebook_post_ext_id", nullable = false)
 	private String facebookPostExternalId;
-
-	@Column(name = "link")
-	private String link;
-
-	@Column(name = "caption")
-	private String caption;
-
-	@Column(name = "name")
-	private String name;
-
-	@Column(name = "description")
-	private String description;
-
-	@Column(name = "total_likes")
-	private int totalLikes;
-	
-	@Column(name = "total_share")
-	private Integer totalShares;
-
-	@Column(name = "total_comments")
-	private int totalComments;
-
-	@Column(name = "total_reachability")
-	private int totalReachability;
-
-	@Column(name = "last_refresh_time")
-	private Date lastRefreshTime;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="facebook_page_id")
@@ -95,6 +56,102 @@ public class FacebookPost {
 	@Column(name="facebook_account_id", insertable=false,updatable=false)
 	private Long facebookAccountId;
 	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="planned_facebook_post_id")
+    private PlannedFacebookPost plannedFacebookPost;
+	@Column(name="planned_facebook_post_id", insertable=false,updatable=false)
+	private Long plannedFacebookPostId;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public int getVer() {
+		return ver;
+	}
+	public void setVer(int ver) {
+		this.ver = ver;
+	}
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	public Date getDateModified() {
+		return dateModified;
+	}
+	public void setDateModified(Date dateModified) {
+		this.dateModified = dateModified;
+	}
+	public Long getCreatorId() {
+		return creatorId;
+	}
+	public void setCreatorId(Long creatorId) {
+		this.creatorId = creatorId;
+	}
+	public Long getModifierId() {
+		return modifierId;
+	}
+	public void setModifierId(Long modifierId) {
+		this.modifierId = modifierId;
+	}
+	public String getFacebookPostExternalId() {
+		return facebookPostExternalId;
+	}
+	public void setFacebookPostExternalId(String facebookPostExternalId) {
+		this.facebookPostExternalId = facebookPostExternalId;
+	}
+	public FacebookPage getFacebookPage() {
+		return facebookPage;
+	}
+	public void setFacebookPage(FacebookPage facebookPage) {
+		this.facebookPage = facebookPage;
+	}
+	public Long getFacebookPageId() {
+		return facebookPageId;
+	}
+	public void setFacebookPageId(Long facebookPageId) {
+		this.facebookPageId = facebookPageId;
+	}
+	public FacebookGroup getFacebookGroup() {
+		return facebookGroup;
+	}
+	public void setFacebookGroup(FacebookGroup facebookGroup) {
+		this.facebookGroup = facebookGroup;
+	}
+	public Long getFacebookGroupId() {
+		return facebookGroupId;
+	}
+	public void setFacebookGroupId(Long facebookGroupId) {
+		this.facebookGroupId = facebookGroupId;
+	}
+	public FacebookAccount getFacebookAccount() {
+		return facebookAccount;
+	}
+	public void setFacebookAccount(FacebookAccount facebookAccount) {
+		this.facebookAccount = facebookAccount;
+	}
+	public Long getFacebookAccountId() {
+		return facebookAccountId;
+	}
+	public void setFacebookAccountId(Long facebookAccountId) {
+		this.facebookAccountId = facebookAccountId;
+	}
+	public PlannedFacebookPost getPlannedFacebookPost() {
+		return plannedFacebookPost;
+	}
+	public void setPlannedFacebookPost(PlannedFacebookPost plannedFacebookPost) {
+		this.plannedFacebookPost = plannedFacebookPost;
+	}
+	public Long getPlannedFacebookPostId() {
+		return plannedFacebookPostId;
+	}
+	public void setPlannedFacebookPostId(Long plannedFacebookPostId) {
+		this.plannedFacebookPostId = plannedFacebookPostId;
+	}
 	
 	
 	

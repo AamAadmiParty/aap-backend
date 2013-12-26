@@ -30,14 +30,13 @@ public class MenuBean extends BaseJsfBean {
 		if(userRolePermissionDto == null){
 			return false;
 		}
-		/*
 		System.out.println("isAcAdmin()="+userRolePermissionDto.isAcAdmin());
 		System.out.println("isPcAdmin()="+userRolePermissionDto.isPcAdmin());
 		System.out.println("isDistrictAdmin()="+userRolePermissionDto.isDistrictAdmin());
 		System.out.println("isStateAdmin()="+userRolePermissionDto.isStateAdmin());
+		System.out.println("isAllAdmin()="+userRolePermissionDto.isAllAdmin());
 		System.out.println("isSuperUser()="+userRolePermissionDto.isSuperUser());
 		System.out.println("isAdmin()="+userRolePermissionDto.isAdmin());
-		*/
 		return userRolePermissionDto.isAdmin();
 		
 	}

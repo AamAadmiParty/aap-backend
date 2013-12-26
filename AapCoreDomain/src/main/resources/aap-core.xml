@@ -26,8 +26,6 @@
 		<property name="properties">
         <util:properties>
             <!-- For Aap Video task -->
-            <prop key="aap.facebook.app.id">372184272903954</prop>
-            
             
         </util:properties>
     </property>

@@ -11,10 +11,14 @@ import org.springframework.social.twitter.api.Twitter;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
+import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
+import com.next.aap.web.dto.PlannedPostStatus;
+import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
@@ -62,7 +66,20 @@ public interface AapService {
 	
 	PlannedFacebookPostDto savePlannedFacebookPost(PlannedFacebookPostDto plannedFacebookPostDto);
 	
+	PlannedFacebookPostDto updatePlannedFacebookPostStatus(Long plannedFacebookPostId, PlannedPostStatus status, String message);
+	
 	List<PlannedFacebookPostDto> getPlannedFacebookPosts(int pageNumber, int pageSize);
 	
+	List<PlannedFacebookPostDto> getPlannedFacebookPostsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
+	
 	UserRolePermissionDto getUserRolePermissions(Long userId);
+	
+	PlannedFacebookPostDto getNextPlannedFacebookPostToPublish();
+	
+	List<FacebookAccountDto> getAllFacebookAccountsForVoiceOfAap(PostLocationType locationType, Long locationId);
+	
+	FacebookPostDto getFacebookPostByPlannedPostIdAndFacebookAccountId(Long plannedFacebookPostId, Long facebookAccountId);
+	
+	FacebookPostDto saveFacebookPost(FacebookPostDto facebookPostDto);
+	
 }

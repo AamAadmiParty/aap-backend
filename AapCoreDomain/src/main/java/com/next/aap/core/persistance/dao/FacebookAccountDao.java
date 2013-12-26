@@ -17,7 +17,16 @@ public interface FacebookAccountDao {
 
 	public abstract FacebookAccount getFacebookAccountByUserName(String userName);
 
-	public abstract List<FacebookAccount> getFacebookAccountsAfterId(
-			Long lastId, int pageSize);
+	public abstract List<FacebookAccount> getFacebookAccountsAfterId(Long lastId, int pageSize);
+	
+	public abstract List<FacebookAccount> getAllFacebookAccountsForVoiceOfAapToPublishOnTimeLine();
+	
+	public abstract List<FacebookAccount> getStateFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long stateId);
+	
+	public abstract List<FacebookAccount> getDistrictFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long district);
+	
+	public abstract List<FacebookAccount> getAcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long acId);
+	
+	public abstract List<FacebookAccount> getPcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId);
 
 }

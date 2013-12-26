@@ -74,6 +74,9 @@ public class PlannedFacebookPost {
 	@Column(name = "location_id")
 	private Long locationId;
 
+	@Column(name = "error_message")
+	private String errorMessage;
+
 	public Long getId() {
 		return id;
 	}
@@ -216,6 +219,14 @@ public class PlannedFacebookPost {
 
 	public void setLocationId(Long locationId) {
 		this.locationId = locationId;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 	
 	

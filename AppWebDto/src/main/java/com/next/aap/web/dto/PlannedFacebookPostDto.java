@@ -4,6 +4,9 @@ import java.util.Date;
 
 public class PlannedFacebookPostDto {
 
+	public static final String PHOTO_TYPE = "Photo";
+	public static final String LINK_TYPE = "Link";
+	public static final String TEXT_TYPE = "TextOnly";
 	private Long id;
 	private String postType;
 	private String picture;
@@ -17,6 +20,7 @@ public class PlannedFacebookPostDto {
 	private PlannedPostStatus status;
 	private PostLocationType locationType;
 	private Long locationId;
+	
 	
 	public Long getId() {
 		return id;

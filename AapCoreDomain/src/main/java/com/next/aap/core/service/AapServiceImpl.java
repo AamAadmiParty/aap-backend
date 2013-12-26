@@ -36,6 +36,8 @@ import com.next.aap.core.persistance.FacebookApp;
 import com.next.aap.core.persistance.FacebookAppPermission;
 import com.next.aap.core.persistance.FacebookGroup;
 import com.next.aap.core.persistance.FacebookGroupMembership;
+import com.next.aap.core.persistance.FacebookPage;
+import com.next.aap.core.persistance.FacebookPost;
 import com.next.aap.core.persistance.ParliamentConstituency;
 import com.next.aap.core.persistance.PcRole;
 import com.next.aap.core.persistance.Permission;
@@ -58,6 +60,8 @@ import com.next.aap.core.persistance.dao.FacebookAppDao;
 import com.next.aap.core.persistance.dao.FacebookAppPermissionDao;
 import com.next.aap.core.persistance.dao.FacebookGroupDao;
 import com.next.aap.core.persistance.dao.FacebookGroupMembershipDao;
+import com.next.aap.core.persistance.dao.FacebookPageDao;
+import com.next.aap.core.persistance.dao.FacebookPostDao;
 import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
 import com.next.aap.core.persistance.dao.PcRoleDao;
 import com.next.aap.core.persistance.dao.PermissionDao;
@@ -74,10 +78,12 @@ import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
+import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
+import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -114,6 +120,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Autowired
 	private FacebookGroupDao facebookGroupDao;
 	@Autowired
+	private FacebookPageDao facebookPageDao;
+	@Autowired
 	private PermissionDao permissionDao;
 	@Autowired
 	private RoleDao roleDao;
@@ -131,8 +139,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	private PcRoleDao pcRoleDao;
 	@Autowired
 	private CountryDao countryDao;
+	@Autowired
+	private FacebookPostDao facebookPostDao;
 	
-	@Value("${voa.facebook.app.id}")
+	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
 
 
@@ -840,11 +850,20 @@ public class AapServiceImpl implements AapService, Serializable {
 	}
 	
 	private PlannedFacebookPostDto convertPlannedFacebookPost(PlannedFacebookPost plannedFacebookPost){
+		if(plannedFacebookPost == null){
+			return null;
+		}
 		PlannedFacebookPostDto plannedFacebookPostDto = new PlannedFacebookPostDto();
 		BeanUtils.copyProperties(plannedFacebookPost, plannedFacebookPostDto);
 		return plannedFacebookPostDto;
 	}
-	
+	private List<PlannedFacebookPostDto> convertPlannedFacebookPosts(List<PlannedFacebookPost> plannedFacebookPosts){
+		List<PlannedFacebookPostDto> returnPlannedFacebookPostDtos = new ArrayList<>(plannedFacebookPosts.size());
+		for(PlannedFacebookPost onePlannedFacebookPost:plannedFacebookPosts){
+			returnPlannedFacebookPostDtos.add(convertPlannedFacebookPost(onePlannedFacebookPost));
+		}
+		return returnPlannedFacebookPostDtos;
+	}
 	private Set<AppPermission> convertPermissionToAppPermission(Set<Permission> permissions){
 		Set<AppPermission> returnPermissions = new HashSet<>();
 		if(permissions != null){
@@ -864,7 +883,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		userRolePermissionDto.setSuperUser(user.isSuperAdmin());
 		
 		Set<Role> allUserRolesAtWorldLevel = user.getAllRoles();
-		System.out.println("allUserRolesAtWorldLevel="+allUserRolesAtWorldLevel);
+		logger.info("allUserRolesAtWorldLevel="+allUserRolesAtWorldLevel);
 		if(allUserRolesAtWorldLevel != null && !allUserRolesAtWorldLevel.isEmpty()){
 			for(Role oneRole:allUserRolesAtWorldLevel){
 				if(!oneRole.getPermissions().isEmpty()){
@@ -874,7 +893,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		
 		Set<StateRole> stateRoles = user.getStateRoles();
-		System.out.println("stateRoles="+stateRoles);
+		logger.info("stateRoles="+stateRoles);
 		if(stateRoles != null && !stateRoles.isEmpty()){
 			for(StateRole oneStateRole:stateRoles){
 				System.out.println("oneStateRole="+oneStateRole);
@@ -887,7 +906,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		
 		Set<DistrictRole> districtRoles = user.getDistrictRoles();
-		System.out.println("districtRoles="+districtRoles);
+		logger.info("districtRoles="+districtRoles);
 		if(districtRoles != null && !districtRoles.isEmpty()){
 			for(DistrictRole oneDistrictRole:districtRoles){
 				if(!oneDistrictRole.getRole().getPermissions().isEmpty()){
@@ -897,7 +916,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		
 		Set<AcRole> acRoles = user.getAcRoles();
-		System.out.println("acRoles="+acRoles);
+		logger.info("acRoles="+acRoles);
 		if(acRoles != null && !acRoles.isEmpty()){
 			for(AcRole oneAcRole:acRoles){
 				if(!oneAcRole.getRole().getPermissions().isEmpty()){
@@ -907,7 +926,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		
 		Set<PcRole> pcRoles = user.getPcRoles();
-		System.out.println("pcRoles="+pcRoles);
+		logger.info("pcRoles="+pcRoles);
 		if(pcRoles != null && !pcRoles.isEmpty()){
 			for(PcRole onePcRole:pcRoles){
 				if(!onePcRole.getRole().getPermissions().isEmpty()){
@@ -1194,4 +1213,90 @@ public class AapServiceImpl implements AapService, Serializable {
 		BeanUtils.copyProperties(country, countryDto);
 		return countryDto;
 	}
+
+	@Override
+	@Transactional
+	public List<PlannedFacebookPostDto> getPlannedFacebookPostsForLocation(PostLocationType postLocationType, Long locationId, int pageNumber, int pageSize) {
+		List<PlannedFacebookPost> plannedFacebookPosts = plannedFacebookPostDao.getPlannedFacebookPostByLocationTypeAndLocationId(postLocationType, locationId);
+		return convertPlannedFacebookPosts(plannedFacebookPosts);
+	}
+
+	@Override
+	@Transactional
+	public PlannedFacebookPostDto getNextPlannedFacebookPostToPublish() {
+		PlannedFacebookPost plannedFacebookPost = plannedFacebookPostDao.getNextPlannedFacebookPostToPublish();
+		return convertPlannedFacebookPost(plannedFacebookPost);
+	}
+
+	@Override
+	@Transactional
+	public List<FacebookAccountDto> getAllFacebookAccountsForVoiceOfAap(PostLocationType locationType, Long locationId) {
+		List<FacebookAccount> facebookAccounts = null;
+		switch(locationType){
+		case Global :
+			facebookAccounts = facebookAccountDao.getAllFacebookAccountsForVoiceOfAapToPublishOnTimeLine();
+			break;
+		case STATE:
+			facebookAccounts = facebookAccountDao.getStateFacebookAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case DISTRICT:
+			facebookAccounts = facebookAccountDao.getDistrictFacebookAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case AC:
+			facebookAccounts = facebookAccountDao.getAcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case PC:
+			facebookAccounts = facebookAccountDao.getPcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		}
+		return convertFacebookAccounts(facebookAccounts);
+	}
+
+	@Override
+	@Transactional
+	public PlannedFacebookPostDto updatePlannedFacebookPostStatus(Long plannedFacebookPostId, PlannedPostStatus status, String errorMessage) {
+		PlannedFacebookPost plannedFacebookPost = plannedFacebookPostDao.getPlannedFacebookPostById(plannedFacebookPostId);
+		plannedFacebookPost.setStatus(status);
+		plannedFacebookPost.setErrorMessage(errorMessage);
+		plannedFacebookPost = plannedFacebookPostDao.savePlannedFacebookPost(plannedFacebookPost);
+		return convertPlannedFacebookPost(plannedFacebookPost);
+	}
+
+	@Override
+	@Transactional
+	public FacebookPostDto getFacebookPostByPlannedPostIdAndFacebookAccountId(Long plannedFacebookPostId, Long facebookAccountId) {
+		FacebookPost facebookPost = facebookPostDao.getFacebookPostByPlannedPostIdAndFacebookAccountId(plannedFacebookPostId, facebookAccountId);
+		return convertFacebookPost(facebookPost);
+	}
+	
+	private FacebookPostDto convertFacebookPost(FacebookPost facebookPost){
+		if(facebookPost == null){
+			return null;
+		}
+		FacebookPostDto facebookPostDto = new FacebookPostDto();
+		BeanUtils.copyProperties(facebookPost, facebookPostDto);
+		return facebookPostDto;
+	}
+
+	@Override
+	@Transactional
+	public FacebookPostDto saveFacebookPost(FacebookPostDto facebookPostDto) {
+		FacebookPost facebookPost = new FacebookPost();
+		FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountById(facebookPostDto.getFacebookAccountId());
+		facebookPost.setFacebookAccount(facebookAccount);
+		PlannedFacebookPost plannedFacebookPost = plannedFacebookPostDao.getPlannedFacebookPostById(facebookPostDto.getPlannedFacebookPostId());
+		facebookPost.setPlannedFacebookPost(plannedFacebookPost);
+		if(facebookPostDto.getFacebookGroupId() != null && facebookPostDto.getFacebookGroupId() > 0){
+			FacebookGroup facebookGroup = facebookGroupDao.getFacebookGroupById(facebookPostDto.getFacebookGroupId());
+			facebookPost.setFacebookGroup(facebookGroup);
+		}
+		if(facebookPostDto.getFacebookPageId() != null && facebookPostDto.getFacebookPageId() > 0){
+			FacebookPage facebookPage = facebookPageDao.getFacebookPageById(facebookPostDto.getFacebookPageId());
+			facebookPost.setFacebookPage(facebookPage);
+		}
+		facebookPost.setFacebookPostExternalId(facebookPostDto.getFacebookPostExternalId());
+		facebookPost = facebookPostDao.saveFacebookPost(facebookPost);
+		return convertFacebookPost(facebookPost);
+	}
+
 }

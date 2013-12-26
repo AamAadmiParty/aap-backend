@@ -32,7 +32,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 	//private static final String appPermissions = "email,user_birthday,user_hometown,user_location,user_photos,offline_access";
 	private static final String appPermissions = "email,user_birthday,offline_access";
 
-	@Value("${aap.facebook.app.secret}")
+	@Value("${aap_facebook_app_secret}")
 	private String appFacebokAppId;
 
 	@RequestMapping(value = "/facebook", method = RequestMethod.GET)

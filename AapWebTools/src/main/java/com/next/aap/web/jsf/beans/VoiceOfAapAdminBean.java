@@ -32,11 +32,13 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 	@Autowired 
 	private MenuBean menuBean;
 	
+	private int pageNumber = 1;
+	private int pageSize = 20;
+	private boolean showList = true;
+	
 	private List<PlannedFacebookPostDto> plannedFacebookPosts;
 	public VoiceOfAapAdminBean(){
 		super(AppPermission.ADMIN_VOICE_OF_AAP_FB, "/admin/voiceofaapfb");
-		selectedFacebookPost = new PlannedFacebookPostDto();
-		selectedFacebookPost.setPicture("https://lh6.googleusercontent.com/-G8Ikvc4xlmE/ToqQJiMd_LI/AAAAAAAAGtE/icBNFtCSwI4/s640/1226230024559.jpg");
 	}
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
@@ -44,6 +46,7 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 		if(!checkUserAccess()){
 			return;
 		}
+		plannedFacebookPosts = aapService.getPlannedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
 		
 	}
 
@@ -58,7 +61,9 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 		return selectedFacebookPost;
 	}
 	public void setSelectedFacebookPost(PlannedFacebookPostDto selectedFacebookPost) {
+		showList = false;
 		this.selectedFacebookPost = selectedFacebookPost;
+		handlePostTypeChange();
 	}
 	
 	public void showPreview(){
@@ -105,7 +110,10 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 			}
 			System.out.println("selectedFacebookPost=" + selectedFacebookPost);
 			if(isValidInput()){
-				aapService.savePlannedFacebookPost(selectedFacebookPost);	
+				aapService.savePlannedFacebookPost(selectedFacebookPost);
+				sendInfoMessageToJsfScreen("Post saved succesfully");
+				plannedFacebookPosts = aapService.getPlannedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+				showList = true;
 			}
 				
 		}catch(Exception ex){
@@ -113,22 +121,31 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 		}
 		
 	}
-	public void clear(){
+	public void newPost(){
 		selectedFacebookPost = new PlannedFacebookPostDto();
+		selectedFacebookPost.setPicture("https://lh6.googleusercontent.com/-G8Ikvc4xlmE/ToqQJiMd_LI/AAAAAAAAGtE/icBNFtCSwI4/s640/1226230024559.jpg");
+		showList = false;
+	}
+	public void clear(){
+		newPost();
+	}
+	public void cancel(){
+		newPost();
+		showList = true;
 	}
 	
 	public void handlePostTypeChange(){
-		if(selectedFacebookPost.getPostType().equals("Photo")){
+		if(selectedFacebookPost.getPostType().equals(PlannedFacebookPostDto.PHOTO_TYPE)){
 			photoTypeFbPost = true;
 			textTypeFbPost = false;
 			linkTypeFbPost = false;
 		}
-		if(selectedFacebookPost.getPostType().equals("Link")){
+		if(selectedFacebookPost.getPostType().equals(PlannedFacebookPostDto.LINK_TYPE)){
 			photoTypeFbPost = false;
 			textTypeFbPost = false;
 			linkTypeFbPost = true;
 		}
-		if(selectedFacebookPost.getPostType().equals("TextOnly")){
+		if(selectedFacebookPost.getPostType().equals(PlannedFacebookPostDto.TEXT_TYPE)){
 			photoTypeFbPost = false;
 			textTypeFbPost = true;
 			linkTypeFbPost = false;
@@ -152,6 +169,24 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 	}
 	public void setLinkTypeFbPost(boolean linkTypeFbPost) {
 		this.linkTypeFbPost = linkTypeFbPost;
+	}
+	public List<PlannedFacebookPostDto> getPlannedFacebookPosts() {
+		return plannedFacebookPosts;
+	}
+	public void setPlannedFacebookPosts(List<PlannedFacebookPostDto> plannedFacebookPosts) {
+		this.plannedFacebookPosts = plannedFacebookPosts;
+	}
+	public int getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+	public boolean isShowList() {
+		return showList;
+	}
+	public void setShowList(boolean showList) {
+		this.showList = showList;
 	}
 
 

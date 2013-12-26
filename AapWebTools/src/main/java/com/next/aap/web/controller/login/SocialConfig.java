@@ -35,9 +35,9 @@ public class SocialConfig {
 	private static final String localAppId = "372184272903954";
 	private static final String localAppSecret = "bec883d1ffb415fff01248f8c46f78f9";
 	*/
-	@Value("${aap.facebook.app.id}")
+	@Value("${aap_facebook_app_id}")
 	private String aapFacebookAppId;
-	@Value("${aap.facebook.app.secret}")
+	@Value("${aap_facebook_app_secret}")
 	private String aapFacebookAppSecret;
 	
 	private String twitterConsumerKey = "QwAtfFGQ4XyH2qSFX0UOg";

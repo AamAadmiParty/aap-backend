@@ -35,9 +35,9 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 	private String appPermissions = "email,user_birthday,offline_access";
 
 
-	@Value("${voa.facebook.app.id}")
+	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
-	@Value("${voa.facebook.app.secret}")
+	@Value("${voa_facebook_app_secret}")
 	private String voiceOfAapAppSecret;
 
 	

@@ -42,8 +42,10 @@ import com.next.aap.core.persistance.ParliamentConstituency;
 import com.next.aap.core.persistance.PcRole;
 import com.next.aap.core.persistance.Permission;
 import com.next.aap.core.persistance.Phone;
+import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.Phone.PhoneType;
 import com.next.aap.core.persistance.PlannedFacebookPost;
+import com.next.aap.core.persistance.PlannedTweet;
 import com.next.aap.core.persistance.Role;
 import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.StateRole;
@@ -67,9 +69,11 @@ import com.next.aap.core.persistance.dao.PcRoleDao;
 import com.next.aap.core.persistance.dao.PermissionDao;
 import com.next.aap.core.persistance.dao.PhoneDao;
 import com.next.aap.core.persistance.dao.PlannedFacebookPostDao;
+import com.next.aap.core.persistance.dao.PlannedTweetDao;
 import com.next.aap.core.persistance.dao.RoleDao;
 import com.next.aap.core.persistance.dao.StateDao;
 import com.next.aap.core.persistance.dao.StateRoleDao;
+import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
 import com.next.aap.web.dto.AppPermission;
@@ -83,8 +87,10 @@ import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
+import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.StateDto;
+import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
@@ -141,6 +147,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	private CountryDao countryDao;
 	@Autowired
 	private FacebookPostDao facebookPostDao;
+	@Autowired
+	private PlannedTweetDao plannedTweetDao;
+	@Autowired
+	private TweetDao tweetDao;
 	
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -1316,6 +1326,153 @@ public class AapServiceImpl implements AapService, Serializable {
 	public List<FacebookPostDto> getUserFacebookPosts(Long facebookAccountId) {
 		List<FacebookPost> facebookPosts = facebookPostDao.getFacebookPostByFacebookAccountId(facebookAccountId);
 		return convertFacebookPosts(facebookPosts);
+	}
+
+	private PlannedTweetDto convertPlannedTweet(PlannedTweet plannedTweet){
+		if(plannedTweet == null){
+			return null;
+		}
+		PlannedTweetDto plannedTweetDto = new PlannedTweetDto();
+		BeanUtils.copyProperties(plannedTweet, plannedTweetDto);
+		return plannedTweetDto;
+	}
+	private List<PlannedTweetDto> convertPlannedTweets(List<PlannedTweet> plannedTweets){
+		if(plannedTweets == null){
+			return null;
+		}
+		List<PlannedTweetDto> plannedTweetDtos = new ArrayList<>(plannedTweets.size());
+		for(PlannedTweet onePlannedTweet:plannedTweets){
+			plannedTweetDtos.add(convertPlannedTweet(onePlannedTweet));
+		}
+		return plannedTweetDtos;
+	}
+	@Override
+	@Transactional
+	public PlannedTweetDto savePlannedTweet(PlannedTweetDto plannedTweetDto) {
+		PlannedTweet plannedTweet = null;
+		if(plannedTweetDto.getId() != null && plannedTweetDto.getId() > 0){
+			plannedTweet = plannedTweetDao.getPlannedTweetById(plannedTweetDto.getId());
+			if(plannedTweet == null){
+				throw new RuntimeException("No such Tweet found[id="+plannedTweetDto.getId()+"]");
+			}
+		}else{
+			plannedTweet = new PlannedTweet();
+			plannedTweet.setDateCreated(new Date());
+			plannedTweet.setStatus(PlannedPostStatus.PENDING);
+		}
+		plannedTweet.setMessage(plannedTweetDto.getMessage());
+		plannedTweet.setPicture(plannedTweetDto.getPicture());
+		plannedTweet.setPostingTime(plannedTweetDto.getPostingTime());
+		plannedTweet.setLocationType(plannedTweetDto.getLocationType());
+		plannedTweet.setLocationId(plannedTweetDto.getLocationId());
+		plannedTweet.setTweetId(plannedTweetDto.getTweetId());
+		plannedTweet.setTweetType(plannedTweetDto.getTweetType());
+		
+		plannedTweet = plannedTweetDao.savePlannedTweet(plannedTweet);
+		
+		return convertPlannedTweet(plannedTweet);
+	}
+
+	@Override
+	@Transactional
+	public PlannedTweetDto updatePlannedTweetStatus(Long plannedTweetId, PlannedPostStatus status, String errorMessage) {
+		PlannedTweet plannedTweet = plannedTweetDao.getPlannedTweetById(plannedTweetId);
+		plannedTweet.setStatus(status);
+		plannedTweet.setErrorMessage(errorMessage);
+		plannedTweet = plannedTweetDao.savePlannedTweet(plannedTweet);
+		return convertPlannedTweet(plannedTweet);
+	}
+
+	@Override
+	@Transactional
+	public List<PlannedTweetDto> getPlannedTweets(int pageNumber, int pageSize) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public List<PlannedTweetDto> getPlannedTweetsForLocation(PostLocationType postLocationType, Long locationId, int pageNumber, int pageSize) {
+		List<PlannedTweet> plannedTweets = plannedTweetDao.getPlannedTweetByLocationTypeAndLocationId(postLocationType, locationId);
+		return convertPlannedTweets(plannedTweets);
+	}
+
+	@Override
+	@Transactional
+	public PlannedTweetDto getNextPlannedTweetToPublish() {
+		PlannedTweet plannedTweet = plannedTweetDao.getNextPlannedTweetToPublish();
+		return convertPlannedTweet(plannedTweet);
+	}
+
+	@Override
+	@Transactional
+	public TweetDto getTweetByPlannedTweetIdAndTwitterAccountId(Long plannedTweetId, Long twitterAccountId) {
+		Tweet tweet = tweetDao.getTweetByPlannedPostIdAndTwitterAccountId(plannedTweetId, twitterAccountId);
+		return convertTweet(tweet);
+	}
+
+	@Override
+	@Transactional
+	public TweetDto saveTweetPost(TweetDto tweetDto) {
+		Tweet tweet = new Tweet();
+		TwitterAccount twitterAccount = twitterAccountDao.getTwitterAccountById(tweetDto.getTwitterAccountId());
+		tweet.setTwitterAccount(twitterAccount);
+		PlannedTweet plannedTweet = plannedTweetDao.getPlannedTweetById(tweetDto.getPlannedTweetId());
+		tweet.setPlannedTweet(plannedTweet);
+		tweet.setDateCreated(new Date());
+		tweet.setDateModified(new Date());
+		tweet.setTweetExternalId(tweetDto.getTweetExternalId());
+		tweet = tweetDao.saveTweet(tweet);
+		return convertTweet(tweet);
+	}
+	private TweetDto convertTweet(Tweet tweet){
+		if(tweet == null){
+			return null;
+		}
+		TweetDto tweetDto = new TweetDto();
+		BeanUtils.copyProperties(tweet, tweetDto);
+		return tweetDto;
+	}
+	private List<TweetDto> convertTweets(List<Tweet> tweets){
+		if(tweets == null){
+			return null;
+		}
+		List<TweetDto> returnTweets = new ArrayList<>(tweets.size());
+		for(Tweet tweet:tweets){
+			returnTweets.add(convertTweet(tweet));
+		}
+		return returnTweets;
+	}
+
+	@Override
+	@Transactional
+	public List<TweetDto> getUserTweets(Long userId) {
+		List<Tweet> tweets = tweetDao.getTweetByUserId(userId);
+		return convertTweets(tweets);
+	}
+
+	@Override
+	@Transactional
+	public List<TwitterAccountDto> getAllTwitterAccountsForVoiceOfAap(PostLocationType locationType, Long locationId) {
+		List<TwitterAccount> twitterAccounts = null;
+		switch(locationType){
+		case Global :
+			twitterAccounts = twitterAccountDao.getAllTwitterAccountsForVoiceOfAapToPublishOnTimeLine();
+			break;
+		case STATE:
+			twitterAccounts = twitterAccountDao.getStateTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case DISTRICT:
+			twitterAccounts = twitterAccountDao.getDistrictTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case AC:
+			twitterAccounts = twitterAccountDao.getAcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case PC:
+			twitterAccounts = twitterAccountDao.getPcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		}
+		return convertTwitterAccounts(twitterAccounts);
 	}
 
 }

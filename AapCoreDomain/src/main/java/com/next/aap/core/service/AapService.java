@@ -18,8 +18,11 @@ import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
+import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.StateDto;
+import com.next.aap.web.dto.TweetDto;
+import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.dto.VoiceOfAapData;
@@ -83,5 +86,23 @@ public interface AapService {
 	FacebookPostDto saveFacebookPost(FacebookPostDto facebookPostDto);
 	
 	List<FacebookPostDto> getUserFacebookPosts(Long facebookAccountId);
+
 	
+	PlannedTweetDto savePlannedTweet(PlannedTweetDto plannedTweetDto);
+	
+	PlannedTweetDto updatePlannedTweetStatus(Long plannedTweetId, PlannedPostStatus status, String message);
+	
+	List<PlannedTweetDto> getPlannedTweets(int pageNumber, int pageSize);
+	
+	List<PlannedTweetDto> getPlannedTweetsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
+	
+	PlannedTweetDto getNextPlannedTweetToPublish();
+
+	TweetDto getTweetByPlannedTweetIdAndTwitterAccountId(Long plannedTweetId, Long twitterAccountId);
+	
+	TweetDto saveTweetPost(TweetDto tweetDto);
+	
+	List<TweetDto> getUserTweets(Long userId);
+	
+	List<TwitterAccountDto> getAllTwitterAccountsForVoiceOfAap(PostLocationType locationType, Long locationId);
 }

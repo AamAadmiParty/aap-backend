@@ -43,7 +43,7 @@ public class FacebookUserTimeLinePostTask {
 			if(allFacebookAccounts != null && !allFacebookAccounts.isEmpty()){
 				CountDownLatch countDownLatch = new CountDownLatch(allFacebookAccounts.size());
 				for(FacebookAccountDto oneFacebookAccount:allFacebookAccounts){
-					PostOnUserTimeLineTask postOnUserTimeLineTask = new PostOnUserTimeLineTask(aapService, oneFacebookAccount, plannedFacebookPostDto, countDownLatch);
+					PostOnUserFacebookTimeLineTask postOnUserTimeLineTask = new PostOnUserFacebookTimeLineTask(aapService, oneFacebookAccount, plannedFacebookPostDto, countDownLatch);
 					threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
 				}
 				//wait for all task to finish before proceeding

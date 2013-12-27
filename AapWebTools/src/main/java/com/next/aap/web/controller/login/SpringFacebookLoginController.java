@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gdata.util.common.base.StringUtil;
-import com.next.aap.core.util.EnvironmentUtil;
 import com.next.aap.web.dto.UserDto;
 
 @Controller
@@ -28,23 +27,24 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private static final String localRedirectUrl = "http://localhost:8081/aap/login/facebooksuccess";
-	private static final String productionRedirectUrl = "http://www.vote4delhi.com/vote/login/facebooksuccess";
 	//private static final String appPermissions = "email,user_birthday,user_hometown,user_location,user_photos,offline_access";
 	private static final String appPermissions = "email,user_birthday,offline_access";
 
-	@Value("${aap_facebook_app_secret}")
+	@Value("${aap_facebook_app_id}")
 	private String appFacebokAppId;
+	@Value("${server_domain_and_context}/login/facebooksuccess")
+	private String facebookRedirectUrl;
 
 	@RequestMapping(value = "/facebook", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		
+		System.out.println("facebookRedirectUrl="+facebookRedirectUrl);
 		FacebookConnectionFactory facebookConnectionFactory = (FacebookConnectionFactory)connectionFactoryLocator.getConnectionFactory(Facebook.class);
 
 		OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
 		OAuth2Parameters params = new OAuth2Parameters();
-		params.setRedirectUri(getFacebookRedirectUrl(httpServletRequest));
+		params.setRedirectUri(facebookRedirectUrl);
 		params.setScope(appPermissions);
 		String authorizeUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, params);
 		
@@ -67,7 +67,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
 			String authorizationCode = httpServletRequest.getParameter("code");
 			System.out.println("authorizationCode="+authorizationCode);
-			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, getFacebookRedirectUrl(httpServletRequest), null);
+			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, facebookRedirectUrl, null);
 			Connection<Facebook> facebookConnection = facebookConnectionFactory.createConnection(accessGrant);
 			
 			afterSuccesfullLogin(httpServletRequest, facebookConnection);
@@ -76,6 +76,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId());
 			facebookConnectionRepository.updateConnection(connection);
 			*/
+			//System.out.println("SpringFacebookLoginController.getRedirectUrlFromSession=" + getRedirectUrlFromSession(httpServletRequest));
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
 			if(StringUtil.isEmpty(redirectUrl)){
 				redirectUrl = httpServletRequest.getContextPath()+"/socialaccounts";
@@ -90,13 +91,6 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 		return mv;
 	}
 
-	protected String getFacebookRedirectUrl(HttpServletRequest httpServletRequest) {
-		String url = localRedirectUrl; 
-		if (EnvironmentUtil.isProductionEnv()) {
-			url = productionRedirectUrl;
-		}
-		return url;
-	}
 	@Override
 	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) {
 		System.out.println("loggedInUser"+loggedInUser);

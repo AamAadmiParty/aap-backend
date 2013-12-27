@@ -6,18 +6,25 @@ import com.next.aap.core.persistance.TwitterAccount;
 
 public interface TwitterAccountDao {
 
-	public abstract TwitterAccount saveTwitterAccount(
-			TwitterAccount twitterAccount);
+	public abstract TwitterAccount saveTwitterAccount(TwitterAccount twitterAccount);
 
 	public abstract TwitterAccount getTwitterAccountById(Long id);
 
 	public abstract TwitterAccount getTwitterAccountByUserId(Long userId);
 
 	public abstract TwitterAccount getTwitterAccountByHandle(String userName);
-	
+
 	public abstract TwitterAccount getTwitterAccountByTwitterUserId(String twitterUserId);
 
-	public abstract List<TwitterAccount> getTwitterAccountsAfterId(
-			Long lastId, int pageSize);
+	public abstract List<TwitterAccount> getTwitterAccountsAfterId(Long lastId, int pageSize);
 
+	public abstract List<TwitterAccount> getAllTwitterAccountsForVoiceOfAapToPublishOnTimeLine();
+	
+	public abstract List<TwitterAccount> getStateTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long stateId);
+	
+	public abstract List<TwitterAccount> getDistrictTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long district);
+	
+	public abstract List<TwitterAccount> getAcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long acId);
+	
+	public abstract List<TwitterAccount> getPcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId);
 }

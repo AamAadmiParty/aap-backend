@@ -109,4 +109,48 @@ public class TwitterAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<TwitterAccount> getAllTwitterAccountsForVoiceOfAapToPublishOnTimeLine() {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("allowTweets", true);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets", params);
+		return list;
+	}
+
+	@Override
+	public List<TwitterAccount> getStateTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long stateId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("allowTweets", true);
+		params.put("stateId", stateId);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets and allowTimeLine = :allowTimeLine and (user.stateLivingId = :stateId or user.stateVotingId = :stateId)", params);
+		return list;
+	}
+
+	@Override
+	public List<TwitterAccount> getDistrictTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long districtId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("allowTweets", true);
+		params.put("districtId", districtId);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets and allowTimeLine = :allowTimeLine and (user.districtLivingId = :districtId or user.districtVotingId = :districtId)", params);
+		return list;
+	}
+
+	@Override
+	public List<TwitterAccount> getAcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long acId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("allowTweets", true);
+		params.put("acId", acId);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets and allowTimeLine = :allowTimeLine and (user.assemblyConstituencyLivingId = :acId or user.assemblyConstituencyVotingId = :acId)", params);
+		return list;
+	}
+
+	@Override
+	public List<TwitterAccount> getPcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("allowTweets", true);
+		params.put("pcId", pcId);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets and allowTimeLine = :allowTimeLine and (user.parliamentConstituencyLivingId = :pcId or user.parliamentConstituencyVotingId = :pcId)", params);
+		return list;
+	}
 }

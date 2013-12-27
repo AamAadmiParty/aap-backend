@@ -21,7 +21,7 @@ import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 
-public class PostOnUserTimeLineTask implements Callable<Boolean> {
+public class PostOnUserFacebookTimeLineTask implements Callable<Boolean> {
 
 	private AapService aapService;
 	private FacebookAccountDto facebookAccountDto;
@@ -29,7 +29,7 @@ public class PostOnUserTimeLineTask implements Callable<Boolean> {
 	private CountDownLatch countDownLatch;
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	public PostOnUserTimeLineTask(AapService aapService, FacebookAccountDto facebookAccountDto, PlannedFacebookPostDto plannedFacebookPostDto, CountDownLatch countDownLatch){
+	public PostOnUserFacebookTimeLineTask(AapService aapService, FacebookAccountDto facebookAccountDto, PlannedFacebookPostDto plannedFacebookPostDto, CountDownLatch countDownLatch){
 		this.aapService = aapService;
 		this.facebookAccountDto = facebookAccountDto;
 		this.plannedFacebookPostDto = plannedFacebookPostDto;

@@ -33,7 +33,7 @@
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close" p:driverClassName="com.mysql.jdbc.Driver"
-		p:url="jdbc:mysql://${dbserver:localhost}:${dbport:3306}/${aapdbname:aapdb}?autoReconnect=true&amp;characterEncoding=UTF-8"
+		p:url="jdbc:mysql://${dbserver:localhost}:${dbport:3306}/${AapCentralDbName:aapcentraldb}?autoReconnect=true&amp;characterEncoding=UTF-8"
 		p:username="${dbuser:adfonic}" p:password="${dbpassword:adfon1c}"></bean>
 
 	<bean id="sessionFactory"

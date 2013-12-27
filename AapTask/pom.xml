@@ -29,12 +29,12 @@
 				<configuration>
 					<!-- Set the target configuration directory to be used in the bin scripts -->
 					<configurationDirectory>conf</configurationDirectory>
-					<!-- Copy the contents from "/src/main/config" to the target configuration directory in the assembled application -->
-					<copyConfigurationDirectory>true</copyConfigurationDirectory>
+					<!-- Copy the contents from "/src/main/config" to the target configuration directory in the assembled application <copyConfigurationDirectory>true</copyConfigurationDirectory> -->
 					<!-- Include the target configuration directory in the beginning of the classpath declaration in the bin scripts -->
 					<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
 					<!-- Extra JVM arguments that will be included in the bin scripts -->
 					<extraJvmArguments>-Xms128m</extraJvmArguments>
+					<showConsoleWindow>false</showConsoleWindow>
 					<programs>
 						<program>
 							<mainClass>com.next.aap.task.App</mainClass>

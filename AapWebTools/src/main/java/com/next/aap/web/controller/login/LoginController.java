@@ -24,7 +24,6 @@ public class LoginController extends BaseController {
 		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
 		mv.getModel().put("loggedInUser", loggedInUser);
 		mv.getModel().put("loginAccounts", loginAccountDto);
-		System.out.println("httpServletRequest="+httpServletRequest.getServletContext().getRealPath("tmp"));
 		mv.setViewName("login");
 		return mv;
 	}

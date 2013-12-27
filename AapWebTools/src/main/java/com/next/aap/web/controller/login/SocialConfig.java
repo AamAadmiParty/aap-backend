@@ -29,12 +29,6 @@ import org.springframework.web.context.request.WebRequest;
 
 @Configuration
 public class SocialConfig {
-	/*
-	private static final String appId = "618283854899839";
-	private static final String appSecret = "4a8d9a3005c298dc9176b0990a996ea6";
-	private static final String localAppId = "372184272903954";
-	private static final String localAppSecret = "bec883d1ffb415fff01248f8c46f78f9";
-	*/
 	@Value("${aap_facebook_app_id}")
 	private String aapFacebookAppId;
 	@Value("${aap_facebook_app_secret}")
@@ -69,6 +63,7 @@ public class SocialConfig {
         return registry;
     }
     
+    /*
     @Bean
     @Scope(value="singleton", proxyMode=ScopedProxyMode.INTERFACES)
     public UsersConnectionRepository usersConnectionRepository() {
@@ -120,9 +115,11 @@ public class SocialConfig {
         return controller;
     }
     
+    
     @Bean
     public TextEncryptor textEncryptor() {
         return Encryptors.noOpText();
     }
+    */
 
 }

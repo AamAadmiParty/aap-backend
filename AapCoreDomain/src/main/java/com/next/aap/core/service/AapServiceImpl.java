@@ -222,6 +222,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		System.out.println("user=" + user);
 		user = userDao.saveUser(user);
 
+		dbFacebookAccount.setDateModified(new Date());
+		dbFacebookAccount.setImageUrl(fbConnectionData.getImageUrl());
+		dbFacebookAccount.setUser(user);
+		dbFacebookAccount = facebookAccountDao.saveFacebookAccount(dbFacebookAccount);
+
 		// check if this email already exists in our system
 		if (!StringUtil.isEmpty(facebookAccountEmail)) {
 			Email email = emailDao.getEmailByEmail(facebookAccountEmail);
@@ -259,10 +264,6 @@ public class AapServiceImpl implements AapService, Serializable {
 			email = emailDao.saveEmail(email);
 		}
 
-		dbFacebookAccount.setDateModified(new Date());
-		dbFacebookAccount.setImageUrl(fbConnectionData.getImageUrl());
-		dbFacebookAccount.setUser(user);
-		dbFacebookAccount = facebookAccountDao.saveFacebookAccount(dbFacebookAccount);
 
 		return connvertUser(user);
 	}

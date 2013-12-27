@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.next.aap.core.util.EnvironmentUtil;
 import com.next.aap.web.dto.UserDto;
 
 @Controller
@@ -29,9 +28,6 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private static final String localRedirectUrl = "http://localhost:8081/aap/login/voa/facebooksuccess";
-	private static final String productionRedirectUrl = "http://www.vote4delhi.com/vote/login/voa/facebooksuccess";
-	//private static final String appPermissions = "email,user_birthday,user_hometown,user_location,user_photos,offline_access";
 	private String appPermissions = "email,user_birthday,offline_access";
 
 
@@ -40,7 +36,9 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 	@Value("${voa_facebook_app_secret}")
 	private String voiceOfAapAppSecret;
 
-	
+	@Value("${server_domain_and_context}/login/voa/facebooksuccess")
+	private String facebookRedirectUrl;
+
 	
 	public void setVoiceOfAapAppId(String voiceOfAapAppId) {
 		this.voiceOfAapAppId = voiceOfAapAppId;
@@ -72,7 +70,7 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 
 		OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
 		OAuth2Parameters params = new OAuth2Parameters();
-		params.setRedirectUri(getFacebookRedirectUrl(httpServletRequest));
+		params.setRedirectUri(facebookRedirectUrl);
 		params.setScope(appPermissions);
 		String authorizeUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, params);
 		
@@ -95,14 +93,15 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 			OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
 			String authorizationCode = httpServletRequest.getParameter("code");
 			System.out.println("authorizationCode="+authorizationCode);
-			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, getFacebookRedirectUrl(httpServletRequest), null);
+			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, facebookRedirectUrl, null);
 			Connection<Facebook> facebookConnection = facebookConnectionFactory.createConnection(accessGrant);
 			
 			afterSuccesfullLogin(httpServletRequest, facebookConnection);
 			
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
 			logger.info("url= {}", redirectUrl);
-			if(redirectUrl == null){
+			//if(redirectUrl == null)
+			{
 				redirectUrl = "./../voiceofaap";
 			}
 			RedirectView rv = new RedirectView(redirectUrl);
@@ -115,13 +114,6 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 		return mv;
 	}
 
-	protected String getFacebookRedirectUrl(HttpServletRequest httpServletRequest) {
-		String url = localRedirectUrl; 
-		if (EnvironmentUtil.isProductionEnv()) {
-			url = productionRedirectUrl;
-		}
-		return url;
-	}
 	@Override
 	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) {
 		System.out.println("loggedInUser"+loggedInUser);

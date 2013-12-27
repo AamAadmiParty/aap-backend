@@ -46,6 +46,10 @@
 			Saving Profile<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:nri">
+			Please wait<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
 			<p:blockUI block="userProfileForm" trigger=":userProfileForm:state,:userProfileForm:livingState">
 			Getting District List<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />

@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
-import org.springframework.social.connect.UsersConnectionRepository;
 
 import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.LoginAccountDto;
@@ -16,10 +15,6 @@ public abstract class BaseSocialLoginController<T> extends BaseController {
 
 	@Autowired 
 	protected ConnectionFactoryLocator connectionFactoryLocator;
-	
-	@Autowired
-	protected UsersConnectionRepository usersConnectionRepository ;
-	
 	
 	protected abstract UserDto saveSocialUser(Connection<T> socialConnection, UserDto loggedInUser);
 

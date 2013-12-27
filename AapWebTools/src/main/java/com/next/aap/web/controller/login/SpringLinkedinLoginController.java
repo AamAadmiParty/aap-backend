@@ -71,11 +71,11 @@ public class SpringLinkedinLoginController extends BaseSocialLoginController<Lin
 			Connection<LinkedIn> connection = linkedinConnectionFactory.createConnection(accessGrant);
 			
 			//aapService.saveGoogleUser(null, connection);
-			
+			/*
 			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository("ravi");
 			facebookConnectionRepository.addConnection(connection);
 			System.out.println(connection.getImageUrl());
-
+			*/
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

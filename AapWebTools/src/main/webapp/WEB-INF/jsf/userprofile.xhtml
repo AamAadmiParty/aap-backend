@@ -60,10 +60,13 @@
 			</p:blockUI>
 			<h:form id="userProfileForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
-				
-				<h:panelGrid columns="2" cellpadding="5">
+
+				<h:panelGrid columns="4" cellpadding="5">
 					<h:outputLabel for="name" value="Name*" />
 					<p:inputText id="name" value="#{userProfileBean.selectedUserForEditing.name}" label="Name">
+					</p:inputText>
+					<h:outputLabel for="voterId" value="Voter Id" />
+					<p:inputText id="voterId" value="#{userProfileBean.selectedUserForEditing.voterId}" label="Voter Id">
 					</p:inputText>
 					<h:outputText value="Gender : " />
 					<p:selectOneMenu value="#{userProfileBean.selectedUserForEditing.gender}">
@@ -71,15 +74,17 @@
 						<f:selectItem itemLabel="Male" itemValue="Male" />
 						<f:selectItem itemLabel="Female" itemValue="Female" />
 					</p:selectOneMenu>
+					<h:outputLabel for="passportNumber" value="Passport Number" />
+					<p:inputText id="passportNumber" value="#{userProfileBean.selectedUserForEditing.passportNumber}" label="Passport Number">
+					</p:inputText>
 					<h:outputLabel for="mobile" value="Mobile" />
-					<h:panelGrid columns="2">
-						<p:selectOneMenu value="#{userProfileBean.selectedUserForEditing.countryCode}">
-							<f:selectItem itemLabel="India - 91" itemValue="91" />
-							<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
-						</p:selectOneMenu>
-						<p:inputText id="mobile" value="#{userProfileBean.selectedUserForEditing.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
-						</p:inputText>
-					</h:panelGrid>
+					<p:selectOneMenu value="#{userProfileBean.selectedUserForEditing.countryCode}">
+						<f:selectItem itemLabel="India - 91" itemValue="91" />
+						<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
+					</p:selectOneMenu>
+					<p:inputText id="mobile" value="#{userProfileBean.selectedUserForEditing.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+					</p:inputText>
+					<p:outputPanel></p:outputPanel>
 
 					<h:outputText value="Date of Birth*" />
 					<p:calendar id="cal" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />

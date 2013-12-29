@@ -33,6 +33,8 @@ public class UserDto implements Serializable{
 	private String countryCode;
 	private String mobileNumber;
 	private String membershipStatus;
+	private String passportNumber;
+	private String voterId;
 
 
 	public Long getId() {
@@ -251,6 +253,22 @@ public class UserDto implements Serializable{
 
 	public void setMembershipStatus(String membershipStatus) {
 		this.membershipStatus = membershipStatus;
+	}
+
+	public String getPassportNumber() {
+		return passportNumber;
+	}
+
+	public void setPassportNumber(String passportNumber) {
+		this.passportNumber = passportNumber;
+	}
+
+	public String getVoterId() {
+		return voterId;
+	}
+
+	public void setVoterId(String voterId) {
+		this.voterId = voterId;
 	}
 
 	@Override

@@ -190,7 +190,13 @@ public class User {
 	
 	@Column(name = "membership_status", nullable = false)
 	private String membershipStatus;
+	
+	@Column(name = "passport_number")
+	private String passportNumber;
 
+	@Column(name = "voter_id")
+	private String voterId;
+	
 	public Long getId() {
 		return id;
 	}
@@ -549,6 +555,22 @@ public class User {
 
 	public void setMembershipStatus(String membershipStatus) {
 		this.membershipStatus = membershipStatus;
+	}
+
+	public String getPassportNumber() {
+		return passportNumber;
+	}
+
+	public void setPassportNumber(String passportNumber) {
+		this.passportNumber = passportNumber;
+	}
+
+	public String getVoterId() {
+		return voterId;
+	}
+
+	public void setVoterId(String voterId) {
+		this.voterId = voterId;
 	}
 
 	@Override

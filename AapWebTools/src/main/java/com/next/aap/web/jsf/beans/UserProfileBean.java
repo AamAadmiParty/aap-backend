@@ -145,8 +145,13 @@ public class UserProfileBean extends BaseJsfBean {
 		if (selectedUserForEditing.getParliamentConstituencyVotingId() == null || selectedUserForEditing.getParliamentConstituencyVotingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you registered as Voter");
 		}
-		if (selectedUserForEditing.isNri() && (selectedUserForEditing.getNriCountryId() == null || selectedUserForEditing.getNriCountryId() == 0)) {
-			sendErrorMessageToJsfScreen("Please select Country where you Live");
+		if (selectedUserForEditing.isNri() ){
+			if((selectedUserForEditing.getNriCountryId() == null || selectedUserForEditing.getNriCountryId() == 0)) {
+				sendErrorMessageToJsfScreen("Please select Country where you Live");
+			}
+			if(selectedUserForEditing.isMember() && StringUtil.isEmpty(selectedUserForEditing.getPassportNumber())){
+				sendErrorMessageToJsfScreen("Please enter passport number. Its Required for NRIs to become member.");
+			}
 		}
 		if (selectedUserForEditing.getDateOfBirth() == null) {
 			sendErrorMessageToJsfScreen("Please enter your Date of Birth");

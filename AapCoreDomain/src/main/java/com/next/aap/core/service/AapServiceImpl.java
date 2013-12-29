@@ -81,6 +81,7 @@ import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.ContentStatus;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
@@ -769,7 +770,9 @@ public class AapServiceImpl implements AapService, Serializable {
 		
 		createRoleWithPermissions("NewsReporterRole", "User of this role will be able to create/update news for a location", true, true,true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS);
 		
-		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update news for a location", true, true,true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
+		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update and publish news for a location", true, true,true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
+		
+		createRoleWithPermissions("NewsApproverRole", "User of this role will be able to publish existing news for a location", true, true,true, true, AppPermission.APPROVE_NEWS);
 
 	}
 	private void createRoleWithPermissions(String name,String description,boolean addStateRoles, boolean addDistrictRoles,boolean addAcRoles,boolean addPcRoles,AppPermission...appPermissions){
@@ -1511,6 +1514,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		if(news == null){
 			news = new News();
 			news.setDateCreated(new Date());
+			news.setContentStatus(ContentStatus.Pending);
 		}
 		news.setAuthor(newsDto.getAuthor());
 		news.setContent(newsDto.getContent());
@@ -1597,6 +1601,15 @@ public class AapServiceImpl implements AapService, Serializable {
 			news = newsDao.getPcNews(locationId);
 			break;
 		}
+		return convertNews(news);
+	}
+
+	@Override
+	@Transactional
+	public NewsDto publishNews(Long newsId) {
+		News news = newsDao.getNewsById(newsId);
+		news.setContentStatus(ContentStatus.Published);
+		news = newsDao.saveNews(news);
 		return convertNews(news);
 	}
 

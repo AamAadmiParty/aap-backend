@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
+import com.next.aap.web.dto.ContentStatus;
 
 @Entity
 @Table(name="news")
@@ -53,6 +57,9 @@ public class News {
 	private Date date;//Publish date of this item
 	@Column(name = "global_allowed")
 	private boolean global;//Whether this News is available global or not
+	@Column(name = "content_status", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ContentStatus contentStatus;
 
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "news_tweets",
@@ -225,5 +232,11 @@ public class News {
 	}
 	public void setGlobal(boolean global) {
 		this.global = global;
+	}
+	public ContentStatus getContentStatus() {
+		return contentStatus;
+	}
+	public void setContentStatus(ContentStatus contentStatus) {
+		this.contentStatus = contentStatus;
 	}
 }

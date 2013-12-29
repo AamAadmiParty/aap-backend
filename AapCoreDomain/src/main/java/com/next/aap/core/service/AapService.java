@@ -109,5 +109,7 @@ public interface AapService {
 	
 	NewsDto saveNews(NewsDto newsDto,PostLocationType locationType, Long locationId);
 	
+	NewsDto publishNews(Long newsId);
+	
 	List<NewsDto> getNews(PostLocationType locationType, Long locationId);
 }

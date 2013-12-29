@@ -12,7 +12,7 @@ public class VideoDto {
 	private String description;//description of video
 	private String youtubeVideoId;
 	private boolean global;//Whether this News is available global or not
-	
+	private ContentStatus contentStatus;
 	public Long getId() {
 		return id;
 	}
@@ -60,6 +60,12 @@ public class VideoDto {
 	}
 	public void setGlobal(boolean global) {
 		this.global = global;
+	}
+	public ContentStatus getContentStatus() {
+		return contentStatus;
+	}
+	public void setContentStatus(ContentStatus contentStatus) {
+		this.contentStatus = contentStatus;
 	}
 	
 	

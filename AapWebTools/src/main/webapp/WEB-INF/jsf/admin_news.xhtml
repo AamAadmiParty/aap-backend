@@ -37,7 +37,10 @@
 	<!-- menu ends -->
 	<div style="width: 800px; margin: 0 auto;">
 		<div style="width: 800px; margin: 0;">
-
+			<p:blockUI block="adminNewsForm" trigger=":adminNewsForm:saveNews,:adminNewsForm:saveNewsAndPublish,:adminNewsForm:publish">
+			Saving Profile<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
 			<h:form id="adminNewsForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:outputPanel id="mainPanel">
@@ -67,6 +70,12 @@
 								</f:facet>
 								<h:outputText value="#{onePost.author}" />
 							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Status" />
+								</f:facet>
+								<h:outputText value="#{onePost.contentStatus}" />
+							</p:column>
 							<p:column style="width:100px;">
 								<f:facet name="header">
 									<h:outputText value="Update" />
@@ -81,30 +90,32 @@
 					<p:outputPanel id="formView" rendered="#{!newsAdminBean.showList}">
 						<p:panelGrid columns="2">
 							<p:outputLabel value="Title"></p:outputLabel>
-							<p:inputText value="#{newsAdminBean.selectedNews.title}" style="width:600px">
+							<p:inputText value="#{newsAdminBean.selectedNews.title}" style="width:600px" disabled="#{!newsAdminBean.editAllowed}" >
 								<p:ajax event="change" update=":adminNewsForm" />
 							</p:inputText>
 							<p:outputLabel value="Image Url"></p:outputLabel>
-							<p:inputText value="#{newsAdminBean.selectedNews.imageUrl}" style="width:600px">
+							<p:inputText value="#{newsAdminBean.selectedNews.imageUrl}" style="width:600px" disabled="#{!newsAdminBean.editAllowed}">
 								<p:ajax event="change" update=":adminNewsForm" />
 							</p:inputText>
 							<p:outputLabel value="Message"></p:outputLabel>
-							<p:editor id="editor" value="#{newsAdminBean.selectedNews.content}" width="600" height="500">
+							<p:outputLabel value="#{newsAdminBean.selectedNews.content}" escape="false" rendered="#{!newsAdminBean.editAllowed}"/>
+							<p:editor id="editor" value="#{newsAdminBean.selectedNews.content}" width="600" height="500" rendered="#{newsAdminBean.editAllowed}">
 							</p:editor>
 							<p:outputLabel value="Author"></p:outputLabel>
-							<p:inputText value="#{newsAdminBean.selectedNews.author}" />
+							<p:inputText value="#{newsAdminBean.selectedNews.author}" disabled="#{!newsAdminBean.editAllowed}"/>
 							<p:outputLabel value="Source"></p:outputLabel>
-							<p:inputText value="#{newsAdminBean.selectedNews.source}" />
+							<p:inputText value="#{newsAdminBean.selectedNews.source}" disabled="#{!newsAdminBean.editAllowed}"/>
 						</p:panelGrid>
 						<p:commandButton value="Cancel" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.cancel}" styleClass="ui-priority-primary">
 						</p:commandButton>
-						<!-- 
-						<p:commandButton value="Clear" update=":adminNewsForm:postPreview" actionListener="#{newsAdminBean.showPreview}" styleClass="ui-priority-primary">
+						<p:commandButton id="saveNews" value="Save Draft" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.savePost}" styleClass="ui-priority-primary"
+						 rendered="#{newsAdminBean.saveDraft}">
 						</p:commandButton>
-						<p:commandButton value="Preview" update=":adminNewsForm:postPreview" actionListener="#{newsAdminBean.showPreview}" styleClass="ui-priority-primary">
+						<p:commandButton id="saveNewsAndPublish" value="Save and Publish" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.saveAndPublishPost}" styleClass="ui-priority-primary"
+						rendered="#{newsAdminBean.saveAndPublish}">
 						</p:commandButton>
-						 -->
-						<p:commandButton value="Save" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.savePost}" styleClass="ui-priority-primary">
+						<p:commandButton id="publish" value="Publish" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.publishPost}" styleClass="ui-priority-primary"
+						rendered="#{newsAdminBean.publish}">
 						</p:commandButton>
 					</p:outputPanel>
 				</p:outputPanel>

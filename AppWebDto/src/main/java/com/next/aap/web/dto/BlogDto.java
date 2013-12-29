@@ -14,6 +14,7 @@ public class BlogDto {
 	private String author;// nullable, name of the person who wrote this article
 	private Date date;//Publish date of this item
 	private boolean global;//Whether this News is available global or not
+	private ContentStatus contentStatus;
 	
 	public Long getId() {
 		return id;
@@ -74,6 +75,12 @@ public class BlogDto {
 	}
 	public void setGlobal(boolean global) {
 		this.global = global;
+	}
+	public ContentStatus getContentStatus() {
+		return contentStatus;
+	}
+	public void setContentStatus(ContentStatus contentStatus) {
+		this.contentStatus = contentStatus;
 	}
 	
 

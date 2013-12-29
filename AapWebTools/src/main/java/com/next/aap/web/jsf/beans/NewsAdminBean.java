@@ -7,10 +7,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.util.AppPermisionUtil;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserRolePermissionDto;
+import com.next.aap.web.util.ClientPermissionUtil;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -60,8 +63,48 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		this.selectedNews = selectedNews;
 		showList = false;
 	}
-	public void showPreview(){
-		
+	public boolean isSaveDraft(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
+				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+	}
+	public boolean isSaveAndPublish(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return (ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
+				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType())) &&
+				ClientPermissionUtil.isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+	}
+	public boolean isPublish(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+	}
+	public boolean isEditAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return (ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
+				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()));
+	}
+	public void saveAndPublishPost() {
+		savePost();
+		publishPost();
+	}
+	public void publishPost(){
+		try{
+			if(selectedNews == null){
+				sendErrorMessageToJsfScreen("No news selected to publish");
+			}
+			if(selectedNews.getId() == null || selectedNews.getId() <= 0){
+				sendErrorMessageToJsfScreen("Please save the News first");
+			}
+			if(!isPublish()){
+				sendErrorMessageToJsfScreen("You do not have permission to publish a news");
+			}
+			if(isValidInput()){
+				selectedNews = aapService.publishNews(selectedNews.getId());	
+			}
+			
+		}catch(Exception ex){
+			sendErrorMessageToJsfScreen("Unable to save Post",ex);
+		}
 	}
 	public void savePost(){
 		try{
@@ -75,7 +118,7 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 			}
 
 			if(isValidInput()){
-				aapService.saveNews(selectedNews, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
+				selectedNews = aapService.saveNews(selectedNews, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
 				sendInfoMessageToJsfScreen("News saved succesfully");
 				refreshNewsList();
 				showList = true;

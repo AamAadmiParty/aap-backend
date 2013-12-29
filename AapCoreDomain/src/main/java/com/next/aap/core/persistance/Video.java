@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
+import com.next.aap.web.dto.ContentStatus;
 
 @Entity
 @Table(name="videos")
@@ -101,7 +105,10 @@ public class Video {
 	@JoinColumn(name="state_id")
 	})
 	private List<State> states;
-	
+	@Column(name = "content_status", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private ContentStatus contentStatus;
+
 	public Long getId() {
 		return id;
 	}
@@ -185,5 +192,35 @@ public class Video {
 	}
 	public void setGlobal(boolean global) {
 		this.global = global;
+	}
+	public List<AssemblyConstituency> getAssemblyConstituencies() {
+		return assemblyConstituencies;
+	}
+	public void setAssemblyConstituencies(List<AssemblyConstituency> assemblyConstituencies) {
+		this.assemblyConstituencies = assemblyConstituencies;
+	}
+	public List<ParliamentConstituency> getParliamentConstituencies() {
+		return parliamentConstituencies;
+	}
+	public void setParliamentConstituencies(List<ParliamentConstituency> parliamentConstituencies) {
+		this.parliamentConstituencies = parliamentConstituencies;
+	}
+	public List<District> getDistricts() {
+		return districts;
+	}
+	public void setDistricts(List<District> districts) {
+		this.districts = districts;
+	}
+	public List<State> getStates() {
+		return states;
+	}
+	public void setStates(List<State> states) {
+		this.states = states;
+	}
+	public ContentStatus getContentStatus() {
+		return contentStatus;
+	}
+	public void setContentStatus(ContentStatus contentStatus) {
+		this.contentStatus = contentStatus;
 	}
 }

@@ -13,6 +13,8 @@ import com.next.aap.core.persistance.dao.NewsDao;
 public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> implements NewsDao{
 
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public News saveNews(News news) {
 		saveObject(news);
@@ -105,6 +107,76 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 				"union (select news_id as newsId from news_state where state_id= :stateId) " +
 				"union (select id as newsId from news where global_allowed= true)) newslist order by newslist.newsId desc";
 		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;
+	}
+
+	@Override
+	public List<News> getGlobalNews() {
+		Map<String, Object> params = new HashMap<>(1);
+		params.put("global", true);
+		String query = "from News where global = :global order by dateCreated desc";
+		List<News> list = executeQueryGetList(query, params);
+		return list;
+	}
+
+	@Override
+	public List<News> getStateNews(Long stateId) {
+		String sqlQuery = "select news_id from news_state where state_id = :stateId";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("stateId", stateId);
+		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		
+		String query = "from News where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("ids", newsIds);
+		List<News> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<News> getDistrictNews(Long districtId) {
+		String sqlQuery = "select news_id from news_district where district_id = :districtId";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("districtId", districtId);
+		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		
+		String query = "from News where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("ids", newsIds);
+		List<News> list = executeQueryGetList(query, queryParams);
+		return list;
+
+	}
+
+	@Override
+	public List<News> getAcNews(Long acId) {
+		String sqlQuery = "select news_id from news_ac where ac_id = :acId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("acId", acId);
+		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		
+		String query = "from News where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("ids", newsIds);
+		List<News> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<News> getPcNews(Long pcId) {
+		String sqlQuery = "select news_id from news_pc where pc_id = :pcId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("pcId", pcId);
+		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		
+		String query = "from News where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("ids", newsIds);
+		List<News> list = executeQueryGetList(query, queryParams);
 		return list;
 	}
 

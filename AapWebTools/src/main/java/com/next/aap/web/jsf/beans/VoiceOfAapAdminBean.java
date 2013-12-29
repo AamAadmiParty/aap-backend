@@ -46,7 +46,8 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 		if(!checkUserAccess()){
 			return;
 		}
-		plannedFacebookPosts = aapService.getPlannedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+		refreshPosts();
+		showList = true;
 		
 	}
 
@@ -112,7 +113,7 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 			if(isValidInput()){
 				aapService.savePlannedFacebookPost(selectedFacebookPost);
 				sendInfoMessageToJsfScreen("Post saved succesfully");
-				plannedFacebookPosts = aapService.getPlannedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+				refreshPosts();
 				showList = true;
 			}
 				
@@ -120,6 +121,9 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 			sendErrorMessageToJsfScreen("Unable to save Post",ex);
 		}
 		
+	}
+	private void refreshPosts(){
+		plannedFacebookPosts = aapService.getPlannedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
 	}
 	public void newPost(){
 		selectedFacebookPost = new PlannedFacebookPostDto();

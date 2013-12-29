@@ -28,4 +28,15 @@ public interface NewsDao {
 	
 	public abstract List<Long> getNewsByLocation(long pcId, long stateId);
 	
+	
+	public abstract List<News> getGlobalNews();
+	
+	public abstract List<News> getStateNews(Long stateId);
+	
+	public abstract List<News> getDistrictNews(Long districtId);
+	
+	public abstract List<News> getAcNews(Long acId);
+	
+	public abstract List<News> getPcNews(Long pcId);
+	
 }

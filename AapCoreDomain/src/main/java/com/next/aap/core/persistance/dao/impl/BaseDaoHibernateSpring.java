@@ -89,15 +89,15 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 		return (List<T>)hibernateQuery.list();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public List<Long> executeSqlQueryGetListOfLong(String query,Map<String, Object> params){
-		Query hibernateQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
+		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
 		if(params != null){
 			for(Entry<String, Object> oneEntry:params.entrySet()){
-				hibernateQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());
+				sqlQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());
 			}
 		}
-		List results = hibernateQuery.list();
+		@SuppressWarnings("rawtypes")
+		List results = sqlQuery.list();
 		List<Long> returnList = new ArrayList<>();
         for(ListIterator iter = results.listIterator(); iter.hasNext(); ) {
         	returnList.add(((BigInteger)iter.next()).longValue());

@@ -58,9 +58,9 @@ public class Video {
 	@JoinColumn(name="video_id") 
 	},
 	inverseJoinColumns = {
-	@JoinColumn(name="tweet_id")
+	@JoinColumn(name="content_tweet_id")
 	})
-	private List<Tweet> tweets;//all one liners attached to this news which can be tweeted
+	private List<ContentTweet> tweets;//all one liners attached to this news which can be tweeted
 	
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "video_ac",
@@ -162,10 +162,10 @@ public class Video {
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
 	}
-	public List<Tweet> getTweets() {
+	public List<ContentTweet> getTweets() {
 		return tweets;
 	}
-	public void setTweets(List<Tweet> tweets) {
+	public void setTweets(List<ContentTweet> tweets) {
 		this.tweets = tweets;
 	}
 	public String getDescription() {

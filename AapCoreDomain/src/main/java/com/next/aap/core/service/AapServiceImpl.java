@@ -39,6 +39,7 @@ import com.next.aap.core.persistance.FacebookGroup;
 import com.next.aap.core.persistance.FacebookGroupMembership;
 import com.next.aap.core.persistance.FacebookPage;
 import com.next.aap.core.persistance.FacebookPost;
+import com.next.aap.core.persistance.News;
 import com.next.aap.core.persistance.ParliamentConstituency;
 import com.next.aap.core.persistance.PcRole;
 import com.next.aap.core.persistance.Permission;
@@ -65,6 +66,7 @@ import com.next.aap.core.persistance.dao.FacebookGroupDao;
 import com.next.aap.core.persistance.dao.FacebookGroupMembershipDao;
 import com.next.aap.core.persistance.dao.FacebookPageDao;
 import com.next.aap.core.persistance.dao.FacebookPostDao;
+import com.next.aap.core.persistance.dao.NewsDao;
 import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
 import com.next.aap.core.persistance.dao.PcRoleDao;
 import com.next.aap.core.persistance.dao.PermissionDao;
@@ -85,6 +87,7 @@ import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
@@ -152,6 +155,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private PlannedTweetDao plannedTweetDao;
 	@Autowired
 	private TweetDao tweetDao;
+	@Autowired
+	private NewsDao newsDao;
 	
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -759,9 +764,17 @@ public class AapServiceImpl implements AapService, Serializable {
 		//Now create all custom Roles
 		createRoleWithPermissions("VoiceOfAapFacebookAdminRole"," User of this role will be able to make Facebook post using voice of AAP Application", true, true,false,false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
 		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true, true,false, false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
+		//News Related Roles
+		createRoleWithPermissions("NewsAdminRole", "User of this role will be able to create/update news for a location", true, true,true, true, AppPermission.CREATE_NEWS,AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS,AppPermission.APPROVE_NEWS);
+		
+		createRoleWithPermissions("NewsReporterRole", "User of this role will be able to create/update news for a location", true, true,true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS);
+		
+		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update news for a location", true, true,true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
 
 	}
 	private void createRoleWithPermissions(String name,String description,boolean addStateRoles, boolean addDistrictRoles,boolean addAcRoles,boolean addPcRoles,AppPermission...appPermissions){
+		logger.info("Creating Role "+ name);
+		
 		Role role = roleDao.getRoleByName(name);
 		if(role == null){
 			role = new Role();
@@ -1486,6 +1499,105 @@ public class AapServiceImpl implements AapService, Serializable {
 			break;
 		}
 		return convertTwitterAccounts(twitterAccounts);
+	}
+
+	@Override
+	@Transactional
+	public NewsDto saveNews(NewsDto newsDto,PostLocationType locationType, Long locationId) {
+		News news = null;
+		if(newsDto.getId() != null && newsDto.getId() > 0){
+			news = newsDao.getNewsById(newsDto.getId());
+		}
+		if(news == null){
+			news = new News();
+			news.setDateCreated(new Date());
+		}
+		news.setAuthor(newsDto.getAuthor());
+		news.setContent(newsDto.getContent());
+		news.setDateModified(new Date());
+		news.setImageUrl(newsDto.getImageUrl());
+		news.setSource(newsDto.getSource());
+		news.setTitle(newsDto.getTitle());
+		
+		switch(locationType){
+		case Global :
+			news.setGlobal(true);
+			break;
+		case STATE:
+			if(news.getStates() == null){
+				news.setStates(new ArrayList<State>());
+			}
+			State state = stateDao.getStateById(locationId);
+			news.getStates().add(state);
+			break;
+		case DISTRICT:
+			if(news.getDistricts() == null){
+				news.setDistricts(new ArrayList<District>());
+			}
+			District district = districtDao.getDistrictById(locationId);
+			news.getDistricts().add(district);
+			break;
+		case AC:
+			if(news.getAssemblyConstituencies() == null){
+				news.setAssemblyConstituencies(new ArrayList<AssemblyConstituency>());
+			}
+			AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(locationId);
+			news.getAssemblyConstituencies().add(assemblyConstituency);
+			break;
+		case PC:
+			if(news.getParliamentConstituencies() == null){
+				news.setParliamentConstituencies(new ArrayList<ParliamentConstituency>());
+			}
+			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(locationId);
+			news.getParliamentConstituencies().add(parliamentConstituency);
+			break;
+		}
+		
+		news = newsDao.saveNews(news);
+		return convertNews(news);
+	}
+	private NewsDto convertNews(News news){
+		if(news == null){
+			return null;
+		}
+		NewsDto newsDto = new NewsDto();
+		BeanUtils.copyProperties(news, newsDto);
+		return newsDto;
+	}
+	
+	private List<NewsDto> convertNews(List<News> news){
+		if(news == null){
+			return null;
+		}
+		List<NewsDto> returnNews = new ArrayList<>(news.size());
+		for(News oneNews:news){
+			returnNews.add(convertNews(oneNews));
+		}
+		return returnNews;
+	}
+
+	@Override
+	@Transactional
+	public List<NewsDto> getNews(PostLocationType locationType, Long locationId) {
+		List<News> news = null;
+		switch(locationType){
+		case Global :
+			news = newsDao.getGlobalNews();
+			break;
+		case STATE:
+			news = newsDao.getStateNews(locationId);
+			break;
+		case DISTRICT:
+			news = newsDao.getDistrictNews(locationId);
+			break;
+		case AC:
+			news = newsDao.getAcNews(locationId);
+			break;
+		case PC:
+			news = newsDao.getPcNews(locationId);
+			break;
+		}
+		return convertNews(news);
 	}
 
 }

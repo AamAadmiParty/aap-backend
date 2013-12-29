@@ -15,6 +15,7 @@ import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
@@ -105,4 +106,8 @@ public interface AapService {
 	List<TweetDto> getUserTweets(Long userId);
 	
 	List<TwitterAccountDto> getAllTwitterAccountsForVoiceOfAap(PostLocationType locationType, Long locationId);
+	
+	NewsDto saveNews(NewsDto newsDto,PostLocationType locationType, Long locationId);
+	
+	List<NewsDto> getNews(PostLocationType locationType, Long locationId);
 }

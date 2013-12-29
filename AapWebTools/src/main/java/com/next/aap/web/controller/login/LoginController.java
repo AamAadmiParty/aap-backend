@@ -3,8 +3,10 @@ package com.next.aap.web.controller.login;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -40,5 +42,13 @@ public class LoginController extends BaseController {
 		rv.setExposeModelAttributes(false);
 		mv.setView(rv);
 		return mv;
+	}
+	
+	@RequestMapping(value = "/ur", method = RequestMethod.GET)
+	@ResponseBody
+	public String updateROlesAndPermissions(ModelAndView mv,
+			HttpServletRequest httpServletRequest) {
+		aapService.updateAllPermissionsAndRole();
+		return "Job Finished";
 	}
 }

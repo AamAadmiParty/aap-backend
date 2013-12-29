@@ -55,6 +55,13 @@ public class LocationAdminBean extends BaseJsfBean {
 			buildAndRedirect("/admin/notallowed");
 		}
 	}
+	public void goToManageNewsPage(){
+		if(isVoiceOfAapTwitterAllowed()){
+			buildAndRedirect("/admin/news");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
 	public boolean isVoiceOfAapFbAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isVoiceOfAapFbAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
@@ -62,6 +69,10 @@ public class LocationAdminBean extends BaseJsfBean {
 	public boolean isVoiceOfAapTwitterAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isVoiceOfAapTwitterAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+	}
+	public boolean isManageNewsAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageNewsAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	
 

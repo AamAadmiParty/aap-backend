@@ -11,6 +11,13 @@ public class ClientPermissionUtil {
 	public static boolean isVoiceOfAapTwitterAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return isAllowed(AppPermission.ADMIN_VOICE_OF_AAP_TWITTER, userRolePermissionDto, locationId, locationType);
 	}
+	public static boolean isManageNewsAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return 
+				isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.DELETE_NEWS, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, locationId, locationType);
+	}
 
 	public static boolean isAllowed(AppPermission appPermission, UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		

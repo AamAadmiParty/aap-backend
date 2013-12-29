@@ -5,9 +5,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.social.twitter.api.Twitter;
+import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
@@ -37,8 +42,11 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 	private List<PlannedTweetDto> plannedTweets;
 	private String tweetPreview;
 
+	@Autowired(required=true)
+	private AapService aapService;
+
 	public VoiceOfAapTwitterAdminBean() {
-		super(AppPermission.ADMIN_VOICE_OF_AAP_FB, "/admin/voiceofaaptwitter");
+		super(AppPermission.ADMIN_VOICE_OF_AAP_TWITTER, "/admin/voiceofaaptwitter");
 	}
 
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
@@ -50,6 +58,8 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 		refreshTweetList();
 	}
 	private void refreshTweetList(){
+		System.out.println("aapService="+aapService);
+		System.out.println("menuBean="+menuBean);
 		plannedTweets = aapService.getPlannedTweetsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
 	}
 
@@ -66,9 +76,29 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 
 	public void showPreview() {
 		if (selectedPlannedTweet.getTweetType().equals(PlannedTweetDto.RETWEET_TYPE)) {
- 
+			if(selectedPlannedTweet.getTweetId() == null || selectedPlannedTweet.getTweetId() <= 0){
+				sendErrorMessageToJsfScreen("Please enter Tweet id you want to retweet");
+				return;
+			}
+			try{
+				Twitter twitter = new TwitterTemplate();
+				String tweetJson = twitter.restOperations().getForObject("https://api.twitter.com/1/statuses/oembed.json?maxwidth=550&id="+selectedPlannedTweet.getTweetId(), String.class);
+				System.out.println("tweetJson = "+tweetJson);
+				Gson gson = new Gson();
+				JsonObject jsonObject = gson.fromJson(tweetJson, JsonObject.class);
+				
+				tweetPreview = jsonObject.get("html").getAsString();
+				
+			}catch(Exception ex){
+				sendErrorMessageToJsfScreen("Unable to find tweet");
+				ex.printStackTrace();
+			}
 		}
-
+		
+		if (selectedPlannedTweet.getTweetType().equals(PlannedTweetDto.TWEET_TYPE)) {
+			tweetPreview = "Preview is only available for ReTweet";
+		}
+		System.out.println("tweetPreview = "+tweetPreview);
 	}
 
 	public void savePost() {

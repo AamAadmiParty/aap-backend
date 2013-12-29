@@ -13,8 +13,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.service.AapService;
-import com.next.aap.web.dto.FacebookAccountDto;
-import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;

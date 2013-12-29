@@ -13,6 +13,8 @@ import com.next.aap.core.persistance.dao.TwitterAccountDao;
 @Component
 public class TwitterAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring<TwitterAccount> implements TwitterAccountDao{
 
+	private static final long serialVersionUID = 1L;
+
 	/* (non-Javadoc)
 	 * @see com.next.vote.server.persistance.dao.impl.TwitterAccountDao#saveTwitterAccount(com.next.vote.server.persistance.TwitterAccount)
 	 */

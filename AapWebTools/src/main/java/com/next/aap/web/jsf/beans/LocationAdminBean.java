@@ -49,7 +49,7 @@ public class LocationAdminBean extends BaseJsfBean {
 		}
 	}
 	public void goToVoiceOfAapAdminPageTwitter(){
-		if(isVoiceOfAapFbAllowed()){
+		if(isVoiceOfAapTwitterAllowed()){
 			buildAndRedirect("/admin/voiceofaaptwitter");
 		}else{
 			buildAndRedirect("/admin/notallowed");

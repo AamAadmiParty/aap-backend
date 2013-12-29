@@ -6,19 +6,53 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.User;
 import com.next.aap.core.persistance.dao.UserDao;
 
 @Repository
-public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> implements UserDao{
-
+public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> implements UserDao {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public User saveUser(User user) {
 		user = saveObject(user);
+		assignMembershipNumber(user);
 		return user;
+	}
+
+	private void assignMembershipNumber(User user) {
+		System.out.println("user.isMember()=" + user.isMember());
+		System.out.println("StringUtil.isEmpty(user.getMembershipNumber())=" + StringUtil.isEmpty(user.getMembershipNumber()));
+		if (user.isMember()) {
+			if (StringUtil.isEmpty(user.getMembershipNumber())) {
+				String membershipNumber = "AAP" + ensureDigits(user.getId(), 6);
+				if (user.getName().indexOf(" ") >= 0) {
+					String names[] = user.getName().split(" ");
+					membershipNumber = membershipNumber + names[0].substring(0, 1) + names[names.length - 1].substring(0, 1);
+				} else {
+					if (user.getName().length() > 1) {
+						membershipNumber = membershipNumber + user.getName().substring(0, 2);
+					} else {
+						membershipNumber = membershipNumber + user.getName();
+					}
+				}
+				membershipNumber = membershipNumber.toUpperCase();
+				user.setMembershipNumber(membershipNumber);
+			}
+			if (StringUtil.isEmpty(user.getMembershipStatus())) {
+				user.setMembershipStatus("Payment Await");
+			}
+		}
+	}
+
+	private String ensureDigits(Long id, int digits) {
+		String idString = id.toString();
+		while (idString.length() < digits) {
+			idString = "0" + idString;
+		}
+		return idString;
 	}
 
 	@Override
@@ -28,7 +62,7 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 
 	@Override
 	public User getUserById(Long id) {
-		return (User)getObjectById(User.class, id);
+		return (User) getObjectById(User.class, id);
 	}
 
 	@Override
@@ -44,7 +78,7 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 
 	@Override
 	public User getUserByEmail(String userEmail) {
-		if(userEmail == null){
+		if (userEmail == null) {
 			return null;
 		}
 		Map<String, Object> params = new HashMap<String, Object>();

@@ -7,47 +7,32 @@ public class UserDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
-	private int ver;
-	
-	private Date dateCreated;
-	private Date dateModified;
-	private Long creatorId;
-	private Long modifierId;
-
-	
 	private String externalId;
-
+	private String membershipNumber;
 	private String name;
-	
+	private String fatherName;
+	private String motherName;
+	private String address;
 	private String gender;
-	
 	private Date dateOfBirth;
-
-	private Long stateLivingId;
-
-	private Long districtLivingId;
-
-	private Long assemblyConstituencyLivingId;
-	
-	private Long parliamentConstituencyLivingId;
-
-	private Long stateVotingId;
-
-	private Long districtVotingId;
-
-	private Long assemblyConstituencyVotingId;
-
-	private Long parliamentConstituencyVotingId;
-	
-	private String profilePic;
-	
-	private String countryCode;
-	
-	private String mobileNumber;
-
 	private boolean nri;
-
 	private Long nriCountryId;
+	private Long stateLivingId;
+	private Long districtLivingId;
+	private Long assemblyConstituencyLivingId;
+	private Long parliamentConstituencyLivingId;
+	private Long stateVotingId;
+	private Long districtVotingId;
+	private Long assemblyConstituencyVotingId;
+	private Long parliamentConstituencyVotingId;
+	private boolean allowTweets;
+	private String profilePic;
+	private boolean superAdmin;
+	private boolean member;
+	private String memberPic;
+	private String countryCode;
+	private String mobileNumber;
+	private String membershipStatus;
 
 
 	public Long getId() {
@@ -56,46 +41,6 @@ public class UserDto implements Serializable{
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public int getVer() {
-		return ver;
-	}
-
-	public void setVer(int ver) {
-		this.ver = ver;
-	}
-
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public void setDateCreated(Date dateCreated) {
-		this.dateCreated = dateCreated;
-	}
-
-	public Date getDateModified() {
-		return dateModified;
-	}
-
-	public void setDateModified(Date dateModified) {
-		this.dateModified = dateModified;
-	}
-
-	public Long getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public Long getModifierId() {
-		return modifierId;
-	}
-
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
 	}
 
 	public String getExternalId() {
@@ -236,6 +181,78 @@ public class UserDto implements Serializable{
 		this.nriCountryId = nriCountryId;
 	}
 
+	public String getMembershipNumber() {
+		return membershipNumber;
+	}
+
+	public void setMembershipNumber(String membershipNumber) {
+		this.membershipNumber = membershipNumber;
+	}
+
+	public String getFatherName() {
+		return fatherName;
+	}
+
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
+
+	public String getMotherName() {
+		return motherName;
+	}
+
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public boolean isAllowTweets() {
+		return allowTweets;
+	}
+
+	public void setAllowTweets(boolean allowTweets) {
+		this.allowTweets = allowTweets;
+	}
+
+	public boolean isSuperAdmin() {
+		return superAdmin;
+	}
+
+	public void setSuperAdmin(boolean superAdmin) {
+		this.superAdmin = superAdmin;
+	}
+
+	public boolean isMember() {
+		return member;
+	}
+
+	public void setMember(boolean member) {
+		this.member = member;
+	}
+
+	public String getMemberPic() {
+		return memberPic;
+	}
+
+	public void setMemberPic(String memberPic) {
+		this.memberPic = memberPic;
+	}
+
+	public String getMembershipStatus() {
+		return membershipStatus;
+	}
+
+	public void setMembershipStatus(String membershipStatus) {
+		this.membershipStatus = membershipStatus;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -259,6 +276,18 @@ public class UserDto implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDto [id=" + id + ", externalId=" + externalId + ", membershipNumber=" + membershipNumber + ", name=" + name + ", fatherName=" + fatherName
+				+ ", motherName=" + motherName + ", address=" + address + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", nri=" + nri
+				+ ", nriCountryId=" + nriCountryId + ", stateLivingId=" + stateLivingId + ", districtLivingId=" + districtLivingId
+				+ ", assemblyConstituencyLivingId=" + assemblyConstituencyLivingId + ", parliamentConstituencyLivingId=" + parliamentConstituencyLivingId
+				+ ", stateVotingId=" + stateVotingId + ", districtVotingId=" + districtVotingId + ", assemblyConstituencyVotingId="
+				+ assemblyConstituencyVotingId + ", parliamentConstituencyVotingId=" + parliamentConstituencyVotingId + ", allowTweets=" + allowTweets
+				+ ", profilePic=" + profilePic + ", superAdmin=" + superAdmin + ", member=" + member + ", memberPic=" + memberPic + ", countryCode="
+				+ countryCode + ", mobileNumber=" + mobileNumber + "]";
 	}
 
 }

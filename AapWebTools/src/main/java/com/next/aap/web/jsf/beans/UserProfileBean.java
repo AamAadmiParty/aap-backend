@@ -1,11 +1,12 @@
 package com.next.aap.web.jsf.beans;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -23,246 +24,175 @@ import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 /*
-@Component
-//@Scope("session")
-@SessionScoped
-@URLMappings(mappings = { @URLMapping(id = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
-@URLBeanName("userProfileBean")
-*/
+ @Component
+ //@Scope("session")
+ @SessionScoped
+ @URLMappings(mappings = { @URLMapping(id = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
+ @URLBeanName("userProfileBean")
+ */
 @Component
 @Scope("session")
-@URLMapping(id = "userProfileBean", beanName="userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
+@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
 @URLBeanName("userProfileBean")
 public class UserProfileBean extends BaseJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private UserDto loggedInUser;
-	
-	
+	private UserDto selectedUserForEditing;
+
 	private List<StateDto> stateList;
 	private List<DistrictDto> districtList;
 	private List<AssemblyConstituencyDto> assemblyConstituencyList;
 	private List<ParliamentConstituencyDto> parliamentConstituencyList;
-	private Long selectedStateId;
-	private Long selectedDistrictId;
-	private Long selectedAssemblyConstituencyId;
-	private Long selectedParliamentConstituencyId;
 	private boolean enableDistrictCombo = false;
 	private boolean enableAssemblyConstituencyCombo = false;
 	private boolean enableParliamentConstituencyCombo = false;
-					
-	
+
 	private List<StateDto> livingStateList;
 	private List<DistrictDto> livingDistrictList;
 	private List<AssemblyConstituencyDto> livingAssemblyConstituencyList;
 	private List<ParliamentConstituencyDto> livingParliamentConstituencyList;
-	private Long selectedLivingStateId;
-	private Long selectedLivingDistrictId;
-	private Long selectedLivingAssemblyConstituencyId;
-	private Long selectedLivingParliamentConstituencyId;
 	private boolean enableLivingDistrictCombo = false;
 	private boolean enableLivingAssemblyConstituencyCombo = false;
 	private boolean enableLivingParliamentConstituencyCombo = false;
-	
+
 	private boolean sameAsLiving;
-	private boolean nri;
-	private Long nriCountryId;
-	
-	private String dateOfBirth;
-	private String name;
-	private String countryCode;
-	private String mobileNumber;
-	private String gender;
+
 	private List<CountryDto> countries;
 
 	@Autowired
 	private AapService aapService;
 
-	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
-	@URLAction(onPostback=false)
+	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
+	@URLAction(onPostback = false)
 	public void init() throws Exception {
 		System.out.println("init " + aapService);
-		loggedInUser = getLoggedInUser(true,buildLoginUrl("/profile"));
-		if(stateList == null || stateList.isEmpty()){
+		UserDto loggedInUser = getLoggedInUser(true, buildLoginUrl("/profile"));
+		if (stateList == null || stateList.isEmpty()) {
 			livingStateList = stateList = aapService.getAllStates();
 		}
-		if(countries == null || countries.isEmpty()){
+		if (countries == null || countries.isEmpty()) {
 			countries = aapService.getAllCountries();
 		}
-		if(loggedInUser == null){
+		if (loggedInUser == null) {
 			return;
 		}
-		if(loggedInUser != null){
-			selectedStateId = loggedInUser.getStateVotingId();
-			selectedDistrictId = loggedInUser.getDistrictVotingId();
-			selectedAssemblyConstituencyId = loggedInUser.getAssemblyConstituencyVotingId();
-			selectedParliamentConstituencyId = loggedInUser.getParliamentConstituencyVotingId();
-			if(selectedStateId != null){
-				enableDistrictCombo = true;
-				enableParliamentConstituencyCombo = true;
-				parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedStateId);
-				districtList = aapService.getAllDistrictOfState(selectedStateId);
-				if(selectedDistrictId != null){
-					enableAssemblyConstituencyCombo = true;
-					assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedDistrictId);
-				}
+		//Copy Logged In user to selectedUserForEditing
+		selectedUserForEditing = new UserDto();
+		BeanUtils.copyProperties(loggedInUser, selectedUserForEditing);
+		if (selectedUserForEditing.getStateVotingId() != null) {
+			enableDistrictCombo = true;
+			enableParliamentConstituencyCombo = true;
+			parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getStateVotingId());
+			districtList = aapService.getAllDistrictOfState(selectedUserForEditing.getStateVotingId());
+			if (selectedUserForEditing.getDistrictVotingId() != null) {
+				enableAssemblyConstituencyCombo = true;
+				assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictVotingId());
 			}
-			selectedLivingStateId = loggedInUser.getStateLivingId();
-			selectedLivingDistrictId = loggedInUser.getDistrictLivingId();
-			selectedLivingAssemblyConstituencyId = loggedInUser.getAssemblyConstituencyLivingId();
-			selectedLivingParliamentConstituencyId = loggedInUser.getParliamentConstituencyLivingId();
-			System.out.println("++selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
-			System.out.println("++selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
-			if(selectedLivingStateId != null){
-				enableLivingDistrictCombo = true;
-				enableLivingParliamentConstituencyCombo = true;
-				livingParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedLivingStateId);
-				livingDistrictList = aapService.getAllDistrictOfState(selectedLivingStateId);
-				if(selectedLivingDistrictId != null){
-					enableLivingAssemblyConstituencyCombo = true;
-					livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedLivingDistrictId);
-				}
-			}
-			//assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfState(selectedStateId);
-			//selectedAssemblyConstituencyId = loggedInUser.getAssemblyConstituencyVotingId();
-			//System.out.println("loggedInUser.getDateOfBirth()="+loggedInUser.getDateOfBirth());
-			if(loggedInUser.getDateOfBirth() != null){
-				dateOfBirth = "";
-				if(loggedInUser.getDateOfBirth().getDate() < 10){
-					dateOfBirth = dateOfBirth+"0";
-				}
-				System.out.println("dateOfBirth="+dateOfBirth);
-				dateOfBirth = dateOfBirth + loggedInUser.getDateOfBirth().getDate() +"/";
-				if(loggedInUser.getDateOfBirth().getMonth() < 9){
-					dateOfBirth = dateOfBirth+"0";
-				}
-				dateOfBirth = dateOfBirth + (loggedInUser.getDateOfBirth().getMonth() + 1) +"/";
-				
-				dateOfBirth = dateOfBirth + (loggedInUser.getDateOfBirth().getYear() + 1900);
-				System.out.println("dateOfBirth="+dateOfBirth);
-			}
-			name = loggedInUser.getName();
-			gender = loggedInUser.getGender();
-			countryCode = loggedInUser.getCountryCode();
-			mobileNumber = loggedInUser.getMobileNumber();
-
-		}else{
-			enableAssemblyConstituencyCombo = false;
 		}
+		if (selectedUserForEditing.getStateLivingId() != null) {
+			enableLivingDistrictCombo = true;
+			enableLivingParliamentConstituencyCombo = true;
+			livingParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getStateLivingId());
+			livingDistrictList = aapService.getAllDistrictOfState(selectedUserForEditing.getStateLivingId());
+			if (selectedUserForEditing.getDistrictLivingId() != null) {
+				enableLivingAssemblyConstituencyCombo = true;
+				livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictLivingId());
+			}
+		}
+		// assemblyConstituencyList =
+		// aapService.getAllAssemblyConstituenciesOfState(selectedStateId);
+		// selectedAssemblyConstituencyId =
+		// loggedInUser.getAssemblyConstituencyVotingId();
+		// System.out.println("loggedInUser.getDateOfBirth()="+loggedInUser.getDateOfBirth());
+		
 	}
 
-	public void saveProfile() {
-		System.out.println("***selectedLivingParliamentConstituencyId="+selectedLivingParliamentConstituencyId);
-		System.out.println("selectedParliamentConstituencyId="+selectedParliamentConstituencyId);
-		if(sameAsLiving){
-			selectedStateId = selectedLivingStateId;
-			selectedDistrictId = selectedLivingDistrictId;
-			selectedAssemblyConstituencyId = selectedLivingAssemblyConstituencyId;
-			selectedParliamentConstituencyId = selectedLivingParliamentConstituencyId;
+	public void saveProfileWithout() {
+		System.out.println("saveProfile : Without Action Event");
+	}
+	public void saveProfile(ActionEvent event) {
+		System.out.println("saveProfile : With Action Event");
+		System.out.println("Saving Profile" );
+		if (sameAsLiving) {
+			selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
+			selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());
+			selectedUserForEditing.setAssemblyConstituencyVotingId(selectedUserForEditing.getAssemblyConstituencyLivingId());
+			selectedUserForEditing.setParliamentConstituencyVotingId(selectedUserForEditing.getParliamentConstituencyLivingId());
 		}
-		
-		if(selectedLivingStateId == null || selectedLivingStateId == 0 ){
+
+		if (selectedUserForEditing.getStateLivingId() == null || selectedUserForEditing.getStateLivingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select State where you are living currently");
 		}
-		if(selectedLivingDistrictId == null || selectedLivingDistrictId ==0 ){
+		if (selectedUserForEditing.getDistrictLivingId() == null || selectedUserForEditing.getDistrictLivingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select District where you are living currently");
 		}
-		if(selectedLivingAssemblyConstituencyId == null || selectedLivingAssemblyConstituencyId ==0 ){
+		if (selectedUserForEditing.getAssemblyConstituencyLivingId() == null || selectedUserForEditing.getAssemblyConstituencyLivingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select Assembly Constituency where you are living currently");
 		}
-		if(selectedLivingParliamentConstituencyId == null || selectedLivingParliamentConstituencyId ==0 ){
+		if (selectedUserForEditing.getParliamentConstituencyLivingId() == null || selectedUserForEditing.getParliamentConstituencyLivingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you are living currently");
 		}
-		if(selectedStateId == null || selectedStateId == 0){
+		if (selectedUserForEditing.getStateVotingId() == null || selectedUserForEditing.getStateVotingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select State where you are registered as Voter");
 		}
-		if(selectedDistrictId == null || selectedDistrictId ==0 ){
+		if (selectedUserForEditing.getDistrictVotingId() == null || selectedUserForEditing.getDistrictVotingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select District where you are registered as Voter");
 		}
-		if(selectedAssemblyConstituencyId == null || selectedAssemblyConstituencyId ==0 ){
+		if (selectedUserForEditing.getAssemblyConstituencyVotingId() == null || selectedUserForEditing.getAssemblyConstituencyVotingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select Assembly Constituency where you registered as Voter");
 		}
-		if(selectedParliamentConstituencyId == null || selectedParliamentConstituencyId ==0 ){
+		if (selectedUserForEditing.getParliamentConstituencyVotingId() == null || selectedUserForEditing.getParliamentConstituencyVotingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you registered as Voter");
 		}
-		if(nri && nriCountryId == 0){
+		if (selectedUserForEditing.isNri() && (selectedUserForEditing.getNriCountryId() == null || selectedUserForEditing.getNriCountryId() == 0)) {
 			sendErrorMessageToJsfScreen("Please select Country where you Live");
 		}
-		Calendar dobCalendar = getDateOfBirthAsDate();
-		if(dobCalendar == null){
+		if (selectedUserForEditing.getDateOfBirth() == null) {
 			sendErrorMessageToJsfScreen("Please enter your Date of Birth");
 		}
 		/*
-		else{
-			Calendar todayCalendar = Calendar.getInstance();
-			todayCalendar.add(Calendar.YEAR, -18);
-			if(dobCalendar.after(todayCalendar)){
-				sendErrorMessageToJsfScreen("You must be 18 to be eligible for vote");
-			}
-		}
-		*/
-		if(StringUtil.isEmptyOrWhitespace(loggedInUser.getName())){
+		 * else{ Calendar todayCalendar = Calendar.getInstance();
+		 * todayCalendar.add(Calendar.YEAR, -18);
+		 * if(dobCalendar.after(todayCalendar)){
+		 * sendErrorMessageToJsfScreen("You must be 18 to be eligible for vote"
+		 * ); } }
+		 */
+		if (StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getName())) {
 			sendErrorMessageToJsfScreen("Please enter your full name");
 		}
-		if(isValidInput()){
-			UserDto user = new UserDto();
-			
-			user.setAssemblyConstituencyLivingId(selectedLivingAssemblyConstituencyId);
-			user.setAssemblyConstituencyVotingId(selectedAssemblyConstituencyId);
-			
-			user.setDistrictLivingId(selectedLivingDistrictId);
-			user.setDistrictVotingId(selectedDistrictId);
-			
-			user.setParliamentConstituencyLivingId(selectedLivingParliamentConstituencyId);
-			user.setParliamentConstituencyVotingId(selectedParliamentConstituencyId);
-			
-			user.setStateLivingId(selectedLivingStateId);
-			user.setStateVotingId(selectedStateId);
-			
-			user.setCountryCode(countryCode);
-			user.setMobileNumber(mobileNumber);
-			
-			 
-			user.setExternalId(loggedInUser.getExternalId());
-			user.setId(loggedInUser.getId());
-			
-			user.setNri(nri);
-			user.setNriCountryId(nriCountryId);
-			
-			user.setName(name);
-			user.setGender(gender);
-			//loggedInUser.setStateVotingId(selectedStateId);
-			user.setDateOfBirth(dobCalendar.getTime());
-			
-			loggedInUser = aapService.saveUser(user);
-			ssaveLoggedInUserInSession(loggedInUser);
+		if (isValidInput()) {
+			System.out.println("Member : " + selectedUserForEditing.isMember());
+			selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
+			ssaveLoggedInUserInSession(selectedUserForEditing);
 			sendInfoMessageToJsfScreen("Profile saved succesfully.");
+		}else{
+			System.out.println("Not a valid Input" );
 		}
 		/*
-		String url = BaseController.getFinalRedirectUrlFromSesion(getHttpServletRequest());
-		if(!StringUtil.isEmpty(url)){
-			BaseController.clearFinalRedirectUrlInSesion(getHttpServletRequest());
-			redirect(buildUrl(url));
-		}
-		*/
+		 * String url =
+		 * BaseController.getFinalRedirectUrlFromSesion(getHttpServletRequest
+		 * ()); if(!StringUtil.isEmpty(url)){
+		 * BaseController.clearFinalRedirectUrlInSesion
+		 * (getHttpServletRequest()); redirect(buildUrl(url)); }
+		 */
 	}
 
-	
 	public void emptyCallToMakeItWork(AjaxBehaviorEvent event) {
-		//This fucntion doesnt do anything but 
+		// This fucntion doesnt do anything but
 	}
+
 	public void handleStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = "+selectedStateId);
+		System.out.println("selected State Id = " + selectedUserForEditing.getStateVotingId());
 		try {
-			if(selectedStateId == 0 || selectedStateId == 36){
+			if (selectedUserForEditing.getStateVotingId() == 0 || selectedUserForEditing.getStateVotingId() == null) {
 				enableDistrictCombo = false;
 				enableParliamentConstituencyCombo = false;
 				districtList = new ArrayList<>();
 				parliamentConstituencyList = new ArrayList<>();
-			}else{
-				districtList = aapService.getAllDistrictOfState(selectedStateId);
-				parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedStateId);
+			} else {
+				districtList = aapService.getAllDistrictOfState(selectedUserForEditing.getStateVotingId());
+				parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getStateVotingId());
 				enableDistrictCombo = true;
 				enableParliamentConstituencyCombo = true;
 			}
@@ -270,17 +200,17 @@ public class UserProfileBean extends BaseJsfBean {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void handleLivingStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = "+selectedLivingStateId);
+		System.out.println("selected State Id = " + selectedUserForEditing.getStateLivingId());
 		try {
-			if(selectedLivingStateId == 0 || selectedLivingStateId == 36){
+			if (selectedUserForEditing.getStateLivingId() == 0 || selectedUserForEditing.getStateLivingId() == null) {
 				enableLivingDistrictCombo = false;
 				enableLivingParliamentConstituencyCombo = false;
 				livingDistrictList = new ArrayList<>();
-			}else{
-				livingParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedLivingStateId);
-				livingDistrictList = aapService.getAllDistrictOfState(selectedLivingStateId);
+			} else {
+				livingParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getStateLivingId());
+				livingDistrictList = aapService.getAllDistrictOfState(selectedUserForEditing.getStateLivingId());
 				enableLivingParliamentConstituencyCombo = true;
 				enableLivingDistrictCombo = true;
 			}
@@ -288,50 +218,52 @@ public class UserProfileBean extends BaseJsfBean {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void handleDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = "+selectedDistrictId);
+		System.out.println("selected District Id = " + selectedUserForEditing.getDistrictVotingId());
 		try {
-			if(selectedDistrictId == 0){
+			if (selectedUserForEditing.getDistrictVotingId() == 0 || selectedUserForEditing.getDistrictVotingId() == null) {
 				enableAssemblyConstituencyCombo = false;
 				assemblyConstituencyList = new ArrayList<>();
-			}else{
+			} else {
 				enableAssemblyConstituencyCombo = true;
-				assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedDistrictId);
+				assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictVotingId());
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 	public void handleLivingDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = "+selectedLivingDistrictId);
+		System.out.println("selected District Id = " + selectedUserForEditing.getDistrictLivingId());
 		try {
-			if(selectedLivingDistrictId == 0){
+			if (selectedUserForEditing.getDistrictLivingId() == 0 || selectedUserForEditing.getDistrictLivingId() == null) {
 				enableLivingAssemblyConstituencyCombo = false;
 				livingAssemblyConstituencyList = new ArrayList<>();
-			}else{
+			} else {
 				enableLivingAssemblyConstituencyCombo = true;
-				livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedLivingDistrictId);
+				livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictLivingId());
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	public void onClickNri(){
-		System.out.println("nri"+nri);
-	}
-	public void onClickSameAsLiving(){
-		System.out.println("sameAsLiving"+sameAsLiving);
+	
+	public boolean isShowMemberPanel(){
+		return StringUtil.isEmpty(selectedUserForEditing.getMembershipNumber());
 	}
 
-	public UserDto getLoggedInUser() {
-		return loggedInUser;
+	public void onClickNri() {
+		System.out.println("nri" + selectedUserForEditing.isNri());
+	}
+	public void onClickMember() {
+		System.out.println("member" + selectedUserForEditing.isMember());
 	}
 
-	public void setLoggedInUser(UserDto loggedInUser) {
-		this.loggedInUser = loggedInUser;
+	public void onClickSameAsLiving() {
+		System.out.println("sameAsLiving" + sameAsLiving);
 	}
 
 	public List<StateDto> getStateList() {
@@ -342,58 +274,20 @@ public class UserProfileBean extends BaseJsfBean {
 		this.stateList = stateList;
 	}
 
-	public Long getSelectedStateId() {
-		return selectedStateId;
-	}
-
-	public void setSelectedStateId(Long selectedStateId) {
-		this.selectedStateId = selectedStateId;
-	}
-
 	public List<AssemblyConstituencyDto> getAssemblyConstituencyList() {
 		return assemblyConstituencyList;
 	}
 
-	public void setAssemblyConstituencyList(
-			List<AssemblyConstituencyDto> assemblyConstituencyList) {
+	public void setAssemblyConstituencyList(List<AssemblyConstituencyDto> assemblyConstituencyList) {
 		this.assemblyConstituencyList = assemblyConstituencyList;
-	}
-
-	public Long getSelectedAssemblyConstituencyId() {
-		return selectedAssemblyConstituencyId;
-	}
-
-	public void setSelectedAssemblyConstituencyId(
-			Long selectedAssemblyConstituencyId) {
-		this.selectedAssemblyConstituencyId = selectedAssemblyConstituencyId;
 	}
 
 	public boolean isEnableAssemblyConstituencyCombo() {
 		return enableAssemblyConstituencyCombo;
 	}
 
-	public void setEnableAssemblyConstituencyCombo(
-			boolean enableAssemblyConstituencyCombo) {
+	public void setEnableAssemblyConstituencyCombo(boolean enableAssemblyConstituencyCombo) {
 		this.enableAssemblyConstituencyCombo = enableAssemblyConstituencyCombo;
-	}
-
-	public String getDateOfBirth() {
-		return dateOfBirth;
-	}
-	public Calendar getDateOfBirthAsDate() {
-		if(StringUtil.isEmptyOrWhitespace(dateOfBirth)){
-			return null;
-		}
-		String[] ddmmyyyy = dateOfBirth.split("/");
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DATE, Integer.parseInt(ddmmyyyy[0]));
-		cal.set(Calendar.MONTH, Integer.parseInt(ddmmyyyy[1]) - 1);
-		cal.set(Calendar.YEAR, Integer.parseInt(ddmmyyyy[2]));
-		return cal;
-	}
-
-	public void setDateOfBirth(String dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
 	}
 
 	public List<DistrictDto> getDistrictList() {
@@ -402,14 +296,6 @@ public class UserProfileBean extends BaseJsfBean {
 
 	public void setDistrictList(List<DistrictDto> districtList) {
 		this.districtList = districtList;
-	}
-
-	public Long getSelectedDistrictId() {
-		return selectedDistrictId;
-	}
-
-	public void setSelectedDistrictId(Long selectedDistrictId) {
-		this.selectedDistrictId = selectedDistrictId;
 	}
 
 	public boolean isEnableDistrictCombo() {
@@ -444,30 +330,6 @@ public class UserProfileBean extends BaseJsfBean {
 		this.livingAssemblyConstituencyList = livingAssemblyConstituencyList;
 	}
 
-	public Long getSelectedLivingStateId() {
-		return selectedLivingStateId;
-	}
-
-	public void setSelectedLivingStateId(Long selectedLivingStateId) {
-		this.selectedLivingStateId = selectedLivingStateId;
-	}
-
-	public Long getSelectedLivingDistrictId() {
-		return selectedLivingDistrictId;
-	}
-
-	public void setSelectedLivingDistrictId(Long selectedLivingDistrictId) {
-		this.selectedLivingDistrictId = selectedLivingDistrictId;
-	}
-
-	public Long getSelectedLivingAssemblyConstituencyId() {
-		return selectedLivingAssemblyConstituencyId;
-	}
-
-	public void setSelectedLivingAssemblyConstituencyId(Long selectedLivingAssemblyConstituencyId) {
-		this.selectedLivingAssemblyConstituencyId = selectedLivingAssemblyConstituencyId;
-	}
-
 	public boolean isEnableLivingDistrictCombo() {
 		return enableLivingDistrictCombo;
 	}
@@ -482,38 +344,6 @@ public class UserProfileBean extends BaseJsfBean {
 
 	public void setEnableLivingAssemblyConstituencyCombo(boolean enableLivingAssemblyConstituencyCombo) {
 		this.enableLivingAssemblyConstituencyCombo = enableLivingAssemblyConstituencyCombo;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCountryCode() {
-		return countryCode;
-	}
-
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
-	}
-
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
 	}
 
 	public boolean isSameAsLiving() {
@@ -532,28 +362,12 @@ public class UserProfileBean extends BaseJsfBean {
 		this.parliamentConstituencyList = parliamentConstituencyList;
 	}
 
-	public Long getSelectedParliamentConstituencyId() {
-		return selectedParliamentConstituencyId;
-	}
-
-	public void setSelectedParliamentConstituencyId(Long selectedParliamentConstituencyId) {
-		this.selectedParliamentConstituencyId = selectedParliamentConstituencyId;
-	}
-
 	public List<ParliamentConstituencyDto> getLivingParliamentConstituencyList() {
 		return livingParliamentConstituencyList;
 	}
 
 	public void setLivingParliamentConstituencyList(List<ParliamentConstituencyDto> livingParliamentConstituencyList) {
 		this.livingParliamentConstituencyList = livingParliamentConstituencyList;
-	}
-
-	public Long getSelectedLivingParliamentConstituencyId() {
-		return selectedLivingParliamentConstituencyId;
-	}
-
-	public void setSelectedLivingParliamentConstituencyId(Long selectedLivingParliamentConstituencyId) {
-		this.selectedLivingParliamentConstituencyId = selectedLivingParliamentConstituencyId;
 	}
 
 	public boolean isEnableLivingParliamentConstituencyCombo() {
@@ -580,28 +394,20 @@ public class UserProfileBean extends BaseJsfBean {
 		this.enableParliamentConstituencyCombo = enableParliamentConstituencyCombo;
 	}
 
-	public boolean isNri() {
-		return nri;
-	}
-
-	public void setNri(boolean nri) {
-		this.nri = nri;
-	}
-
-	public Long getNriCountryId() {
-		return nriCountryId;
-	}
-
-	public void setNriCountryId(Long nriCountryId) {
-		this.nriCountryId = nriCountryId;
-	}
-
 	public List<CountryDto> getCountries() {
 		return countries;
 	}
 
 	public void setCountries(List<CountryDto> countries) {
 		this.countries = countries;
+	}
+
+	public UserDto getSelectedUserForEditing() {
+		return selectedUserForEditing;
+	}
+
+	public void setSelectedUserForEditing(UserDto selectedUserForEditing) {
+		this.selectedUserForEditing = selectedUserForEditing;
 	}
 
 }

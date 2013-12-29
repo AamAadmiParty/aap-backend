@@ -21,7 +21,7 @@ import javax.persistence.Version;
 @Entity
 @Table(name="users")
 public class User {
-
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
@@ -42,9 +42,21 @@ public class User {
 	@Column(name = "external_id", nullable = false, length=256)
 	private String externalId;
 
+	@Column(name = "membership_no", nullable = false)
+	private String membershipNumber;
+
 	@Column(name = "name", nullable = false, length=256)
 	private String name;
 	
+	@Column(name = "father_name")
+	private String fatherName;
+
+	@Column(name = "mother_name")
+	private String motherName;
+
+	@Column(name = "address", length=512)
+	private String address;
+
 	@Column(name = "gender")
 	private String gender;
 
@@ -173,6 +185,12 @@ public class User {
 	@Column(name = "super_admin", nullable = false)
 	private boolean superAdmin;
 
+	@Column(name = "member", nullable = false)
+	private boolean member;
+	
+	@Column(name = "membership_status", nullable = false)
+	private String membershipStatus;
+
 	public Long getId() {
 		return id;
 	}
@@ -229,12 +247,44 @@ public class User {
 		this.externalId = externalId;
 	}
 
+	public String getMembershipNumber() {
+		return membershipNumber;
+	}
+
+	public void setMembershipNumber(String membershipNumber) {
+		this.membershipNumber = membershipNumber;
+	}
+
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getFatherName() {
+		return fatherName;
+	}
+
+	public void setFatherName(String fatherName) {
+		this.fatherName = fatherName;
+	}
+
+	public String getMotherName() {
+		return motherName;
+	}
+
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getGender() {
@@ -251,6 +301,30 @@ public class User {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public boolean isNri() {
+		return nri;
+	}
+
+	public void setNri(boolean nri) {
+		this.nri = nri;
+	}
+
+	public Country getNriCountry() {
+		return nriCountry;
+	}
+
+	public void setNriCountry(Country nriCountry) {
+		this.nriCountry = nriCountry;
+	}
+
+	public Long getNriCountryId() {
+		return nriCountryId;
+	}
+
+	public void setNriCountryId(Long nriCountryId) {
+		this.nriCountryId = nriCountryId;
 	}
 
 	public State getStateLiving() {
@@ -461,28 +535,20 @@ public class User {
 		this.superAdmin = superAdmin;
 	}
 
-	public boolean isNri() {
-		return nri;
+	public boolean isMember() {
+		return member;
 	}
 
-	public void setNri(boolean nri) {
-		this.nri = nri;
+	public void setMember(boolean member) {
+		this.member = member;
 	}
 
-	public Country getNriCountry() {
-		return nriCountry;
+	public String getMembershipStatus() {
+		return membershipStatus;
 	}
 
-	public void setNriCountry(Country nriCountry) {
-		this.nriCountry = nriCountry;
-	}
-
-	public Long getNriCountryId() {
-		return nriCountryId;
-	}
-
-	public void setNriCountryId(Long nriCountryId) {
-		this.nriCountryId = nriCountryId;
+	public void setMembershipStatus(String membershipStatus) {
+		this.membershipStatus = membershipStatus;
 	}
 
 	@Override

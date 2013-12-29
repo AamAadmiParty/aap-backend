@@ -2,6 +2,7 @@ package com.next.aap.core.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -42,13 +43,13 @@ import com.next.aap.core.persistance.ParliamentConstituency;
 import com.next.aap.core.persistance.PcRole;
 import com.next.aap.core.persistance.Permission;
 import com.next.aap.core.persistance.Phone;
-import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.Phone.PhoneType;
 import com.next.aap.core.persistance.PlannedFacebookPost;
 import com.next.aap.core.persistance.PlannedTweet;
 import com.next.aap.core.persistance.Role;
 import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.StateRole;
+import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
 import com.next.aap.core.persistance.dao.AcRoleDao;
@@ -200,7 +201,14 @@ public class AapServiceImpl implements AapService, Serializable {
 			facebookAppPermission.setFacebookAccount(dbFacebookAccount);
 			facebookAppPermission.setFacebookApp(facebookApp);
 			facebookAppPermission.setToken(fbConnectionData.getAccessToken());
-			facebookAppPermission.setExpireTime(new Date(fbConnectionData.getExpireTime()));
+			if(fbConnectionData.getExpireTime() == null){
+				Calendar today = Calendar.getInstance();
+				today.add(Calendar.HOUR, 2);
+				facebookAppPermission.setExpireTime(today.getTime());
+			}else{
+				facebookAppPermission.setExpireTime(new Date(fbConnectionData.getExpireTime()));	
+			}
+			
 			facebookAppPermission = facebookAppPermissionDao.saveFacebookAppPermission(facebookAppPermission);
 		}
 		System.out.println("user=" + user);
@@ -553,6 +561,10 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		user.setGender(userDto.getGender());
 		user.setNri(userDto.isNri());
+		user.setMember(userDto.isMember());
+		user.setFatherName(userDto.getFatherName());
+		user.setMotherName(userDto.getMotherName());
+		user.setAddress(userDto.getAddress());
 		if(user.isNri()){
 			if(userDto.getNriCountryId() != null && userDto.getNriCountryId() > 0){
 				Country country = countryDao.getCountryById(userDto.getNriCountryId());

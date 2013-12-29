@@ -3,6 +3,7 @@ package com.next.aap.web.jsf.beans;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.StateDto;
+import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 
@@ -30,6 +32,7 @@ public class MenuBean extends BaseJsfBean {
 		if(userRolePermissionDto == null){
 			return false;
 		}
+		/*
 		System.out.println("isAcAdmin()="+userRolePermissionDto.isAcAdmin());
 		System.out.println("isPcAdmin()="+userRolePermissionDto.isPcAdmin());
 		System.out.println("isDistrictAdmin()="+userRolePermissionDto.isDistrictAdmin());
@@ -37,6 +40,7 @@ public class MenuBean extends BaseJsfBean {
 		System.out.println("isAllAdmin()="+userRolePermissionDto.isAllAdmin());
 		System.out.println("isSuperUser()="+userRolePermissionDto.isSuperUser());
 		System.out.println("isAdmin()="+userRolePermissionDto.isAdmin());
+		*/
 		return userRolePermissionDto.isAdmin();
 		
 	}
@@ -82,6 +86,19 @@ public class MenuBean extends BaseJsfBean {
 			return false;
 		}
 		return userRolePermissionDto.isAllAdmin();
+	}
+	public String getContext(){
+		HttpServletRequest httpServletRequest = getHttpServletRequest();
+		System.out.println("getServletContext = " + httpServletRequest.getServletContext().getContextPath());
+		System.out.println("Context = " +  httpServletRequest.getContextPath());
+		return httpServletRequest.getContextPath();
+	}
+	public boolean isLoggedIn(){
+		UserDto user = getLoggedInUser();
+		if(user == null){
+			return false;
+		}
+		return true;
 	}
 	
 

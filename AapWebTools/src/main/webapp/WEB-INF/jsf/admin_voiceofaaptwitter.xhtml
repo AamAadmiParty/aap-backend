@@ -48,7 +48,7 @@
 						<p:dataTable id="listOfPlannedPosts" var="onePost" value="#{voiceOfAapTwitterAdminBean.plannedTweets}" paginator="true" rows="#{voiceOfAapTwitterAdminBean.pageSize}"
 							paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Tweets"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
-							<f:facet name="header">Planned Facebook Posts</f:facet>
+							<f:facet name="header">Planned Tweets</f:facet>
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="Id" />
@@ -110,21 +110,17 @@
 									<p:ajax event="change" update=":adminVoiceOfAapTwitterForm" />
 								</p:inputText>
 								<p:outputLabel value="Message" rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}"></p:outputLabel>
-								<p:outputPanel rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}" >
+								<p:outputPanel rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}">
 									<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining."
 										value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.message}">
 										<p:ajax event="change" update=":adminVoiceOfAapTwitterForm" />
-									</p:inputTextarea><br></br>
+									</p:inputTextarea>
+									<br></br>
 									<h:outputText id="counter" />
 								</p:outputPanel>
 								<p:outputLabel value="Post Time"></p:outputLabel>
 								<p:calendar value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.postingTime}" pattern="MM/dd/yyyy HH:mm" />
 							</p:panelGrid>
-							<p:outputPanel id="postPreview" styleClass="topAlignPanelColumns">
-								<p:outputPanel rendered="voiceOfAapTwitterAdminBean.normalTweetType">
-								</p:outputPanel>
-							</p:outputPanel>
-
 						</p:panelGrid>
 						<p:commandButton value="Cancel" update=":adminVoiceOfAapTwitterForm:mainPanel" actionListener="#{voiceOfAapTwitterAdminBean.cancel}" styleClass="ui-priority-primary">
 						</p:commandButton>
@@ -134,8 +130,18 @@
 						</p:commandButton>
 						<p:commandButton value="Save" update=":adminVoiceOfAapTwitterForm:mainPanel" actionListener="#{voiceOfAapTwitterAdminBean.savePost}" styleClass="ui-priority-primary">
 						</p:commandButton>
+						<br></br>
+						<p:outputPanel id="postPreview" styleClass="topAlignPanelColumns">
+							<p:outputLabel escape="false" value="#{voiceOfAapTwitterAdminBean.tweetPreview}"></p:outputLabel>
+						</p:outputPanel>
+
 					</p:outputPanel>
+
 				</p:outputPanel>
+				<br></br>
+				<br></br>
+				<br></br>
+				<br></br>
 			</h:form>
 
 
@@ -143,7 +149,7 @@
 			<div class="footerWrapper">
 				<div class="container_24">
 					<div class="grid_24 panel footer">
-						Copyright &copy; 2013 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
+						Copyright &copy; 2014 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
 					</div>
 				</div>
 				<div class="clear"></div>

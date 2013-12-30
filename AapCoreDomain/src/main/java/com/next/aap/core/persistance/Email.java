@@ -57,7 +57,8 @@ public class Email {
 	public enum ConfirmationType{
 		CONFIRMED_FACEBOOK_ACCOUNT,
 		CONFIRMED_GOOGLE_ACCOUNT,
-		RECEIVED_EMAIL_FROM_ACCOUNT
+		RECEIVED_EMAIL_FROM_ACCOUNT,
+		ADMIN_ENTERED
 	}
 
 	public Long getId() {

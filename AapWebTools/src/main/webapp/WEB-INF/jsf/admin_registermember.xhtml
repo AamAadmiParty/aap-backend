@@ -1,0 +1,446 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Search or Register Member</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<!-- menu starts -->
+	<ui:include src="menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 800px; margin: 0 auto;">
+		<div style="width: 800px; margin: 0;">
+
+			<!-- header starts -->
+			<h5>Search Or Register Member</h5>
+			<!-- http://www.ajaxload.info/ -->
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:state,:userProfileForm:livingState">
+			Getting District List<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:district,:userProfileForm:livingDistrict">
+			Getting Assembly Constituency List<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<h:form id="userProfileForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel rendered="#{adminRegisterMemberBean.showSearchPanel}">
+					<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
+						<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
+							<f:facet name="header">Select Living Place of Member</f:facet>
+
+							<h:outputLabel for="livingState" value="State*" />
+							<p:selectOneMenu id="livingState" value="#{adminRegisterMemberBean.searchedUser.stateLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select State" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+
+								<p:ajax event="change" update=":userProfileForm:livingDistrict,:userProfileForm:livingParliamentConstituency,:userProfileForm:livingAssemblyConstituency"
+									listener="#{adminRegisterMemberBean.handleLivingStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="livingDistrict" value="District*" />
+							<p:selectOneMenu id="livingDistrict" disabled="#{!adminRegisterMemberBean.enableLivingDistrictCombo}" value="#{adminRegisterMemberBean.searchedUser.districtLivingId}"
+								effect="fold" editable="false">
+								<f:selectItem itemLabel="Select District" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+								<p:ajax event="change" update=":userProfileForm:livingAssemblyConstituency" listener="#{adminRegisterMemberBean.handleLivingDistrictChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="livingParliamentConstituency" value="Parliament Constituency*" />
+
+							<p:selectOneMenu id="livingParliamentConstituency" disabled="#{adminRegisterMemberBean.sameAsLiving or !adminRegisterMemberBean.enableLivingParliamentConstituencyCombo}"
+								value="#{adminRegisterMemberBean.searchedUser.parliamentConstituencyLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.livingParliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+									itemValue="#{oneParliamentConstituency.id}" />
+
+								<p:ajax update="livingAssemblyConstituency" />
+							</p:selectOneMenu>
+
+							<h:outputLabel for="livingAssemblyConstituency" value="Assembly Constituency*" />
+							<p:selectOneMenu id="livingAssemblyConstituency" disabled="#{!adminRegisterMemberBean.enableLivingAssemblyConstituencyCombo}"
+								value="#{adminRegisterMemberBean.searchedUser.assemblyConstituencyLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.livingAssemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+									itemValue="#{oneAssemblyConstituency.id}" />
+
+							</p:selectOneMenu>
+
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" cellpadding="5" id="votingLocation" style="width:395px;">
+							<f:facet name="header">
+        		Select Voting Area of Member
+        		<br></br>
+							</f:facet>
+
+							<p:selectBooleanCheckbox value="#{adminRegisterMemberBean.sameAsLiving}">
+								<p:ajax update=":userProfileForm:votingLocation" listener="#{adminRegisterMemberBean.onClickSameAsLiving}" />
+							</p:selectBooleanCheckbox>
+							<h:outputLabel value="Same as Living Location" />
+
+							<h:outputLabel for="state" value="State*" />
+							<p:selectOneMenu id="state" disabled="#{adminRegisterMemberBean.sameAsLiving}" value="#{adminRegisterMemberBean.searchedUser.stateVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select State" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+								<p:ajax event="change" update=":userProfileForm:district,:userProfileForm:parliamentConstituency,:userProfileForm:assemblyConstituency"
+									listener="#{adminRegisterMemberBean.handleStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="district" value="District*" />
+							<p:selectOneMenu id="district" disabled="#{adminRegisterMemberBean.sameAsLiving or !adminRegisterMemberBean.enableDistrictCombo}"
+								value="#{adminRegisterMemberBean.searchedUser.districtVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select District" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.districtList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+								<p:ajax event="change" update=":userProfileForm:assemblyConstituency" listener="#{adminRegisterMemberBean.handleDistrictChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
+							<p:selectOneMenu id="parliamentConstituency" disabled="#{adminRegisterMemberBean.sameAsLiving or !adminRegisterMemberBean.enableParliamentConstituencyCombo}"
+								value="#{adminRegisterMemberBean.searchedUser.parliamentConstituencyVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.parliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+									itemValue="#{oneParliamentConstituency.id}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
+							<p:selectOneMenu id="assemblyConstituency" disabled="#{adminRegisterMemberBean.sameAsLiving or !adminRegisterMemberBean.enableAssemblyConstituencyCombo}"
+								value="#{adminRegisterMemberBean.searchedUser.assemblyConstituencyVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.assemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+									itemValue="#{oneAssemblyConstituency.id}" />
+
+							</p:selectOneMenu>
+
+
+						</p:panelGrid>
+					</h:panelGrid>
+					<h:panelGrid columns="4" cellpadding="5">
+						<h:outputLabel for="name" value="Name*" />
+						<p:inputText id="name" value="#{adminRegisterMemberBean.searchedUser.name}" label="Name">
+						</p:inputText>
+						<h:outputLabel for="voterId" value="Voter Id" />
+						<p:inputText id="voterId" value="#{adminRegisterMemberBean.searchedUser.voterId}" label="Voter Id">
+						</p:inputText>
+						<h:outputText value="Gender : " />
+						<p:selectOneMenu value="#{adminRegisterMemberBean.searchedUser.gender}">
+							<f:selectItem itemLabel="Not Specified" itemValue="NotSpecified" />
+							<f:selectItem itemLabel="Male" itemValue="Male" />
+							<f:selectItem itemLabel="Female" itemValue="Female" />
+						</p:selectOneMenu>
+						<h:outputLabel for="email" value="Email" />
+						<p:inputText id="email" value="#{adminRegisterMemberBean.searchedUser.email}" label="Email">
+							<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+						</p:inputText>
+						<h:outputLabel for="mobile" value="Mobile" />
+						<p:selectOneMenu value="#{adminRegisterMemberBean.searchedUser.countryCode}">
+							<f:selectItem itemLabel="India - 91" itemValue="91" />
+							<f:selectItems value="#{adminRegisterMemberBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
+						</p:selectOneMenu>
+						<p:inputText id="mobile" value="#{adminRegisterMemberBean.searchedUser.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+						</p:inputText>
+						<p:outputPanel></p:outputPanel>
+
+						<h:outputText value="Date of Birth*" />
+						<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" readonlyInput="true" 
+						value="#{adminRegisterMemberBean.searchedUser.dateOfBirth}" navigator="true" effect="slideDown" />
+
+
+						<h:outputLabel for="passportNumber" value="Passport Number" />
+						<p:inputText id="passportNumber" value="#{adminRegisterMemberBean.searchedUser.passportNumber}" label="Passport Number">
+						</p:inputText>
+
+						<h:outputLabel for="motherName" value="Mother Name" />
+						<p:inputText id="motherName" value="#{adminRegisterMemberBean.searchedUser.motherName}" label="Mother Name">
+						</p:inputText>
+
+						<h:outputLabel for="fatherName" value="Father Name" />
+						<p:inputText id="fatherName" value="#{adminRegisterMemberBean.searchedUser.fatherName}" label="Father Name">
+						</p:inputText>
+
+					</h:panelGrid>
+					<p:watermark for="mobile" value="XXXXXXXXXX" />
+
+
+					<br></br>
+
+
+
+					<p:commandButton id="searchMember" update=":userProfileForm" value="Search Member" actionListener="#{adminRegisterMemberBean.searchMember}" />
+					<p:tooltip for="searchMember">Search Member</p:tooltip>
+					<br></br>
+					<p:outputPanel id="userResultPanelStart"></p:outputPanel>
+					<p:outputPanel rendered="#{adminRegisterMemberBean.showResult}">
+						<p:dataTable id="listOfUsers" var="oneUser" value="#{adminRegisterMemberBean.searchMemberResult.users}" paginator="true" rows="25" paginatorPosition="bottom"
+							paginatorAlwaysVisible="false" emptyMessage="No Member Found"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Members</f:facet>
+							<p:column style="width:2%">
+								<p:rowToggler />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Membership #" />
+								</f:facet>
+								<h:outputText value="#{oneUser.membershipNumber}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Status" />
+								</f:facet>
+								<h:outputText value="#{oneUser.membershipStatus}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneUser.name}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Address" />
+								</f:facet>
+								<h:outputText value="#{oneUser.address}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Phone" />
+								</f:facet>
+								<h:outputText value="#{oneUser.countryCode}-#{oneUser.mobileNumber}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Email" />
+								</f:facet>
+								<h:outputText value="#{oneUser.email}" />
+							</p:column>
+
+							<p:rowExpansion>
+								<h:panelGrid id="display" columns="4" cellpadding="4">
+
+									<f:facet name="header">
+										<p:graphicImage value="#{oneUser.memberPic}" />
+									</f:facet>
+
+									<h:outputText value="Name" />
+									<h:outputText value="#{oneUser.name}" />
+
+									<h:outputText value="Gender" />
+									<h:outputText value="#{oneUser.gender}" />
+
+									<h:outputText value="Date Of Birth" />
+									<h:outputText value="#{oneUser.dateOfBirth}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" />
+									</h:outputText>
+
+									<h:outputText value="Phone" />
+									<h:outputText value="#{oneUser.countryCode} - #{oneUser.mobileNumber}" />
+
+									<h:outputText value="Membership Number" />
+									<h:outputText value="#{oneUser.membershipNumber}" />
+
+									<h:outputText value="Membership Status" />
+									<h:outputText value="#{oneUser.membershipStatus}" />
+
+								</h:panelGrid>
+									<p:outputLabel value="You can not edit this member" rendered="#{!adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}"></p:outputLabel>
+									<p:commandButton id="editMemberButton" update=":userProfileForm" value="Update Member" rendered="#{adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}" >
+										<f:setPropertyActionListener value="#{oneUser}" target="#{adminRegisterMemberBean.selectedUserForEditing}" />
+									</p:commandButton>
+
+							</p:rowExpansion>
+						</p:dataTable>
+						<br></br>
+						<p:outputLabel value="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExistsMessage}" rendered="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExists}"></p:outputLabel>
+						<p:commandButton id="createNewMember" update=":userProfileForm" value="Create New Member" rendered="#{!adminRegisterMemberBean.searchMemberResult.userAlreadyExists}"
+							actionListener="#{adminRegisterMemberBean.createNewMember}" />
+						<p:tooltip for="createNewMember">Create New Member</p:tooltip>
+					</p:outputPanel>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{!adminRegisterMemberBean.showSearchPanel}">
+					<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
+						<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
+							<f:facet name="header">Select Living area of Member</f:facet>
+
+							<h:outputLabel for="editLivingState" value="State*" />
+							<p:selectOneMenu id="editLivingState" value="#{adminRegisterMemberBean.selectedUserForEditing.stateLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select State" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+
+								<p:ajax event="change" update=":userProfileForm:editLivingDistrict,:userProfileForm:editLivingParliamentConstituency" listener="#{adminRegisterMemberBean.handleUserLivingStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="editLivingDistrict" value="District*" />
+							<p:selectOneMenu id="editLivingDistrict" disabled="#{!adminRegisterMemberBean.enableLivingDistrictCombo}"
+								value="#{adminRegisterMemberBean.selectedUserForEditing.districtLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select District" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+								<p:ajax event="change" update=":userProfileForm:editLivingAssemblyConstituency" listener="#{adminRegisterMemberBean.handleUserLivingDistrictChange}" />
+							</p:selectOneMenu>
+
+							<h:outputLabel for="editLivingParliamentConstituency" value="Parliament Constituency*" />
+							<p:selectOneMenu id="editLivingParliamentConstituency" disabled="#{adminRegisterMemberBean.sameAsLiving or !adminRegisterMemberBean.enableLivingParliamentConstituencyCombo}"
+								value="#{adminRegisterMemberBean.selectedUserForEditing.parliamentConstituencyLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.livingParliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+									itemValue="#{oneParliamentConstituency.id}" />
+
+								<p:ajax update="livingAssemblyConstituency" />
+							</p:selectOneMenu>
+
+							<h:outputLabel for="editLivingAssemblyConstituency" value="Assembly Constituency*" />
+							<p:selectOneMenu id="editLivingAssemblyConstituency" disabled="#{!adminRegisterMemberBean.enableLivingAssemblyConstituencyCombo}"
+								value="#{adminRegisterMemberBean.selectedUserForEditing.assemblyConstituencyLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.livingAssemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+									itemValue="#{oneAssemblyConstituency.id}" />
+
+							</p:selectOneMenu>
+
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" cellpadding="5" id="editVotingLocation" style="width:395px;">
+							<f:facet name="header">
+        		Select Voting Area of Member
+        		<br></br>
+							</f:facet>
+
+							<p:selectBooleanCheckbox value="#{adminRegisterMemberBean.sameAsLiving}">
+								<p:ajax update=":userProfileForm:editVotingLocation" listener="#{adminRegisterMemberBean.onClickSameAsLiving}" />
+							</p:selectBooleanCheckbox>
+							<h:outputLabel value="Same as Living Location" />
+
+							<h:outputLabel for="editVotingState" value="State*" />
+							<p:selectOneMenu id="editVotingState" disabled="#{adminRegisterMemberBean.sameAsLiving}" value="#{adminRegisterMemberBean.selectedUserForEditing.stateVotingId}"
+								effect="fold" editable="false">
+								<f:selectItem itemLabel="Select State" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+								<p:ajax event="change" update=":userProfileForm:editVotingDistrict,:userProfileForm:editVotingParliamentConstituency" listener="#{adminRegisterMemberBean.handleUserVotingStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="editVotingDistrict" value="District*" />
+							<p:selectOneMenu id="editVotingDistrict" disabled="#{adminRegisterMemberBean.sameAsLiving or !adminRegisterMemberBean.enableDistrictCombo}"
+								value="#{adminRegisterMemberBean.selectedUserForEditing.districtVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select District" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.districtList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+								<p:ajax event="change" update=":userProfileForm:editVotingAssemblyConstituency" listener="#{adminRegisterMemberBean.handleUserVotingDistrictChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="editVotingParliamentConstituency" value="Parliament Constituency*" />
+							<p:selectOneMenu id="editVotingParliamentConstituency" disabled="#{adminRegisterMemberBean.sameAsLiving or !adminRegisterMemberBean.enableParliamentConstituencyCombo}"
+								value="#{adminRegisterMemberBean.selectedUserForEditing.parliamentConstituencyVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.parliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+									itemValue="#{oneParliamentConstituency.id}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="editVotingAssemblyConstituency" value="Assembly Constituency*" />
+							<p:selectOneMenu id="editVotingAssemblyConstituency" disabled="#{adminRegisterMemberBean.sameAsLiving or !adminRegisterMemberBean.enableAssemblyConstituencyCombo}"
+								value="#{adminRegisterMemberBean.selectedUserForEditing.assemblyConstituencyVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+								<f:selectItems value="#{adminRegisterMemberBean.assemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+									itemValue="#{oneAssemblyConstituency.id}" />
+
+							</p:selectOneMenu>
+
+
+						</p:panelGrid>
+					</h:panelGrid>
+					<h:panelGrid columns="4" cellpadding="5">
+						<h:outputLabel for="editName" value="Name*" />
+						<p:inputText id="editName" value="#{adminRegisterMemberBean.selectedUserForEditing.name}" label="Name">
+						</p:inputText>
+						<h:outputLabel for="editVoterId" value="Voter Id" />
+						<p:inputText id="editVoterId" value="#{adminRegisterMemberBean.selectedUserForEditing.voterId}" label="Voter Id">
+						</p:inputText>
+						<h:outputText value="Gender : " />
+						<p:selectOneMenu value="#{adminRegisterMemberBean.selectedUserForEditing.gender}">
+							<f:selectItem itemLabel="Not Specified" itemValue="NotSpecified" />
+							<f:selectItem itemLabel="Male" itemValue="Male" />
+							<f:selectItem itemLabel="Female" itemValue="Female" />
+						</p:selectOneMenu>
+						<h:outputLabel for="editEmail" value="Email" />
+						<p:inputText id="editEmail" value="#{adminRegisterMemberBean.selectedUserForEditing.email}" label="Email">
+							<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+						</p:inputText>
+						<h:outputLabel for="editMobile" value="Mobile" />
+						<p:selectOneMenu value="#{adminRegisterMemberBean.selectedUserForEditing.countryCode}">
+							<f:selectItem itemLabel="India - 91" itemValue="91" />
+							<f:selectItems value="#{adminRegisterMemberBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
+						</p:selectOneMenu>
+						<p:inputText id="editMobile" value="#{adminRegisterMemberBean.selectedUserForEditing.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+						</p:inputText>
+						<p:watermark for="editMobile" value="XXXXXXXXXX" />
+
+						<h:outputText value="Date of Birth*" />
+						<p:calendar id="editCal" yearRange="1900:2004" pattern="dd-MMM-yyyy" readonlyInput="true"
+						value="#{adminRegisterMemberBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
+
+						<h:outputLabel for="editPassportNumber" value="Passport Number" />
+						<p:inputText id="editPassportNumber" value="#{adminRegisterMemberBean.selectedUserForEditing.passportNumber}" label="Passport Number">
+						</p:inputText>
+
+						<h:outputLabel for="editMotherName" value="Mother Name" />
+						<p:inputText id="editMotherName" value="#{adminRegisterMemberBean.selectedUserForEditing.motherName}" label="Mother Name">
+						</p:inputText>
+
+						<h:outputLabel for="editFatherName" value="Father Name" />
+						<p:inputText id="editFatherName" value="#{adminRegisterMemberBean.selectedUserForEditing.fatherName}" label="Father Name">
+						</p:inputText>
+					</h:panelGrid>
+					<p:blockUI block="userProfileForm" trigger=":userProfileForm:saveMember">
+						Saving Profile<br />
+						<p:graphicImage value="/images/ajax-loader.gif" />
+					</p:blockUI>
+
+					<p:commandButton id="saveMember" update=":userProfileForm" value="Save Member" actionListener="#{adminRegisterMemberBean.saveProfile}" />
+					<p:commandButton id="cancel" update=":userProfileForm" value="Cancel" actionListener="#{adminRegisterMemberBean.cancelSaveMember}" />
+					<p:tooltip for="saveMember">Save Member</p:tooltip>
+				</p:outputPanel>
+
+
+
+			</h:form>
+			<!-- header ends -->
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2014 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+			<br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br>
+
+		</div>
+	</div>
+
+</h:body>
+</html>

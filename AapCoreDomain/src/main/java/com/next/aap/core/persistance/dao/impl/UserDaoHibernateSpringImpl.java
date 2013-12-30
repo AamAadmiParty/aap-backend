@@ -3,6 +3,7 @@ package com.next.aap.core.persistance.dao.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +18,12 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 
 	@Override
 	public User saveUser(User user) {
+		if(user.getPassportNumber() != null){
+			user.setPassportNumber(user.getPassportNumber().toUpperCase());
+		}
+		if(StringUtil.isEmpty(user.getExternalId())){
+			user.setExternalId(UUID.randomUUID().toString());
+		}
 		user = saveObject(user);
 		assignMembershipNumber(user);
 		return user;
@@ -88,8 +95,29 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 	}
 
 	@Override
-	public User getUserByMobile(String mobile) {
-		// TODO Auto-generated method stub
-		return null;
+	public User getUserByMembershipNumber(String membershipNumber) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("membershipNumber", membershipNumber.toUpperCase());
+		String query = "from User where membershipNumber=:membershipNumber";
+		return executeQueryGetObject(query, params);
 	}
+
+	@Override
+	public User getUserByPassportNumber(String passportNumber) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("passportNumber", passportNumber.toUpperCase());
+		String query = "from User where passportNumber=:passportNumber";
+		return executeQueryGetObject(query, params);
+	}
+
+	@Override
+	public List<User> searchUserOfAssemblyConstituency(String name, Long livingAcId, Long votingAcId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("name", "%" +name.toUpperCase()+"%");
+		params.put("livingAcId", livingAcId);
+		params.put("votingAcId", votingAcId);
+		String query = "from User where (assemblyConstituencyLivingId = :livingAcId or assemblyConstituencyVotingId = :votingAcId) and UPPER(name) like :name";
+		return executeQueryGetList(query, params);
+	}
+		
 }

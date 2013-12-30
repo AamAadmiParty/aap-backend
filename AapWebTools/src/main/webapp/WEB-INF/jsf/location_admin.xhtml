@@ -58,6 +58,11 @@
 					<p:commandButton value="Manage News" actionListener="#{locationAdminBean.goToManageNewsPage}" rendered="#{locationAdminBean.manageNewsAllowed}"
 						styleClass="ui-priority-primary">
 					</p:commandButton>
+					
+					<p:commandButton value="Manage Members" actionListener="#{locationAdminBean.goToManageMemberPage}" rendered="#{locationAdminBean.manageMemberAllowed}"
+						styleClass="ui-priority-primary">
+					</p:commandButton>
+
 				</p:panelGrid>
 				<br></br>
 				<br></br>

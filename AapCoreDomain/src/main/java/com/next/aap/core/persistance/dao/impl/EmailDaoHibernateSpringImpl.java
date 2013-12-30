@@ -52,4 +52,11 @@ public class EmailDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Email> i
 		Email email = executeQueryGetObject("from Email where emailUp = :email", params);
 		return email;
 	}
+
+	@Override
+	public List<Email> getEmailsByUserId(Long userId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("userId", userId);
+		return executeQueryGetList("from Email where userId = :userId", params);
+	}
 }

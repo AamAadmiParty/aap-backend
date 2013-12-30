@@ -52,12 +52,23 @@ public interface UserDao {
 	 * @return user or null if not found
 	 */
 	public abstract User getUserByEmail(String userEmail);
-
+	
 	/**
-	 * Search user by Mobile number
-	 * @param mobile
+	 * Search user by Membership Number
+	 * @param userMembershipNumber
 	 * @return user or null if not found
 	 */
-	public abstract User getUserByMobile(String mobile);
+	public abstract User getUserByMembershipNumber(String membershipNumber);
+
+
+	/**
+	 * Search user by Passport Number
+	 * @param userPassportNumber
+	 * @return user or null if not found
+	 */
+	public abstract User getUserByPassportNumber(String passportNumber);
+
+
+	List<User> searchUserOfAssemblyConstituency(String name,Long livingAcId,Long votingAcId);
 
 }

@@ -1,6 +1,7 @@
 package com.next.aap.web.controller.login;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.util.CookieUtil;
 
 @Controller
 public class SpringTwitterLoginController extends BaseSocialLoginController<Twitter> {
@@ -55,7 +57,7 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 		return "Please login to Twitter and give permission";
 	}
 	@RequestMapping(value = "/twittersuccess", method = RequestMethod.GET)
-	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, ModelAndView mv) {
+	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, ModelAndView mv) {
 		try {
 			// upon receiving the callback from the provider:
 			TwitterConnectionFactory twitterConnectionFactory = (TwitterConnectionFactory)connectionFactoryLocator.getConnectionFactory(Twitter.class);
@@ -81,6 +83,8 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);
 			mv.setView(rv);
+			
+			CookieUtil.setLastLoggedInAccountAsTwitterCookie(httpServletResponse);
 			return mv;
 
 			

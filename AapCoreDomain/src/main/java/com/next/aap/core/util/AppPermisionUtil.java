@@ -14,7 +14,7 @@ public class AppPermisionUtil {
 	private AapService aapService;
 	@PostConstruct
 	public void init(){
-		//aapService.updateAllPermissionsAndRole();
+		aapService.updateAllPermissionsAndRole();
 		//aapService.saveAllCountries();
 	}
 }

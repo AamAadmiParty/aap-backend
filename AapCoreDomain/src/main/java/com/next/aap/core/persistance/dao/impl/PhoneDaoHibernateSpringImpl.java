@@ -46,10 +46,11 @@ public class PhoneDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Phone> i
 	}
 
 	@Override
-	public Phone getPhoneByPhone(String phoneId) {
+	public Phone getPhoneByPhone(String phoneId, String countryCode) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("phone", phoneId);
-		Phone phone = executeQueryGetObject("from Phone where phoneNumber = :phone", params);
+		params.put("countryCode", countryCode);
+		Phone phone = executeQueryGetObject("from Phone where phoneNumber = :phone and countryCode = :countryCode", params);
 		return phone;
 	}
 

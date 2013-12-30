@@ -62,6 +62,15 @@ public class LocationAdminBean extends BaseJsfBean {
 			buildAndRedirect("/admin/notallowed");
 		}
 	}
+	public void goToManageMemberPage(){
+		if(isManageMemberAllowed()){
+			buildAndRedirect("/admin/register");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	
+	
 	public boolean isVoiceOfAapFbAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isVoiceOfAapFbAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
@@ -73,6 +82,10 @@ public class LocationAdminBean extends BaseJsfBean {
 	public boolean isManageNewsAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isManageNewsAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+	}
+	public boolean isManageMemberAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageMemberAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	
 

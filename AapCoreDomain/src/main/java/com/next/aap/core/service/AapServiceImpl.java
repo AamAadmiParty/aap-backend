@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +96,7 @@ import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.PostLocationType;
+import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
@@ -234,7 +234,6 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 
 			user.setDateCreated(new Date());
-			user.setExternalId(UUID.randomUUID().toString());
 		}
 		//always use facebook Image Url
 		user.setProfilePic(fbConnectionData.getImageUrl());
@@ -284,10 +283,10 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 
 
-		return connvertUser(user);
+		return convertUser(user);
 	}
 
-	private UserDto connvertUser(User user) {
+	private UserDto convertUser(User user) {
 		UserDto returnUser = new UserDto();
 		BeanUtils.copyProperties(user, returnUser);
 		List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
@@ -305,7 +304,22 @@ public class AapServiceImpl implements AapService, Serializable {
 			returnUser.setCountryCode(onePhone.getCountryCode());
 			returnUser.setMobileNumber(onePhone.getPhoneNumber());
 		}
+		
+		List<Email> emails = emailDao.getEmailsByUserId(user.getId());
+		if(emails != null && !emails.isEmpty()){
+			returnUser.setEmail(emails.get(0).getEmail());
+		}
 		return returnUser;
+	}
+	private List<UserDto> convertUsers(List<User> users) {
+		List<UserDto> returnUsers = new ArrayList<>();
+		if(users == null){
+			return returnUsers;
+		}
+		for(User oneUser:users){
+			returnUsers.add(convertUser(oneUser));
+		}
+		return returnUsers;
 	}
 
 	private void mergeUser(User targetUser, User sourceUser) {
@@ -345,7 +359,6 @@ public class AapServiceImpl implements AapService, Serializable {
 			user = new User();
 			user.setName(twitterConnectionData.getDisplayName());
 			user.setDateCreated(new Date());
-			user.setExternalId(UUID.randomUUID().toString());
 			user.setProfilePic(twitterConnectionData.getImageUrl());
 		}
 		user = userDao.saveUser(user);
@@ -357,7 +370,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		dbTwitterAccount.setUser(user);
 		dbTwitterAccount = twitterAccountDao.saveTwitterAccount(dbTwitterAccount);
 
-		return connvertUser(user);
+		return convertUser(user);
 	}
 
 	@Override
@@ -522,13 +535,18 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Override
 	@Transactional
 	public UserDto saveUser(UserDto userDto) {
-		User dbUser = userDao.getUserById(userDto.getId());
-		if (dbUser == null) {
-			logger.error("User DO NOT Exists [id=" + userDto.getId() + "]");
-			return null;
+		User user;
+		if(userDto.getId() == null || userDto.getId() <= 0){
+			user = new User();
+			user.setMember(true);
+		}else{
+			user = userDao.getUserById(userDto.getId());;
+			if (user == null) {
+				logger.error("User DO NOT Exists [id=" + userDto.getId() + "]");
+				return null;
+			}
 		}
-		// find out if we have facebook account with given user name
-		User user = userDao.getUserById(userDto.getId());
+		
 		user.setDateModified(new Date());
 		// user.setEmail(userDto.getEmail());
 		// user.setMobile(userDto.getMobile());
@@ -615,8 +633,45 @@ public class AapServiceImpl implements AapService, Serializable {
 				onePhone = phoneDao.savePhone(onePhone);
 			}
 		}
+		
+		if(!StringUtil.isEmpty(userDto.getEmail())){
+			//save Mobile number
+			List<Email> userEmails = emailDao.getEmailsByUserId(user.getId());
+			Email oneEmail = null;
+			if(userEmails == null || userEmails.isEmpty()){
+				oneEmail = new Email();
+				oneEmail.setDateCreated(new Date());
+				oneEmail.setEmail(userDto.getEmail());
+				oneEmail.setConfirmationType(ConfirmationType.ADMIN_ENTERED);
+				oneEmail.setConfirmed(false);
+				oneEmail.setUser(user);
+				oneEmail.setDateModified(new Date());
+				oneEmail = emailDao.saveEmail(oneEmail);
+			}else{
+				oneEmail = null;
+				for(Email email:userEmails){
+					oneEmail = email;
+					if(email.getConfirmationType().equals(ConfirmationType.ADMIN_ENTERED)){
+						oneEmail = email;
+						break;
+					}
+				}
+				if(oneEmail == null){
+					oneEmail = new Email();
+					oneEmail.setDateCreated(new Date());
+					oneEmail.setConfirmationType(ConfirmationType.ADMIN_ENTERED);
+					oneEmail.setConfirmed(false);
+					oneEmail.setUser(user);
+					oneEmail.setDateModified(new Date());
+				}
+				oneEmail.setEmail(userDto.getEmail());
+				oneEmail.setUser(user);
+				oneEmail.setDateModified(new Date());
+				oneEmail = emailDao.saveEmail(oneEmail);
+			}
+		}
 		user = userDao.getUserById(user.getId());
-		return connvertUser(user);
+		return convertUser(user);
 	}
 
 	@Override
@@ -768,6 +823,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		
 		
 		//Now create all custom Roles
+		/*
 		createRoleWithPermissions("VoiceOfAapFacebookAdminRole"," User of this role will be able to make Facebook post using voice of AAP Application", true, true,false,false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
 		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true, true,false, false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
 		//News Related Roles
@@ -778,7 +834,13 @@ public class AapServiceImpl implements AapService, Serializable {
 		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update and publish news for a location", true, true,true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
 		
 		createRoleWithPermissions("NewsApproverRole", "User of this role will be able to publish existing news for a location", true, true,true, true, AppPermission.APPROVE_NEWS);
-
+		
+		createRoleWithPermissions("GlobalMemberAdminRole", "User of this role will be able to add new member at any location and will be able to update any member", false, false,false, false, AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.VIEW_MEMBER);
+		
+		createRoleWithPermissions("MemberAdminRole", "User of this role will be able to add new member at any location and will be able to update member at his location only", true, true,true, true, AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
+		
+		*/
+		logger.info("All Roles and permissions are created");
 	}
 	private void createRoleWithPermissions(String name,String description,boolean addStateRoles, boolean addDistrictRoles,boolean addAcRoles,boolean addPcRoles,AppPermission...appPermissions){
 		logger.info("Creating Role "+ name);
@@ -1666,5 +1728,156 @@ public class AapServiceImpl implements AapService, Serializable {
 		News news = newsDao.getNewsById(newsId);
 		return convertContentTweets(news.getTweets());
 	}
+
+	@Override
+	@Transactional
+	public UserDto registerMember(UserDto userDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public SearchMemberResultDto searchMembers(UserDto searchUserDto) {
+		SearchMemberResultDto searchMemberResult = new SearchMemberResultDto();
+		if(!StringUtil.isEmpty(searchUserDto.getMembershipNumber())){
+			User user = userDao.getUserByMembershipNumber(searchUserDto.getMembershipNumber());
+			if(user != null){
+				searchMemberResult.getUsers().add(convertUser(user));
+				searchMemberResult.setUserAlreadyExists(true);
+				searchMemberResult.setUserAlreadyExistsMessage("Member with membership number "+ searchUserDto.getMembershipNumber()+" already exists");
+				return searchMemberResult;
+			}
+		}
+		if(!StringUtil.isEmpty(searchUserDto.getEmail())){
+			Email email = emailDao.getEmailByEmail(searchUserDto.getEmail());
+			if(email != null){
+				User user = email.getUser();
+				if(user != null){
+					searchMemberResult.getUsers().add(convertUser(user));
+					searchMemberResult.setUserAlreadyExists(true);
+					searchMemberResult.setUserAlreadyExistsMessage("Member with email "+ searchUserDto.getEmail()+" already exists");
+					return searchMemberResult;
+				}
+			}
+		}
+		if(!StringUtil.isEmpty(searchUserDto.getMobileNumber())){
+			Phone phone = phoneDao.getPhoneByPhone(searchUserDto.getMobileNumber(), searchUserDto.getCountryCode());
+			if(phone != null){
+				User user = phone.getUser();
+				if(user != null){
+					searchMemberResult.getUsers().add(convertUser(user));
+					searchMemberResult.setUserAlreadyExists(true);
+					searchMemberResult.setUserAlreadyExistsMessage("Member with phone "+ searchUserDto.getMobileNumber()+" already exists");
+					return searchMemberResult;
+				}
+			}
+		}
+		
+		if(!StringUtil.isEmpty(searchUserDto.getPassportNumber())){
+			User user = userDao.getUserByPassportNumber(searchUserDto.getPassportNumber());
+			if(user != null){
+				searchMemberResult.getUsers().add(convertUser(user));
+				searchMemberResult.setUserAlreadyExists(true);
+				searchMemberResult.setUserAlreadyExistsMessage("Member with passport number "+ searchUserDto.getPassportNumber()+" already exists");
+				return searchMemberResult;
+			}
+		}
+		
+		if(!StringUtil.isEmpty(searchUserDto.getName())){
+			List<User> users = userDao.searchUserOfAssemblyConstituency(searchUserDto.getName(),searchUserDto.getAssemblyConstituencyLivingId(), searchUserDto.getAssemblyConstituencyVotingId());
+			if(users != null){
+				searchMemberResult.getUsers().addAll(convertUsers(users));
+				searchMemberResult.setUserAlreadyExists(false);
+				searchMemberResult.setUserAlreadyExistsMessage("Similar member found inthis area, check manually if member already exists");
+				return searchMemberResult;
+			}
+		}
+		searchMemberResult.setUserAlreadyExists(false);
+		searchMemberResult.setUserAlreadyExistsMessage("No Member found");
+		return searchMemberResult;
+	}
+	
+	@Override
+	@Transactional
+	public AssemblyConstituencyDto saveAssemblyConstituency(
+			AssemblyConstituencyDto assemblyConstituencyDto) {
+		AssemblyConstituency dbAssemblyConstituency;
+		if (assemblyConstituencyDto.getId() == null
+				|| assemblyConstituencyDto.getId() <= 0) {
+			dbAssemblyConstituency = assemblyConstituencyDao
+					.getAssemblyConstituencyNameAndDistrictId(
+							assemblyConstituencyDto.getDistrictId(),
+							assemblyConstituencyDto.getName());
+			if (dbAssemblyConstituency == null) {
+				dbAssemblyConstituency = new AssemblyConstituency();
+				dbAssemblyConstituency.setDateCreated(new Date());
+			}
+		} else {
+			dbAssemblyConstituency = assemblyConstituencyDao
+					.getAssemblyConstituencyById(assemblyConstituencyDto
+							.getId());
+			if (dbAssemblyConstituency == null) {
+				throw new RuntimeException(
+						"No such Assembly Constituency exist[id="
+								+ assemblyConstituencyDto.getId() + "]");
+			}
+		}
+		dbAssemblyConstituency.setDateModified(new Date());
+		dbAssemblyConstituency.setName(assemblyConstituencyDto.getName());
+		District district = districtDao.getDistrictById(assemblyConstituencyDto
+				.getDistrictId());
+		district.setAcDataAvailable(true);
+		dbAssemblyConstituency.setDistrict(district);
+
+		dbAssemblyConstituency = assemblyConstituencyDao
+				.saveAssemblyConstituency(dbAssemblyConstituency);
+
+		assemblyConstituencyDto.setId(dbAssemblyConstituency.getId());
+		return assemblyConstituencyDto;
+	}
+	
+	@Override
+	@Transactional
+	public DistrictDto saveDistrict(DistrictDto districtWeb) {
+		District dbDistrict;
+		if (districtWeb.getId() == null || districtWeb.getId() <= 0) {
+			dbDistrict = districtDao.getDistrictByNameAndStateId(
+					districtWeb.getStateId(), districtWeb.getName());
+			if (dbDistrict == null) {
+				dbDistrict = new District();
+				dbDistrict.setDateCreated(new Date());
+			}
+		} else {
+			dbDistrict = districtDao.getDistrictById(districtWeb.getId());
+			if (dbDistrict == null) {
+				throw new RuntimeException("No such District exist[id="
+						+ districtWeb.getId() + "]");
+			}
+		}
+		
+		if(dbDistrict.getDateCreated() == null ){
+			dbDistrict.setDateCreated(new Date());
+		}
+		dbDistrict.setName(districtWeb.getName());
+		dbDistrict.setDateModified(new Date());
+		
+		
+		State state = stateDao.getStateById(districtWeb.getStateId());
+		dbDistrict.setState(state);
+
+		dbDistrict = districtDao.saveDistrict(dbDistrict);
+
+		districtWeb.setId(dbDistrict.getId());
+		return districtWeb;
+	}
+	
+	@Override
+	@Transactional
+	public DistrictDto getDistrictByNameAndStateId(String name, Long stateId) {
+		District district = districtDao.getDistrictByNameAndStateId(stateId, name);
+		return convertDistrict(district);
+	}
+
 
 }

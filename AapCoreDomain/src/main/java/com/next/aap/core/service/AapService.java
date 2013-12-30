@@ -22,6 +22,7 @@ import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.PostLocationType;
+import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
@@ -115,4 +116,14 @@ public interface AapService {
 	List<NewsDto> getNews(PostLocationType locationType, Long locationId);
 	
 	List<ContentTweetDto> getNewsContentTweets(Long newsId);
+	
+	UserDto registerMember(UserDto userDto);
+	
+	SearchMemberResultDto searchMembers(UserDto searchUserDto);
+	
+	DistrictDto saveDistrict(DistrictDto districtWeb) ;
+	
+	DistrictDto getDistrictByNameAndStateId(String name, Long stateId) ;
+	
+	AssemblyConstituencyDto saveAssemblyConstituency(AssemblyConstituencyDto assemblyConstituencyWeb) ;
 }

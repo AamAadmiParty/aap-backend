@@ -1,6 +1,7 @@
 package com.next.aap.web.controller.login;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.util.CookieUtil;
 
 @Controller
 public class SpringFacebookLoginController extends BaseSocialLoginController<Facebook> {
@@ -61,7 +63,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 		return "Please login to facebook and give permission";
 	}
 	@RequestMapping(value = "/facebooksuccess", method = RequestMethod.GET)
-	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, ModelAndView mv) {
+	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse, ModelAndView mv) {
 		try {
 			FacebookConnectionFactory facebookConnectionFactory = (FacebookConnectionFactory)connectionFactoryLocator.getConnectionFactory(Facebook.class);
 			OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
@@ -78,12 +80,15 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			*/
 			//System.out.println("SpringFacebookLoginController.getRedirectUrlFromSession=" + getRedirectUrlFromSession(httpServletRequest));
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
+			logger.info("redirectUrl= {}", redirectUrl);
 			if(StringUtil.isEmpty(redirectUrl)){
 				redirectUrl = httpServletRequest.getContextPath()+"/socialaccounts";
 			}
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);
 			mv.setView(rv);
+			
+			CookieUtil.setLastLoggedInAccountAsFacebookCookie(httpServletResponse);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

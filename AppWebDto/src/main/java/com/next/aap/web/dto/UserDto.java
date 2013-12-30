@@ -35,6 +35,7 @@ public class UserDto implements Serializable{
 	private String membershipStatus;
 	private String passportNumber;
 	private String voterId;
+	private String email;
 
 
 	public Long getId() {
@@ -269,6 +270,14 @@ public class UserDto implements Serializable{
 
 	public void setVoterId(String voterId) {
 		this.voterId = voterId;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override

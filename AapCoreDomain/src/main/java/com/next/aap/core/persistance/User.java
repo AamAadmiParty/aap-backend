@@ -42,7 +42,7 @@ public class User {
 	@Column(name = "external_id", nullable = false, length=256)
 	private String externalId;
 
-	@Column(name = "membership_no", nullable = false)
+	@Column(name = "membership_no")
 	private String membershipNumber;
 
 	@Column(name = "name", nullable = false, length=256)
@@ -188,7 +188,7 @@ public class User {
 	@Column(name = "member", nullable = false)
 	private boolean member;
 	
-	@Column(name = "membership_status", nullable = false)
+	@Column(name = "membership_status")
 	private String membershipStatus;
 	
 	@Column(name = "passport_number")

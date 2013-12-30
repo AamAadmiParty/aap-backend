@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.AcRole;
 import com.next.aap.core.persistance.AssemblyConstituency;
+import com.next.aap.core.persistance.ContentTweet;
 import com.next.aap.core.persistance.Country;
 import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
@@ -55,6 +56,7 @@ import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
 import com.next.aap.core.persistance.dao.AcRoleDao;
 import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
+import com.next.aap.core.persistance.dao.ContentTweetDao;
 import com.next.aap.core.persistance.dao.CountryDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
 import com.next.aap.core.persistance.dao.DistrictRoleDao;
@@ -82,6 +84,7 @@ import com.next.aap.core.persistance.dao.UserDao;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.ContentStatus;
+import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
@@ -158,6 +161,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private TweetDao tweetDao;
 	@Autowired
 	private NewsDao newsDao;
+	@Autowired
+	private ContentTweetDao contentTweetDao;
 	
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -1506,7 +1511,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public NewsDto saveNews(NewsDto newsDto,PostLocationType locationType, Long locationId) {
+	public NewsDto saveNews(NewsDto newsDto, List<ContentTweetDto> contentTweetDtos,PostLocationType locationType, Long locationId) {
 		News news = null;
 		if(newsDto.getId() != null && newsDto.getId() > 0){
 			news = newsDao.getNewsById(newsDto.getId());
@@ -1522,6 +1527,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		news.setImageUrl(newsDto.getImageUrl());
 		news.setSource(newsDto.getSource());
 		news.setTitle(newsDto.getTitle());
+		
 		
 		switch(locationType){
 		case Global :
@@ -1558,6 +1564,27 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		
 		news = newsDao.saveNews(news);
+		
+		//add all tweets
+		if(contentTweetDtos != null && contentTweetDtos.size() > 0){
+			if(news.getTweets() == null){
+				news.setTweets(new ArrayList<ContentTweet>());
+			}
+			ContentTweet oneContentTweet;
+			for(ContentTweetDto oneContentTweetDto: contentTweetDtos){
+				if(oneContentTweetDto.getId() == null || oneContentTweetDto.getId() <= 0){
+					oneContentTweet = new ContentTweet();
+				}else{
+					oneContentTweet = contentTweetDao.getContentTweetById(oneContentTweetDto.getId());
+				}
+				oneContentTweet.setImageUrl(oneContentTweetDto.getImageUrl());
+				oneContentTweet.setTweetContent(oneContentTweetDto.getTweetContent());
+				
+				oneContentTweet = contentTweetDao.saveContentTweet(oneContentTweet);
+				news.getTweets().add(oneContentTweet);
+			}
+		}
+		
 		return convertNews(news);
 	}
 	private NewsDto convertNews(News news){
@@ -1611,6 +1638,33 @@ public class AapServiceImpl implements AapService, Serializable {
 		news.setContentStatus(ContentStatus.Published);
 		news = newsDao.saveNews(news);
 		return convertNews(news);
+	}
+
+	private ContentTweetDto convertContentTweet(ContentTweet contentTweet){
+		if(contentTweet == null){
+			return null;
+		}
+		ContentTweetDto contentTweetDto = new ContentTweetDto();
+		BeanUtils.copyProperties(contentTweet, contentTweetDto);
+		return contentTweetDto;
+	}
+	
+	private List<ContentTweetDto> convertContentTweets(Collection<ContentTweet> contentTweets){
+		if(contentTweets == null){
+			return null;
+		}
+		List<ContentTweetDto> contentTweetDtos = new ArrayList<>(contentTweets.size());
+		for(ContentTweet oneContentTweet:contentTweets){
+			contentTweetDtos.add(convertContentTweet(oneContentTweet));
+		}
+		return contentTweetDtos;
+	}
+	
+	@Override
+	@Transactional
+	public List<ContentTweetDto> getNewsContentTweets(Long newsId) {
+		News news = newsDao.getNewsById(newsId);
+		return convertContentTweets(news.getTweets());
 	}
 
 }

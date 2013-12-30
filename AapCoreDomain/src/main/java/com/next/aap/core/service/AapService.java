@@ -9,6 +9,7 @@ import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 
 import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
@@ -107,9 +108,11 @@ public interface AapService {
 	
 	List<TwitterAccountDto> getAllTwitterAccountsForVoiceOfAap(PostLocationType locationType, Long locationId);
 	
-	NewsDto saveNews(NewsDto newsDto,PostLocationType locationType, Long locationId);
+	NewsDto saveNews(NewsDto newsDto, List<ContentTweetDto> contentTweetDtos, PostLocationType locationType, Long locationId);
 	
 	NewsDto publishNews(Long newsId);
 	
 	List<NewsDto> getNews(PostLocationType locationType, Long locationId);
+	
+	List<ContentTweetDto> getNewsContentTweets(Long newsId);
 }

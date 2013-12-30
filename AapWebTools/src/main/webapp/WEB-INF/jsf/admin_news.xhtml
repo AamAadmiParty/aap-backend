@@ -46,7 +46,7 @@
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView" rendered="#{newsAdminBean.showList}">
 
-						<p:commandButton value="Create News" actionListener="#{newsAdminBean.newPost}" update=":adminNewsForm:mainPanel">
+						<p:commandButton value="Create News" actionListener="#{newsAdminBean.createNews}" update=":adminNewsForm:mainPanel">
 						</p:commandButton>
 						<p:dataTable id="listOfNews" var="onePost" value="#{newsAdminBean.newsList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 							emptyMessage="No Facebook Post" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -90,7 +90,7 @@
 					<p:outputPanel id="formView" rendered="#{!newsAdminBean.showList}">
 						<p:panelGrid columns="2">
 							<p:outputLabel value="Title"></p:outputLabel>
-							<p:inputText value="#{newsAdminBean.selectedNews.title}" style="width:600px" disabled="#{!newsAdminBean.editAllowed}" >
+							<p:inputText value="#{newsAdminBean.selectedNews.title}" style="width:600px" disabled="#{!newsAdminBean.editAllowed}">
 								<p:ajax event="change" update=":adminNewsForm" />
 							</p:inputText>
 							<p:outputLabel value="Image Url"></p:outputLabel>
@@ -98,25 +98,68 @@
 								<p:ajax event="change" update=":adminNewsForm" />
 							</p:inputText>
 							<p:outputLabel value="Message"></p:outputLabel>
-							<p:outputLabel value="#{newsAdminBean.selectedNews.content}" escape="false" rendered="#{!newsAdminBean.editAllowed}"/>
+							<p:outputLabel value="#{newsAdminBean.selectedNews.content}" escape="false" rendered="#{!newsAdminBean.editAllowed}" />
 							<p:editor id="editor" value="#{newsAdminBean.selectedNews.content}" width="600" height="500" rendered="#{newsAdminBean.editAllowed}">
 							</p:editor>
 							<p:outputLabel value="Author"></p:outputLabel>
-							<p:inputText value="#{newsAdminBean.selectedNews.author}" disabled="#{!newsAdminBean.editAllowed}"/>
+							<p:inputText value="#{newsAdminBean.selectedNews.author}" disabled="#{!newsAdminBean.editAllowed}" />
 							<p:outputLabel value="Source"></p:outputLabel>
-							<p:inputText value="#{newsAdminBean.selectedNews.source}" disabled="#{!newsAdminBean.editAllowed}"/>
+							<p:inputText value="#{newsAdminBean.selectedNews.source}" disabled="#{!newsAdminBean.editAllowed}" />
 						</p:panelGrid>
-						<p:commandButton value="Cancel" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.cancel}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						<p:commandButton id="saveNews" value="Save Draft" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.savePost}" styleClass="ui-priority-primary"
-						 rendered="#{newsAdminBean.saveDraft}">
-						</p:commandButton>
-						<p:commandButton id="saveNewsAndPublish" value="Save and Publish" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.saveAndPublishPost}" styleClass="ui-priority-primary"
-						rendered="#{newsAdminBean.saveAndPublish}">
-						</p:commandButton>
-						<p:commandButton id="publish" value="Publish" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.publishPost}" styleClass="ui-priority-primary"
-						rendered="#{newsAdminBean.publish}">
-						</p:commandButton>
+						<br></br>
+						<p:outputPanel id="tweetPanel">
+							<p:outputPanel rendered="#{!newsAdminBean.showTweetList}">
+								<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining." value="#{newsAdminBean.selectedTweet.tweetContent}">
+								</p:inputTextarea>
+								<br></br>
+								<h:outputText id="counter" />
+								<br></br>
+								<p:commandButton value="Add Tweet" update=":adminNewsForm" actionListener="#{newsAdminBean.addNewsTweet}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton value="Cancel" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.cancelTweet}" styleClass="ui-priority-primary">
+								</p:commandButton>
+
+							</p:outputPanel>
+							<p:outputPanel rendered="#{newsAdminBean.showTweetList}">
+								<p:commandButton value="Create News Tweet" update=":adminNewsForm:tweetPanel" actionListener="#{newsAdminBean.createNewsTweet}" 
+								rendered="#{newsAdminBean.editAllowed}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<br></br>
+								<p:dataTable id="listOfTweets" var="oneTweet" value="#{newsAdminBean.tweetList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+									emptyMessage="No Tweet Related to this News"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Tweets" />
+										</f:facet>
+										<h:outputText value="#{oneTweet.tweetContent}" />
+									</p:column>
+									<p:column style="width:100px;" rendered="#{newsAdminBean.editAllowed}">
+										<f:facet name="header">
+											<h:outputText value="Update" />
+										</f:facet>
+										<p:commandLink title="Update Tweet" update=":adminNewsForm:tweetPanel">
+											<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+											<f:setPropertyActionListener value="#{oneTweet}" target="#{newsAdminBean.selectedTweet}" />
+										</p:commandLink>
+									</p:column>
+								</p:dataTable>
+								<br></br>
+								<p:commandButton value="Cancel" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.cancel}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton id="saveNews" value="Save Draft" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.savePost}" styleClass="ui-priority-primary"
+									rendered="#{newsAdminBean.saveDraft}">
+								</p:commandButton>
+								<p:commandButton id="saveNewsAndPublish" value="Save and Publish" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.saveAndPublishPost}"
+									styleClass="ui-priority-primary" rendered="#{newsAdminBean.saveAndPublish}">
+								</p:commandButton>
+								<p:commandButton id="publish" value="Publish" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.publishPost}" styleClass="ui-priority-primary"
+									rendered="#{newsAdminBean.publish}">
+								</p:commandButton>
+
+							</p:outputPanel>
+						</p:outputPanel>
+
 					</p:outputPanel>
 				</p:outputPanel>
 				<br></br>

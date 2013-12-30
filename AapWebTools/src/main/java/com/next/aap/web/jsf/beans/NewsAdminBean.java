@@ -1,5 +1,6 @@
 package com.next.aap.web.jsf.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
-import com.next.aap.core.util.AppPermisionUtil;
 import com.next.aap.web.dto.AppPermission;
+import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.UserDto;
@@ -32,10 +33,15 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	private MenuBean menuBean;
 	
 	private boolean showList = true;
+	private List<ContentTweetDto> tweetList;
+	private ContentTweetDto selectedTweet;
+	private boolean newTweet = false;
+	private boolean showTweetList = true;
 	
 	private List<NewsDto> newsList;
 	public NewsAdminBean(){
 		super("/admin/news", AppPermission.CREATE_NEWS,AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
+		selectedTweet = new ContentTweetDto();
 	}
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
@@ -47,10 +53,26 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	private void refreshNewsList(){
 		newsList = aapService.getNews(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
+		tweetList = new ArrayList<>();
 	}
 
 	public LoginAccountDto getLoginAccounts() {
 		return getLoggedInAccountsFromSesion();
+	}
+	public void cancelTweet(){
+		showTweetList = true;
+	}
+	public void createNewsTweet(){
+		System.out.println("createNewsTweet");
+		selectedTweet = new ContentTweetDto();
+		newTweet = true;
+		showTweetList = false;
+	}
+	public void addNewsTweet(){
+		if(newTweet){
+			tweetList.add(selectedTweet);
+		}
+		showTweetList = true;
 	}
 
 	public UserDto getUser() {
@@ -62,6 +84,7 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public void setSelectedNews(NewsDto selectedNews) {
 		this.selectedNews = selectedNews;
 		showList = false;
+		tweetList = aapService.getNewsContentTweets(selectedNews.getId());
 	}
 	public boolean isSaveDraft(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
@@ -118,7 +141,12 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 			}
 
 			if(isValidInput()){
-				selectedNews = aapService.saveNews(selectedNews, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
+				System.out.println("tweetList="+tweetList);
+				if(tweetList != null){
+					System.out.println("tweetList="+tweetList);	
+				}
+				
+				selectedNews = aapService.saveNews(selectedNews, tweetList, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
 				sendInfoMessageToJsfScreen("News saved succesfully");
 				refreshNewsList();
 				showList = true;
@@ -129,16 +157,18 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		}
 		
 	}
-	public void newPost(){
+	public void createNews(){
 		selectedNews = new NewsDto();
 		showList = false;
-	}
-	public void clear(){
-		newPost();
+		tweetList = new ArrayList<>();
 	}
 	public void cancel(){
-		newPost();
+		createNews();
 		showList = true;
+	}
+	public void deleteTweet(){
+		System.out.println("Delete Tweet : "+selectedTweet.getTweetContent());
+		tweetList.remove(selectedTweet);
 	}
 	
 	public boolean isShowList() {
@@ -152,6 +182,32 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void setNewsList(List<NewsDto> newsList) {
 		this.newsList = newsList;
+	}
+	public List<ContentTweetDto> getTweetList() {
+		return tweetList;
+	}
+	public void setTweetList(List<ContentTweetDto> tweetList) {
+		this.tweetList = tweetList;
+	}
+	public ContentTweetDto getSelectedTweet() {
+		return selectedTweet;
+	}
+	public void setSelectedTweet(ContentTweetDto selectedTweet) {
+		this.selectedTweet = selectedTweet;
+		newTweet = false;
+		showTweetList = false;
+	}
+	public boolean isNewTweet() {
+		return newTweet;
+	}
+	public void setNewTweet(boolean newTweet) {
+		this.newTweet = newTweet;
+	}
+	public boolean isShowTweetList() {
+		return showTweetList;
+	}
+	public void setShowTweetList(boolean showTweetList) {
+		this.showTweetList = showTweetList;
 	}
 
 

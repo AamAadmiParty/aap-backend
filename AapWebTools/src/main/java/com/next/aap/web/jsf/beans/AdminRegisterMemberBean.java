@@ -244,20 +244,12 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 		}else{
 			System.out.println("Not a valid Input" );
 		}
-		/*
-		 * String url =
-		 * BaseController.getFinalRedirectUrlFromSesion(getHttpServletRequest
-		 * ()); if(!StringUtil.isEmpty(url)){
-		 * BaseController.clearFinalRedirectUrlInSesion
-		 * (getHttpServletRequest()); redirect(buildUrl(url)); }
-		 */
 	}
 
 	public void searchMember(){
 		System.out.println("Search Member "+searchedUser.getAssemblyConstituencyLivingId() +" , "+searchedUser.getAssemblyConstituencyVotingId());
 		searchMemberResult = aapService.searchMembers(searchedUser);
 		showResult = true;
-		//redirect("#userProfileForm:userResultPanelStart");
 	}
 
 	public void handleStateChange(AjaxBehaviorEvent event) {

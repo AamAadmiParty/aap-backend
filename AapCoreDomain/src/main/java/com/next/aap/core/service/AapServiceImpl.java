@@ -840,6 +840,9 @@ public class AapServiceImpl implements AapService, Serializable {
 		createRoleWithPermissions("MemberAdminRole", "User of this role will be able to add new member at any location and will be able to update member at his location only", true, true,true, true, AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
 		
 		*/
+		
+		createRoleWithPermissions("AdminEditUserRoles", "User of this role will be able to add or remove user roles on a location", true, true,true, true, AppPermission.EDIT_USER_ROLES);
+		
 		logger.info("All Roles and permissions are created");
 	}
 	private void createRoleWithPermissions(String name,String description,boolean addStateRoles, boolean addDistrictRoles,boolean addAcRoles,boolean addPcRoles,AppPermission...appPermissions){

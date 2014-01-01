@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -96,6 +97,7 @@ import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.PostLocationType;
+import com.next.aap.web.dto.RoleDto;
 import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TweetDto;
@@ -163,10 +165,9 @@ public class AapServiceImpl implements AapService, Serializable {
 	private NewsDao newsDao;
 	@Autowired
 	private ContentTweetDao contentTweetDao;
-	
+
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
-
 
 	@Override
 	@Transactional
@@ -212,14 +213,14 @@ public class AapServiceImpl implements AapService, Serializable {
 			facebookAppPermission.setFacebookAccount(dbFacebookAccount);
 			facebookAppPermission.setFacebookApp(facebookApp);
 			facebookAppPermission.setToken(fbConnectionData.getAccessToken());
-			if(fbConnectionData.getExpireTime() == null){
+			if (fbConnectionData.getExpireTime() == null) {
 				Calendar today = Calendar.getInstance();
 				today.add(Calendar.HOUR, 2);
 				facebookAppPermission.setExpireTime(today.getTime());
-			}else{
-				facebookAppPermission.setExpireTime(new Date(fbConnectionData.getExpireTime()));	
+			} else {
+				facebookAppPermission.setExpireTime(new Date(fbConnectionData.getExpireTime()));
 			}
-			
+
 			facebookAppPermission = facebookAppPermissionDao.saveFacebookAppPermission(facebookAppPermission);
 		}
 		System.out.println("user=" + user);
@@ -235,7 +236,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 			user.setDateCreated(new Date());
 		}
-		//always use facebook Image Url
+		// always use facebook Image Url
 		user.setProfilePic(fbConnectionData.getImageUrl());
 		System.out.println("user=" + user);
 		user = userDao.saveUser(user);
@@ -282,7 +283,6 @@ public class AapServiceImpl implements AapService, Serializable {
 			email = emailDao.saveEmail(email);
 		}
 
-
 		return convertUser(user);
 	}
 
@@ -291,32 +291,33 @@ public class AapServiceImpl implements AapService, Serializable {
 		BeanUtils.copyProperties(user, returnUser);
 		List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
 		Phone onePhone = null;
-		if(userPhones != null && !userPhones.isEmpty()){
-			for(Phone phone:userPhones){
-				if(phone.getPhoneType().equals(PhoneType.MOBILE)){
+		if (userPhones != null && !userPhones.isEmpty()) {
+			for (Phone phone : userPhones) {
+				if (phone.getPhoneType().equals(PhoneType.MOBILE)) {
 					onePhone = phone;
 					break;
 				}
 			}
-			if(onePhone == null){
+			if (onePhone == null) {
 				onePhone = userPhones.get(0);
 			}
 			returnUser.setCountryCode(onePhone.getCountryCode());
 			returnUser.setMobileNumber(onePhone.getPhoneNumber());
 		}
-		
+
 		List<Email> emails = emailDao.getEmailsByUserId(user.getId());
-		if(emails != null && !emails.isEmpty()){
+		if (emails != null && !emails.isEmpty()) {
 			returnUser.setEmail(emails.get(0).getEmail());
 		}
 		return returnUser;
 	}
+
 	private List<UserDto> convertUsers(List<User> users) {
 		List<UserDto> returnUsers = new ArrayList<>();
-		if(users == null){
+		if (users == null) {
 			return returnUsers;
 		}
-		for(User oneUser:users){
+		for (User oneUser : users) {
 			returnUsers.add(convertUser(oneUser));
 		}
 		return returnUsers;
@@ -461,9 +462,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	private DistrictDto convertDistrict(District oneDistrict) {
 		DistrictDto oneDistrictDto = new DistrictDto();
-		oneDistrictDto.setId(oneDistrict.getId());
-		oneDistrictDto.setName(oneDistrict.getName());
-		oneDistrictDto.setAcDataAvailable(oneDistrict.getAcDataAvailable());
+		BeanUtils.copyProperties(oneDistrict, oneDistrictDto);
 		return oneDistrictDto;
 	}
 
@@ -536,17 +535,18 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public UserDto saveUser(UserDto userDto) {
 		User user;
-		if(userDto.getId() == null || userDto.getId() <= 0){
+		if (userDto.getId() == null || userDto.getId() <= 0) {
 			user = new User();
 			user.setMember(true);
-		}else{
-			user = userDao.getUserById(userDto.getId());;
+		} else {
+			user = userDao.getUserById(userDto.getId());
+			;
 			if (user == null) {
 				logger.error("User DO NOT Exists [id=" + userDto.getId() + "]");
 				return null;
 			}
 		}
-		
+
 		user.setDateModified(new Date());
 		// user.setEmail(userDto.getEmail());
 		// user.setMobile(userDto.getMobile());
@@ -594,19 +594,19 @@ public class AapServiceImpl implements AapService, Serializable {
 		user.setFatherName(userDto.getFatherName());
 		user.setMotherName(userDto.getMotherName());
 		user.setAddress(userDto.getAddress());
-		if(user.isNri()){
-			if(userDto.getNriCountryId() != null && userDto.getNriCountryId() > 0){
+		if (user.isNri()) {
+			if (userDto.getNriCountryId() != null && userDto.getNriCountryId() > 0) {
 				Country country = countryDao.getCountryById(userDto.getNriCountryId());
 				user.setNriCountry(country);
 			}
 		}
 		user = userDao.saveUser(user);
-		
-		if(!StringUtil.isEmpty(userDto.getMobileNumber())){
-			//save Mobile number
+
+		if (!StringUtil.isEmpty(userDto.getMobileNumber())) {
+			// save Mobile number
 			List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
 			Phone onePhone = null;
-			if(userPhones == null || userPhones.isEmpty()){
+			if (userPhones == null || userPhones.isEmpty()) {
 				onePhone = new Phone();
 				onePhone.setCountryCode(userDto.getCountryCode());
 				onePhone.setDateCreated(new Date());
@@ -615,14 +615,14 @@ public class AapServiceImpl implements AapService, Serializable {
 				onePhone.setUser(user);
 				onePhone.setDateModified(new Date());
 				onePhone = phoneDao.savePhone(onePhone);
-			}else{
-				for(Phone phone:userPhones){
-					if(phone.getPhoneType().equals(PhoneType.MOBILE)){
+			} else {
+				for (Phone phone : userPhones) {
+					if (phone.getPhoneType().equals(PhoneType.MOBILE)) {
 						onePhone = phone;
 						break;
 					}
 				}
-				if(onePhone == null){
+				if (onePhone == null) {
 					onePhone = userPhones.get(0);
 				}
 				onePhone.setCountryCode(userDto.getCountryCode());
@@ -633,12 +633,12 @@ public class AapServiceImpl implements AapService, Serializable {
 				onePhone = phoneDao.savePhone(onePhone);
 			}
 		}
-		
-		if(!StringUtil.isEmpty(userDto.getEmail())){
-			//save Mobile number
+
+		if (!StringUtil.isEmpty(userDto.getEmail())) {
+			// save Mobile number
 			List<Email> userEmails = emailDao.getEmailsByUserId(user.getId());
 			Email oneEmail = null;
-			if(userEmails == null || userEmails.isEmpty()){
+			if (userEmails == null || userEmails.isEmpty()) {
 				oneEmail = new Email();
 				oneEmail.setDateCreated(new Date());
 				oneEmail.setEmail(userDto.getEmail());
@@ -647,16 +647,16 @@ public class AapServiceImpl implements AapService, Serializable {
 				oneEmail.setUser(user);
 				oneEmail.setDateModified(new Date());
 				oneEmail = emailDao.saveEmail(oneEmail);
-			}else{
+			} else {
 				oneEmail = null;
-				for(Email email:userEmails){
+				for (Email email : userEmails) {
 					oneEmail = email;
-					if(email.getConfirmationType().equals(ConfirmationType.ADMIN_ENTERED)){
+					if (email.getConfirmationType().equals(ConfirmationType.ADMIN_ENTERED)) {
 						oneEmail = email;
 						break;
 					}
 				}
-				if(oneEmail == null){
+				if (oneEmail == null) {
 					oneEmail = new Email();
 					oneEmail.setDateCreated(new Date());
 					oneEmail.setConfirmationType(ConfirmationType.ADMIN_ENTERED);
@@ -677,11 +677,13 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Override
 	@Transactional
 	public FacebookAppPermissionDto getFacebookPermission(long facebookAppId, long facebookAccountId) {
-		FacebookAppPermission facebookAppPermission = facebookAppPermissionDao.getFacebookAppPermissionByAppIdAndFacebookAccountId(facebookAppId,facebookAccountId);
+		FacebookAppPermission facebookAppPermission = facebookAppPermissionDao.getFacebookAppPermissionByAppIdAndFacebookAccountId(facebookAppId,
+				facebookAccountId);
 		return convertFacebookAppPermission(facebookAppPermission);
 	}
-	private FacebookAppPermissionDto convertFacebookAppPermission(FacebookAppPermission facebookAppPermission){
-		if(facebookAppPermission == null){
+
+	private FacebookAppPermissionDto convertFacebookAppPermission(FacebookAppPermission facebookAppPermission) {
+		if (facebookAppPermission == null) {
 			return null;
 		}
 		FacebookAppPermissionDto facebookAppPermissionDto = new FacebookAppPermissionDto();
@@ -692,37 +694,39 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Override
 	@Transactional
 	public FacebookAppPermissionDto getVoiceOfAapFacebookPermission(long facebookAccountId) {
-		FacebookAppPermission facebookAppPermission = facebookAppPermissionDao.getFacebookAppPermissionByFacebookAppIdAndFacebookAccountId(voiceOfAapAppId,facebookAccountId);
+		FacebookAppPermission facebookAppPermission = facebookAppPermissionDao.getFacebookAppPermissionByFacebookAppIdAndFacebookAccountId(voiceOfAapAppId,
+				facebookAccountId);
 		return convertFacebookAppPermission(facebookAppPermission);
 	}
 
 	@Override
 	@Transactional
-	public void saveVoiceOfAapSettings(Long facebookAccountId, boolean beVoiceOfAap, boolean postOnMyTimeLine, List<String> selectedGroups, List<String> selectedPages, boolean allowTweets) {
+	public void saveVoiceOfAapSettings(Long facebookAccountId, boolean beVoiceOfAap, boolean postOnMyTimeLine, List<String> selectedGroups,
+			List<String> selectedPages, boolean allowTweets) {
 		FacebookAccount dbFacebookAccount = facebookAccountDao.getFacebookAccountById(facebookAccountId);
-		if(dbFacebookAccount == null){
-			throw new RuntimeException("No such Facebook account found [id="+facebookAccountId+"]");
+		if (dbFacebookAccount == null) {
+			throw new RuntimeException("No such Facebook account found [id=" + facebookAccountId + "]");
 		}
 		dbFacebookAccount.setAllowDdu(beVoiceOfAap);
 		dbFacebookAccount.setVoiceOfAap(beVoiceOfAap);
 		dbFacebookAccount.setAllowTimeLine(postOnMyTimeLine);
-		
+
 		dbFacebookAccount = facebookAccountDao.saveFacebookAccount(dbFacebookAccount);
-		
-		User user = dbFacebookAccount.getUser(); 
+
+		User user = dbFacebookAccount.getUser();
 		user.setAllowTweets(allowTweets);
-		
+
 		List<FacebookGroupMembership> facebookGroupMemberships = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookAccountId(facebookAccountId);
-		if(facebookGroupMemberships == null){
+		if (facebookGroupMemberships == null) {
 			return;
 		}
 		Set<String> selectedGroupIds = new HashSet<>(selectedGroups);
-		
-		for(FacebookGroupMembership oneFacebookGroupMembership:facebookGroupMemberships){
-			if(selectedGroupIds.contains(oneFacebookGroupMembership.getFacebookGroup().getFacebookGroupExternalId())){
+
+		for (FacebookGroupMembership oneFacebookGroupMembership : facebookGroupMemberships) {
+			if (selectedGroupIds.contains(oneFacebookGroupMembership.getFacebookGroup().getFacebookGroupExternalId())) {
 				oneFacebookGroupMembership.setAllowDduPost(beVoiceOfAap);
 				oneFacebookGroupMembership.setAllowVoiceOfAapPost(beVoiceOfAap);
-			}else{
+			} else {
 				oneFacebookGroupMembership.setAllowDduPost(false);
 				oneFacebookGroupMembership.setAllowVoiceOfAapPost(false);
 			}
@@ -732,33 +736,34 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Override
 	@Transactional
 	public void saveFacebookAccountGroups(Long facebookAccountId, List<GroupMembership> userGroupMembership) {
-		if(userGroupMembership == null || userGroupMembership.isEmpty()){
+		if (userGroupMembership == null || userGroupMembership.isEmpty()) {
 			return;
 		}
 		FacebookAccount dbFacebookAccount = facebookAccountDao.getFacebookAccountById(facebookAccountId);
-		if(dbFacebookAccount == null){
-			throw new RuntimeException("No such Facebook account found [id="+facebookAccountId+"]");
+		if (dbFacebookAccount == null) {
+			throw new RuntimeException("No such Facebook account found [id=" + facebookAccountId + "]");
 		}
 		FacebookGroupMembership oneFacebookGroupMembership;
 		FacebookGroup oneFacebookGroup;
-		for(GroupMembership oneGroupMembership:userGroupMembership){
+		for (GroupMembership oneGroupMembership : userGroupMembership) {
 			oneFacebookGroup = facebookGroupDao.getFacebookGroupByFacebookGroupExternalId(oneGroupMembership.getId());
-			if(oneFacebookGroup == null){
+			if (oneFacebookGroup == null) {
 				oneFacebookGroup = new FacebookGroup();
 				oneFacebookGroup.setFacebookGroupExternalId(oneGroupMembership.getId());
 			}
 			oneFacebookGroup.setGroupName(oneGroupMembership.getName());
 			oneFacebookGroup = facebookGroupDao.saveFacebookGroup(oneFacebookGroup);
-			
-			oneFacebookGroupMembership = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookUserIdAndGroupId(facebookAccountId, oneFacebookGroup.getId());
-			if(oneFacebookGroupMembership == null){
+
+			oneFacebookGroupMembership = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookUserIdAndGroupId(facebookAccountId,
+					oneFacebookGroup.getId());
+			if (oneFacebookGroupMembership == null) {
 				oneFacebookGroupMembership = new FacebookGroupMembership();
 				oneFacebookGroupMembership.setFacebookAccount(dbFacebookAccount);
 				oneFacebookGroupMembership.setFacebookGroup(oneFacebookGroup);
 				oneFacebookGroupMembership = facebookGroupMembershipDao.saveFacebookGroupMembership(oneFacebookGroupMembership);
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -770,11 +775,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		voiceOfAapData.setPostOnTimeLine(facebookAccount.isAllowTimeLine());
 		voiceOfAapData.setTweetFromMyAccount(facebookAccount.getUser().isAllowTweets());
 		List<String> groupIdsList = new ArrayList<>();
-		
+
 		List<FacebookGroupMembership> groupMemberships = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookAccountId(facebookAcountId);
-		if(groupMemberships != null){
-			for(FacebookGroupMembership oneFacebookGroupMembership:groupMemberships){
-				if(oneFacebookGroupMembership.isAllowVoiceOfAapPost()){
+		if (groupMemberships != null) {
+			for (FacebookGroupMembership oneFacebookGroupMembership : groupMemberships) {
+				if (oneFacebookGroupMembership.isAllowVoiceOfAapPost()) {
 					groupIdsList.add(oneFacebookGroupMembership.getFacebookGroup().getFacebookGroupExternalId());
 				}
 			}
@@ -787,88 +792,99 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Override
 	@Transactional
 	public void updateAllPermissionsAndRole() {
-		//Make sure all permission exists in Database
+		// Make sure all permission exists in Database
 		Permission onePermission;
-		for(AppPermission oneAppPermission:AppPermission.values()){
+		for (AppPermission oneAppPermission : AppPermission.values()) {
 			onePermission = permissionDao.getPermissionByName(oneAppPermission);
-			if(onePermission == null){
+			if (onePermission == null) {
 				onePermission = new Permission();
 				onePermission.setPermission(oneAppPermission);
 				onePermission = permissionDao.savePermission(onePermission);
 			}
 		}
-		
-		//assign super admin role to Ravi's account
-		
+
+		// assign super admin role to Ravi's account
+
 		Email email = emailDao.getEmailByEmail("ping2ravi@gmail.com");
 		User user = null;
-		if(email == null){
+		if (email == null) {
 			FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountByFacebookUserId("691358626");
-			if(facebookAccount == null){
+			if (facebookAccount == null) {
 				TwitterAccount twitterAccount = twitterAccountDao.getTwitterAccountByTwitterUserId("287659262");
-				if(twitterAccount != null){
+				if (twitterAccount != null) {
 					user = twitterAccount.getUser();
 				}
-			}else{
+			} else {
 				user = facebookAccount.getUser();
 			}
-		}else{
+		} else {
 			user = email.getUser();
 		}
-		if(user == null){
-			logger.error("No predefined user found to make a user Super Admin");			
-		}else{
-			//user.setSuperAdmin(true);
+		if (user == null) {
+			logger.error("No predefined user found to make a user Super Admin");
+		} else {
+			// user.setSuperAdmin(true);
 		}
-		
-		
-		//Now create all custom Roles
-		/*
-		createRoleWithPermissions("VoiceOfAapFacebookAdminRole"," User of this role will be able to make Facebook post using voice of AAP Application", true, true,false,false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
-		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true, true,false, false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
-		//News Related Roles
-		createRoleWithPermissions("NewsAdminRole", "User of this role will be able to create/update news for a location", true, true,true, true, AppPermission.CREATE_NEWS,AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS,AppPermission.APPROVE_NEWS);
-		
-		createRoleWithPermissions("NewsReporterRole", "User of this role will be able to create/update news for a location", true, true,true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS);
-		
-		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update and publish news for a location", true, true,true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
-		
-		createRoleWithPermissions("NewsApproverRole", "User of this role will be able to publish existing news for a location", true, true,true, true, AppPermission.APPROVE_NEWS);
-		
-		createRoleWithPermissions("GlobalMemberAdminRole", "User of this role will be able to add new member at any location and will be able to update any member", false, false,false, false, AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.VIEW_MEMBER);
-		
-		createRoleWithPermissions("MemberAdminRole", "User of this role will be able to add new member at any location and will be able to update member at his location only", true, true,true, true, AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
-		
-		*/
-		
-		createRoleWithPermissions("AdminEditUserRoles", "User of this role will be able to add or remove user roles on a location", true, true,true, true, AppPermission.EDIT_USER_ROLES);
-		
+
+		// Now create all custom Roles
+
+		createRoleWithPermissions("VoiceOfAapFacebookAdminRole", " User of this role will be able to make Facebook post using voice of AAP Application", true,
+				true, false, false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
+		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true,
+				true, false, false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
+		// News Related Roles
+		createRoleWithPermissions("NewsAdminRole", "User of this role will be able to create/update/Approve/delete news for a location", true, true, true, true,
+				AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
+
+		createRoleWithPermissions("NewsReporterRole", "User of this role will be able to create/update news for a location", true, true, true, true,
+				AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS);
+
+		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update/approve and publish news for a location", true, true, true, true,
+				AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
+
+		createRoleWithPermissions("NewsApproverRole", "User of this role will be able to approve/publish existing news for a location", true, true, true, true,
+				AppPermission.APPROVE_NEWS);
+
+		createRoleWithPermissions("GlobalMemberAdminRole",
+				"User of this role will be able to add new member at any location and will be able to update any member", false, false, false, false,
+				AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.VIEW_MEMBER);
+
+		createRoleWithPermissions("MemberAdminRole",
+				"User of this role will be able to add new member at any location and will be able to update member at his location only", true, true, true,
+				true, AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
+
+		// createRoleWithPermissions("AdminEditUserRoles",
+		// "User of this role will be able to add or remove user roles on a location",
+		// true, true,true, true, AppPermission.EDIT_USER_ROLES);
+
 		logger.info("All Roles and permissions are created");
 	}
-	private void createRoleWithPermissions(String name,String description,boolean addStateRoles, boolean addDistrictRoles,boolean addAcRoles,boolean addPcRoles,AppPermission...appPermissions){
-		logger.info("Creating Role "+ name);
-		
+
+	private void createRoleWithPermissions(String name, String description, boolean addStateRoles, boolean addDistrictRoles, boolean addAcRoles,
+			boolean addPcRoles, AppPermission... appPermissions) {
+		logger.info("Creating Role " + name);
+
 		Role role = roleDao.getRoleByName(name);
-		if(role == null){
+		if (role == null) {
 			role = new Role();
 			role.setName(name);
 			role.setDescription(description);
 			role = roleDao.saveRole(role);
 		}
-		if(role.getPermissions() == null){
+		if (role.getPermissions() == null) {
 			role.setPermissions(new HashSet<Permission>());
 		}
 		Permission onePermission;
-		for(AppPermission oneAppPermission:appPermissions){
+		for (AppPermission oneAppPermission : appPermissions) {
 			onePermission = permissionDao.getPermissionByName(oneAppPermission);
 			role.getPermissions().add(onePermission);
 		}
-		if(addStateRoles){
-			List<State> allStates  = stateDao.getAllStates();
+		if (addStateRoles) {
+			List<State> allStates = stateDao.getAllStates();
 			StateRole oneStateRole;
-			for(State oneSate:allStates){
+			for (State oneSate : allStates) {
 				oneStateRole = stateRoleDao.getStateRoleByStateIdAndRoleId(oneSate.getId(), role.getId());
-				if(oneStateRole == null){
+				if (oneStateRole == null) {
 					oneStateRole = new StateRole();
 					oneStateRole.setState(oneSate);
 					oneStateRole.setRole(role);
@@ -876,13 +892,13 @@ public class AapServiceImpl implements AapService, Serializable {
 				}
 			}
 		}
-		
-		if(addDistrictRoles){
-			List<District> allDistricts  = districtDao.getAllDistricts();
+
+		if (addDistrictRoles) {
+			List<District> allDistricts = districtDao.getAllDistricts();
 			DistrictRole oneDistrictRole;
-			for(District oneDistrict:allDistricts){
+			for (District oneDistrict : allDistricts) {
 				oneDistrictRole = districtRoleDao.getDistrictRoleByDistrictIdAndRoleId(oneDistrict.getId(), role.getId());
-				if(oneDistrictRole == null){
+				if (oneDistrictRole == null) {
 					oneDistrictRole = new DistrictRole();
 					oneDistrictRole.setDistrict(oneDistrict);
 					oneDistrictRole.setRole(role);
@@ -890,13 +906,13 @@ public class AapServiceImpl implements AapService, Serializable {
 				}
 			}
 		}
-		
-		if(addAcRoles){
-			List<AssemblyConstituency> allAcs  = assemblyConstituencyDao.getAllAssemblyConstituencys();
+
+		if (addAcRoles) {
+			List<AssemblyConstituency> allAcs = assemblyConstituencyDao.getAllAssemblyConstituencys();
 			AcRole oneAcRole;
-			for(AssemblyConstituency oneAssemblyConstituency:allAcs){
+			for (AssemblyConstituency oneAssemblyConstituency : allAcs) {
 				oneAcRole = acRoleDao.getAcRoleByAcIdAndRoleId(oneAssemblyConstituency.getId(), role.getId());
-				if(oneAcRole == null){
+				if (oneAcRole == null) {
 					oneAcRole = new AcRole();
 					oneAcRole.setAssemblyConstituency(oneAssemblyConstituency);
 					oneAcRole.setRole(role);
@@ -904,13 +920,13 @@ public class AapServiceImpl implements AapService, Serializable {
 				}
 			}
 		}
-		
-		if(addPcRoles){
-			List<ParliamentConstituency> allPcs  = parliamentConstituencyDao.getAllParliamentConstituencys();
+
+		if (addPcRoles) {
+			List<ParliamentConstituency> allPcs = parliamentConstituencyDao.getAllParliamentConstituencys();
 			PcRole onePcRole;
-			for(ParliamentConstituency oneParliamentConstituency:allPcs){
+			for (ParliamentConstituency oneParliamentConstituency : allPcs) {
 				onePcRole = pcRoleDao.getPcRoleByPcIdAndRoleId(oneParliamentConstituency.getId(), role.getId());
-				if(onePcRole == null){
+				if (onePcRole == null) {
 					onePcRole = new PcRole();
 					onePcRole.setParliamentConstituency(oneParliamentConstituency);
 					onePcRole.setRole(role);
@@ -924,12 +940,12 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public PlannedFacebookPostDto savePlannedFacebookPost(PlannedFacebookPostDto plannedFacebookPostDto) {
 		PlannedFacebookPost plannedFacebookPost = null;
-		if(plannedFacebookPostDto.getId() != null && plannedFacebookPostDto.getId() > 0){
+		if (plannedFacebookPostDto.getId() != null && plannedFacebookPostDto.getId() > 0) {
 			plannedFacebookPost = plannedFacebookPostDao.getPlannedFacebookPostById(plannedFacebookPostDto.getId());
-			if(plannedFacebookPost == null){
-				throw new RuntimeException("No such Post found[id="+plannedFacebookPostDto.getId()+"]");
+			if (plannedFacebookPost == null) {
+				throw new RuntimeException("No such Post found[id=" + plannedFacebookPostDto.getId() + "]");
 			}
-		}else{
+		} else {
 			plannedFacebookPost = new PlannedFacebookPost();
 			plannedFacebookPost.setDateCreated(new Date());
 			plannedFacebookPost.setStatus(PlannedPostStatus.PENDING);
@@ -945,9 +961,9 @@ public class AapServiceImpl implements AapService, Serializable {
 		plannedFacebookPost.setSource(plannedFacebookPostDto.getSource());
 		plannedFacebookPost.setLocationType(plannedFacebookPostDto.getLocationType());
 		plannedFacebookPost.setLocationId(plannedFacebookPostDto.getLocationId());
-		
+
 		plannedFacebookPost = plannedFacebookPostDao.savePlannedFacebookPost(plannedFacebookPost);
-		
+
 		return convertPlannedFacebookPost(plannedFacebookPost);
 	}
 
@@ -957,30 +973,32 @@ public class AapServiceImpl implements AapService, Serializable {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	private PlannedFacebookPostDto convertPlannedFacebookPost(PlannedFacebookPost plannedFacebookPost){
-		if(plannedFacebookPost == null){
+
+	private PlannedFacebookPostDto convertPlannedFacebookPost(PlannedFacebookPost plannedFacebookPost) {
+		if (plannedFacebookPost == null) {
 			return null;
 		}
 		PlannedFacebookPostDto plannedFacebookPostDto = new PlannedFacebookPostDto();
 		BeanUtils.copyProperties(plannedFacebookPost, plannedFacebookPostDto);
 		return plannedFacebookPostDto;
 	}
-	private List<PlannedFacebookPostDto> convertPlannedFacebookPosts(List<PlannedFacebookPost> plannedFacebookPosts){
+
+	private List<PlannedFacebookPostDto> convertPlannedFacebookPosts(List<PlannedFacebookPost> plannedFacebookPosts) {
 		List<PlannedFacebookPostDto> returnPlannedFacebookPostDtos = new ArrayList<>(plannedFacebookPosts.size());
-		for(PlannedFacebookPost onePlannedFacebookPost:plannedFacebookPosts){
+		for (PlannedFacebookPost onePlannedFacebookPost : plannedFacebookPosts) {
 			returnPlannedFacebookPostDtos.add(convertPlannedFacebookPost(onePlannedFacebookPost));
 		}
 		return returnPlannedFacebookPostDtos;
 	}
-	private Set<AppPermission> convertPermissionToAppPermission(Set<Permission> permissions){
+
+	private Set<AppPermission> convertPermissionToAppPermission(Set<Permission> permissions) {
 		Set<AppPermission> returnPermissions = new HashSet<>();
-		if(permissions != null){
-			for(Permission onePermission:permissions){
+		if (permissions != null) {
+			for (Permission onePermission : permissions) {
 				returnPermissions.add(onePermission.getPermission());
 			}
 		}
-		
+
 		return returnPermissions;
 	}
 
@@ -990,56 +1008,60 @@ public class AapServiceImpl implements AapService, Serializable {
 		User user = userDao.getUserById(userId);
 		UserRolePermissionDto userRolePermissionDto = new UserRolePermissionDto();
 		userRolePermissionDto.setSuperUser(user.isSuperAdmin());
-		
+
 		Set<Role> allUserRolesAtWorldLevel = user.getAllRoles();
-		logger.info("allUserRolesAtWorldLevel="+allUserRolesAtWorldLevel);
-		if(allUserRolesAtWorldLevel != null && !allUserRolesAtWorldLevel.isEmpty()){
-			for(Role oneRole:allUserRolesAtWorldLevel){
-				if(!oneRole.getPermissions().isEmpty()){
-					userRolePermissionDto.addAllPermissions(convertPermissionToAppPermission(oneRole.getPermissions()));	
+		logger.info("allUserRolesAtWorldLevel=" + allUserRolesAtWorldLevel);
+		if (allUserRolesAtWorldLevel != null && !allUserRolesAtWorldLevel.isEmpty()) {
+			for (Role oneRole : allUserRolesAtWorldLevel) {
+				if (!oneRole.getPermissions().isEmpty()) {
+					userRolePermissionDto.addAllPermissions(convertPermissionToAppPermission(oneRole.getPermissions()));
 				}
 			}
 		}
-		
+
 		Set<StateRole> stateRoles = user.getStateRoles();
-		logger.info("stateRoles="+stateRoles);
-		if(stateRoles != null && !stateRoles.isEmpty()){
-			for(StateRole oneStateRole:stateRoles){
-				System.out.println("oneStateRole="+oneStateRole);
-				System.out.println("!oneStateRole.getRole().getRolePermissions().isEmpty()="+!oneStateRole.getRole().getPermissions().isEmpty());
-				if(!oneStateRole.getRole().getPermissions().isEmpty()){
-					userRolePermissionDto.addStatePermissions(convertState(oneStateRole.getState()), convertPermissionToAppPermission(oneStateRole.getRole().getPermissions()));
+		logger.info("stateRoles=" + stateRoles);
+		if (stateRoles != null && !stateRoles.isEmpty()) {
+			for (StateRole oneStateRole : stateRoles) {
+				System.out.println("oneStateRole=" + oneStateRole);
+				System.out.println("!oneStateRole.getRole().getRolePermissions().isEmpty()=" + !oneStateRole.getRole().getPermissions().isEmpty());
+				if (!oneStateRole.getRole().getPermissions().isEmpty()) {
+					userRolePermissionDto.addStatePermissions(convertState(oneStateRole.getState()), convertPermissionToAppPermission(oneStateRole.getRole()
+							.getPermissions()));
 				}
-				System.out.println("userRolePermissionDto.isStateAdmin()="+userRolePermissionDto.isStateAdmin());
+				System.out.println("userRolePermissionDto.isStateAdmin()=" + userRolePermissionDto.isStateAdmin());
 			}
 		}
-		
+
 		Set<DistrictRole> districtRoles = user.getDistrictRoles();
-		logger.info("districtRoles="+districtRoles);
-		if(districtRoles != null && !districtRoles.isEmpty()){
-			for(DistrictRole oneDistrictRole:districtRoles){
-				if(!oneDistrictRole.getRole().getPermissions().isEmpty()){
-					userRolePermissionDto.addDistrictPermissions(convertDistrict(oneDistrictRole.getDistrict()), convertPermissionToAppPermission(oneDistrictRole.getRole().getPermissions()));
+		logger.info("districtRoles=" + districtRoles);
+		if (districtRoles != null && !districtRoles.isEmpty()) {
+			for (DistrictRole oneDistrictRole : districtRoles) {
+				if (!oneDistrictRole.getRole().getPermissions().isEmpty()) {
+					userRolePermissionDto.addDistrictPermissions(convertDistrict(oneDistrictRole.getDistrict()),
+							convertPermissionToAppPermission(oneDistrictRole.getRole().getPermissions()));
 				}
 			}
 		}
-		
+
 		Set<AcRole> acRoles = user.getAcRoles();
-		logger.info("acRoles="+acRoles);
-		if(acRoles != null && !acRoles.isEmpty()){
-			for(AcRole oneAcRole:acRoles){
-				if(!oneAcRole.getRole().getPermissions().isEmpty()){
-					userRolePermissionDto.addAcPermissions(convertAssemblyConstituency(oneAcRole.getAssemblyConstituency()), convertPermissionToAppPermission(oneAcRole.getRole().getPermissions()));
+		logger.info("acRoles=" + acRoles);
+		if (acRoles != null && !acRoles.isEmpty()) {
+			for (AcRole oneAcRole : acRoles) {
+				if (!oneAcRole.getRole().getPermissions().isEmpty()) {
+					userRolePermissionDto.addAcPermissions(convertAssemblyConstituency(oneAcRole.getAssemblyConstituency()),
+							convertPermissionToAppPermission(oneAcRole.getRole().getPermissions()));
 				}
 			}
 		}
-		
+
 		Set<PcRole> pcRoles = user.getPcRoles();
-		logger.info("pcRoles="+pcRoles);
-		if(pcRoles != null && !pcRoles.isEmpty()){
-			for(PcRole onePcRole:pcRoles){
-				if(!onePcRole.getRole().getPermissions().isEmpty()){
-					userRolePermissionDto.addPcPermissions(convertParliamentConstituency(onePcRole.getParliamentConstituency()), convertPermissionToAppPermission(onePcRole.getRole().getPermissions()));
+		logger.info("pcRoles=" + pcRoles);
+		if (pcRoles != null && !pcRoles.isEmpty()) {
+			for (PcRole onePcRole : pcRoles) {
+				if (!onePcRole.getRole().getPermissions().isEmpty()) {
+					userRolePermissionDto.addPcPermissions(convertParliamentConstituency(onePcRole.getParliamentConstituency()),
+							convertPermissionToAppPermission(onePcRole.getRole().getPermissions()));
 				}
 			}
 		}
@@ -1049,248 +1071,249 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Override
 	@Transactional
 	public void saveAllCountries() {
-		saveCountry("Afghanistan","93");
-		saveCountry("Albania","355");
-		saveCountry("Algeria","213");
-		saveCountry("American Samoa","1 684 ");
-		saveCountry("Andorra","376");
-		saveCountry("Angola","244");
-		saveCountry("Anguilla","1 264 ");
-		saveCountry("Antarctica","672");
-		saveCountry("Antigua and Barbuda","1 268 ");
-		saveCountry("Argentina","54");
-		saveCountry("Armenia","374");
-		saveCountry("Aruba","297");
-		saveCountry("Australia","61");
-		saveCountry("Austria","43");
-		saveCountry("Azerbaijan","994");
-		saveCountry("Bahamas","1 242 ");
-		saveCountry("Bahrain","973");
-		saveCountry("Bangladesh","880");
-		saveCountry("Barbados","1 246 ");
-		saveCountry("Belarus","375");
-		saveCountry("Belgium","32");
-		saveCountry("Belize","501");
-		saveCountry("Benin","229");
-		saveCountry("Bermuda","1 441 ");
-		saveCountry("Bhutan","975");
-		saveCountry("Bolivia","591");
-		saveCountry("Bosnia and Herzegovina","387");
-		saveCountry("Botswana","267");
-		saveCountry("Brazil","55");
-		saveCountry("British Indian Ocean Territory"," ");
-		saveCountry("British Virgin Islands","1 284 ");
-		saveCountry("Brunei","673");
-		saveCountry("Bulgaria","359");
-		saveCountry("Burkina Faso","226");
-		saveCountry("Burma (Myanmar)","95");
-		saveCountry("Burundi","257");
-		saveCountry("Cambodia","855");
-		saveCountry("Cameroon","237");
-		saveCountry("Canada","1");
-		saveCountry("Cape Verde","238");
-		saveCountry("Cayman Islands","1 345 ");
-		saveCountry("Central African Republic","236");
-		saveCountry("Chad","235");
-		saveCountry("Chile","56");
-		saveCountry("China","86");
-		saveCountry("Christmas Island","61");
-		saveCountry("Cocos (Keeling) Islands","61");
-		saveCountry("Colombia","57");
-		saveCountry("Comoros","269");
-		saveCountry("Cook Islands","682");
-		saveCountry("Costa Rica","506");
-		saveCountry("Croatia","385");
-		saveCountry("Cuba","53");
-		saveCountry("Cyprus","357");
-		saveCountry("Czech Republic","420");
-		saveCountry("Democratic Republic of the Congo","243");
-		saveCountry("Denmark","45");
-		saveCountry("Djibouti","253");
-		saveCountry("Dominica","1 767 ");
-		saveCountry("Dominican Republic","1 809 ");
-		saveCountry("Ecuador","593");
-		saveCountry("Egypt","20");
-		saveCountry("El Salvador","503");
-		saveCountry("Equatorial Guinea","240");
-		saveCountry("Eritrea","291");
-		saveCountry("Estonia","372");
-		saveCountry("Ethiopia","251");
-		saveCountry("Falkland Islands","500");
-		saveCountry("Faroe Islands","298");
-		saveCountry("Fiji","679");
-		saveCountry("Finland","358");
-		saveCountry("France","33");
-		saveCountry("French Polynesia","689");
-		saveCountry("Gabon","241");
-		saveCountry("Gambia","220");
-		saveCountry("Gaza Strip","970");
-		saveCountry("Georgia","995");
-		saveCountry("Germany","49");
-		saveCountry("Ghana","233");
-		saveCountry("Gibraltar","350");
-		saveCountry("Greece","30");
-		saveCountry("Greenland","299");
-		saveCountry("Grenada","1 473 ");
-		saveCountry("Guam","1 671 ");
-		saveCountry("Guatemala","502");
-		saveCountry("Guinea","224");
-		saveCountry("Guinea-Bissau","245");
-		saveCountry("Guyana","592");
-		saveCountry("Haiti","509");
-		saveCountry("Holy See (Vatican City)","39");
-		saveCountry("Honduras","504");
-		saveCountry("Hong Kong","852");
-		saveCountry("Hungary","36");
-		saveCountry("Iceland","354");
-		saveCountry("India","91");
-		saveCountry("Indonesia","62");
-		saveCountry("Iran","98");
-		saveCountry("Iraq","964");
-		saveCountry("Ireland","353");
-		saveCountry("Isle of Man","44");
-		saveCountry("Israel","972");
-		saveCountry("Italy","39");
-		saveCountry("Ivory Coast","225");
-		saveCountry("Jamaica","1 876 ");
-		saveCountry("Japan","81");
-		saveCountry("Jersey"," ");
-		saveCountry("Jordan","962");
-		saveCountry("Kazakhstan","7");
-		saveCountry("Kenya","254");
-		saveCountry("Kiribati","686");
-		saveCountry("Kosovo","381");
-		saveCountry("Kuwait","965");
-		saveCountry("Kyrgyzstan","996");
-		saveCountry("Laos","856");
-		saveCountry("Latvia","371");
-		saveCountry("Lebanon","961");
-		saveCountry("Lesotho","266");
-		saveCountry("Liberia","231");
-		saveCountry("Libya","218");
-		saveCountry("Liechtenstein","423");
-		saveCountry("Lithuania","370");
-		saveCountry("Luxembourg","352");
-		saveCountry("Macau","853");
-		saveCountry("Macedonia","389");
-		saveCountry("Madagascar","261");
-		saveCountry("Malawi","265");
-		saveCountry("Malaysia","60");
-		saveCountry("Maldives","960");
-		saveCountry("Mali","223");
-		saveCountry("Malta","356");
-		saveCountry("Marshall Islands","692");
-		saveCountry("Mauritania","222");
-		saveCountry("Mauritius","230");
-		saveCountry("Mayotte","262");
-		saveCountry("Mexico","52");
-		saveCountry("Micronesia","691");
-		saveCountry("Moldova","373");
-		saveCountry("Monaco","377");
-		saveCountry("Mongolia","976");
-		saveCountry("Montenegro","382");
-		saveCountry("Montserrat","1 664 ");
-		saveCountry("Morocco","212");
-		saveCountry("Mozambique","258");
-		saveCountry("Namibia","264");
-		saveCountry("Nauru","674");
-		saveCountry("Nepal","977");
-		saveCountry("Netherlands","31");
-		saveCountry("Netherlands Antilles","599");
-		saveCountry("New Caledonia","687");
-		saveCountry("New Zealand","64");
-		saveCountry("Nicaragua","505");
-		saveCountry("Niger","227");
-		saveCountry("Nigeria","234");
-		saveCountry("Niue","683");
-		saveCountry("Norfolk Island","672");
-		saveCountry("North Korea","850");
-		saveCountry("Northern Mariana Islands","1 670 ");
-		saveCountry("Norway","47");
-		saveCountry("Oman","968");
-		saveCountry("Pakistan","92");
-		saveCountry("Palau","680");
-		saveCountry("Panama","507");
-		saveCountry("Papua New Guinea","675");
-		saveCountry("Paraguay","595");
-		saveCountry("Peru","51");
-		saveCountry("Philippines","63");
-		saveCountry("Pitcairn Islands","870");
-		saveCountry("Poland","48");
-		saveCountry("Portugal","351");
-		saveCountry("Puerto Rico","1");
-		saveCountry("Qatar","974");
-		saveCountry("Republic of the Congo","242");
-		saveCountry("Romania","40");
-		saveCountry("Russia","7");
-		saveCountry("Rwanda","250");
-		saveCountry("Saint Barthelemy","590");
-		saveCountry("Saint Helena","290");
-		saveCountry("Saint Kitts and Nevis","1 869 ");
-		saveCountry("Saint Lucia","1 758 ");
-		saveCountry("Saint Martin","1 599 ");
-		saveCountry("Saint Pierre and Miquelon","508");
-		saveCountry("Saint Vincent and the Grenadines","1 784 ");
-		saveCountry("Samoa","685");
-		saveCountry("San Marino","378");
-		saveCountry("Sao Tome and Principe","239");
-		saveCountry("Saudi Arabia","966");
-		saveCountry("Senegal","221");
-		saveCountry("Serbia","381");
-		saveCountry("Seychelles","248");
-		saveCountry("Sierra Leone","232");
-		saveCountry("Singapore","65");
-		saveCountry("Slovakia","421");
-		saveCountry("Slovenia","386");
-		saveCountry("Solomon Islands","677");
-		saveCountry("Somalia","252");
-		saveCountry("South Africa","27");
-		saveCountry("South Korea","82");
-		saveCountry("Spain","34");
-		saveCountry("Sri Lanka","94");
-		saveCountry("Sudan","249");
-		saveCountry("Suriname","597");
-		saveCountry("Svalbard"," ");
-		saveCountry("Swaziland","268");
-		saveCountry("Sweden","46");
-		saveCountry("Switzerland","41");
-		saveCountry("Syria","963");
-		saveCountry("Taiwan","886");
-		saveCountry("Tajikistan","992");
-		saveCountry("Tanzania","255");
-		saveCountry("Thailand","66");
-		saveCountry("Timor-Leste","670");
-		saveCountry("Togo","228");
-		saveCountry("Tokelau","690");
-		saveCountry("Tonga","676");
-		saveCountry("Trinidad and Tobago","1 868 ");
-		saveCountry("Tunisia","216");
-		saveCountry("Turkey","90");
-		saveCountry("Turkmenistan","993");
-		saveCountry("Turks and Caicos Islands","1 649 ");
-		saveCountry("Tuvalu","688");
-		saveCountry("Uganda","256");
-		saveCountry("Ukraine","380");
-		saveCountry("United Arab Emirates","971");
-		saveCountry("United Kingdom","44");
-		saveCountry("United States","1");
-		saveCountry("Uruguay","598");
-		saveCountry("US Virgin Islands","1 340 ");
-		saveCountry("Uzbekistan","998");
-		saveCountry("Vanuatu","678");
-		saveCountry("Venezuela","58");
-		saveCountry("Vietnam","84");
-		saveCountry("Wallis and Futuna","681");
-		saveCountry("West Bank","970");
-		saveCountry("Western Sahara"," ");
-		saveCountry("Yemen","967");
-		saveCountry("Zambia","260");
-		saveCountry("Zimbabwe","263");
-		
+		saveCountry("Afghanistan", "93");
+		saveCountry("Albania", "355");
+		saveCountry("Algeria", "213");
+		saveCountry("American Samoa", "1 684 ");
+		saveCountry("Andorra", "376");
+		saveCountry("Angola", "244");
+		saveCountry("Anguilla", "1 264 ");
+		saveCountry("Antarctica", "672");
+		saveCountry("Antigua and Barbuda", "1 268 ");
+		saveCountry("Argentina", "54");
+		saveCountry("Armenia", "374");
+		saveCountry("Aruba", "297");
+		saveCountry("Australia", "61");
+		saveCountry("Austria", "43");
+		saveCountry("Azerbaijan", "994");
+		saveCountry("Bahamas", "1 242 ");
+		saveCountry("Bahrain", "973");
+		saveCountry("Bangladesh", "880");
+		saveCountry("Barbados", "1 246 ");
+		saveCountry("Belarus", "375");
+		saveCountry("Belgium", "32");
+		saveCountry("Belize", "501");
+		saveCountry("Benin", "229");
+		saveCountry("Bermuda", "1 441 ");
+		saveCountry("Bhutan", "975");
+		saveCountry("Bolivia", "591");
+		saveCountry("Bosnia and Herzegovina", "387");
+		saveCountry("Botswana", "267");
+		saveCountry("Brazil", "55");
+		saveCountry("British Indian Ocean Territory", " ");
+		saveCountry("British Virgin Islands", "1 284 ");
+		saveCountry("Brunei", "673");
+		saveCountry("Bulgaria", "359");
+		saveCountry("Burkina Faso", "226");
+		saveCountry("Burma (Myanmar)", "95");
+		saveCountry("Burundi", "257");
+		saveCountry("Cambodia", "855");
+		saveCountry("Cameroon", "237");
+		saveCountry("Canada", "1");
+		saveCountry("Cape Verde", "238");
+		saveCountry("Cayman Islands", "1 345 ");
+		saveCountry("Central African Republic", "236");
+		saveCountry("Chad", "235");
+		saveCountry("Chile", "56");
+		saveCountry("China", "86");
+		saveCountry("Christmas Island", "61");
+		saveCountry("Cocos (Keeling) Islands", "61");
+		saveCountry("Colombia", "57");
+		saveCountry("Comoros", "269");
+		saveCountry("Cook Islands", "682");
+		saveCountry("Costa Rica", "506");
+		saveCountry("Croatia", "385");
+		saveCountry("Cuba", "53");
+		saveCountry("Cyprus", "357");
+		saveCountry("Czech Republic", "420");
+		saveCountry("Democratic Republic of the Congo", "243");
+		saveCountry("Denmark", "45");
+		saveCountry("Djibouti", "253");
+		saveCountry("Dominica", "1 767 ");
+		saveCountry("Dominican Republic", "1 809 ");
+		saveCountry("Ecuador", "593");
+		saveCountry("Egypt", "20");
+		saveCountry("El Salvador", "503");
+		saveCountry("Equatorial Guinea", "240");
+		saveCountry("Eritrea", "291");
+		saveCountry("Estonia", "372");
+		saveCountry("Ethiopia", "251");
+		saveCountry("Falkland Islands", "500");
+		saveCountry("Faroe Islands", "298");
+		saveCountry("Fiji", "679");
+		saveCountry("Finland", "358");
+		saveCountry("France", "33");
+		saveCountry("French Polynesia", "689");
+		saveCountry("Gabon", "241");
+		saveCountry("Gambia", "220");
+		saveCountry("Gaza Strip", "970");
+		saveCountry("Georgia", "995");
+		saveCountry("Germany", "49");
+		saveCountry("Ghana", "233");
+		saveCountry("Gibraltar", "350");
+		saveCountry("Greece", "30");
+		saveCountry("Greenland", "299");
+		saveCountry("Grenada", "1 473 ");
+		saveCountry("Guam", "1 671 ");
+		saveCountry("Guatemala", "502");
+		saveCountry("Guinea", "224");
+		saveCountry("Guinea-Bissau", "245");
+		saveCountry("Guyana", "592");
+		saveCountry("Haiti", "509");
+		saveCountry("Holy See (Vatican City)", "39");
+		saveCountry("Honduras", "504");
+		saveCountry("Hong Kong", "852");
+		saveCountry("Hungary", "36");
+		saveCountry("Iceland", "354");
+		saveCountry("India", "91");
+		saveCountry("Indonesia", "62");
+		saveCountry("Iran", "98");
+		saveCountry("Iraq", "964");
+		saveCountry("Ireland", "353");
+		saveCountry("Isle of Man", "44");
+		saveCountry("Israel", "972");
+		saveCountry("Italy", "39");
+		saveCountry("Ivory Coast", "225");
+		saveCountry("Jamaica", "1 876 ");
+		saveCountry("Japan", "81");
+		saveCountry("Jersey", " ");
+		saveCountry("Jordan", "962");
+		saveCountry("Kazakhstan", "7");
+		saveCountry("Kenya", "254");
+		saveCountry("Kiribati", "686");
+		saveCountry("Kosovo", "381");
+		saveCountry("Kuwait", "965");
+		saveCountry("Kyrgyzstan", "996");
+		saveCountry("Laos", "856");
+		saveCountry("Latvia", "371");
+		saveCountry("Lebanon", "961");
+		saveCountry("Lesotho", "266");
+		saveCountry("Liberia", "231");
+		saveCountry("Libya", "218");
+		saveCountry("Liechtenstein", "423");
+		saveCountry("Lithuania", "370");
+		saveCountry("Luxembourg", "352");
+		saveCountry("Macau", "853");
+		saveCountry("Macedonia", "389");
+		saveCountry("Madagascar", "261");
+		saveCountry("Malawi", "265");
+		saveCountry("Malaysia", "60");
+		saveCountry("Maldives", "960");
+		saveCountry("Mali", "223");
+		saveCountry("Malta", "356");
+		saveCountry("Marshall Islands", "692");
+		saveCountry("Mauritania", "222");
+		saveCountry("Mauritius", "230");
+		saveCountry("Mayotte", "262");
+		saveCountry("Mexico", "52");
+		saveCountry("Micronesia", "691");
+		saveCountry("Moldova", "373");
+		saveCountry("Monaco", "377");
+		saveCountry("Mongolia", "976");
+		saveCountry("Montenegro", "382");
+		saveCountry("Montserrat", "1 664 ");
+		saveCountry("Morocco", "212");
+		saveCountry("Mozambique", "258");
+		saveCountry("Namibia", "264");
+		saveCountry("Nauru", "674");
+		saveCountry("Nepal", "977");
+		saveCountry("Netherlands", "31");
+		saveCountry("Netherlands Antilles", "599");
+		saveCountry("New Caledonia", "687");
+		saveCountry("New Zealand", "64");
+		saveCountry("Nicaragua", "505");
+		saveCountry("Niger", "227");
+		saveCountry("Nigeria", "234");
+		saveCountry("Niue", "683");
+		saveCountry("Norfolk Island", "672");
+		saveCountry("North Korea", "850");
+		saveCountry("Northern Mariana Islands", "1 670 ");
+		saveCountry("Norway", "47");
+		saveCountry("Oman", "968");
+		saveCountry("Pakistan", "92");
+		saveCountry("Palau", "680");
+		saveCountry("Panama", "507");
+		saveCountry("Papua New Guinea", "675");
+		saveCountry("Paraguay", "595");
+		saveCountry("Peru", "51");
+		saveCountry("Philippines", "63");
+		saveCountry("Pitcairn Islands", "870");
+		saveCountry("Poland", "48");
+		saveCountry("Portugal", "351");
+		saveCountry("Puerto Rico", "1");
+		saveCountry("Qatar", "974");
+		saveCountry("Republic of the Congo", "242");
+		saveCountry("Romania", "40");
+		saveCountry("Russia", "7");
+		saveCountry("Rwanda", "250");
+		saveCountry("Saint Barthelemy", "590");
+		saveCountry("Saint Helena", "290");
+		saveCountry("Saint Kitts and Nevis", "1 869 ");
+		saveCountry("Saint Lucia", "1 758 ");
+		saveCountry("Saint Martin", "1 599 ");
+		saveCountry("Saint Pierre and Miquelon", "508");
+		saveCountry("Saint Vincent and the Grenadines", "1 784 ");
+		saveCountry("Samoa", "685");
+		saveCountry("San Marino", "378");
+		saveCountry("Sao Tome and Principe", "239");
+		saveCountry("Saudi Arabia", "966");
+		saveCountry("Senegal", "221");
+		saveCountry("Serbia", "381");
+		saveCountry("Seychelles", "248");
+		saveCountry("Sierra Leone", "232");
+		saveCountry("Singapore", "65");
+		saveCountry("Slovakia", "421");
+		saveCountry("Slovenia", "386");
+		saveCountry("Solomon Islands", "677");
+		saveCountry("Somalia", "252");
+		saveCountry("South Africa", "27");
+		saveCountry("South Korea", "82");
+		saveCountry("Spain", "34");
+		saveCountry("Sri Lanka", "94");
+		saveCountry("Sudan", "249");
+		saveCountry("Suriname", "597");
+		saveCountry("Svalbard", " ");
+		saveCountry("Swaziland", "268");
+		saveCountry("Sweden", "46");
+		saveCountry("Switzerland", "41");
+		saveCountry("Syria", "963");
+		saveCountry("Taiwan", "886");
+		saveCountry("Tajikistan", "992");
+		saveCountry("Tanzania", "255");
+		saveCountry("Thailand", "66");
+		saveCountry("Timor-Leste", "670");
+		saveCountry("Togo", "228");
+		saveCountry("Tokelau", "690");
+		saveCountry("Tonga", "676");
+		saveCountry("Trinidad and Tobago", "1 868 ");
+		saveCountry("Tunisia", "216");
+		saveCountry("Turkey", "90");
+		saveCountry("Turkmenistan", "993");
+		saveCountry("Turks and Caicos Islands", "1 649 ");
+		saveCountry("Tuvalu", "688");
+		saveCountry("Uganda", "256");
+		saveCountry("Ukraine", "380");
+		saveCountry("United Arab Emirates", "971");
+		saveCountry("United Kingdom", "44");
+		saveCountry("United States", "1");
+		saveCountry("Uruguay", "598");
+		saveCountry("US Virgin Islands", "1 340 ");
+		saveCountry("Uzbekistan", "998");
+		saveCountry("Vanuatu", "678");
+		saveCountry("Venezuela", "58");
+		saveCountry("Vietnam", "84");
+		saveCountry("Wallis and Futuna", "681");
+		saveCountry("West Bank", "970");
+		saveCountry("Western Sahara", " ");
+		saveCountry("Yemen", "967");
+		saveCountry("Zambia", "260");
+		saveCountry("Zimbabwe", "263");
+
 	}
-	private void saveCountry(String name, String isdCode){
+
+	private void saveCountry(String name, String isdCode) {
 		Country country = countryDao.getCountryByName(name);
-		if(country == null){
+		if (country == null) {
 			country = new Country();
 			country.setName(name);
 			country.setIsdCode(isdCode);
@@ -1298,7 +1321,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			country.setDateModified(new Date());
 			country = countryDao.saveCountry(country);
 		}
-		
+
 	}
 
 	@Override
@@ -1307,15 +1330,17 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<Country> countries = countryDao.getAllCountries();
 		return convertCountries(countries);
 	}
-	private List<CountryDto> convertCountries(List<Country> countries){
+
+	private List<CountryDto> convertCountries(List<Country> countries) {
 		List<CountryDto> countryDtos = new ArrayList<>();
-		for(Country oneCountry:countries){
+		for (Country oneCountry : countries) {
 			countryDtos.add(convertCountry(oneCountry));
 		}
 		return countryDtos;
 	}
-	private CountryDto convertCountry(Country country){
-		if(country == null){
+
+	private CountryDto convertCountry(Country country) {
+		if (country == null) {
 			return null;
 		}
 		CountryDto countryDto = new CountryDto();
@@ -1341,8 +1366,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public List<FacebookAccountDto> getAllFacebookAccountsForVoiceOfAap(PostLocationType locationType, Long locationId) {
 		List<FacebookAccount> facebookAccounts = null;
-		switch(locationType){
-		case Global :
+		switch (locationType) {
+		case Global:
 			facebookAccounts = facebookAccountDao.getAllFacebookAccountsForVoiceOfAapToPublishOnTimeLine();
 			break;
 		case STATE:
@@ -1377,22 +1402,23 @@ public class AapServiceImpl implements AapService, Serializable {
 		FacebookPost facebookPost = facebookPostDao.getFacebookPostByPlannedPostIdAndFacebookAccountId(plannedFacebookPostId, facebookAccountId);
 		return convertFacebookPost(facebookPost);
 	}
-	
-	private FacebookPostDto convertFacebookPost(FacebookPost facebookPost){
-		if(facebookPost == null){
+
+	private FacebookPostDto convertFacebookPost(FacebookPost facebookPost) {
+		if (facebookPost == null) {
 			return null;
 		}
 		FacebookPostDto facebookPostDto = new FacebookPostDto();
 		BeanUtils.copyProperties(facebookPost, facebookPostDto);
 		return facebookPostDto;
 	}
-	private List<FacebookPostDto> convertFacebookPosts(List<FacebookPost> facebookPosts){
-		if(facebookPosts == null){
+
+	private List<FacebookPostDto> convertFacebookPosts(List<FacebookPost> facebookPosts) {
+		if (facebookPosts == null) {
 			return null;
 		}
 		List<FacebookPostDto> returnFacebookPosts = new ArrayList<>(facebookPosts.size());
-		for(FacebookPost oneFacebookPost:facebookPosts){
-			returnFacebookPosts.add(convertFacebookPost(oneFacebookPost));	
+		for (FacebookPost oneFacebookPost : facebookPosts) {
+			returnFacebookPosts.add(convertFacebookPost(oneFacebookPost));
 		}
 		return returnFacebookPosts;
 	}
@@ -1405,11 +1431,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		facebookPost.setFacebookAccount(facebookAccount);
 		PlannedFacebookPost plannedFacebookPost = plannedFacebookPostDao.getPlannedFacebookPostById(facebookPostDto.getPlannedFacebookPostId());
 		facebookPost.setPlannedFacebookPost(plannedFacebookPost);
-		if(facebookPostDto.getFacebookGroupId() != null && facebookPostDto.getFacebookGroupId() > 0){
+		if (facebookPostDto.getFacebookGroupId() != null && facebookPostDto.getFacebookGroupId() > 0) {
 			FacebookGroup facebookGroup = facebookGroupDao.getFacebookGroupById(facebookPostDto.getFacebookGroupId());
 			facebookPost.setFacebookGroup(facebookGroup);
 		}
-		if(facebookPostDto.getFacebookPageId() != null && facebookPostDto.getFacebookPageId() > 0){
+		if (facebookPostDto.getFacebookPageId() != null && facebookPostDto.getFacebookPageId() > 0) {
 			FacebookPage facebookPage = facebookPageDao.getFacebookPageById(facebookPostDto.getFacebookPageId());
 			facebookPost.setFacebookPage(facebookPage);
 		}
@@ -1427,34 +1453,36 @@ public class AapServiceImpl implements AapService, Serializable {
 		return convertFacebookPosts(facebookPosts);
 	}
 
-	private PlannedTweetDto convertPlannedTweet(PlannedTweet plannedTweet){
-		if(plannedTweet == null){
+	private PlannedTweetDto convertPlannedTweet(PlannedTweet plannedTweet) {
+		if (plannedTweet == null) {
 			return null;
 		}
 		PlannedTweetDto plannedTweetDto = new PlannedTweetDto();
 		BeanUtils.copyProperties(plannedTweet, plannedTweetDto);
 		return plannedTweetDto;
 	}
-	private List<PlannedTweetDto> convertPlannedTweets(List<PlannedTweet> plannedTweets){
-		if(plannedTweets == null){
+
+	private List<PlannedTweetDto> convertPlannedTweets(List<PlannedTweet> plannedTweets) {
+		if (plannedTweets == null) {
 			return null;
 		}
 		List<PlannedTweetDto> plannedTweetDtos = new ArrayList<>(plannedTweets.size());
-		for(PlannedTweet onePlannedTweet:plannedTweets){
+		for (PlannedTweet onePlannedTweet : plannedTweets) {
 			plannedTweetDtos.add(convertPlannedTweet(onePlannedTweet));
 		}
 		return plannedTweetDtos;
 	}
+
 	@Override
 	@Transactional
 	public PlannedTweetDto savePlannedTweet(PlannedTweetDto plannedTweetDto) {
 		PlannedTweet plannedTweet = null;
-		if(plannedTweetDto.getId() != null && plannedTweetDto.getId() > 0){
+		if (plannedTweetDto.getId() != null && plannedTweetDto.getId() > 0) {
 			plannedTweet = plannedTweetDao.getPlannedTweetById(plannedTweetDto.getId());
-			if(plannedTweet == null){
-				throw new RuntimeException("No such Tweet found[id="+plannedTweetDto.getId()+"]");
+			if (plannedTweet == null) {
+				throw new RuntimeException("No such Tweet found[id=" + plannedTweetDto.getId() + "]");
 			}
-		}else{
+		} else {
 			plannedTweet = new PlannedTweet();
 			plannedTweet.setDateCreated(new Date());
 			plannedTweet.setStatus(PlannedPostStatus.PENDING);
@@ -1466,9 +1494,9 @@ public class AapServiceImpl implements AapService, Serializable {
 		plannedTweet.setLocationId(plannedTweetDto.getLocationId());
 		plannedTweet.setTweetId(plannedTweetDto.getTweetId());
 		plannedTweet.setTweetType(plannedTweetDto.getTweetType());
-		
+
 		plannedTweet = plannedTweetDao.savePlannedTweet(plannedTweet);
-		
+
 		return convertPlannedTweet(plannedTweet);
 	}
 
@@ -1524,20 +1552,22 @@ public class AapServiceImpl implements AapService, Serializable {
 		tweet = tweetDao.saveTweet(tweet);
 		return convertTweet(tweet);
 	}
-	private TweetDto convertTweet(Tweet tweet){
-		if(tweet == null){
+
+	private TweetDto convertTweet(Tweet tweet) {
+		if (tweet == null) {
 			return null;
 		}
 		TweetDto tweetDto = new TweetDto();
 		BeanUtils.copyProperties(tweet, tweetDto);
 		return tweetDto;
 	}
-	private List<TweetDto> convertTweets(List<Tweet> tweets){
-		if(tweets == null){
+
+	private List<TweetDto> convertTweets(List<Tweet> tweets) {
+		if (tweets == null) {
 			return null;
 		}
 		List<TweetDto> returnTweets = new ArrayList<>(tweets.size());
-		for(Tweet tweet:tweets){
+		for (Tweet tweet : tweets) {
 			returnTweets.add(convertTweet(tweet));
 		}
 		return returnTweets;
@@ -1554,8 +1584,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public List<TwitterAccountDto> getAllTwitterAccountsForVoiceOfAap(PostLocationType locationType, Long locationId) {
 		List<TwitterAccount> twitterAccounts = null;
-		switch(locationType){
-		case Global :
+		switch (locationType) {
+		case Global:
 			twitterAccounts = twitterAccountDao.getAllTwitterAccountsForVoiceOfAapToPublishOnTimeLine();
 			break;
 		case STATE:
@@ -1576,12 +1606,12 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public NewsDto saveNews(NewsDto newsDto, List<ContentTweetDto> contentTweetDtos,PostLocationType locationType, Long locationId) {
+	public NewsDto saveNews(NewsDto newsDto, List<ContentTweetDto> contentTweetDtos, PostLocationType locationType, Long locationId) {
 		News news = null;
-		if(newsDto.getId() != null && newsDto.getId() > 0){
+		if (newsDto.getId() != null && newsDto.getId() > 0) {
 			news = newsDao.getNewsById(newsDto.getId());
 		}
-		if(news == null){
+		if (news == null) {
 			news = new News();
 			news.setDateCreated(new Date());
 			news.setContentStatus(ContentStatus.Pending);
@@ -1592,81 +1622,81 @@ public class AapServiceImpl implements AapService, Serializable {
 		news.setImageUrl(newsDto.getImageUrl());
 		news.setSource(newsDto.getSource());
 		news.setTitle(newsDto.getTitle());
-		
-		
-		switch(locationType){
-		case Global :
+
+		switch (locationType) {
+		case Global:
 			news.setGlobal(true);
 			break;
 		case STATE:
-			if(news.getStates() == null){
+			if (news.getStates() == null) {
 				news.setStates(new ArrayList<State>());
 			}
 			State state = stateDao.getStateById(locationId);
 			news.getStates().add(state);
 			break;
 		case DISTRICT:
-			if(news.getDistricts() == null){
+			if (news.getDistricts() == null) {
 				news.setDistricts(new ArrayList<District>());
 			}
 			District district = districtDao.getDistrictById(locationId);
 			news.getDistricts().add(district);
 			break;
 		case AC:
-			if(news.getAssemblyConstituencies() == null){
+			if (news.getAssemblyConstituencies() == null) {
 				news.setAssemblyConstituencies(new ArrayList<AssemblyConstituency>());
 			}
 			AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(locationId);
 			news.getAssemblyConstituencies().add(assemblyConstituency);
 			break;
 		case PC:
-			if(news.getParliamentConstituencies() == null){
+			if (news.getParliamentConstituencies() == null) {
 				news.setParliamentConstituencies(new ArrayList<ParliamentConstituency>());
 			}
 			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(locationId);
 			news.getParliamentConstituencies().add(parliamentConstituency);
 			break;
 		}
-		
+
 		news = newsDao.saveNews(news);
-		
-		//add all tweets
-		if(contentTweetDtos != null && contentTweetDtos.size() > 0){
-			if(news.getTweets() == null){
+
+		// add all tweets
+		if (contentTweetDtos != null && contentTweetDtos.size() > 0) {
+			if (news.getTweets() == null) {
 				news.setTweets(new ArrayList<ContentTweet>());
 			}
 			ContentTweet oneContentTweet;
-			for(ContentTweetDto oneContentTweetDto: contentTweetDtos){
-				if(oneContentTweetDto.getId() == null || oneContentTweetDto.getId() <= 0){
+			for (ContentTweetDto oneContentTweetDto : contentTweetDtos) {
+				if (oneContentTweetDto.getId() == null || oneContentTweetDto.getId() <= 0) {
 					oneContentTweet = new ContentTweet();
-				}else{
+				} else {
 					oneContentTweet = contentTweetDao.getContentTweetById(oneContentTweetDto.getId());
 				}
 				oneContentTweet.setImageUrl(oneContentTweetDto.getImageUrl());
 				oneContentTweet.setTweetContent(oneContentTweetDto.getTweetContent());
-				
+
 				oneContentTweet = contentTweetDao.saveContentTweet(oneContentTweet);
 				news.getTweets().add(oneContentTweet);
 			}
 		}
-		
+
 		return convertNews(news);
 	}
-	private NewsDto convertNews(News news){
-		if(news == null){
+
+	private NewsDto convertNews(News news) {
+		if (news == null) {
 			return null;
 		}
 		NewsDto newsDto = new NewsDto();
 		BeanUtils.copyProperties(news, newsDto);
 		return newsDto;
 	}
-	
-	private List<NewsDto> convertNews(List<News> news){
-		if(news == null){
+
+	private List<NewsDto> convertNews(List<News> news) {
+		if (news == null) {
 			return null;
 		}
 		List<NewsDto> returnNews = new ArrayList<>(news.size());
-		for(News oneNews:news){
+		for (News oneNews : news) {
 			returnNews.add(convertNews(oneNews));
 		}
 		return returnNews;
@@ -1676,8 +1706,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public List<NewsDto> getNews(PostLocationType locationType, Long locationId) {
 		List<News> news = null;
-		switch(locationType){
-		case Global :
+		switch (locationType) {
+		case Global:
 			news = newsDao.getGlobalNews();
 			break;
 		case STATE:
@@ -1705,26 +1735,26 @@ public class AapServiceImpl implements AapService, Serializable {
 		return convertNews(news);
 	}
 
-	private ContentTweetDto convertContentTweet(ContentTweet contentTweet){
-		if(contentTweet == null){
+	private ContentTweetDto convertContentTweet(ContentTweet contentTweet) {
+		if (contentTweet == null) {
 			return null;
 		}
 		ContentTweetDto contentTweetDto = new ContentTweetDto();
 		BeanUtils.copyProperties(contentTweet, contentTweetDto);
 		return contentTweetDto;
 	}
-	
-	private List<ContentTweetDto> convertContentTweets(Collection<ContentTweet> contentTweets){
-		if(contentTweets == null){
+
+	private List<ContentTweetDto> convertContentTweets(Collection<ContentTweet> contentTweets) {
+		if (contentTweets == null) {
 			return null;
 		}
 		List<ContentTweetDto> contentTweetDtos = new ArrayList<>(contentTweets.size());
-		for(ContentTweet oneContentTweet:contentTweets){
+		for (ContentTweet oneContentTweet : contentTweets) {
 			contentTweetDtos.add(convertContentTweet(oneContentTweet));
 		}
 		return contentTweetDtos;
 	}
-	
+
 	@Override
 	@Transactional
 	public List<ContentTweetDto> getNewsContentTweets(Long newsId) {
@@ -1743,53 +1773,54 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public SearchMemberResultDto searchMembers(UserDto searchUserDto) {
 		SearchMemberResultDto searchMemberResult = new SearchMemberResultDto();
-		if(!StringUtil.isEmpty(searchUserDto.getMembershipNumber())){
+		if (!StringUtil.isEmpty(searchUserDto.getMembershipNumber())) {
 			User user = userDao.getUserByMembershipNumber(searchUserDto.getMembershipNumber());
-			if(user != null){
+			if (user != null) {
 				searchMemberResult.getUsers().add(convertUser(user));
 				searchMemberResult.setUserAlreadyExists(true);
-				searchMemberResult.setUserAlreadyExistsMessage("Member with membership number "+ searchUserDto.getMembershipNumber()+" already exists");
+				searchMemberResult.setUserAlreadyExistsMessage("Member with membership number " + searchUserDto.getMembershipNumber() + " already exists");
 				return searchMemberResult;
 			}
 		}
-		if(!StringUtil.isEmpty(searchUserDto.getEmail())){
+		if (!StringUtil.isEmpty(searchUserDto.getEmail())) {
 			Email email = emailDao.getEmailByEmail(searchUserDto.getEmail());
-			if(email != null){
+			if (email != null) {
 				User user = email.getUser();
-				if(user != null){
+				if (user != null) {
 					searchMemberResult.getUsers().add(convertUser(user));
 					searchMemberResult.setUserAlreadyExists(true);
-					searchMemberResult.setUserAlreadyExistsMessage("Member with email "+ searchUserDto.getEmail()+" already exists");
+					searchMemberResult.setUserAlreadyExistsMessage("Member with email " + searchUserDto.getEmail() + " already exists");
 					return searchMemberResult;
 				}
 			}
 		}
-		if(!StringUtil.isEmpty(searchUserDto.getMobileNumber())){
+		if (!StringUtil.isEmpty(searchUserDto.getMobileNumber())) {
 			Phone phone = phoneDao.getPhoneByPhone(searchUserDto.getMobileNumber(), searchUserDto.getCountryCode());
-			if(phone != null){
+			if (phone != null) {
 				User user = phone.getUser();
-				if(user != null){
+				if (user != null) {
 					searchMemberResult.getUsers().add(convertUser(user));
 					searchMemberResult.setUserAlreadyExists(true);
-					searchMemberResult.setUserAlreadyExistsMessage("Member with phone "+ searchUserDto.getMobileNumber()+" already exists");
+					searchMemberResult.setUserAlreadyExistsMessage("Member with phone " + searchUserDto.getMobileNumber() + " already exists");
 					return searchMemberResult;
 				}
 			}
 		}
-		
-		if(!StringUtil.isEmpty(searchUserDto.getPassportNumber())){
+
+		if (!StringUtil.isEmpty(searchUserDto.getPassportNumber())) {
 			User user = userDao.getUserByPassportNumber(searchUserDto.getPassportNumber());
-			if(user != null){
+			if (user != null) {
 				searchMemberResult.getUsers().add(convertUser(user));
 				searchMemberResult.setUserAlreadyExists(true);
-				searchMemberResult.setUserAlreadyExistsMessage("Member with passport number "+ searchUserDto.getPassportNumber()+" already exists");
+				searchMemberResult.setUserAlreadyExistsMessage("Member with passport number " + searchUserDto.getPassportNumber() + " already exists");
 				return searchMemberResult;
 			}
 		}
-		
-		if(!StringUtil.isEmpty(searchUserDto.getName())){
-			List<User> users = userDao.searchUserOfAssemblyConstituency(searchUserDto.getName(),searchUserDto.getAssemblyConstituencyLivingId(), searchUserDto.getAssemblyConstituencyVotingId());
-			if(users != null){
+
+		if (!StringUtil.isEmpty(searchUserDto.getName())) {
+			List<User> users = userDao.searchUserOfAssemblyConstituency(searchUserDto.getName(), searchUserDto.getAssemblyConstituencyLivingId(),
+					searchUserDto.getAssemblyConstituencyVotingId());
+			if (users != null) {
 				searchMemberResult.getUsers().addAll(convertUsers(users));
 				searchMemberResult.setUserAlreadyExists(false);
 				searchMemberResult.setUserAlreadyExistsMessage("Similar member found inthis area, check manually if member already exists");
@@ -1800,53 +1831,42 @@ public class AapServiceImpl implements AapService, Serializable {
 		searchMemberResult.setUserAlreadyExistsMessage("No Member found");
 		return searchMemberResult;
 	}
-	
+
 	@Override
 	@Transactional
-	public AssemblyConstituencyDto saveAssemblyConstituency(
-			AssemblyConstituencyDto assemblyConstituencyDto) {
+	public AssemblyConstituencyDto saveAssemblyConstituency(AssemblyConstituencyDto assemblyConstituencyDto) {
 		AssemblyConstituency dbAssemblyConstituency;
-		if (assemblyConstituencyDto.getId() == null
-				|| assemblyConstituencyDto.getId() <= 0) {
-			dbAssemblyConstituency = assemblyConstituencyDao
-					.getAssemblyConstituencyNameAndDistrictId(
-							assemblyConstituencyDto.getDistrictId(),
-							assemblyConstituencyDto.getName());
+		if (assemblyConstituencyDto.getId() == null || assemblyConstituencyDto.getId() <= 0) {
+			dbAssemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyNameAndDistrictId(assemblyConstituencyDto.getDistrictId(),
+					assemblyConstituencyDto.getName());
 			if (dbAssemblyConstituency == null) {
 				dbAssemblyConstituency = new AssemblyConstituency();
 				dbAssemblyConstituency.setDateCreated(new Date());
 			}
 		} else {
-			dbAssemblyConstituency = assemblyConstituencyDao
-					.getAssemblyConstituencyById(assemblyConstituencyDto
-							.getId());
+			dbAssemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(assemblyConstituencyDto.getId());
 			if (dbAssemblyConstituency == null) {
-				throw new RuntimeException(
-						"No such Assembly Constituency exist[id="
-								+ assemblyConstituencyDto.getId() + "]");
+				throw new RuntimeException("No such Assembly Constituency exist[id=" + assemblyConstituencyDto.getId() + "]");
 			}
 		}
 		dbAssemblyConstituency.setDateModified(new Date());
 		dbAssemblyConstituency.setName(assemblyConstituencyDto.getName());
-		District district = districtDao.getDistrictById(assemblyConstituencyDto
-				.getDistrictId());
+		District district = districtDao.getDistrictById(assemblyConstituencyDto.getDistrictId());
 		district.setAcDataAvailable(true);
 		dbAssemblyConstituency.setDistrict(district);
 
-		dbAssemblyConstituency = assemblyConstituencyDao
-				.saveAssemblyConstituency(dbAssemblyConstituency);
+		dbAssemblyConstituency = assemblyConstituencyDao.saveAssemblyConstituency(dbAssemblyConstituency);
 
 		assemblyConstituencyDto.setId(dbAssemblyConstituency.getId());
 		return assemblyConstituencyDto;
 	}
-	
+
 	@Override
 	@Transactional
 	public DistrictDto saveDistrict(DistrictDto districtWeb) {
 		District dbDistrict;
 		if (districtWeb.getId() == null || districtWeb.getId() <= 0) {
-			dbDistrict = districtDao.getDistrictByNameAndStateId(
-					districtWeb.getStateId(), districtWeb.getName());
+			dbDistrict = districtDao.getDistrictByNameAndStateId(districtWeb.getStateId(), districtWeb.getName());
 			if (dbDistrict == null) {
 				dbDistrict = new District();
 				dbDistrict.setDateCreated(new Date());
@@ -1854,18 +1874,16 @@ public class AapServiceImpl implements AapService, Serializable {
 		} else {
 			dbDistrict = districtDao.getDistrictById(districtWeb.getId());
 			if (dbDistrict == null) {
-				throw new RuntimeException("No such District exist[id="
-						+ districtWeb.getId() + "]");
+				throw new RuntimeException("No such District exist[id=" + districtWeb.getId() + "]");
 			}
 		}
-		
-		if(dbDistrict.getDateCreated() == null ){
+
+		if (dbDistrict.getDateCreated() == null) {
 			dbDistrict.setDateCreated(new Date());
 		}
 		dbDistrict.setName(districtWeb.getName());
 		dbDistrict.setDateModified(new Date());
-		
-		
+
 		State state = stateDao.getStateById(districtWeb.getStateId());
 		dbDistrict.setState(state);
 
@@ -1874,7 +1892,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		districtWeb.setId(dbDistrict.getId());
 		return districtWeb;
 	}
-	
+
 	@Override
 	@Transactional
 	public DistrictDto getDistrictByNameAndStateId(String name, Long stateId) {
@@ -1882,5 +1900,236 @@ public class AapServiceImpl implements AapService, Serializable {
 		return convertDistrict(district);
 	}
 
+	@Override
+	@Transactional
+	public DistrictDto getDistrictById(Long districtId) {
+		District district = districtDao.getDistrictById(districtId);
+		return convertDistrict(district);
+	}
+
+	@Override
+	@Transactional
+	public AssemblyConstituencyDto getAssemblyConstituencyById(long stateId) {
+		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(stateId);
+		return convertAssemblyConstituency(assemblyConstituency);
+	}
+
+	@Override
+	@Transactional
+	public ParliamentConstituencyDto getParliamentConstituencyById(long pcId) {
+		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
+		return convertParliamentConstituency(parliamentConstituency);
+	}
+
+	@Override
+	@Transactional
+	public List<RoleDto> getUserRoles(Long userId, PostLocationType postLocationType, Long locationId) {
+		List<Role> roles = null;
+		switch (postLocationType) {
+		case Global:
+			roles = roleDao.getUserGlobalRoles(userId);
+			break;
+		case STATE:
+			roles = roleDao.getUserStateRoles(userId, locationId);
+			break;
+		case DISTRICT:
+			roles = roleDao.getUserDistrictRoles(userId, locationId);
+			break;
+		case AC:
+			roles = roleDao.getUserAcRoles(userId, locationId);
+			break;
+		case PC:
+			roles = roleDao.getUserPcRoles(userId, locationId);
+			break;
+		}
+		return convertRoles(roles);
+	}
+
+	private RoleDto convertRole(Role role) {
+		if (role == null) {
+			return null;
+		}
+		RoleDto roleDto = new RoleDto();
+		BeanUtils.copyProperties(role, roleDto);
+		return roleDto;
+	}
+
+	private List<RoleDto> convertRoles(List<Role> roles) {
+		List<RoleDto> returnRoles = new ArrayList<>();
+		if (roles == null) {
+			return returnRoles;
+		}
+		for (Role role : roles) {
+			returnRoles.add(convertRole(role));
+		}
+		return returnRoles;
+	}
+
+	@Override
+	@Transactional
+	public List<RoleDto> getLocationRoles(PostLocationType postLocationType, Long locationId) {
+		List<Role> roles = null;
+		switch (postLocationType) {
+		case Global:
+			roles = roleDao.getGlobalRoles();
+			break;
+		case STATE:
+			roles = roleDao.getStateRoles(locationId);
+			break;
+		case DISTRICT:
+			roles = roleDao.getDistrictRoles(locationId);
+			break;
+		case AC:
+			roles = roleDao.getAcRoles(locationId);
+			break;
+		case PC:
+			roles = roleDao.getPcRoles(locationId);
+			break;
+		}
+		return convertRoles(roles);
+	}
+
+	@Override
+	@Transactional
+	public void removeAllUserRolesAtLocation(Long userId, PostLocationType postLocationType, Long locationId) {
+		User user = userDao.getUserById(userId);
+		switch (postLocationType) {
+		case Global:
+			user.getAllRoles().clear();
+			break;
+		case STATE: {
+			Set<StateRole> allStateRoles = user.getStateRoles();
+			if (allStateRoles != null && !allStateRoles.isEmpty()) {
+				Iterator<StateRole> iterator = allStateRoles.iterator();
+				StateRole oneStateRole;
+				while (iterator.hasNext()) {
+					oneStateRole = iterator.next();
+					if (oneStateRole.getStateId().equals(locationId)) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+			break;
+		case DISTRICT: {
+			Set<DistrictRole> allDistrictRoles = user.getDistrictRoles();
+			if (allDistrictRoles != null && !allDistrictRoles.isEmpty()) {
+				Iterator<DistrictRole> iterator = allDistrictRoles.iterator();
+				DistrictRole oneDistrictRole;
+				while (iterator.hasNext()) {
+					oneDistrictRole = iterator.next();
+					if (oneDistrictRole.getDistrictId().equals(locationId)) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+			break;
+		case AC: {
+			Set<AcRole> allAcRoles = user.getAcRoles();
+			if (allAcRoles != null && !allAcRoles.isEmpty()) {
+				Iterator<AcRole> iterator = allAcRoles.iterator();
+				AcRole oneAcRole;
+				while (iterator.hasNext()) {
+					oneAcRole = iterator.next();
+					if (oneAcRole.getAssemblyConstituencyId().equals(locationId)) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+			break;
+		case PC: {
+			Set<PcRole> allPcRoles = user.getPcRoles();
+			if (allPcRoles != null && !allPcRoles.isEmpty()) {
+				Iterator<PcRole> iterator = allPcRoles.iterator();
+				PcRole onePcRole;
+				while (iterator.hasNext()) {
+					onePcRole = iterator.next();
+					if (onePcRole.getParliamentConstituencyId().equals(locationId)) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+			break;
+		}
+	}
+
+	@Override
+	@Transactional
+	public void saveUserRolesAtLocation(Long userId, PostLocationType postLocationType, Long locationId, List<RoleDto> userRoleDtos) {
+		User user = userDao.getUserById(userId);
+		// First remove all roles at given location
+		removeAllUserRolesAtLocation(userId, postLocationType, locationId);
+		System.out.println("postLocationType=" + postLocationType);
+		System.out.println("locationId=" + locationId);
+		switch (postLocationType) {
+		case Global:
+			// and then add all new role
+			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+				Set<Role> allNewRoles = new HashSet<>();
+				Role oneRole;
+				for (RoleDto oneRoleDto : userRoleDtos) {
+					oneRole = roleDao.getRoleById(oneRoleDto.getId());
+					allNewRoles.add(oneRole);
+				}
+				user.getAllRoles().addAll(allNewRoles);
+			}
+			break;
+		case STATE: {
+			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+				Set<StateRole> allNewStateRoles = new HashSet<>();
+				StateRole oneStateRole;
+				for (RoleDto oneRoleDto : userRoleDtos) {
+					oneStateRole = stateRoleDao.getStateRoleByStateIdAndRoleId(locationId, oneRoleDto.getId());
+					allNewStateRoles.add(oneStateRole);
+				}
+				user.getStateRoles().addAll(allNewStateRoles);
+			}
+		}
+			break;
+		case DISTRICT: {
+			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+				Set<DistrictRole> allNewDistrictRoles = new HashSet<>();
+				DistrictRole oneDistrictRole;
+				for (RoleDto oneRoleDto : userRoleDtos) {
+					oneDistrictRole = districtRoleDao.getDistrictRoleByDistrictIdAndRoleId(locationId, oneRoleDto.getId());
+					allNewDistrictRoles.add(oneDistrictRole);
+				}
+				user.getDistrictRoles().addAll(allNewDistrictRoles);
+			}
+		}
+			break;
+		case AC: {
+			System.out.println("Adding AC Roles");
+			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+				Set<AcRole> allNewAcRoles = new HashSet<>();
+				AcRole oneAcRole;
+				for (RoleDto oneRoleDto : userRoleDtos) {
+					System.out.println("oneRoleDto " + oneRoleDto.getId());
+					oneAcRole = acRoleDao.getAcRoleByAcIdAndRoleId(locationId, oneRoleDto.getId());
+					System.out.println("oneAcRole " + oneAcRole.getId());
+					allNewAcRoles.add(oneAcRole);
+				}
+				user.getAcRoles().addAll(allNewAcRoles);
+			}
+		}
+			break;
+		case PC: {
+			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+				Set<PcRole> allNewPcRoles = new HashSet<>();
+				PcRole onePcRole;
+				for (RoleDto oneRoleDto : userRoleDtos) {
+					onePcRole = pcRoleDao.getPcRoleByPcIdAndRoleId(locationId, oneRoleDto.getId());
+					allNewPcRoles.add(onePcRole);
+				}
+				user.getPcRoles().addAll(allNewPcRoles);
+			}
+		}
+			break;
+		}
+		user = userDao.saveUser(user);
+	}
 
 }

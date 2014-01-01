@@ -22,6 +22,7 @@ import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.PostLocationType;
+import com.next.aap.web.dto.RoleDto;
 import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TweetDto;
@@ -48,11 +49,17 @@ public interface AapService {
 	
 	List<DistrictDto> getAllDistrictOfState(long stateId) ;
 	
+	DistrictDto getDistrictById(Long districtId) ;
+	
 	List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfDistrict(long districtId) ;
 	
 	List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfState(long stateId) ;
+	
+	AssemblyConstituencyDto getAssemblyConstituencyById(long acId) ;
 
 	List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(long stateId) ;
+	
+	ParliamentConstituencyDto getParliamentConstituencyById(long pcId) ;
 	
 	UserDto saveUser(UserDto userDto);
 	
@@ -126,4 +133,12 @@ public interface AapService {
 	DistrictDto getDistrictByNameAndStateId(String name, Long stateId) ;
 	
 	AssemblyConstituencyDto saveAssemblyConstituency(AssemblyConstituencyDto assemblyConstituencyWeb) ;
+	
+	List<RoleDto> getUserRoles(Long userId, PostLocationType postLocationType, Long locationId);
+	
+	List<RoleDto> getLocationRoles(PostLocationType postLocationType, Long locationId);
+	
+	void removeAllUserRolesAtLocation(Long userId, PostLocationType postLocationType, Long locationId);
+	
+	void saveUserRolesAtLocation(Long userId, PostLocationType postLocationType, Long locationId, List<RoleDto> userRoleDtos);
 }

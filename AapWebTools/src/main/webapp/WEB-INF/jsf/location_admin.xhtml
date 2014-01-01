@@ -63,6 +63,10 @@
 						styleClass="ui-priority-primary">
 					</p:commandButton>
 
+					<p:commandButton value="Manage user Roles" actionListener="#{locationAdminBean.goToManageUserRolePage}" rendered="#{locationAdminBean.manageUserRoleAllowed}"
+						styleClass="ui-priority-primary">
+					</p:commandButton>
+
 				</p:panelGrid>
 				<br></br>
 				<br></br>

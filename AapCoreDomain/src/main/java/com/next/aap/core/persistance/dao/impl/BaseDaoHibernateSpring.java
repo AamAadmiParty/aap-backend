@@ -3,6 +3,7 @@ package com.next.aap.core.persistance.dao.impl;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -76,7 +77,12 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 		Query hibernateQuery = this.sessionFactory.getCurrentSession().createQuery(query);
 		if(params != null){
 			for(Entry<String, Object> oneEntry:params.entrySet()){
-				hibernateQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());
+				if(oneEntry.getValue() instanceof Collection){
+					hibernateQuery.setParameterList(oneEntry.getKey(), (Collection)oneEntry.getValue());
+				}else{
+					hibernateQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());	
+				}
+				
 			}
 		}
 		if(pageSize > 0 ){
@@ -93,7 +99,11 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
 		if(params != null){
 			for(Entry<String, Object> oneEntry:params.entrySet()){
-				sqlQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());
+				if(oneEntry.getValue() instanceof Collection){
+					sqlQuery.setParameterList(oneEntry.getKey(), (Collection)oneEntry.getValue());
+				}else{
+					sqlQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());	
+				}
 			}
 		}
 		@SuppressWarnings("rawtypes")

@@ -5,9 +5,11 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
@@ -26,6 +28,13 @@ public class MenuBean extends BaseJsfBean {
 
 	private Long adminSelectedLocationId;
 	private PostLocationType locationType;
+	private StateDto selectedAdminState;
+	private DistrictDto selectedAdminDistrict;
+	private AssemblyConstituencyDto selectedAdminAc;
+	private ParliamentConstituencyDto selectedAdminPc;
+
+	@Autowired
+	protected AapService aapService;
 
 	public boolean isAdmin() {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
@@ -138,28 +147,54 @@ public class MenuBean extends BaseJsfBean {
 	public void selectState(ActionEvent event){
 		locationType = PostLocationType.STATE;
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("stateId");
+		selectedAdminState = aapService.getStateById(adminSelectedLocationId);
 		buildAndRedirect("/locationadmin");
 	}
 	public void selectDistrict(ActionEvent event){
 		locationType = PostLocationType.DISTRICT;
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("districtId");
+		System.out.println("adminSelectedLocationId="+adminSelectedLocationId);
+		System.out.println("aapService="+aapService);
+		selectedAdminDistrict = aapService.getDistrictById(adminSelectedLocationId);
+		System.out.println("selectedAdminDistrict="+selectedAdminDistrict.getStateId());
+		selectedAdminState = aapService.getStateById(selectedAdminDistrict.getStateId());
 		buildAndRedirect("/locationadmin");
 	}
 	
 	public void selectAc(ActionEvent event){
 		locationType = PostLocationType.AC;
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("acId");
+		selectedAdminAc = aapService.getAssemblyConstituencyById(adminSelectedLocationId);
+		selectedAdminDistrict = aapService.getDistrictById(selectedAdminAc.getDistrictId());
+		selectedAdminState = aapService.getStateById(selectedAdminDistrict.getStateId());
 		buildAndRedirect("/locationadmin");
 	}
 	public void selectPc(ActionEvent event){
 		locationType = PostLocationType.PC;
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("pcId");
+		selectedAdminPc = aapService.getParliamentConstituencyById(adminSelectedLocationId);
+		selectedAdminState = aapService.getStateById(selectedAdminPc.getStateId());
 		buildAndRedirect("/locationadmin");
 	}
 	
 
 	public PostLocationType getLocationType() {
 		return locationType;
+	}
+	public String getCurrentLocationName() {
+		switch(locationType){
+		case Global :
+			return "Global";
+		case STATE :
+			return selectedAdminState.getName();
+		case DISTRICT :
+			return selectedAdminDistrict.getName();
+		case AC :
+			return selectedAdminAc.getName();
+		case PC :
+			return selectedAdminPc.getName();
+		}
+		return "";
 	}
 
 	public Long getAdminSelectedLocationId() {
@@ -168,6 +203,42 @@ public class MenuBean extends BaseJsfBean {
 
 	public void setAdminSelectedLocationId(Long adminSelectedLocationId) {
 		this.adminSelectedLocationId = adminSelectedLocationId;
+	}
+
+	public StateDto getSelectedAdminState() {
+		return selectedAdminState;
+	}
+
+	public void setSelectedAdminState(StateDto selectedAdminState) {
+		this.selectedAdminState = selectedAdminState;
+	}
+
+	public DistrictDto getSelectedAdminDistrict() {
+		return selectedAdminDistrict;
+	}
+
+	public void setSelectedAdminDistrict(DistrictDto selectedAdminDistrict) {
+		this.selectedAdminDistrict = selectedAdminDistrict;
+	}
+
+	public AssemblyConstituencyDto getSelectedAdminAc() {
+		return selectedAdminAc;
+	}
+
+	public void setSelectedAdminAc(AssemblyConstituencyDto selectedAdminAc) {
+		this.selectedAdminAc = selectedAdminAc;
+	}
+
+	public ParliamentConstituencyDto getSelectedAdminPc() {
+		return selectedAdminPc;
+	}
+
+	public void setSelectedAdminPc(ParliamentConstituencyDto selectedAdminPc) {
+		this.selectedAdminPc = selectedAdminPc;
+	}
+
+	public void setLocationType(PostLocationType locationType) {
+		this.locationType = locationType;
 	}
 	
 }

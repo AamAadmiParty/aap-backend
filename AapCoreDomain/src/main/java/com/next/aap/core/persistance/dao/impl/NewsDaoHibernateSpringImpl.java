@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,10 +127,13 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 		sqlQueryParams.put("stateId", stateId);
 		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
 		
-		
+		if(newsIds == null || newsIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
 		String query = "from News where id in (:ids) order by dateCreated desc";
 		Map<String, Object> queryParams = new HashMap<String, Object>(1);
-		sqlQueryParams.put("ids", newsIds);
+		queryParams.put("ids", newsIds);
 		List<News> list = executeQueryGetList(query, queryParams);
 		return list;
 	}
@@ -141,10 +145,13 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 		sqlQueryParams.put("districtId", districtId);
 		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
 		
-		
+		if(newsIds == null || newsIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
 		String query = "from News where id in (:ids) order by dateCreated desc";
 		Map<String, Object> queryParams = new HashMap<String, Object>(1);
-		sqlQueryParams.put("ids", newsIds);
+		queryParams.put("ids", newsIds);
 		List<News> list = executeQueryGetList(query, queryParams);
 		return list;
 
@@ -157,10 +164,13 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 		sqlQueryParams.put("acId", acId);
 		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
 		
-		
+		if(newsIds == null || newsIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
 		String query = "from News where id in (:ids) order by dateCreated desc";
 		Map<String, Object> queryParams = new HashMap<String, Object>(1);
-		sqlQueryParams.put("ids", newsIds);
+		queryParams.put("ids", newsIds);
 		List<News> list = executeQueryGetList(query, queryParams);
 		return list;
 	}
@@ -172,10 +182,13 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 		sqlQueryParams.put("pcId", pcId);
 		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
 		
-		
+		if(newsIds == null || newsIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
 		String query = "from News where id in (:ids) order by dateCreated desc";
 		Map<String, Object> queryParams = new HashMap<String, Object>(1);
-		sqlQueryParams.put("ids", newsIds);
+		queryParams.put("ids", newsIds);
 		List<News> list = executeQueryGetList(query, queryParams);
 		return list;
 	}

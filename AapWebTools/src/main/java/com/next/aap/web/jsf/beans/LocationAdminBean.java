@@ -70,6 +70,16 @@ public class LocationAdminBean extends BaseJsfBean {
 		}
 	}
 	
+	public void goToManageUserRolePage(){
+		if(isManageUserRoleAllowed()){
+			buildAndRedirect("/admin/roles");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	
+	
+	
 	
 	public boolean isVoiceOfAapFbAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
@@ -87,7 +97,8 @@ public class LocationAdminBean extends BaseJsfBean {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isManageMemberAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
-	
-
-
+	public boolean isManageUserRoleAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageUserRoleAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+	}
 }

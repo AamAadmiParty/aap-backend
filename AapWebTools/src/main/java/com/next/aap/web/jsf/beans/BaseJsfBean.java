@@ -70,7 +70,7 @@ public class BaseJsfBean extends BaseController implements Serializable {
 	}
 
 	public static String buildLoginUrl(HttpServletRequest httpServletRequest, String redirectUrl) {
-		return httpServletRequest.getContextPath() + "/socialaccounts?" + REDIRECT_URL_PARAM_ID + "=" + httpServletRequest.getContextPath() + redirectUrl;
+		return httpServletRequest.getContextPath() + "/login?" + REDIRECT_URL_PARAM_ID + "=" + httpServletRequest.getContextPath() + redirectUrl;
 	}
 
 	public static String buildUrl(String url) {

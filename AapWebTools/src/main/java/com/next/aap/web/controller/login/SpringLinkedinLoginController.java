@@ -48,7 +48,7 @@ public class SpringLinkedinLoginController extends BaseSocialLoginController<Lin
 		
 		String authorizeUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, params);
 		
-		//setRedirectUrlInSessiom(httpServletRequest, getRedirectUrl(httpServletRequest));
+		setRedirectUrlInSessiom(httpServletRequest, getRedirectUrlForRedirectionAfterLogin(httpServletRequest));
 
 		RedirectView rv = new RedirectView(authorizeUrl);
 		logger.info("url= {}", authorizeUrl);

@@ -44,7 +44,7 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 		OAuthToken requestToken = oauthOperations.fetchRequestToken(twitterRedirectUrl, null);
 		String authorizeUrl = oauthOperations.buildAuthenticateUrl(requestToken.getValue() , OAuth1Parameters.NONE);
 		
-		//setRedirectUrlInSessiom(httpServletRequest, getRedirectUrl(httpServletRequest));
+		setRedirectUrlInSessiom(httpServletRequest, getRedirectUrlForRedirectionAfterLogin(httpServletRequest));
 
 		RedirectView rv = new RedirectView(authorizeUrl);
 		logger.info("url= {}", authorizeUrl);

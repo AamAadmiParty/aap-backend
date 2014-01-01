@@ -49,7 +49,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 		params.setScope(appPermissions);
 		String authorizeUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, params);
 		
-		//setRedirectUrlInSessiom(httpServletRequest, getRedirectUrl(httpServletRequest));
+		setRedirectUrlInSessiom(httpServletRequest, getRedirectUrlForRedirectionAfterLogin(httpServletRequest));
 
 		RedirectView rv = new RedirectView(authorizeUrl);
 		logger.info("url= {}", authorizeUrl);
@@ -84,7 +84,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);
 			mv.setView(rv);
-			
+			logger.info("Setting facebook Cookie");
 			CookieUtil.setLastLoggedInAccountAsFacebookCookie(httpServletResponse);
 
 		} catch (Exception ex) {

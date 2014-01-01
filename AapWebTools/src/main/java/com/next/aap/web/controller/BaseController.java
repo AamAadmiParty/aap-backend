@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -15,7 +16,7 @@ import com.next.aap.web.dto.UserRolePermissionDto;
 
 public class BaseController {
 
-	public static final String REDIRECT_URL_PARAM_ID = "v4d_redirect_url";
+	public static final String REDIRECT_URL_PARAM_ID = "aap_redirect_url";
 	
 	public static final String FINAL_REDIRECT_URL_PARAM_ID = "fru";
 	
@@ -43,13 +44,20 @@ public class BaseController {
 		redirectToViewAfterLogin(redirectUrl, mv);
 	}
 	protected void redirectToViewAfterLogin(String redirectUrl, ModelAndView mv){
-		if(redirectUrl == null){
-			redirectUrl = "http://localhost:8081/vote/ac/delhi/adarsh_nagar";
-		}
         RedirectView rv = new RedirectView(redirectUrl);
         rv.setExposeModelAttributes(false);
         mv.setView(rv);
 	}
+	protected String getRedirectUrlForRedirectionAfterLogin(HttpServletRequest httpServletRequest){
+		String redirectUrlAfterLogin = getRedirectUrl(httpServletRequest);
+		System.out.println("redirectUrlAfterLogin from param = "+redirectUrlAfterLogin);
+		if(StringUtil.isEmpty(redirectUrlAfterLogin)){
+			redirectUrlAfterLogin = httpServletRequest.getContextPath()+"/socialaccounts";
+			System.out.println("redirectUrlAfterLogin default = "+redirectUrlAfterLogin);
+		}
+		return redirectUrlAfterLogin;
+	}
+
 	
 	
 	protected void setRedirectUrlInSessiom(HttpServletRequest httpServletRequest, String redirectUrl){

@@ -31,14 +31,17 @@ public class CookieUtil {
 	}
 
 	public static void setLastLoggedInAccountAsFacebookCookie(HttpServletResponse httpServletResponse){
-		Cookie lastAccountCookie = new Cookie(LAST_ACCOUNT, FACEBOOK);
-		lastAccountCookie.setMaxAge(3 * 30 * 24 * 60 * 60);
-		lastAccountCookie.setPath("/");
-		httpServletResponse.addCookie(lastAccountCookie);
+		setLastLoggedInAccountCookie(httpServletResponse, FACEBOOK);
 	}
 	public static void setLastLoggedInAccountAsTwitterCookie(HttpServletResponse httpServletResponse){
-		Cookie lastAccountCookie = new Cookie(LAST_ACCOUNT, TWITTER);
+		setLastLoggedInAccountCookie(httpServletResponse, TWITTER);
+	}
+	private static void setLastLoggedInAccountCookie(HttpServletResponse httpServletResponse, String account){
+		System.out.println("Creating Cookie "+ LAST_ACCOUNT+" = "+account);
+		Cookie lastAccountCookie = new Cookie(LAST_ACCOUNT, account);
+		lastAccountCookie.setPath("/");
 		lastAccountCookie.setMaxAge(3 * 30 * 24 * 60 * 60);
 		httpServletResponse.addCookie(lastAccountCookie);
+		
 	}
 }

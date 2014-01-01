@@ -73,7 +73,6 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 			/*
 			ConnectionRepository twitterConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId());
 			twitterConnectionRepository.updateConnection(connection);
-			System.out.println(connection.getImageUrl());
 			*/
 			
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
@@ -96,14 +95,12 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 
 	@Override
 	protected UserDto saveSocialUser(Connection<Twitter> socialConnection, UserDto loggedInUser) {
-		System.out.println("loggedInUser"+loggedInUser);
 		UserDto user;
 		if(loggedInUser == null){
 			user = aapService.saveTwitterUser(null, socialConnection);	
 		}else{
 			user = aapService.saveTwitterUser(loggedInUser.getId(), socialConnection);
 		}
-		System.out.println("user"+user);
 		return user;
 	}
 

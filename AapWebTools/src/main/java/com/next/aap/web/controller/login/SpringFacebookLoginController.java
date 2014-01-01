@@ -41,7 +41,6 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		
-		System.out.println("facebookRedirectUrl="+facebookRedirectUrl);
 		FacebookConnectionFactory facebookConnectionFactory = (FacebookConnectionFactory)connectionFactoryLocator.getConnectionFactory(Facebook.class);
 
 		OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
@@ -68,7 +67,6 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			FacebookConnectionFactory facebookConnectionFactory = (FacebookConnectionFactory)connectionFactoryLocator.getConnectionFactory(Facebook.class);
 			OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
 			String authorizationCode = httpServletRequest.getParameter("code");
-			System.out.println("authorizationCode="+authorizationCode);
 			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, facebookRedirectUrl, null);
 			Connection<Facebook> facebookConnection = facebookConnectionFactory.createConnection(accessGrant);
 			
@@ -78,7 +76,6 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId());
 			facebookConnectionRepository.updateConnection(connection);
 			*/
-			//System.out.println("SpringFacebookLoginController.getRedirectUrlFromSession=" + getRedirectUrlFromSession(httpServletRequest));
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
 			logger.info("redirectUrl= {}", redirectUrl);
 			if(StringUtil.isEmpty(redirectUrl)){
@@ -91,21 +88,23 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			CookieUtil.setLastLoggedInAccountAsFacebookCookie(httpServletResponse);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("unable to complete facebook login", ex);
+			String redirectUrl = httpServletRequest.getContextPath()+"/facebookfail";
+			RedirectView rv = new RedirectView(redirectUrl);
+			logger.info("url= {}", redirectUrl);
+			mv.setView(rv);
 		}
 		return mv;
 	}
 
 	@Override
 	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) {
-		System.out.println("loggedInUser"+loggedInUser);
 		UserDto user;
 		if(loggedInUser == null){
 			user = aapService.saveFacebookUser(null, socialConnection, appFacebokAppId);	
 		}else{
 			user = aapService.saveFacebookUser(loggedInUser.getId(), socialConnection, appFacebokAppId);
 		}
-		System.out.println("user"+user);
 		return user;
 	}
 

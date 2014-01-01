@@ -66,7 +66,6 @@ public class SpringLinkedinLoginController extends BaseSocialLoginController<Lin
 			LinkedInConnectionFactory linkedinConnectionFactory = (LinkedInConnectionFactory)connectionFactoryLocator.getConnectionFactory(LinkedIn.class);
 			OAuth2Operations oauthOperations = linkedinConnectionFactory.getOAuthOperations();
 			String authorizationCode = httpServletRequest.getParameter("code");
-			System.out.println("authorizationCode="+authorizationCode);
 			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, getFacebookRedirectUrl(httpServletRequest), null);
 			Connection<LinkedIn> connection = linkedinConnectionFactory.createConnection(accessGrant);
 			
@@ -74,7 +73,6 @@ public class SpringLinkedinLoginController extends BaseSocialLoginController<Lin
 			/*
 			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository("ravi");
 			facebookConnectionRepository.addConnection(connection);
-			System.out.println(connection.getImageUrl());
 			*/
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -92,14 +90,12 @@ public class SpringLinkedinLoginController extends BaseSocialLoginController<Lin
 	@Override
 	protected UserDto saveSocialUser(Connection<LinkedIn> socialConnection,
 			UserDto loggedInUser) {
-		System.out.println("loggedInUser"+loggedInUser);
 		UserDto user;
 		if(loggedInUser == null){
 			//user = aapService.saveLi(null, socialConnection);	
 		}else{
 			//user = aapService.saveGoogleUser(loggedInUser.getId(), socialConnection);
 		}
-		//System.out.println("user"+user);
 		return null;
 	}
 

@@ -119,7 +119,6 @@ public class VoiceOfAapBean extends BaseJsfBean {
 	}
 
 	public void handlePostOnGroupCheckBoxChange(){
-		System.out.println("handlePostOnGroupCheckBoxChange " + postOnGroup);
 		if(postOnGroup){
 			Facebook facebook = new FacebookTemplate(facebookAppPermission.getToken());
 			try{
@@ -158,7 +157,6 @@ public class VoiceOfAapBean extends BaseJsfBean {
 		}
 	}
 	public void handleVoiceOfAapCheckBoxChange() {
-		System.out.println("handleVoiceOfAapCheckBoxChange " + beVoiceOfAap);
 		if(beVoiceOfAap){
 			Facebook facebook = new FacebookTemplate(facebookAppPermission.getToken());
 			try{
@@ -180,7 +178,6 @@ public class VoiceOfAapBean extends BaseJsfBean {
 	public void handlePostOnTimeLineCheckBoxChange(){
 	}
 	public void handleTweetFromMyAccountCheckBoxChange(){
-		System.out.println("handleTweetFromMyAccountCheckBoxChange " + tweetFromMyAccount);
 		if(postOnGroup){
 			LoginAccountDto loginAccounts = getLoggedInAccountsFromSesion();
 			if(loginAccounts.getTwitterAccounts() == null || loginAccounts.getTwitterAccounts().isEmpty()){

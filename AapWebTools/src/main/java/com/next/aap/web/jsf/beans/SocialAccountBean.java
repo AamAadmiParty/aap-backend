@@ -31,17 +31,14 @@ public class SocialAccountBean extends BaseJsfBean {
 		HttpServletRequest httpServletRequest =  getHttpServletRequest();
 		/*
 		String passedRedirectUrl = getRedirectUrl(httpServletRequest);
-		System.out.println("passedRedirectUrl="+passedRedirectUrl);
 		
 		if(passedRedirectUrl != null){
 			if(CookieUtil.isLastLoggedInViaFacebook(httpServletRequest)){
 				redirectUrlAfterLogin = passedRedirectUrl;
-				System.out.println("redirecting to Facebook Account");
 				buildAndRedirect("/login/facebook");
 				return;
 			}else if(CookieUtil.isLastLoggedInViaTwitter(httpServletRequest)){
 				redirectUrlAfterLogin = passedRedirectUrl;
-				System.out.println("redirecting to Twitter Account");
 				buildAndRedirect("/login/twitter");
 				return;
 			}

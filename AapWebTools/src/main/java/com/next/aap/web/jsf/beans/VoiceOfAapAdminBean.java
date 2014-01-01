@@ -72,7 +72,6 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 	}
 	public void savePost(){
 		try{
-			System.out.println("MenuBean = "+ menuBean);
 			selectedFacebookPost.setLocationType(menuBean.getLocationType());
 			selectedFacebookPost.setLocationId(menuBean.getAdminSelectedLocationId());
 			
@@ -103,13 +102,11 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 					sendErrorMessageToJsfScreen("Please enter when you want to post it by choosing correct time in future");
 				}else{
 					Calendar today = Calendar.getInstance();
-					System.out.println("today = "+today.getTime());
 					if(today.getTime().after(selectedFacebookPost.getPostingTime())){
 						sendErrorMessageToJsfScreen("Please enter a time in future(Now + 1 hour)");
 					}
 				}
 			}
-			System.out.println("selectedFacebookPost=" + selectedFacebookPost);
 			if(isValidInput()){
 				aapService.savePlannedFacebookPost(selectedFacebookPost);
 				sendInfoMessageToJsfScreen("Post saved succesfully");

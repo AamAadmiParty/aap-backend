@@ -80,6 +80,7 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	private List<ParliamentConstituencyDto> memberParliamentConstituencyList;
 
 	private boolean showRolesPanel;
+	private boolean disableSaveMemberRoleButton = true;
 
 	private RoleDtoModel userLocationRoles;
 	List<RoleDto> editingUserLocationRoles;
@@ -98,7 +99,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
-		System.out.println("init " + aapService);
 		if (!checkUserAccess()) {
 			return;
 		}
@@ -167,7 +167,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 		// aapService.getAllAssemblyConstituenciesOfState(selectedStateId);
 		// selectedAssemblyConstituencyId =
 		// loggedInUser.getAssemblyConstituencyVotingId();
-		// System.out.println("loggedInUser.getDateOfBirth()="+loggedInUser.getDateOfBirth());
 
 	}
 
@@ -177,8 +176,9 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 		BeanUtils.copyProperties(searchedUser, selectedUserForEditing);
 	}
 
-	public void cancelSaveMember() {
+	public void cancelSaveMemberRole() {
 		showSearchPanel = true;
+		resetRolePanel();
 	}
 
 	public boolean isMemberUpdateAllowed(UserDto userDto) {
@@ -187,49 +187,45 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void saveProfile(ActionEvent event) {
-		System.out.println("Saving User Roles");
-
-		if (selectedPostLocationType == null || selectedPostLocationId == null || selectedPostLocationId <= 0) {
+		if (selectedPostLocationType == null ||(selectedPostLocationType != PostLocationType.Global && (selectedPostLocationId == null || selectedPostLocationId <= 0))) {
 			sendErrorMessageToJsfScreen("Please select a Location");
 		}
 
 		if (isValidInput()) {
 			if (editingUserLocationRoles == null || editingUserLocationRoles.isEmpty()) {
-				System.out.println("Removing all Roles at this location");
 				aapService.removeAllUserRolesAtLocation(selectedUserForEditing.getId(), selectedPostLocationType, selectedPostLocationId);
 			} else {
-				System.out.println("Adding Roles at this location");
 				aapService.saveUserRolesAtLocation(selectedUserForEditing.getId(), selectedPostLocationType, selectedPostLocationId, editingUserLocationRoles);
 			}
 			showSearchPanel = true;
 
-			showRolesPanel = false;
-
-			userLocationRoles = null;
-			editingUserLocationRoles = null;
-			;
-
-			selectedPostLocationType = null;
-			selectedPostLocationId = null;
-			selectedAcIdForRoles = null;
-			selectedDistrictIdForRoles = null;
-			selectedPcIdForRoles = null;
-			selectedStateIdForRoles = null;
-			location = null;
+			resetRolePanel();
 			sendInfoMessageToJsfScreen("Roles updated succesfully");
-		} else {
-			System.out.println("Not a valid Input");
 		}
+	}
+	
+	public void resetRolePanel(){
+		showRolesPanel = false;
+
+		userLocationRoles = null;
+		editingUserLocationRoles = null;
+
+		selectedPostLocationType = null;
+		selectedPostLocationId = null;
+		selectedAcIdForRoles = null;
+		selectedDistrictIdForRoles = null;
+		selectedPcIdForRoles = null;
+		selectedStateIdForRoles = null;
+		location = null;
+		disableSaveMemberRoleButton = true;
 	}
 
 	public void searchMember() {
-		System.out.println("Search Member " + searchedUser.getAssemblyConstituencyLivingId() + " , " + searchedUser.getAssemblyConstituencyVotingId());
 		searchMemberResult = aapService.searchMembers(searchedUser);
 		showResult = true;
 	}
 
 	public void handleStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + searchedUser.getStateVotingId());
 		try {
 			if (searchedUser.getStateVotingId() == 0 || searchedUser.getStateVotingId() == null) {
 				enableDistrictCombo = false;
@@ -249,7 +245,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleUserVotingStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + searchedUser.getStateVotingId());
 		try {
 			if (searchedUser.getStateVotingId() == 0 || searchedUser.getStateVotingId() == null) {
 				enableDistrictCombo = false;
@@ -269,7 +264,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleLocationClick() {
-		System.out.println("handleGlobalLocationClick " + location);
 		if (location.indexOf("Global-") == 0) {
 			// User choose his/her location
 			loadLocationRoles(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), false);
@@ -281,6 +275,7 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 			selectedDistrictIdForRoles = null;
 			selectedPcIdForRoles = null;
 			selectedStateIdForRoles = null;
+			disableSaveMemberRoleButton = true;
 			// loadLocationRoles(menuBean.getLocationType(), 0L, false);
 		}
 	}
@@ -292,9 +287,11 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 		if ((selectedPostLocationType != null && selectedPostLocationType != PostLocationType.Global)
 				&& (selectedLocationId == null || selectedLocationId <= 0)) {
 			showRolesPanel = false;
+			disableSaveMemberRoleButton = true;
 			return;
 		}
 		showRolesPanel = true;
+		disableSaveMemberRoleButton = false;
 		// get Roles of LoggedInUserId in this location
 		UserDto loggedInuser = getLoggedInUser();
 		if (getAllRolesOfLocation) {
@@ -310,7 +307,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleLivingStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + searchedUser.getStateLivingId());
 		try {
 			if (searchedUser.getStateLivingId() == 0 || searchedUser.getStateLivingId() == null) {
 				enableLivingDistrictCombo = false;
@@ -329,7 +325,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleUserLivingStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + selectedUserForEditing.getStateLivingId());
 		try {
 			if (selectedUserForEditing.getStateLivingId() == 0 || selectedUserForEditing.getStateLivingId() == null) {
 				enableLivingDistrictCombo = false;
@@ -348,7 +343,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + searchedUser.getDistrictVotingId());
 		try {
 			if (searchedUser.getDistrictVotingId() == 0 || searchedUser.getDistrictVotingId() == null) {
 				enableAssemblyConstituencyCombo = false;
@@ -364,7 +358,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleLivingDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + searchedUser.getDistrictLivingId());
 		try {
 			if (searchedUser.getDistrictLivingId() == 0 || searchedUser.getDistrictLivingId() == null) {
 				enableLivingAssemblyConstituencyCombo = false;
@@ -380,7 +373,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleUserVotingDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + selectedUserForEditing.getDistrictVotingId());
 		try {
 			if (selectedUserForEditing.getDistrictVotingId() == 0 || selectedUserForEditing.getDistrictVotingId() == null) {
 				enableAssemblyConstituencyCombo = false;
@@ -396,7 +388,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleUserLivingDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + selectedUserForEditing.getDistrictLivingId());
 		try {
 			if (selectedUserForEditing.getDistrictLivingId() == 0 || selectedUserForEditing.getDistrictLivingId() == null) {
 				enableLivingAssemblyConstituencyCombo = false;
@@ -428,7 +419,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 
 	public boolean isRenderDistrictComboForRoles() {
 		boolean returnValue = (PostLocationType.STATE == menuBean.getLocationType());
-		System.out.println("isRenderStateComobForRoles=" + returnValue);
 		return returnValue;
 	}
 
@@ -457,7 +447,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleRoleStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selectedStateIdForRoles = " + selectedStateIdForRoles);
 		try {
 			loadLocationRoles(PostLocationType.STATE, selectedStateIdForRoles, true);
 		} catch (Exception e) {
@@ -466,7 +455,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleRoleDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selectedDistrictIdForRoles = " + selectedDistrictIdForRoles);
 		try {
 			loadLocationRoles(PostLocationType.DISTRICT, selectedDistrictIdForRoles, true);
 		} catch (Exception e) {
@@ -475,7 +463,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleRoleAcChange(AjaxBehaviorEvent event) {
-		System.out.println("selectedAcIdForRoles = " + selectedAcIdForRoles);
 		try {
 			loadLocationRoles(PostLocationType.AC, selectedAcIdForRoles, true);
 		} catch (Exception e) {
@@ -484,7 +471,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleRolePcChange(AjaxBehaviorEvent event) {
-		System.out.println("selectedPcIdForRoles = " + selectedPcIdForRoles);
 		try {
 			loadLocationRoles(PostLocationType.PC, selectedPcIdForRoles, true);
 		} catch (Exception e) {
@@ -493,15 +479,12 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void onClickNri() {
-		System.out.println("nri" + selectedUserForEditing.isNri());
 	}
 
 	public void onClickMember() {
-		System.out.println("member" + selectedUserForEditing.isMember());
 	}
 
 	public void onClickSameAsLiving() {
-		System.out.println("sameAsLiving" + sameAsLiving);
 	}
 
 	public List<StateDto> getStateList() {
@@ -775,6 +758,14 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void setEditingUserLocationRoles(List<RoleDto> editingUserLocationRoles) {
 		this.editingUserLocationRoles = editingUserLocationRoles;
+	}
+
+	public boolean isDisableSaveMemberRoleButton() {
+		return disableSaveMemberRoleButton;
+	}
+
+	public void setDisableSaveMemberRoleButton(boolean disableSaveMemberRoleButton) {
+		this.disableSaveMemberRoleButton = disableSaveMemberRoleButton;
 	}
 
 }

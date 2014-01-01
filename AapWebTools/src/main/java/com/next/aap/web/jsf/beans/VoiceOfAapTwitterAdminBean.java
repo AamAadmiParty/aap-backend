@@ -58,8 +58,6 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 		refreshTweetList();
 	}
 	private void refreshTweetList(){
-		System.out.println("aapService="+aapService);
-		System.out.println("menuBean="+menuBean);
 		plannedTweets = aapService.getPlannedTweetsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
 	}
 
@@ -83,7 +81,6 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 			try{
 				Twitter twitter = new TwitterTemplate();
 				String tweetJson = twitter.restOperations().getForObject("https://api.twitter.com/1/statuses/oembed.json?maxwidth=550&id="+selectedPlannedTweet.getTweetId(), String.class);
-				System.out.println("tweetJson = "+tweetJson);
 				Gson gson = new Gson();
 				JsonObject jsonObject = gson.fromJson(tweetJson, JsonObject.class);
 				
@@ -98,7 +95,6 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 		if (selectedPlannedTweet.getTweetType().equals(PlannedTweetDto.TWEET_TYPE)) {
 			tweetPreview = "Preview is only available for ReTweet";
 		}
-		System.out.println("tweetPreview = "+tweetPreview);
 	}
 
 	public void savePost() {
@@ -126,7 +122,6 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 				sendErrorMessageToJsfScreen("Please enter when you want to tweet it by choosing correct time in future");
 			} else {
 				Calendar today = Calendar.getInstance();
-				System.out.println("today = " + today.getTime());
 				if (today.getTime().after(selectedPlannedTweet.getPostingTime())) {
 					sendErrorMessageToJsfScreen("Please enter posting time in future");
 				}

@@ -82,7 +82,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
-		System.out.println("init " + aapService);
 		if(!checkUserAccess()){
 			return;
 		}
@@ -135,12 +134,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 				livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(searchedUser.getDistrictLivingId());
 			}
 		}
-		// assemblyConstituencyList =
-		// aapService.getAllAssemblyConstituenciesOfState(selectedStateId);
-		// selectedAssemblyConstituencyId =
-		// loggedInUser.getAssemblyConstituencyVotingId();
-		// System.out.println("loggedInUser.getDateOfBirth()="+loggedInUser.getDateOfBirth());
-		
 	}
 
 	public void createNewMember(){
@@ -158,7 +151,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 				||ClientPermissionUtil.isAllowed(AppPermission.UPDATE_MEMBER, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	public boolean isMemberUpdateAllowed(UserDto userDto){
-		System.out.println("isMemberUpdateAllowed = " + userDto);
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isAllowed(AppPermission.UPDATE_GLOBAL_MEMBER, userRolePermissionDto, null, PostLocationType.Global)
 				||ClientPermissionUtil.isAllowed(AppPermission.UPDATE_MEMBER, userRolePermissionDto, userDto.getAssemblyConstituencyLivingId(), PostLocationType.AC)
@@ -171,7 +163,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 				||ClientPermissionUtil.isAllowed(AppPermission.UPDATE_MEMBER, userRolePermissionDto, userDto.getStateVotingId(), PostLocationType.STATE);
 	}
 	public void saveProfile(ActionEvent event) {
-		System.out.println("Saving Profile" );
 		if (sameAsLiving) {
 			selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
 			selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());
@@ -241,19 +232,15 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 				searchMemberResult = aapService.searchMembers(searchedUser);
 			}
 			showSearchPanel = true;
-		}else{
-			System.out.println("Not a valid Input" );
 		}
 	}
 
 	public void searchMember(){
-		System.out.println("Search Member "+searchedUser.getAssemblyConstituencyLivingId() +" , "+searchedUser.getAssemblyConstituencyVotingId());
 		searchMemberResult = aapService.searchMembers(searchedUser);
 		showResult = true;
 	}
 
 	public void handleStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + searchedUser.getStateVotingId());
 		try {
 			if (searchedUser.getStateVotingId() == 0 || searchedUser.getStateVotingId() == null) {
 				enableDistrictCombo = false;
@@ -273,7 +260,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	
 	public void handleUserVotingStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + searchedUser.getStateVotingId());
 		try {
 			if (searchedUser.getStateVotingId() == 0 || searchedUser.getStateVotingId() == null) {
 				enableDistrictCombo = false;
@@ -293,7 +279,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleLivingStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + searchedUser.getStateLivingId());
 		try {
 			if (searchedUser.getStateLivingId() == 0 || searchedUser.getStateLivingId() == null) {
 				enableLivingDistrictCombo = false;
@@ -312,7 +297,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleUserLivingStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + selectedUserForEditing.getStateLivingId());
 		try {
 			if (selectedUserForEditing.getStateLivingId() == 0 || selectedUserForEditing.getStateLivingId() == null) {
 				enableLivingDistrictCombo = false;
@@ -331,7 +315,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + searchedUser.getDistrictVotingId());
 		try {
 			if (searchedUser.getDistrictVotingId() == 0 || searchedUser.getDistrictVotingId() == null) {
 				enableAssemblyConstituencyCombo = false;
@@ -346,7 +329,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 		}
 	}
 	public void handleLivingDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + searchedUser.getDistrictLivingId());
 		try {
 			if (searchedUser.getDistrictLivingId() == 0 || searchedUser.getDistrictLivingId() == null) {
 				enableLivingAssemblyConstituencyCombo = false;
@@ -361,7 +343,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 		}
 	}
 	public void handleUserVotingDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + selectedUserForEditing.getDistrictVotingId());
 		try {
 			if (selectedUserForEditing.getDistrictVotingId() == 0 || selectedUserForEditing.getDistrictVotingId() == null) {
 				enableAssemblyConstituencyCombo = false;
@@ -377,7 +358,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void handleUserLivingDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + selectedUserForEditing.getDistrictLivingId());
 		try {
 			if (selectedUserForEditing.getDistrictLivingId() == 0 || selectedUserForEditing.getDistrictLivingId() == null) {
 				enableLivingAssemblyConstituencyCombo = false;
@@ -397,14 +377,11 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void onClickNri() {
-		System.out.println("nri" + selectedUserForEditing.isNri());
 	}
 	public void onClickMember() {
-		System.out.println("member" + selectedUserForEditing.isMember());
 	}
 
 	public void onClickSameAsLiving() {
-		System.out.println("sameAsLiving" + sameAsLiving);
 	}
 
 	public List<StateDto> getStateList() {

@@ -66,7 +66,6 @@ public class UserProfileBean extends BaseJsfBean {
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
-		System.out.println("init " + aapService);
 		UserDto loggedInUser = getLoggedInUser(true, buildLoginUrl("/profile"));
 		if (stateList == null || stateList.isEmpty()) {
 			livingStateList = stateList = aapService.getAllStates();
@@ -100,20 +99,10 @@ public class UserProfileBean extends BaseJsfBean {
 				livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictLivingId());
 			}
 		}
-		// assemblyConstituencyList =
-		// aapService.getAllAssemblyConstituenciesOfState(selectedStateId);
-		// selectedAssemblyConstituencyId =
-		// loggedInUser.getAssemblyConstituencyVotingId();
-		// System.out.println("loggedInUser.getDateOfBirth()="+loggedInUser.getDateOfBirth());
 		
 	}
 
-	public void saveProfileWithout() {
-		System.out.println("saveProfile : Without Action Event");
-	}
 	public void saveProfile(ActionEvent event) {
-		System.out.println("saveProfile : With Action Event");
-		System.out.println("Saving Profile" );
 		if (sameAsLiving) {
 			selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
 			selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());
@@ -167,12 +156,9 @@ public class UserProfileBean extends BaseJsfBean {
 			sendErrorMessageToJsfScreen("Please enter your full name");
 		}
 		if (isValidInput()) {
-			System.out.println("Member : " + selectedUserForEditing.isMember());
 			selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
 			ssaveLoggedInUserInSession(selectedUserForEditing);
 			sendInfoMessageToJsfScreen("Profile saved succesfully.");
-		}else{
-			System.out.println("Not a valid Input" );
 		}
 		/*
 		 * String url =
@@ -188,7 +174,6 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 
 	public void handleStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + selectedUserForEditing.getStateVotingId());
 		try {
 			if (selectedUserForEditing.getStateVotingId() == 0 || selectedUserForEditing.getStateVotingId() == null) {
 				enableDistrictCombo = false;
@@ -207,7 +192,6 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 
 	public void handleLivingStateChange(AjaxBehaviorEvent event) {
-		System.out.println("selected State Id = " + selectedUserForEditing.getStateLivingId());
 		try {
 			if (selectedUserForEditing.getStateLivingId() == 0 || selectedUserForEditing.getStateLivingId() == null) {
 				enableLivingDistrictCombo = false;
@@ -225,7 +209,6 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 
 	public void handleDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + selectedUserForEditing.getDistrictVotingId());
 		try {
 			if (selectedUserForEditing.getDistrictVotingId() == 0 || selectedUserForEditing.getDistrictVotingId() == null) {
 				enableAssemblyConstituencyCombo = false;
@@ -241,7 +224,6 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 
 	public void handleLivingDistrictChange(AjaxBehaviorEvent event) {
-		System.out.println("selected District Id = " + selectedUserForEditing.getDistrictLivingId());
 		try {
 			if (selectedUserForEditing.getDistrictLivingId() == 0 || selectedUserForEditing.getDistrictLivingId() == null) {
 				enableLivingAssemblyConstituencyCombo = false;
@@ -261,14 +243,11 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 
 	public void onClickNri() {
-		System.out.println("nri" + selectedUserForEditing.isNri());
 	}
 	public void onClickMember() {
-		System.out.println("member" + selectedUserForEditing.isMember());
 	}
 
 	public void onClickSameAsLiving() {
-		System.out.println("sameAsLiving" + sameAsLiving);
 	}
 
 	public List<StateDto> getStateList() {

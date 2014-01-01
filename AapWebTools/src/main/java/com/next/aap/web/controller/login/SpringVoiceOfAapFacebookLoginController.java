@@ -50,8 +50,6 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 
 	@PostConstruct
 	public void init(){
-		System.out.println("SpringVoiceOfAapFacebookLoginController:voiceOfAapAppId="+voiceOfAapAppId);
-		System.out.println("SpringVoiceOfAapFacebookLoginController:voiceOfAapAppSecret="+voiceOfAapAppSecret);
 	}
 	
 	@RequestMapping(value = "/voa/facebook", method = RequestMethod.GET)
@@ -92,7 +90,6 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 			FacebookConnectionFactory facebookConnectionFactory = new FacebookConnectionFactory(voiceOfAapAppId, voiceOfAapAppSecret);
 			OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
 			String authorizationCode = httpServletRequest.getParameter("code");
-			System.out.println("authorizationCode="+authorizationCode);
 			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, facebookRedirectUrl, null);
 			Connection<Facebook> facebookConnection = facebookConnectionFactory.createConnection(accessGrant);
 			
@@ -109,21 +106,24 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 			mv.setView(rv);
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("unable to complete Voice of AAP facebook login", ex);
+			String redirectUrl = httpServletRequest.getContextPath()+"/voa/facebookfail";
+			RedirectView rv = new RedirectView(redirectUrl);
+			logger.info("url= {}", redirectUrl);
+			mv.setView(rv);
+
 		}
 		return mv;
 	}
 
 	@Override
 	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) {
-		System.out.println("loggedInUser"+loggedInUser);
 		UserDto user;
 		if(loggedInUser == null){
 			user = aapService.saveFacebookUser(null, socialConnection, voiceOfAapAppId);	
 		}else{
 			user = aapService.saveFacebookUser(loggedInUser.getId(), socialConnection, voiceOfAapAppId);
 		}
-		System.out.println("user"+user);
 		return user;
 	}
 

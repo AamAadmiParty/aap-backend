@@ -52,8 +52,6 @@ public class SocialConfig {
 
     @Bean
     public ConnectionFactoryLocator connectionFactoryLocator() {
-		System.out.println("ConnectionFactoryLocator:aapFacebookAppId="+aapFacebookAppId);
-		System.out.println("ConnectionFactoryLocator:aapFacebookAppSecret"+aapFacebookAppSecret);
 
         ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
         registry.addConnectionFactory(new FacebookConnectionFactory(aapFacebookAppId,aapFacebookAppSecret));
@@ -81,13 +79,11 @@ public class SocialConfig {
 			public void preConnect(
 					ConnectionFactory<Twitter> connectionFactory,
 					MultiValueMap<String, String> parameters, WebRequest request) {
-				System.out.println("preConnect twitter");
 			}
 
 			@Override
 			public void postConnect(Connection<Twitter> connection,
 					WebRequest request) {
-				System.out.println("postConnect Twitetr");
 				//usersConnectionRepository().createConnectionRepository("ravit").addConnection(connection);
 			}
 
@@ -99,14 +95,12 @@ public class SocialConfig {
 			public void preConnect(
 					ConnectionFactory<Facebook> connectionFactory,
 					MultiValueMap<String, String> parameters, WebRequest request) {
-				System.out.println("preConnect facebook");
 				
 			}
 
 			@Override
 			public void postConnect(Connection<Facebook> connection,
 					WebRequest request) {
-				System.out.println("postConnect facebook");
 				
 			}
 

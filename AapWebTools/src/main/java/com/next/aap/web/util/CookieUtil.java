@@ -19,12 +19,10 @@ public class CookieUtil {
 	
 	public static boolean isLastLoggedInViaAccount(HttpServletRequest httpServletRequest, String account){
 		Cookie[] allCookies = httpServletRequest.getCookies();
-		System.out.println("allCookies="+allCookies);
 		if(allCookies == null || allCookies.length == 0){
 			return false;
 		}
 		for(Cookie oneCookie:allCookies){
-			System.out.println("oneCookie = "+oneCookie.getName() +" : "+oneCookie.getValue());
 			if(oneCookie.getName().equals(LAST_ACCOUNT)){
 				return oneCookie.getValue().equals(account);
 			}
@@ -33,15 +31,12 @@ public class CookieUtil {
 	}
 
 	public static void setLastLoggedInAccountAsFacebookCookie(HttpServletResponse httpServletResponse){
-		System.out.println("Setting Cookie "+ LAST_ACCOUNT+" : "+ FACEBOOK);
 		Cookie lastAccountCookie = new Cookie(LAST_ACCOUNT, FACEBOOK);
 		lastAccountCookie.setMaxAge(3 * 30 * 24 * 60 * 60);
 		lastAccountCookie.setPath("/");
-		System.out.println("Setting Cookie "+ lastAccountCookie.getPath());
 		httpServletResponse.addCookie(lastAccountCookie);
 	}
 	public static void setLastLoggedInAccountAsTwitterCookie(HttpServletResponse httpServletResponse){
-		System.out.println("Setting Cookie "+ LAST_ACCOUNT+" : "+ TWITTER);
 		Cookie lastAccountCookie = new Cookie(LAST_ACCOUNT, TWITTER);
 		lastAccountCookie.setMaxAge(3 * 30 * 24 * 60 * 60);
 		httpServletResponse.addCookie(lastAccountCookie);

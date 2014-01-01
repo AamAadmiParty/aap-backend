@@ -827,20 +827,20 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 
 		// Now create all custom Roles
-
+/*
 		createRoleWithPermissions("VoiceOfAapFacebookAdminRole", " User of this role will be able to make Facebook post using voice of AAP Application", true,
 				true, false, false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
 		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true,
 				true, false, false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
 		// News Related Roles
-		createRoleWithPermissions("NewsAdminRole", "User of this role will be able to create/update/Approve/delete news for a location", true, true, true, true,
-				AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
+		createRoleWithPermissions("NewsAdminRole", "User of this role will be able to create/update/Approve/delete news for a location", true, true, true,
+				true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
 
 		createRoleWithPermissions("NewsReporterRole", "User of this role will be able to create/update news for a location", true, true, true, true,
 				AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS);
 
-		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update/approve and publish news for a location", true, true, true, true,
-				AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
+		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update/approve and publish news for a location", true, true,
+				true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
 
 		createRoleWithPermissions("NewsApproverRole", "User of this role will be able to approve/publish existing news for a location", true, true, true, true,
 				AppPermission.APPROVE_NEWS);
@@ -853,10 +853,9 @@ public class AapServiceImpl implements AapService, Serializable {
 				"User of this role will be able to add new member at any location and will be able to update member at his location only", true, true, true,
 				true, AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
 
-		// createRoleWithPermissions("AdminEditUserRoles",
-		// "User of this role will be able to add or remove user roles on a location",
-		// true, true,true, true, AppPermission.EDIT_USER_ROLES);
-
+		createRoleWithPermissions("AdminEditUserRoles", "User of this role will be able to add or remove user roles on a location", true, true, true, true,
+				AppPermission.EDIT_USER_ROLES);
+*/
 		logger.info("All Roles and permissions are created");
 	}
 

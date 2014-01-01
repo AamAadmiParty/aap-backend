@@ -98,8 +98,6 @@ public class MenuBean extends BaseJsfBean {
 	}
 	public String getContext(){
 		HttpServletRequest httpServletRequest = getHttpServletRequest();
-		System.out.println("getServletContext = " + httpServletRequest.getServletContext().getContextPath());
-		System.out.println("Context = " +  httpServletRequest.getContextPath());
 		return httpServletRequest.getContextPath();
 	}
 	public boolean isLoggedIn(){
@@ -153,10 +151,7 @@ public class MenuBean extends BaseJsfBean {
 	public void selectDistrict(ActionEvent event){
 		locationType = PostLocationType.DISTRICT;
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("districtId");
-		System.out.println("adminSelectedLocationId="+adminSelectedLocationId);
-		System.out.println("aapService="+aapService);
 		selectedAdminDistrict = aapService.getDistrictById(adminSelectedLocationId);
-		System.out.println("selectedAdminDistrict="+selectedAdminDistrict.getStateId());
 		selectedAdminState = aapService.getStateById(selectedAdminDistrict.getStateId());
 		buildAndRedirect("/locationadmin");
 	}

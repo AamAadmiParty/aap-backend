@@ -63,7 +63,6 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		showTweetList = true;
 	}
 	public void createNewsTweet(){
-		System.out.println("createNewsTweet");
 		selectedTweet = new ContentTweetDto();
 		newTweet = true;
 		showTweetList = false;
@@ -131,8 +130,6 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void savePost(){
 		try{
-			System.out.println("MenuBean = "+ menuBean);
-			
 			if(StringUtil.isEmpty(selectedNews.getContent())){
 				sendErrorMessageToJsfScreen("Please enter News Content");
 			}
@@ -141,10 +138,6 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 			}
 
 			if(isValidInput()){
-				System.out.println("tweetList="+tweetList);
-				if(tweetList != null){
-					System.out.println("tweetList="+tweetList);	
-				}
 				
 				selectedNews = aapService.saveNews(selectedNews, tweetList, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
 				sendInfoMessageToJsfScreen("News saved succesfully");
@@ -167,7 +160,6 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		showList = true;
 	}
 	public void deleteTweet(){
-		System.out.println("Delete Tweet : "+selectedTweet.getTweetContent());
 		tweetList.remove(selectedTweet);
 	}
 	

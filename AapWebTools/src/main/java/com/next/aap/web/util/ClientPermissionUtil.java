@@ -31,7 +31,6 @@ public class ClientPermissionUtil {
 	}
 
 	public static boolean isAllowed(AppPermission appPermission, UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
-		System.out.println("isAllowed="+appPermission+",locationId="+locationId+",locationType="+locationType);
 		switch(locationType){
 		case Global:
 			return userRolePermissionDto.getAllPermissions().contains(appPermission);
@@ -47,10 +46,8 @@ public class ClientPermissionUtil {
 			return userRolePermissionDto.getDistrictPermissions().get(locationId).contains(appPermission);
 		case AC:
 			if(userRolePermissionDto.getAcPermissions().get(locationId) == null){
-				System.out.println("userRolePermissionDto.getAcPermissions().get(locationId) == null");
 				return false;
 			}
-			System.out.println("userRolePermissionDto.getAcPermissions().get(locationId).contains(appPermission) = "+ userRolePermissionDto.getAcPermissions().get(locationId).contains(appPermission));
 			return userRolePermissionDto.getAcPermissions().get(locationId).contains(appPermission);
 		case PC:
 			if(userRolePermissionDto.getPcPermissions().get(locationId) == null){

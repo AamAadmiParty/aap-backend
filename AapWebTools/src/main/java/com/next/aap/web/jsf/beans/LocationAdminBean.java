@@ -26,7 +26,6 @@ public class LocationAdminBean extends BaseJsfBean {
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
 	public void init() throws Exception {
-		System.out.println("MenuBean = "+ menuBean);
 		UserDto loggedInUser = getLoggedInUser(true,buildLoginUrl("/locationadmin"));
 		if(loggedInUser == null){
 			return;

@@ -61,7 +61,6 @@ public class SpringGoogleLoginController extends BaseSocialLoginController<Googl
 			GoogleConnectionFactory googleConnectionFactory = (GoogleConnectionFactory)connectionFactoryLocator.getConnectionFactory(Google.class);
 			OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
 			String authorizationCode = httpServletRequest.getParameter("code");
-			System.out.println("authorizationCode="+authorizationCode);
 			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, getFacebookRedirectUrl(httpServletRequest), null);
 			Connection<Google> googleConnection = googleConnectionFactory.createConnection(accessGrant);
 			
@@ -70,7 +69,6 @@ public class SpringGoogleLoginController extends BaseSocialLoginController<Googl
 			/*
 			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository("ravi");
 			facebookConnectionRepository.addConnection(connection);
-			System.out.println(connection.getImageUrl());
 			*/
 
 		} catch (Exception ex) {
@@ -89,14 +87,12 @@ public class SpringGoogleLoginController extends BaseSocialLoginController<Googl
 	@Override
 	protected UserDto saveSocialUser(Connection<Google> socialConnection,
 			UserDto loggedInUser) {
-		System.out.println("loggedInUser"+loggedInUser);
 		UserDto user;
 		if(loggedInUser == null){
 			user = aapService.saveGoogleUser(null, socialConnection);	
 		}else{
 			user = aapService.saveGoogleUser(loggedInUser.getId(), socialConnection);
 		}
-		System.out.println("user"+user);
 		return user;
 	}
 

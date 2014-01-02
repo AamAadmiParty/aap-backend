@@ -49,6 +49,8 @@ import com.next.aap.core.persistance.Phone;
 import com.next.aap.core.persistance.Phone.PhoneType;
 import com.next.aap.core.persistance.PlannedFacebookPost;
 import com.next.aap.core.persistance.PlannedTweet;
+import com.next.aap.core.persistance.PollAnswer;
+import com.next.aap.core.persistance.PollQuestion;
 import com.next.aap.core.persistance.Role;
 import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.StateRole;
@@ -77,6 +79,8 @@ import com.next.aap.core.persistance.dao.PermissionDao;
 import com.next.aap.core.persistance.dao.PhoneDao;
 import com.next.aap.core.persistance.dao.PlannedFacebookPostDao;
 import com.next.aap.core.persistance.dao.PlannedTweetDao;
+import com.next.aap.core.persistance.dao.PollAnswerDao;
+import com.next.aap.core.persistance.dao.PollQuestionDao;
 import com.next.aap.core.persistance.dao.RoleDao;
 import com.next.aap.core.persistance.dao.StateDao;
 import com.next.aap.core.persistance.dao.StateRoleDao;
@@ -99,6 +103,8 @@ import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
+import com.next.aap.web.dto.PollAnswerDto;
+import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.RoleDto;
 import com.next.aap.web.dto.SearchMemberResultDto;
@@ -170,6 +176,11 @@ public class AapServiceImpl implements AapService, Serializable {
 	private ContentTweetDao contentTweetDao;
 	@Autowired
 	private BlogDao blogDao;
+	@Autowired
+	private PollQuestionDao pollQuestionDao;
+	@Autowired
+	private PollAnswerDao pollAnswerDao;
+	
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -883,6 +894,21 @@ public class AapServiceImpl implements AapService, Serializable {
 
 		createRoleWithPermissions("BlogApproverRole", "User of this role will be able to approve/publish existing blog for a location", true, true, true, true,
 				AppPermission.APPROVE_BLOG);
+
+		//Poll
+		createRoleWithPermissions("PollAdminRole", "User of this role will be able to create/update/Approve/delete poll for a location", true, true, true,
+				true, AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL, AppPermission.DELETE_POLL, AppPermission.APPROVE_POLL);
+
+		createRoleWithPermissions("PollReporterRole", "User of this role will be able to create/update poll for a location", true, true, true, true,
+				AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL);
+
+		createRoleWithPermissions("PollEditorRole", "User of this role will be able to create/update/approve and publish poll for a location", true, true,
+				true, true, AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL, AppPermission.APPROVE_POLL);
+
+		createRoleWithPermissions("PollApproverRole", "User of this role will be able to approve/publish existing poll for a location", true, true, true, true,
+				AppPermission.APPROVE_POLL);
+
+		
 
 		logger.info("All Roles and permissions are created");
 	}
@@ -2305,5 +2331,159 @@ public class AapServiceImpl implements AapService, Serializable {
 		blog = blogDao.saveBlog(blog);
 		return convertBlog(blog);
 	}
+
+	@Override
+	@Transactional
+	public PollQuestionDto savePollQuestion(PollQuestionDto pollQuestionDto, List<PollAnswerDto> pollAnswers, PostLocationType locationType, Long locationId) {
+		PollQuestion pollQuestion = null;
+		if (pollQuestionDto.getId() != null && pollQuestionDto.getId() > 0) {
+			pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionDto.getId());
+		}
+		if (pollQuestion == null) {
+			pollQuestion = new PollQuestion();
+			pollQuestion.setDateCreated(new Date());
+			pollQuestion.setContentStatus(ContentStatus.Pending);
+		}
+		pollQuestion.setContent(pollQuestionDto.getContent());
+		pollQuestion.setDateModified(new Date());
+		pollQuestion.setImageUrl(pollQuestionDto.getImageUrl());
+
+		switch (locationType) {
+		case Global:
+			pollQuestion.setGlobal(true);
+			break;
+		case STATE:
+			if (pollQuestion.getStates() == null) {
+				pollQuestion.setStates(new ArrayList<State>());
+			}
+			State state = stateDao.getStateById(locationId);
+			pollQuestion.getStates().add(state);
+			break;
+		case DISTRICT:
+			if (pollQuestion.getDistricts() == null) {
+				pollQuestion.setDistricts(new ArrayList<District>());
+			}
+			District district = districtDao.getDistrictById(locationId);
+			pollQuestion.getDistricts().add(district);
+			break;
+		case AC:
+			if (pollQuestion.getAssemblyConstituencies() == null) {
+				pollQuestion.setAssemblyConstituencies(new ArrayList<AssemblyConstituency>());
+			}
+			AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(locationId);
+			pollQuestion.getAssemblyConstituencies().add(assemblyConstituency);
+			break;
+		case PC:
+			if (pollQuestion.getParliamentConstituencies() == null) {
+				pollQuestion.setParliamentConstituencies(new ArrayList<ParliamentConstituency>());
+			}
+			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(locationId);
+			pollQuestion.getParliamentConstituencies().add(parliamentConstituency);
+			break;
+		}
+
+		pollQuestion = pollQuestionDao.savePollQuestion(pollQuestion);
+
+		// add all tweets
+		if (pollAnswers != null && pollAnswers.size() > 0) {
+			if (pollQuestion.getPollAnswers() == null) {
+				pollQuestion.setPollAnswers(new HashSet<PollAnswer>());
+			}
+			PollAnswer onePollAnswer;
+			for (PollAnswerDto onePollAnswerDto : pollAnswers) {
+				if (onePollAnswerDto.getId() == null || onePollAnswerDto.getId() <= 0) {
+					onePollAnswer = new PollAnswer();
+				} else {
+					onePollAnswer = pollAnswerDao.getPollAnswerById(onePollAnswerDto.getId());
+				}
+				onePollAnswer.setContent(onePollAnswerDto.getContent());
+				onePollAnswer.setPollQuestion(pollQuestion);
+				onePollAnswer = pollAnswerDao.savePollAnswer(onePollAnswer);
+				pollQuestion.getPollAnswers().add(onePollAnswer);
+			}
+		}
+		return convertPollQuestion(pollQuestion);
+	}
+	private PollQuestionDto convertPollQuestion(PollQuestion pollQuestion){
+		if(pollQuestion == null){
+			return null;
+		}
+		PollQuestionDto pollQuestionDto = new PollQuestionDto();
+		BeanUtils.copyProperties(pollQuestion, pollQuestionDto);
+		return pollQuestionDto;
+	}
+	
+	private List<PollQuestionDto> convertPollQuestions(List<PollQuestion> pollQuestions){
+		List<PollQuestionDto> pollQuestionDtos = new ArrayList<>();
+		if(pollQuestions == null){
+			return pollQuestionDtos;
+		}
+		for(PollQuestion onePollQuestion:pollQuestions){
+			pollQuestionDtos.add(convertPollQuestion(onePollQuestion));
+		}
+		return pollQuestionDtos;
+	}
+
+	@Override
+	@Transactional
+	public List<PollQuestionDto> getPollQuestion(PostLocationType locationType, Long locationId) {
+		List<PollQuestion> pollQuestions = null;
+		switch (locationType) {
+		case Global:
+			pollQuestions = pollQuestionDao.getGlobalPollQuestion();
+			break;
+		case STATE:
+			pollQuestions = pollQuestionDao.getStatePollQuestion(locationId);
+			break;
+		case DISTRICT:
+			pollQuestions = pollQuestionDao.getDistrictPollQuestion(locationId);
+			break;
+		case AC:
+			pollQuestions = pollQuestionDao.getAcPollQuestion(locationId);
+			break;
+		case PC:
+			pollQuestions = pollQuestionDao.getPcPollQuestion(locationId);
+			break;
+		}
+		return convertPollQuestions(pollQuestions);
+	}
+
+	@Override
+	@Transactional
+	public List<PollAnswerDto> getPollAnswers(Long pollQuestionId) {
+		PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionId);
+		return convertPollAnswers(pollQuestion.getPollAnswers());
+	}
+	
+	private PollAnswerDto convertPollAnswer(PollAnswer pollAnswer){
+		if(pollAnswer == null){
+			return null;
+		}
+		PollAnswerDto pollAnswerDto = new PollAnswerDto();
+		BeanUtils.copyProperties(pollAnswer, pollAnswerDto);
+		return pollAnswerDto;
+	}
+	
+	private List<PollAnswerDto> convertPollAnswers(Collection<PollAnswer> pollAnswers){
+		List<PollAnswerDto> pollAnswerDtos = new ArrayList<>();
+		if(pollAnswers == null){
+			return pollAnswerDtos;
+		}
+		for(PollAnswer onePollAnswer:pollAnswers){
+			pollAnswerDtos.add(convertPollAnswer(onePollAnswer));
+		}
+		return pollAnswerDtos;
+	}
+
+	@Override
+	@Transactional
+	public PollQuestionDto publishPollQuestion(Long pollQuestionId) {
+		PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionId);
+		pollQuestion.setContentStatus(ContentStatus.Published);
+		pollQuestion = pollQuestionDao.savePollQuestion(pollQuestion);
+		return convertPollQuestion(pollQuestion);
+	}
+	
+	
 
 }

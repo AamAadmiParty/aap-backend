@@ -25,6 +25,13 @@ public class ClientPermissionUtil {
 				|| isAllowed(AppPermission.DELETE_BLOG, userRolePermissionDto, locationId, locationType)
 				|| isAllowed(AppPermission.APPROVE_BLOG, userRolePermissionDto, locationId, locationType);
 	}
+	public static boolean isManagePollAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return 
+				isAllowed(AppPermission.CREATE_POLL, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.UPDATE_POLL, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.DELETE_POLL, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.APPROVE_POLL, userRolePermissionDto, locationId, locationType);
+	}
 	public static boolean isManageMemberAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return 
 				isAllowed(AppPermission.ADD_MEMBER, userRolePermissionDto, locationId, locationType)

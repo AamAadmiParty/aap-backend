@@ -28,6 +28,9 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 	protected Session getCurrentSession(){
 		return sessionFactory.getCurrentSession();
 	}
+	protected void evictObject(T object){
+		this.sessionFactory.getCurrentSession().evict(object);
+	}
 	protected T saveObject(T object){
 		this.sessionFactory.getCurrentSession().saveOrUpdate(object);
 		return object;

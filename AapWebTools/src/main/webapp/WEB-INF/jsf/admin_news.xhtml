@@ -49,7 +49,7 @@
 						<p:commandButton value="Create News" actionListener="#{newsAdminBean.createNews}" update=":adminNewsForm:mainPanel">
 						</p:commandButton>
 						<p:dataTable id="listOfNews" var="onePost" value="#{newsAdminBean.newsList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
-							emptyMessage="No Facebook Post" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							emptyMessage="No News" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">News</f:facet>
 							<p:column>

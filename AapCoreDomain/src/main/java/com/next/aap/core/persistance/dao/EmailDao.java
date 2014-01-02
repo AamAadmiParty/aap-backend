@@ -10,7 +10,6 @@ public interface EmailDao {
 
 	public abstract Email getEmailById(Long id);
 
-
 	public abstract Email getEmailByEmail(String email);
 	
 	public abstract List<Email> getEmailsByUserId(Long userId);

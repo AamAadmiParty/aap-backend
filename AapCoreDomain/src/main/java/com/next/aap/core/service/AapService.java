@@ -8,6 +8,7 @@ import org.springframework.social.facebook.api.GroupMembership;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 
+import com.next.aap.core.persistance.dao.PollAnswerDao;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.ContentTweetDto;
@@ -22,6 +23,8 @@ import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
+import com.next.aap.web.dto.PollAnswerDto;
+import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.RoleDto;
 import com.next.aap.web.dto.SearchMemberResultDto;
@@ -150,4 +153,12 @@ public interface AapService {
 	void removeAllUserRolesAtLocation(Long userId, PostLocationType postLocationType, Long locationId);
 	
 	void saveUserRolesAtLocation(Long userId, PostLocationType postLocationType, Long locationId, List<RoleDto> userRoleDtos);
+	
+	PollQuestionDto savePollQuestion(PollQuestionDto blogDto, List<PollAnswerDto> pollAnswers, PostLocationType locationType, Long locationId);
+	
+	List<PollQuestionDto> getPollQuestion(PostLocationType locationType, Long locationId);
+	
+	List<PollAnswerDto> getPollAnswers(Long pollQuestionId);
+	
+	PollQuestionDto publishPollQuestion(Long pollQuestionId);
 }

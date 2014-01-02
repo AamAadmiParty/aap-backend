@@ -109,7 +109,7 @@ public class Blog {
 	@Column(name = "content_status", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private ContentStatus contentStatus;
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -170,6 +170,12 @@ public class Blog {
 	public void setWebUrl(String webUrl) {
 		this.webUrl = webUrl;
 	}
+	public String getOriginalUrl() {
+		return originalUrl;
+	}
+	public void setOriginalUrl(String originalUrl) {
+		this.originalUrl = originalUrl;
+	}
 	public String getSource() {
 		return source;
 	}
@@ -188,23 +194,41 @@ public class Blog {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	public boolean isGlobal() {
+		return global;
+	}
+	public void setGlobal(boolean global) {
+		this.global = global;
+	}
 	public List<ContentTweet> getTweets() {
 		return tweets;
 	}
 	public void setTweets(List<ContentTweet> tweets) {
 		this.tweets = tweets;
 	}
-	public String getOriginalUrl() {
-		return originalUrl;
+	public List<AssemblyConstituency> getAssemblyConstituencies() {
+		return assemblyConstituencies;
 	}
-	public void setOriginalUrl(String originalUrl) {
-		this.originalUrl = originalUrl;
+	public void setAssemblyConstituencies(List<AssemblyConstituency> assemblyConstituencies) {
+		this.assemblyConstituencies = assemblyConstituencies;
 	}
-	public boolean isGlobal() {
-		return global;
+	public List<ParliamentConstituency> getParliamentConstituencies() {
+		return parliamentConstituencies;
 	}
-	public void setGlobal(boolean global) {
-		this.global = global;
+	public void setParliamentConstituencies(List<ParliamentConstituency> parliamentConstituencies) {
+		this.parliamentConstituencies = parliamentConstituencies;
+	}
+	public List<District> getDistricts() {
+		return districts;
+	}
+	public void setDistricts(List<District> districts) {
+		this.districts = districts;
+	}
+	public List<State> getStates() {
+		return states;
+	}
+	public void setStates(List<State> states) {
+		this.states = states;
 	}
 	public ContentStatus getContentStatus() {
 		return contentStatus;
@@ -212,4 +236,6 @@ public class Blog {
 	public void setContentStatus(ContentStatus contentStatus) {
 		this.contentStatus = contentStatus;
 	}
+
+	
 }

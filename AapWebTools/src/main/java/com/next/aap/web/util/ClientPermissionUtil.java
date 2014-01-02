@@ -18,6 +18,13 @@ public class ClientPermissionUtil {
 				|| isAllowed(AppPermission.DELETE_NEWS, userRolePermissionDto, locationId, locationType)
 				|| isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, locationId, locationType);
 	}
+	public static boolean isManageBlogAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return 
+				isAllowed(AppPermission.CREATE_BLOG, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.UPDATE_BLOG, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.DELETE_BLOG, userRolePermissionDto, locationId, locationType)
+				|| isAllowed(AppPermission.APPROVE_BLOG, userRolePermissionDto, locationId, locationType);
+	}
 	public static boolean isManageMemberAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return 
 				isAllowed(AppPermission.ADD_MEMBER, userRolePermissionDto, locationId, locationType)

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 
@@ -27,6 +28,10 @@ public class BaseJsfBean extends BaseController implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	protected boolean isLocationNotSelected(MenuBean menuBean){
+		return (menuBean.getLocationType() == null || (menuBean.getLocationType() != PostLocationType.Global && (menuBean.getAdminSelectedLocationId() == null || menuBean.getAdminSelectedLocationId() <= 0)));
+	}
+
 	public void buildAndRedirect(String url) {
 		try {
 			FacesContext.getCurrentInstance().getExternalContext().redirect(buildUrl(url));

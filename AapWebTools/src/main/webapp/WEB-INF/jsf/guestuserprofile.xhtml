@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Profile - #{guestUserProfileBean.selectedUserForEditing.name}</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<!-- menu starts -->
+	<ui:include src="menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 800px; margin: 0 auto;">
+		<div style="width: 800px; margin: 0;">
+
+			<!-- header starts -->
+			<h2>Register as Member/Volunteer</h2>
+			<p:notificationBar widgetVar="topBar" autoDisplay="true">
+				We enocurage you to register your own account with us instead of filling this form. Please <a href="../profile">click here</a> to create your own
+				<br></br>
+				<h:outputLink value="#" onclick="topBar.hide()">Hide</h:outputLink>
+			</p:notificationBar>
+			<!-- http://www.ajaxload.info/ -->
+			<p:blockUI block=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel" trigger=":guestMemberVoluteerForm:saveProfile">
+			Saving Profile<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<p:blockUI block=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel"
+				trigger=":guestMemberVoluteerForm:nri,:guestMemberVoluteerForm:member,:guestMemberVoluteerForm:volunteer">
+			Please wait<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<p:blockUI block=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel" trigger=":guestMemberVoluteerForm:state,:guestMemberVoluteerForm:livingState">
+			Getting District List<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<p:blockUI block=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel" trigger=":guestMemberVoluteerForm:district,:guestMemberVoluteerForm:livingDistrict">
+			Getting Assembly Constituency List<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<h:form id="guestMemberVoluteerForm">
+				<p:outputPanel id="guestMemberVoluteerMainPanel">
+					<p:messages id="messages" autoUpdate="true" closable="true" />
+
+					<h:panelGrid columns="5">
+
+						<p:outputLabel value="Register As : "></p:outputLabel>
+						<p:outputLabel value="Member"></p:outputLabel>
+						<p:selectBooleanCheckbox id="member" value="#{guestUserProfileBean.selectedUserForEditing.member}">
+							<p:ajax update=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel" listener="#{guestUserProfileBean.onClickMember}" />
+						</p:selectBooleanCheckbox>
+						<p:outputLabel value="Volunteer"></p:outputLabel>
+						<p:selectBooleanCheckbox id="volunteer" value="#{guestUserProfileBean.selectedUserForEditing.volunteer}">
+							<p:ajax update=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel" listener="#{guestUserProfileBean.onClickVolunteer}" />
+						</p:selectBooleanCheckbox>
+					</h:panelGrid>
+					<p:panel header="How to become Member, Choose your Language" toggleable="true" rendered="#{guestUserProfileBean.selectedUserForEditing.member}">
+					<p:outputPanel cellpadding="10" >
+						<p:tabView id="tabView">
+
+							<p:tab id="hindi" title="हिंदी">
+								मेम्बर बनने के लिए कृपया नीचे दी गयी चार चरणों की प्रक्रिया पूर्ण करें -
+								<ul>
+									<li><h:outputText value="चरण - 1 -	नीचे दिए गए फॉर्म में अपना विवरण भरें ।" /></li>
+									<li><h:outputText value="चरण - 2 -	आप दो तरह से 10 रुपये की अपनी सदस्यता शुल्क का भुगतान कर सकते हैं." /></li>
+									<li><h:outputText
+											value="चरण - 2a -	फॉर्म को भरकर क्रेडिट कार्ड / डेबिट कार्ड या नेट बैंकिंग के माध्यम से भी ऑनलाइन सदस्यता शुल्क (Membership fee) रु . 10/- का भुगतान कर सकते हैं | पुष्टि ईमेल जो आपको प्राप्त होगी वही आपकी सदस्यता की पुष्टि है |" /></li>
+									<li><b><h:outputText value="या" /></b></li>
+									<li><h:outputText
+											value="चरण - 2a -	अपने स्थानीय पोस्ट ऑफिस से दस रुपये का पोस्टल आर्डर लेकर (अगर दस रुपये का एक पोस्टल आर्डर न मिले तो आप पांच रुपये के दो या कोई अन्य मोल). अदा करें में 'आम आदमी पार्टी' लिखें. 'पोस्ट ऑफिस पर' की जगह खाली छोड़ दें. आधी जमा पर्ची अपने पास पावती के तौर पर रख लें." /></li>
+									<li><h:outputText
+											value="चरण - 2b -	इस प्रिंटआउट को रु . 10/- के पोस्टल आर्डर के साथ अपने शहर के पार्टी दफ्तर में जमा करें या पार्टी के केंद्रीय कार्यालय को इस पते पर डाक द्वारा भेजें - Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
+								</ul>
+
+							</p:tab>
+							<p:tab id="english" title="English">
+								<ul>
+									<li><h:outputText value="STEP – 1 –	Complete Your Profile below" /></li>
+									<li><h:outputText value="STEP – 2 –	You can pay your membership fees of Rs 10 in two ways." /></li>
+									<li><h:outputText
+											value="STEP - 2a -	Submit the form and pay Rs. 10. online through Credit/Debit Card Or Internet Banking As Membership Fees and become a member.The email confirmation that you receive on making the payment in option is your confirmation of membership.." /></li>
+									<li><b><h:outputText value="or" /></b></li>
+									<li><h:outputText
+											value="STEP - 2a -	Purchase a Postal Order (PO) of Rs.10/- from your local Post Office (if a single PO is not available you can purchase two Rs.5/- POs or any other combination). In 'PAY TO' write 'Aam Aadmi Party'. Please leave 'AT THE POST OFFICE AT' column blank. You can keep the counterfoil with yourself as acknowledgement." /></li>
+									<li><h:outputText
+											value="STEP - 2b -	Submit this printout of the membership form along with a postal order of Rs.10/- at the party office of your city OR send the printout and postal order to our national office at -Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
+								</ul>
+							</p:tab>
+						</p:tabView>
+
+					</p:outputPanel>
+					</p:panel>
+					<h:panelGrid columns="4" cellpadding="5">
+						<h:outputLabel for="name" value="Name*" />
+						<p:inputText id="name" value="#{guestUserProfileBean.selectedUserForEditing.name}" label="Name">
+						</p:inputText>
+						<h:outputLabel for="voterId" value="Voter Id" />
+						<p:inputText id="voterId" value="#{guestUserProfileBean.selectedUserForEditing.voterId}" label="Voter Id">
+						</p:inputText>
+						<h:outputText value="Gender : " />
+						<p:selectOneMenu value="#{guestUserProfileBean.selectedUserForEditing.gender}">
+							<f:selectItem itemLabel="Not Specified" itemValue="NotSpecified" />
+							<f:selectItem itemLabel="Male" itemValue="Male" />
+							<f:selectItem itemLabel="Female" itemValue="Female" />
+						</p:selectOneMenu>
+						<h:outputLabel for="passportNumber" value="Passport Number" />
+						<p:inputText id="passportNumber" value="#{guestUserProfileBean.selectedUserForEditing.passportNumber}" label="Passport Number">
+						</p:inputText>
+						<h:outputLabel for="mobile" value="Mobile" />
+						<p:selectOneMenu value="#{guestUserProfileBean.selectedUserForEditing.countryCode}">
+							<f:selectItem itemLabel="India - 91" itemValue="91" />
+							<f:selectItems value="#{guestUserProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
+						</p:selectOneMenu>
+						<p:inputText id="mobile" value="#{guestUserProfileBean.selectedUserForEditing.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+						</p:inputText>
+						<p:outputPanel></p:outputPanel>
+
+						<h:outputText value="Date of Birth*" />
+						<p:calendar id="cal" pattern="dd-MMM-yyyy" value="#{guestUserProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
+						<h:outputLabel for="email" value="Email" />
+						<p:inputText id="email" value="#{guestUserProfileBean.selectedUserForEditing.email}" label="Email">
+						</p:inputText>
+					</h:panelGrid>
+
+					<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
+						<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
+							<f:facet name="header">  Select the place where you live</f:facet>
+
+							<h:outputLabel for="livingState" value="State*" />
+							<p:selectOneMenu id="livingState" value="#{guestUserProfileBean.selectedUserForEditing.stateLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select State" itemValue="0" />
+								<f:selectItems value="#{guestUserProfileBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+
+								<p:ajax event="change" update=":guestMemberVoluteerForm:livingDistrict,:guestMemberVoluteerForm:livingParliamentConstituency"
+									listener="#{guestUserProfileBean.handleLivingStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="livingDistrict" value="District*" />
+							<p:selectOneMenu id="livingDistrict" disabled="#{!guestUserProfileBean.enableLivingDistrictCombo}" value="#{guestUserProfileBean.selectedUserForEditing.districtLivingId}"
+								effect="fold" editable="false">
+								<f:selectItem itemLabel="Select District" itemValue="0" />
+								<f:selectItems value="#{guestUserProfileBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+								<p:ajax event="change" update=":guestMemberVoluteerForm:livingAssemblyConstituency" listener="#{guestUserProfileBean.handleLivingDistrictChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="livingParliamentConstituency" value="Parliament Constituency*" />
+
+							<p:selectOneMenu id="livingParliamentConstituency" disabled="#{!guestUserProfileBean.enableLivingParliamentConstituencyCombo}"
+								value="#{guestUserProfileBean.selectedUserForEditing.parliamentConstituencyLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+								<f:selectItems value="#{guestUserProfileBean.livingParliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+									itemValue="#{oneParliamentConstituency.id}" />
+
+								<p:ajax update="livingAssemblyConstituency" />
+							</p:selectOneMenu>
+
+							<h:outputLabel for="livingAssemblyConstituency" value="Assembly Constituency*" />
+							<p:selectOneMenu id="livingAssemblyConstituency" disabled="#{!guestUserProfileBean.enableLivingAssemblyConstituencyCombo}"
+								value="#{guestUserProfileBean.selectedUserForEditing.assemblyConstituencyLivingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+								<f:selectItems value="#{guestUserProfileBean.livingAssemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+									itemValue="#{oneAssemblyConstituency.id}" />
+
+							</p:selectOneMenu>
+
+						</p:panelGrid>
+
+						<p:panelGrid columns="2" cellpadding="5" id="votingLocation" style="width:395px;">
+							<f:facet name="header">
+        		Select the place where you registered as voter
+        		<br></br>
+							</f:facet>
+
+							<p:selectBooleanCheckbox value="#{guestUserProfileBean.sameAsLiving}">
+								<p:ajax update=":guestMemberVoluteerForm:votingLocation" listener="#{guestUserProfileBean.onClickSameAsLiving}" />
+							</p:selectBooleanCheckbox>
+							<h:outputLabel value="Same as Living Location" />
+
+							<h:outputLabel for="state" value="State*" />
+							<p:selectOneMenu id="state" disabled="#{guestUserProfileBean.sameAsLiving}" value="#{guestUserProfileBean.selectedUserForEditing.stateVotingId}" effect="fold"
+								editable="false">
+								<f:selectItem itemLabel="Select State" itemValue="0" />
+								<f:selectItems value="#{guestUserProfileBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+								<p:ajax event="change" update=":guestMemberVoluteerForm:district,:guestMemberVoluteerForm:parliamentConstituency" listener="#{guestUserProfileBean.handleStateChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="district" value="District*" />
+							<p:selectOneMenu id="district" disabled="#{guestUserProfileBean.sameAsLiving or !guestUserProfileBean.enableDistrictCombo}"
+								value="#{guestUserProfileBean.selectedUserForEditing.districtVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select District" itemValue="0" />
+								<f:selectItems value="#{guestUserProfileBean.districtList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+								<p:ajax event="change" update=":guestMemberVoluteerForm:assemblyConstituency" listener="#{guestUserProfileBean.handleDistrictChange}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
+							<p:selectOneMenu id="parliamentConstituency" disabled="#{guestUserProfileBean.sameAsLiving or !guestUserProfileBean.enableParliamentConstituencyCombo}"
+								value="#{guestUserProfileBean.selectedUserForEditing.parliamentConstituencyVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+								<f:selectItems value="#{guestUserProfileBean.parliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+									itemValue="#{oneParliamentConstituency.id}" />
+							</p:selectOneMenu>
+							<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
+							<p:selectOneMenu id="assemblyConstituency" disabled="#{guestUserProfileBean.sameAsLiving or !guestUserProfileBean.enableAssemblyConstituencyCombo}"
+								value="#{guestUserProfileBean.selectedUserForEditing.assemblyConstituencyVotingId}" effect="fold" editable="false">
+								<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+								<f:selectItems value="#{guestUserProfileBean.assemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+									itemValue="#{oneAssemblyConstituency.id}" />
+
+							</p:selectOneMenu>
+
+
+						</p:panelGrid>
+					</h:panelGrid>
+
+
+					<p:panelGrid columns="2" cellpadding="5" id="nriLocation">
+						<f:facet name="header">
+							<h:outputLabel for="nri" value="I am NRI" />
+							<p:selectBooleanCheckbox id="nri" value="#{guestUserProfileBean.selectedUserForEditing.nri}">
+								<p:ajax update=":guestMemberVoluteerForm:nriCountry" listener="#{guestUserProfileBean.onClickNri}" />
+							</p:selectBooleanCheckbox>
+						</f:facet>
+						<h:outputLabel value="Country" />
+
+						<p:selectOneMenu id="nriCountry" value="#{guestUserProfileBean.selectedUserForEditing.nriCountryId}" disabled="#{!guestUserProfileBean.selectedUserForEditing.nri}">
+							<f:selectItem itemLabel="Select Country" itemValue="0" />
+							<f:selectItems value="#{guestUserProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
+						</p:selectOneMenu>
+
+
+					</p:panelGrid>
+					<br></br>
+					<br></br>
+					<p:outputPanel id="memberId" rendered="#{!guestUserProfileBean.showMemberPanel}">
+				Membership Number : #{guestUserProfileBean.selectedUserForEditing.membershipNumber}
+				<br></br>
+				Membership Status :  #{guestUserProfileBean.selectedUserForEditing.membershipStatus}
+				</p:outputPanel>
+				</p:outputPanel>
+				<p:captcha validatorMessage="captcha Text did not match please try again" requiredMessage="Please enter captcha text" />
+				<br></br>
+				<p:commandButton ajax="false" id="saveProfile" update=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel" value="Register"
+					actionListener="#{guestUserProfileBean.saveProfile}" />
+
+
+			</h:form>
+			<!-- header ends -->
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2014 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+			<br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br> <br></br>
+			<br></br> <br></br> <br></br> <br></br> <br></br> <br></br>
+
+		</div>
+	</div>
+
+</h:body>
+</html>

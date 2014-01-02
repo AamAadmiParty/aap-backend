@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,9 +73,9 @@ public class BlogDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Blog> imp
 	}
 
 	@Override
-	public List<Blog> getBlogItemsAfterId(long newsId) {
+	public List<Blog> getBlogItemsAfterId(long blogId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("lastId", newsId);
+		params.put("lastId", blogId);
 		String query = "from Blog where id > :lastId order by id asc";
 		List<Blog> list = executeQueryGetList(query, params);
 		return list;
@@ -105,6 +106,88 @@ public class BlogDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Blog> imp
 				"union (select blog_id as blogId from blog_state where state_id= :stateId) " +
 				"union (select id as blogId from blogs where global_allowed= true)) bloglist order by bloglist.blogId desc";
 		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;
+	}
+	
+	@Override
+	public List<Blog> getGlobalBlog() {
+		Map<String, Object> params = new HashMap<>(1);
+		params.put("global", true);
+		String query = "from Blog where global = :global order by dateCreated desc";
+		List<Blog> list = executeQueryGetList(query, params);
+		return list;
+	}
+
+	@Override
+	public List<Blog> getStateBlog(Long stateId) {
+		String sqlQuery = "select blog_id from blog_state where state_id = :stateId";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("stateId", stateId);
+		List<Long> blogIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(blogIds == null || blogIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from Blog where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", blogIds);
+		List<Blog> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Blog> getDistrictBlog(Long districtId) {
+		String sqlQuery = "select blog_id from blog_district where district_id = :districtId";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("districtId", districtId);
+		List<Long> blogIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(blogIds == null || blogIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from Blog where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", blogIds);
+		List<Blog> list = executeQueryGetList(query, queryParams);
+		return list;
+
+	}
+
+	@Override
+	public List<Blog> getAcBlog(Long acId) {
+		String sqlQuery = "select blog_id from blog_ac where ac_id = :acId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("acId", acId);
+		List<Long> blogIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(blogIds == null || blogIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from Blog where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", blogIds);
+		List<Blog> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Blog> getPcBlog(Long pcId) {
+		String sqlQuery = "select blog_id from blog_pc where pc_id = :pcId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("pcId", pcId);
+		List<Long> blogIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(blogIds == null || blogIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from Blog where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", blogIds);
+		List<Blog> list = executeQueryGetList(query, queryParams);
 		return list;
 	}
 

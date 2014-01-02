@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.util.ClientPermissionUtil;
@@ -30,8 +31,10 @@ public class LocationAdminBean extends BaseJsfBean {
 		if(loggedInUser == null){
 			return;
 		}
+		if(isLocationNotSelected(menuBean)){
+			buildAndRedirect("/admin/home");
+		}
 	}
-
 	public LoginAccountDto getLoginAccounts() {
 		return getLoggedInAccountsFromSesion();
 	}
@@ -55,8 +58,15 @@ public class LocationAdminBean extends BaseJsfBean {
 		}
 	}
 	public void goToManageNewsPage(){
-		if(isVoiceOfAapTwitterAllowed()){
+		if(isManageNewsAllowed()){
 			buildAndRedirect("/admin/news");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	public void goToManageBlogPage(){
+		if(isManageBlogAllowed()){
+			buildAndRedirect("/admin/blog");
 		}else{
 			buildAndRedirect("/admin/notallowed");
 		}
@@ -91,6 +101,10 @@ public class LocationAdminBean extends BaseJsfBean {
 	public boolean isManageNewsAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isManageNewsAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+	}
+	public boolean isManageBlogAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageBlogAllowed(userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	public boolean isManageMemberAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();

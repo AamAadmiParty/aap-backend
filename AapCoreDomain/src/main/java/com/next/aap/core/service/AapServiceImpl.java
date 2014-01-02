@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.AcRole;
 import com.next.aap.core.persistance.AssemblyConstituency;
+import com.next.aap.core.persistance.Blog;
 import com.next.aap.core.persistance.ContentTweet;
 import com.next.aap.core.persistance.Country;
 import com.next.aap.core.persistance.District;
@@ -56,6 +57,7 @@ import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
 import com.next.aap.core.persistance.dao.AcRoleDao;
 import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
+import com.next.aap.core.persistance.dao.BlogDao;
 import com.next.aap.core.persistance.dao.ContentTweetDao;
 import com.next.aap.core.persistance.dao.CountryDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
@@ -83,6 +85,7 @@ import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.ContentStatus;
 import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.CountryDto;
@@ -165,6 +168,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private NewsDao newsDao;
 	@Autowired
 	private ContentTweetDao contentTweetDao;
+	@Autowired
+	private BlogDao blogDao;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -540,13 +545,22 @@ public class AapServiceImpl implements AapService, Serializable {
 			user.setMember(true);
 		} else {
 			user = userDao.getUserById(userDto.getId());
-			;
 			if (user == null) {
 				logger.error("User DO NOT Exists [id=" + userDto.getId() + "]");
 				return null;
 			}
 		}
 
+		SearchMemberResultDto searchMemberResultDto = searchExistingUser(userDto);
+		if(searchMemberResultDto != null && searchMemberResultDto.isUserAlreadyExists()){
+			if(userDto.getId() == null || userDto.getId() <= 0){
+				throw new RuntimeException(searchMemberResultDto.getUserAlreadyExistsMessage());
+			}else{
+				if(!searchMemberResultDto.getUsers().get(0).getId().equals(userDto.getId())){
+					throw new RuntimeException(searchMemberResultDto.getUserAlreadyExistsMessage());
+				}
+			}
+		}
 		user.setDateModified(new Date());
 		// user.setEmail(userDto.getEmail());
 		// user.setMobile(userDto.getMobile());
@@ -594,6 +608,8 @@ public class AapServiceImpl implements AapService, Serializable {
 		user.setFatherName(userDto.getFatherName());
 		user.setMotherName(userDto.getMotherName());
 		user.setAddress(userDto.getAddress());
+		user.setVoterId(userDto.getVoterId());
+		user.setPassportNumber(userDto.getPassportNumber());
 		if (user.isNri()) {
 			if (userDto.getNriCountryId() != null && userDto.getNriCountryId() > 0) {
 				Country country = countryDao.getCountryById(userDto.getNriCountryId());
@@ -856,6 +872,18 @@ public class AapServiceImpl implements AapService, Serializable {
 		createRoleWithPermissions("AdminEditUserRoles", "User of this role will be able to add or remove user roles on a location", true, true, true, true,
 				AppPermission.EDIT_USER_ROLES);
 */
+		createRoleWithPermissions("BlogAdminRole", "User of this role will be able to create/update/Approve/delete blog for a location", true, true, true,
+				true, AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
+
+		createRoleWithPermissions("BlogReporterRole", "User of this role will be able to create/update blog for a location", true, true, true, true,
+				AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG);
+
+		createRoleWithPermissions("BlogEditorRole", "User of this role will be able to create/update/approve and publish blog for a location", true, true,
+				true, true, AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.APPROVE_BLOG);
+
+		createRoleWithPermissions("BlogApproverRole", "User of this role will be able to approve/publish existing blog for a location", true, true, true, true,
+				AppPermission.APPROVE_BLOG);
+
 		logger.info("All Roles and permissions are created");
 	}
 
@@ -1760,6 +1788,13 @@ public class AapServiceImpl implements AapService, Serializable {
 		News news = newsDao.getNewsById(newsId);
 		return convertContentTweets(news.getTweets());
 	}
+	
+	@Override
+	@Transactional
+	public List<ContentTweetDto> getBlogContentTweets(Long newsId) {
+		Blog blog = blogDao.getBlogById(newsId);
+		return convertContentTweets(blog.getTweets());
+	}
 
 	@Override
 	@Transactional
@@ -1768,9 +1803,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		return null;
 	}
 
-	@Override
-	@Transactional
-	public SearchMemberResultDto searchMembers(UserDto searchUserDto) {
+	private SearchMemberResultDto searchExistingUser(UserDto searchUserDto) {
 		SearchMemberResultDto searchMemberResult = new SearchMemberResultDto();
 		if (!StringUtil.isEmpty(searchUserDto.getMembershipNumber())) {
 			User user = userDao.getUserByMembershipNumber(searchUserDto.getMembershipNumber());
@@ -1814,6 +1847,17 @@ public class AapServiceImpl implements AapService, Serializable {
 				searchMemberResult.setUserAlreadyExistsMessage("Member with passport number " + searchUserDto.getPassportNumber() + " already exists");
 				return searchMemberResult;
 			}
+		}
+		return null;
+	}
+	@Override
+	@Transactional
+	public SearchMemberResultDto searchMembers(UserDto searchUserDto) {
+		SearchMemberResultDto searchMemberResult = searchExistingUser(searchUserDto);
+		if(searchMemberResult == null){
+			searchMemberResult = new SearchMemberResultDto();
+		}else{
+			return searchMemberResult;
 		}
 
 		if (!StringUtil.isEmpty(searchUserDto.getName())) {
@@ -2129,6 +2173,137 @@ public class AapServiceImpl implements AapService, Serializable {
 			break;
 		}
 		user = userDao.saveUser(user);
+	}
+
+	@Override
+	@Transactional
+	public BlogDto saveBlog(BlogDto blogDto, List<ContentTweetDto> contentTweetDtos, PostLocationType locationType, Long locationId) {
+		Blog blog = null;
+		if (blogDto.getId() != null && blogDto.getId() > 0) {
+			blog = blogDao.getBlogById(blogDto.getId());
+		}
+		if (blog == null) {
+			blog = new Blog();
+			blog.setDateCreated(new Date());
+			blog.setContentStatus(ContentStatus.Pending);
+		}
+		blog.setAuthor(blogDto.getAuthor());
+		blog.setContent(blogDto.getContent());
+		blog.setDateModified(new Date());
+		blog.setImageUrl(blogDto.getImageUrl());
+		blog.setSource(blogDto.getSource());
+		blog.setTitle(blogDto.getTitle());
+
+		switch (locationType) {
+		case Global:
+			blog.setGlobal(true);
+			break;
+		case STATE:
+			if (blog.getStates() == null) {
+				blog.setStates(new ArrayList<State>());
+			}
+			State state = stateDao.getStateById(locationId);
+			blog.getStates().add(state);
+			break;
+		case DISTRICT:
+			if (blog.getDistricts() == null) {
+				blog.setDistricts(new ArrayList<District>());
+			}
+			District district = districtDao.getDistrictById(locationId);
+			blog.getDistricts().add(district);
+			break;
+		case AC:
+			if (blog.getAssemblyConstituencies() == null) {
+				blog.setAssemblyConstituencies(new ArrayList<AssemblyConstituency>());
+			}
+			AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(locationId);
+			blog.getAssemblyConstituencies().add(assemblyConstituency);
+			break;
+		case PC:
+			if (blog.getParliamentConstituencies() == null) {
+				blog.setParliamentConstituencies(new ArrayList<ParliamentConstituency>());
+			}
+			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(locationId);
+			blog.getParliamentConstituencies().add(parliamentConstituency);
+			break;
+		}
+
+		blog = blogDao.saveBlog(blog);
+
+		// add all tweets
+		if (contentTweetDtos != null && contentTweetDtos.size() > 0) {
+			if (blog.getTweets() == null) {
+				blog.setTweets(new ArrayList<ContentTweet>());
+			}
+			ContentTweet oneContentTweet;
+			for (ContentTweetDto oneContentTweetDto : contentTweetDtos) {
+				if (oneContentTweetDto.getId() == null || oneContentTweetDto.getId() <= 0) {
+					oneContentTweet = new ContentTweet();
+				} else {
+					oneContentTweet = contentTweetDao.getContentTweetById(oneContentTweetDto.getId());
+				}
+				oneContentTweet.setImageUrl(oneContentTweetDto.getImageUrl());
+				oneContentTweet.setTweetContent(oneContentTweetDto.getTweetContent());
+
+				oneContentTweet = contentTweetDao.saveContentTweet(oneContentTweet);
+				blog.getTweets().add(oneContentTweet);
+			}
+		}
+
+		return convertBlog(blog);
+	}
+
+	private BlogDto convertBlog(Blog blog) {
+		if (blog == null) {
+			return null;
+		}
+		BlogDto blogDto = new BlogDto();
+		BeanUtils.copyProperties(blog, blogDto);
+		return blogDto;
+	}
+
+	private List<BlogDto> convertBlog(List<Blog> blog) {
+		if (blog == null) {
+			return null;
+		}
+		List<BlogDto> returnBlog = new ArrayList<>(blog.size());
+		for (Blog oneBlog : blog) {
+			returnBlog.add(convertBlog(oneBlog));
+		}
+		return returnBlog;
+	}
+
+	@Override
+	@Transactional
+	public List<BlogDto> getBlog(PostLocationType locationType, Long locationId) {
+		List<Blog> blog = null;
+		switch (locationType) {
+		case Global:
+			blog = blogDao.getGlobalBlog();
+			break;
+		case STATE:
+			blog = blogDao.getStateBlog(locationId);
+			break;
+		case DISTRICT:
+			blog = blogDao.getDistrictBlog(locationId);
+			break;
+		case AC:
+			blog = blogDao.getAcBlog(locationId);
+			break;
+		case PC:
+			blog = blogDao.getPcBlog(locationId);
+			break;
+		}
+		return convertBlog(blog);
+	}
+
+	@Override
+	@Transactional
+	public BlogDto publishBlog(Long blogId) {
+		Blog blog = blogDao.getBlogById(blogId);
+		blog.setContentStatus(ContentStatus.Published);
+		blog = blogDao.saveBlog(blog);
+		return convertBlog(blog);
 	}
 
 }

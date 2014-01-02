@@ -1,4 +1,4 @@
-package com.next.aap.core.util;
+package com.next.aap.web.util;
 
 import javax.annotation.PostConstruct;
 
@@ -14,7 +14,7 @@ public class AppPermisionUtil {
 	private AapService aapService;
 	@PostConstruct
 	public void init(){
-		aapService.updateAllPermissionsAndRole();
+		//aapService.updateAllPermissionsAndRole();
 		//aapService.saveAllCountries();
 	}
 }

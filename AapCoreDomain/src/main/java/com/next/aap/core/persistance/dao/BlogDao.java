@@ -3,6 +3,7 @@ package com.next.aap.core.persistance.dao;
 import java.util.List;
 
 import com.next.aap.core.persistance.Blog;
+import com.next.aap.core.persistance.Blog;
 
 public interface BlogDao {
 
@@ -28,5 +29,15 @@ public interface BlogDao {
 	
 	public abstract List<Long> getBlogByLocation(long pcId, long stateId);
 
+	
+	public abstract List<Blog> getGlobalBlog();
+	
+	public abstract List<Blog> getStateBlog(Long stateId);
+	
+	public abstract List<Blog> getDistrictBlog(Long districtId);
+	
+	public abstract List<Blog> getAcBlog(Long acId);
+	
+	public abstract List<Blog> getPcBlog(Long pcId);
 
 }

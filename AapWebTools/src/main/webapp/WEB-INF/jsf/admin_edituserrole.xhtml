@@ -50,7 +50,7 @@
 			Getting Assembly Constituency List<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
-			<p:blockUI block="userProfileForm" trigger=":userProfileForm:locationSelectionRadio">
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:locationSelectionRadio,:userProfileForm:memberState,:userProfileForm:opt1,:userProfileForm:memberDistrict">
 			Please wait<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
@@ -58,6 +58,11 @@
 			Saving User Roles<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:searchMember">
+			Searching Members<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			
 
 			<h:form id="userProfileForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />

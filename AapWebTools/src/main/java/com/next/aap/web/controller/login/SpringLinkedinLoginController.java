@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.social.connect.Connection;
-import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.linkedin.api.LinkedIn;
 import org.springframework.social.linkedin.connect.LinkedInConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;

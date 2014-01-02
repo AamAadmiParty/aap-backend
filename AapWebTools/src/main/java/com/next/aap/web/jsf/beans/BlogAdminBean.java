@@ -11,7 +11,7 @@ import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.LoginAccountDto;
-import com.next.aap.web.dto.NewsDto;
+import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.util.ClientPermissionUtil;
@@ -21,13 +21,13 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @Component
 @Scope("session")
-@URLMapping(id = "newsAdminBean", beanName="newsAdminBean", pattern = "/admin/news", viewId = "/WEB-INF/jsf/admin_news.xhtml")
-@URLBeanName("newsAdminBean")
-public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
+@URLMapping(id = "blogAdminBean", beanName="blogAdminBean", pattern = "/admin/blog", viewId = "/WEB-INF/jsf/admin_blog.xhtml")
+@URLBeanName("blogAdminBean")
+public class BlogAdminBean extends BaseMultiPermissionAdminJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private NewsDto selectedNews;;
+	private BlogDto selectedBlog;;
 	
 	@Autowired 
 	private MenuBean menuBean;
@@ -38,9 +38,9 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	private boolean newTweet = false;
 	private boolean showTweetList = true;
 	
-	private List<NewsDto> newsList;
-	public NewsAdminBean(){
-		super("/admin/news", AppPermission.CREATE_NEWS,AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
+	private List<BlogDto> blogList;
+	public BlogAdminBean(){
+		super("/admin/blog", AppPermission.CREATE_BLOG,AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
 		selectedTweet = new ContentTweetDto();
 	}
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
@@ -49,10 +49,10 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		if(!checkUserAccess()){
 			return;
 		}
-		refreshNewsList();
+		refreshBlogList();
 	}
-	private void refreshNewsList(){
-		newsList = aapService.getNews(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
+	private void refreshBlogList(){
+		blogList = aapService.getBlog(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
 		tweetList = new ArrayList<>();
 	}
 
@@ -62,12 +62,12 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public void cancelTweet(){
 		showTweetList = true;
 	}
-	public void createNewsTweet(){
+	public void createBlogTweet(){
 		selectedTweet = new ContentTweetDto();
 		newTweet = true;
 		showTweetList = false;
 	}
-	public void addNewsTweet(){
+	public void addBlogTweet(){
 		if(newTweet){
 			tweetList.add(selectedTweet);
 		}
@@ -77,33 +77,33 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public UserDto getUser() {
 		return getLoggedInUser();
 	}
-	public NewsDto getSelectedNews() {
-		return selectedNews;
+	public BlogDto getSelectedBlog() {
+		return selectedBlog;
 	}
-	public void setSelectedNews(NewsDto selectedNews) {
-		this.selectedNews = selectedNews;
+	public void setSelectedBlog(BlogDto selectedBlog) {
+		this.selectedBlog = selectedBlog;
 		showList = false;
-		tweetList = aapService.getNewsContentTweets(selectedNews.getId());
+		tweetList = aapService.getBlogContentTweets(selectedBlog.getId());
 	}
 	public boolean isSaveDraft(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
-		return ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
-				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+		return ClientPermissionUtil.isAllowed(AppPermission.CREATE_BLOG, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
+				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_BLOG, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	public boolean isSaveAndPublish(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
-		return (ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
-				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType())) &&
-				ClientPermissionUtil.isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+		return (ClientPermissionUtil.isAllowed(AppPermission.CREATE_BLOG, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
+				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_BLOG, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType())) &&
+				ClientPermissionUtil.isAllowed(AppPermission.APPROVE_BLOG, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	public boolean isPublish(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
-		return ClientPermissionUtil.isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+		return ClientPermissionUtil.isAllowed(AppPermission.APPROVE_BLOG, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	public boolean isEditAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
-		return (ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
-				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()));
+		return (ClientPermissionUtil.isAllowed(AppPermission.CREATE_BLOG, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
+				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_BLOG, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()));
 	}
 	public void saveAndPublishPost() {
 		savePost();
@@ -111,19 +111,19 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void publishPost(){
 		try{
-			if(selectedNews == null){
-				sendErrorMessageToJsfScreen("No news selected to publish");
+			if(selectedBlog == null){
+				sendErrorMessageToJsfScreen("No blog selected to publish");
 			}
-			if(selectedNews.getId() == null || selectedNews.getId() <= 0){
-				sendErrorMessageToJsfScreen("Please save the News first");
+			if(selectedBlog.getId() == null || selectedBlog.getId() <= 0){
+				sendErrorMessageToJsfScreen("Please save the Blog first");
 			}
 			if(!isPublish()){
-				sendErrorMessageToJsfScreen("You do not have permission to publish a news");
+				sendErrorMessageToJsfScreen("You do not have permission to publish a blog");
 			}
 			if(isValidInput()){
-				selectedNews = aapService.publishNews(selectedNews.getId());
-				sendInfoMessageToJsfScreen("News Published Succesfully");
-				refreshNewsList();
+				selectedBlog = aapService.publishBlog(selectedBlog.getId());
+				sendInfoMessageToJsfScreen("Blog Published Succesfully");
+				refreshBlogList();
 			}
 			
 		}catch(Exception ex){
@@ -132,18 +132,18 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void savePost(){
 		try{
-			if(StringUtil.isEmpty(selectedNews.getContent())){
-				sendErrorMessageToJsfScreen("Please enter News Content");
+			if(StringUtil.isEmpty(selectedBlog.getContent())){
+				sendErrorMessageToJsfScreen("Please enter Blog Content");
 			}
-			if(StringUtil.isEmpty(selectedNews.getTitle())){
-				sendErrorMessageToJsfScreen("Please enter News Title");
+			if(StringUtil.isEmpty(selectedBlog.getTitle())){
+				sendErrorMessageToJsfScreen("Please enter Blog Title");
 			}
 
 			if(isValidInput()){
 				
-				selectedNews = aapService.saveNews(selectedNews, tweetList, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
-				sendInfoMessageToJsfScreen("News saved succesfully");
-				refreshNewsList();
+				selectedBlog = aapService.saveBlog(selectedBlog, tweetList, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
+				sendInfoMessageToJsfScreen("Blog saved succesfully");
+				refreshBlogList();
 				showList = true;
 			}
 				
@@ -152,13 +152,13 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		}
 		
 	}
-	public void createNews(){
-		selectedNews = new NewsDto();
+	public void createBlog(){
+		selectedBlog = new BlogDto();
 		showList = false;
 		tweetList = new ArrayList<>();
 	}
 	public void cancel(){
-		createNews();
+		createBlog();
 		showList = true;
 	}
 	public void deleteTweet(){
@@ -171,11 +171,11 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public void setShowList(boolean showList) {
 		this.showList = showList;
 	}
-	public List<NewsDto> getNewsList() {
-		return newsList;
+	public List<BlogDto> getBlogList() {
+		return blogList;
 	}
-	public void setNewsList(List<NewsDto> newsList) {
-		this.newsList = newsList;
+	public void setBlogList(List<BlogDto> blogList) {
+		this.blogList = blogList;
 	}
 	public List<ContentTweetDto> getTweetList() {
 		return tweetList;

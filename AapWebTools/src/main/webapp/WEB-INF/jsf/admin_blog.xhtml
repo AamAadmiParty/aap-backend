@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Blog - Admin Panel</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 800px; margin: 0 auto;">
+		<div style="width: 800px; margin: 0;">
+			<p:blockUI block="adminBlogForm" trigger=":adminBlogForm:saveBlog,:adminBlogForm:saveBlogAndPublish,:adminBlogForm:publish">
+			Saving Profile<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<h:form id="adminBlogForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="mainPanel">
+					<p:outputPanel id="listView" rendered="#{blogAdminBean.showList}">
+
+						<p:commandButton value="Create Blog" actionListener="#{blogAdminBean.createBlog}" update=":adminBlogForm:mainPanel">
+						</p:commandButton>
+						<p:dataTable id="listOfBlog" var="onePost" value="#{blogAdminBean.blogList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+							emptyMessage="No Blogs" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Blog</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Id" />
+								</f:facet>
+								<h:outputText value="#{onePost.id}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Title" />
+								</f:facet>
+								<h:outputText value="#{onePost.title}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Author" />
+								</f:facet>
+								<h:outputText value="#{onePost.author}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Status" />
+								</f:facet>
+								<h:outputText value="#{onePost.contentStatus}" />
+							</p:column>
+							<p:column style="width:100px;">
+								<f:facet name="header">
+									<h:outputText value="Update" />
+								</f:facet>
+								<p:commandLink update=":adminBlogForm:mainPanel" title="Update Post">
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+									<f:setPropertyActionListener value="#{onePost}" target="#{blogAdminBean.selectedBlog}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+					<p:outputPanel id="formView" rendered="#{!blogAdminBean.showList}">
+						<p:panelGrid columns="2">
+							<p:outputLabel value="Title"></p:outputLabel>
+							<p:inputText value="#{blogAdminBean.selectedBlog.title}" style="width:600px" disabled="#{!blogAdminBean.editAllowed}">
+								<p:ajax event="change" update=":adminBlogForm" />
+							</p:inputText>
+							<p:outputLabel value="Image Url"></p:outputLabel>
+							<p:inputText value="#{blogAdminBean.selectedBlog.imageUrl}" style="width:600px" disabled="#{!blogAdminBean.editAllowed}">
+								<p:ajax event="change" update=":adminBlogForm" />
+							</p:inputText>
+							<p:outputLabel value="Message"></p:outputLabel>
+							<p:outputLabel value="#{blogAdminBean.selectedBlog.content}" escape="false" rendered="#{!blogAdminBean.editAllowed}" />
+							<p:editor id="editor" value="#{blogAdminBean.selectedBlog.content}" width="600" height="500" rendered="#{blogAdminBean.editAllowed}">
+							</p:editor>
+							<p:outputLabel value="Author"></p:outputLabel>
+							<p:inputText value="#{blogAdminBean.selectedBlog.author}" disabled="#{!blogAdminBean.editAllowed}" />
+							<p:outputLabel value="Source"></p:outputLabel>
+							<p:inputText value="#{blogAdminBean.selectedBlog.source}" disabled="#{!blogAdminBean.editAllowed}" />
+						</p:panelGrid>
+						<br></br>
+						<p:outputPanel id="tweetPanel">
+							<p:outputPanel rendered="#{!blogAdminBean.showTweetList}">
+								<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining." value="#{blogAdminBean.selectedTweet.tweetContent}">
+								</p:inputTextarea>
+								<br></br>
+								<h:outputText id="counter" />
+								<br></br>
+								<p:commandButton value="Add Tweet" update=":adminBlogForm" actionListener="#{blogAdminBean.addBlogTweet}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton value="Cancel" update=":adminBlogForm:mainPanel" actionListener="#{blogAdminBean.cancelTweet}" styleClass="ui-priority-primary">
+								</p:commandButton>
+
+							</p:outputPanel>
+							<p:outputPanel rendered="#{blogAdminBean.showTweetList}">
+								<p:commandButton value="Create Blog Tweet" update=":adminBlogForm:tweetPanel" actionListener="#{blogAdminBean.createBlogTweet}" 
+								rendered="#{blogAdminBean.editAllowed}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<br></br>
+								<p:dataTable id="listOfTweets" var="oneTweet" value="#{blogAdminBean.tweetList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+									emptyMessage="No Tweet Related to this Blog"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Tweets" />
+										</f:facet>
+										<h:outputText value="#{oneTweet.tweetContent}" />
+									</p:column>
+									<p:column style="width:100px;" rendered="#{blogAdminBean.editAllowed}">
+										<f:facet name="header">
+											<h:outputText value="Update" />
+										</f:facet>
+										<p:commandLink title="Update Tweet" update=":adminBlogForm:tweetPanel">
+											<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+											<f:setPropertyActionListener value="#{oneTweet}" target="#{blogAdminBean.selectedTweet}" />
+										</p:commandLink>
+									</p:column>
+								</p:dataTable>
+								<br></br>
+								<p:commandButton value="Cancel" update=":adminBlogForm:mainPanel" actionListener="#{blogAdminBean.cancel}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton id="saveBlog" value="Save Draft" update=":adminBlogForm:mainPanel" actionListener="#{blogAdminBean.savePost}" styleClass="ui-priority-primary"
+									rendered="#{blogAdminBean.saveDraft}">
+								</p:commandButton>
+								<p:commandButton id="saveBlogAndPublish" value="Save and Publish" update=":adminBlogForm:mainPanel" actionListener="#{blogAdminBean.saveAndPublishPost}"
+									styleClass="ui-priority-primary" rendered="#{blogAdminBean.saveAndPublish}">
+								</p:commandButton>
+								<p:commandButton id="publish" value="Publish" update=":adminBlogForm:mainPanel" actionListener="#{blogAdminBean.publishPost}" styleClass="ui-priority-primary"
+									rendered="#{blogAdminBean.publish}">
+								</p:commandButton>
+
+							</p:outputPanel>
+						</p:outputPanel>
+
+					</p:outputPanel>
+				</p:outputPanel>
+				<br></br>
+				<br></br>
+				<br></br>
+				<br></br>
+			</h:form>
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2014 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+		</div>
+	</div>
+
+</h:body>
+</html>

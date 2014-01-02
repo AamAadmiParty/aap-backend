@@ -29,6 +29,7 @@ public class UserDto implements Serializable{
 	private String profilePic;
 	private boolean superAdmin;
 	private boolean member;
+	private boolean volunteer;
 	private String memberPic;
 	private String countryCode;
 	private String mobileNumber;
@@ -278,6 +279,14 @@ public class UserDto implements Serializable{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public boolean isVolunteer() {
+		return volunteer;
+	}
+
+	public void setVolunteer(boolean volunteer) {
+		this.volunteer = volunteer;
 	}
 
 	@Override

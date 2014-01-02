@@ -59,6 +59,10 @@
 						styleClass="ui-priority-primary">
 					</p:commandButton>
 					
+					<p:commandButton value="Manage Blogs" actionListener="#{locationAdminBean.goToManageBlogPage}" rendered="#{locationAdminBean.manageBlogAllowed}"
+						styleClass="ui-priority-primary">
+					</p:commandButton>
+
 					<p:commandButton value="Manage Members" actionListener="#{locationAdminBean.goToManageMemberPage}" rendered="#{locationAdminBean.manageMemberAllowed}"
 						styleClass="ui-priority-primary">
 					</p:commandButton>

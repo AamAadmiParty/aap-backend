@@ -28,14 +28,14 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
  @Component
  //@Scope("session")
  @SessionScoped
- @URLMappings(mappings = { @URLMapping(id = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
- @URLBeanName("userProfileBean")
+ @URLMappings(mappings = { @URLMapping(id = "guestUserProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
+ @URLBeanName("guestUserProfileBean")
  */
 @Component
 @Scope("session")
-@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
-@URLBeanName("userProfileBean")
-public class UserProfileBean extends BaseJsfBean {
+@URLMapping(id = "guestUserProfileBean", beanName = "guestUserProfileBean", pattern = "/guest/register", viewId = "/WEB-INF/jsf/guestuserprofile.xhtml")
+@URLBeanName("guestUserProfileBean")
+public class GuestUserProfileBean extends BaseJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
@@ -64,22 +64,16 @@ public class UserProfileBean extends BaseJsfBean {
 	@Autowired
 	private AapService aapService;
 
-	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
-		UserDto loggedInUser = getLoggedInUser(true, buildLoginUrl("/profile"));
-		if (loggedInUser == null) {
-			return;
+		if (countries == null || countries.isEmpty()) {
+			countries = aapService.getAllCountries();
 		}
 		if (stateList == null || stateList.isEmpty()) {
 			livingStateList = stateList = aapService.getAllStates();
 		}
-		if (countries == null || countries.isEmpty()) {
-			countries = aapService.getAllCountries();
-		}
 		//Copy Logged In user to selectedUserForEditing
 		selectedUserForEditing = new UserDto();
-		BeanUtils.copyProperties(loggedInUser, selectedUserForEditing);
 		if (selectedUserForEditing.getStateVotingId() != null) {
 			enableDistrictCombo = true;
 			enableParliamentConstituencyCombo = true;
@@ -140,7 +134,7 @@ public class UserProfileBean extends BaseJsfBean {
 				sendErrorMessageToJsfScreen("Please select Country where you Live");
 			}
 			if(selectedUserForEditing.isMember() && StringUtil.isEmpty(selectedUserForEditing.getPassportNumber())){
-				sendErrorMessageToJsfScreen("Please enter passport number. Its Required for NRIs to become member.");
+				sendErrorMessageToJsfScreen("Please enter passport number. Its Required for NRIs to become member/Volunteer.");
 			}
 		}
 		if (selectedUserForEditing.getDateOfBirth() == null) {
@@ -156,10 +150,18 @@ public class UserProfileBean extends BaseJsfBean {
 		if (StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getName())) {
 			sendErrorMessageToJsfScreen("Please enter your full name");
 		}
+		if (StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getEmail()) && StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getMobileNumber())) {
+			sendErrorMessageToJsfScreen("Please enter eitehr email or Mobile number or both");
+		}
 		if (isValidInput()) {
-			selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
-			ssaveLoggedInUserInSession(selectedUserForEditing);
-			sendInfoMessageToJsfScreen("Profile saved succesfully.");
+			try{
+				selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
+				ssaveLoggedInUserInSession(selectedUserForEditing);
+				sendInfoMessageToJsfScreen("Profile saved succesfully.");
+				
+			}catch(Exception ex){
+				sendErrorMessageToJsfScreen(ex.getMessage());
+			}
 		}
 		/*
 		 * String url =
@@ -247,7 +249,9 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 	public void onClickMember() {
 	}
-
+	public void onClickVolunteer(AjaxBehaviorEvent event){
+		
+	}
 	public void onClickSameAsLiving() {
 	}
 

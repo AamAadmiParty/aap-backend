@@ -87,7 +87,7 @@
 					<p:outputPanel></p:outputPanel>
 
 					<h:outputText value="Date of Birth*" />
-					<p:calendar id="cal" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
+					<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
 					<!-- 
 					<p:inputMask id="dob" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" mask="99/99/9999" />
 					 -->

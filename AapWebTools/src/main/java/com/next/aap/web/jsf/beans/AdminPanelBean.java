@@ -1,5 +1,6 @@
 package com.next.aap.web.jsf.beans;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,9 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 public class AdminPanelBean extends BaseJsfBean {
 
 	private static final long serialVersionUID = 1L;
+	
+	@Autowired
+	private MenuBean menuBean;
 
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
@@ -24,6 +28,42 @@ public class AdminPanelBean extends BaseJsfBean {
 		if(loggedInUser == null){
 			return;
 		}
+		int totalLocation = 0;
+		if(menuBean.isGlobalAdmin()){
+			totalLocation++;
+		}
+		if(menuBean.getAdminStates() != null && menuBean.getAdminStates().size() > 0){
+			totalLocation = totalLocation + menuBean.getAdminStates().size();
+		}
+		if(menuBean.getAdminDistricts() != null && menuBean.getAdminDistricts().size() > 0){
+			totalLocation = totalLocation + menuBean.getAdminDistricts().size();
+		}
+		if(menuBean.getAdminAcs() != null && menuBean.getAdminAcs().size() > 0){
+			totalLocation = totalLocation + menuBean.getAdminAcs().size();
+		}
+		if(menuBean.getAdminPcs() != null && menuBean.getAdminPcs().size() > 0){
+			totalLocation = totalLocation + menuBean.getAdminPcs().size();
+		}
+		
+		if(totalLocation == 1){
+			if(menuBean.isGlobalAdmin()){
+				menuBean.selectGlobal(null);
+			}
+			if(menuBean.getAdminStates() != null && menuBean.getAdminStates().size() > 0){
+				menuBean.setSelectedAdminState(menuBean.getAdminStates().get(0));
+			}
+			if(menuBean.getAdminDistricts() != null && menuBean.getAdminDistricts().size() > 0){
+				menuBean.setSelectedAdminDistrict(menuBean.getAdminDistricts().get(0));
+			}
+			if(menuBean.getAdminAcs() != null && menuBean.getAdminAcs().size() > 0){
+				menuBean.setSelectedAdminAc(menuBean.getAdminAcs().get(0));
+			}
+			if(menuBean.getAdminPcs() != null && menuBean.getAdminPcs().size() > 0){
+				menuBean.setSelectedAdminPc(menuBean.getAdminPcs().get(0));
+			}
+			return;
+		}
+		
 	}
 
 	public LoginAccountDto getLoginAccounts() {

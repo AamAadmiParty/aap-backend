@@ -168,7 +168,7 @@
 							<f:selectItem itemLabel="Female" itemValue="Female" />
 						</p:selectOneMenu>
 						<h:outputLabel for="email" value="Email" />
-						<p:inputText id="email" value="#{adminEditUserRoleBean.searchedUser.email}" label="Email">
+						<p:inputText id="email" value="#{adminEditUserRoleBean.searchedUser.email}" label="Email" validatorMessage="Email is not in correct format ,i.e. guest@aap.org">
 							<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
 						</p:inputText>
 						<h:outputLabel for="mobile" value="Mobile" />

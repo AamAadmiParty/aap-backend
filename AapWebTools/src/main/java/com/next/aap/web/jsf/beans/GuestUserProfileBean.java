@@ -151,7 +151,7 @@ public class GuestUserProfileBean extends BaseJsfBean {
 			sendErrorMessageToJsfScreen("Please enter your full name");
 		}
 		if (StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getEmail()) && StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getMobileNumber())) {
-			sendErrorMessageToJsfScreen("Please enter eitehr email or Mobile number or both");
+			sendErrorMessageToJsfScreen("Please enter either email or Mobile number or both");
 		}
 		if (isValidInput()) {
 			try{

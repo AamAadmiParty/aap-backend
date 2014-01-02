@@ -882,7 +882,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 		createRoleWithPermissions("AdminEditUserRoles", "User of this role will be able to add or remove user roles on a location", true, true, true, true,
 				AppPermission.EDIT_USER_ROLES);
-*/
+
 		createRoleWithPermissions("BlogAdminRole", "User of this role will be able to create/update/Approve/delete blog for a location", true, true, true,
 				true, AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
 
@@ -907,7 +907,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 		createRoleWithPermissions("PollApproverRole", "User of this role will be able to approve/publish existing poll for a location", true, true, true, true,
 				AppPermission.APPROVE_POLL);
-
+*/
 		
 
 		logger.info("All Roles and permissions are created");

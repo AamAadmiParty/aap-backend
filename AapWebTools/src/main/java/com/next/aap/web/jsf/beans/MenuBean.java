@@ -140,20 +140,20 @@ public class MenuBean extends BaseJsfBean {
 	public void selectGlobal(ActionEvent event){
 		locationType = PostLocationType.Global;
 		adminSelectedLocationId = -1L;
-		buildAndRedirect("/locationadmin");
+		buildAndRedirect("/admin/location");
 	}
 	public void selectState(ActionEvent event){
 		locationType = PostLocationType.STATE;
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("stateId");
 		selectedAdminState = aapService.getStateById(adminSelectedLocationId);
-		buildAndRedirect("/locationadmin");
+		buildAndRedirect("/admin/location");
 	}
 	public void selectDistrict(ActionEvent event){
 		locationType = PostLocationType.DISTRICT;
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("districtId");
 		selectedAdminDistrict = aapService.getDistrictById(adminSelectedLocationId);
 		selectedAdminState = aapService.getStateById(selectedAdminDistrict.getStateId());
-		buildAndRedirect("/locationadmin");
+		buildAndRedirect("/admin/location");
 	}
 	
 	public void selectAc(ActionEvent event){
@@ -162,14 +162,14 @@ public class MenuBean extends BaseJsfBean {
 		selectedAdminAc = aapService.getAssemblyConstituencyById(adminSelectedLocationId);
 		selectedAdminDistrict = aapService.getDistrictById(selectedAdminAc.getDistrictId());
 		selectedAdminState = aapService.getStateById(selectedAdminDistrict.getStateId());
-		buildAndRedirect("/locationadmin");
+		buildAndRedirect("/admin/location");
 	}
 	public void selectPc(ActionEvent event){
 		locationType = PostLocationType.PC;
 		adminSelectedLocationId = (Long)event.getComponent().getAttributes().get("pcId");
 		selectedAdminPc = aapService.getParliamentConstituencyById(adminSelectedLocationId);
 		selectedAdminState = aapService.getStateById(selectedAdminPc.getStateId());
-		buildAndRedirect("/locationadmin");
+		buildAndRedirect("/admin/location");
 	}
 	
 

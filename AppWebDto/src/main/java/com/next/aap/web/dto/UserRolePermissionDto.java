@@ -91,14 +91,19 @@ public class UserRolePermissionDto implements Serializable{
 	}
 	public void addStatePermissions(StateDto stateDto, Set<AppPermission> oneStatePermissions) {
 		addLocationPermision(stateDto.getId(), oneStatePermissions, this.statePermissions);
-		adminStates.add(stateDto);
+		if(!adminStates.contains(stateDto)){
+			adminStates.add(stateDto);	
+		}
 	}
 	public Map<Long, Set<AppPermission>> getDistrictPermissions() {
 		return districtPermissions;
 	}
 	public void addDistrictPermissions(DistrictDto districtDto, Set<AppPermission> oneDistrictPermissions) {
 		addLocationPermision(districtDto.getId(), oneDistrictPermissions, this.districtPermissions);
-		adminDistricts.add(districtDto);
+		if(!adminDistricts.contains(districtDto)){
+			adminDistricts.add(districtDto);	
+		}
+		
 	}
 	private void addLocationPermision(Long locationId, Set<AppPermission> oneLocationPermission, Map<Long,Set<AppPermission>> locationPermissions){
 		Set<AppPermission> districtPermission = locationPermissions.get(locationId);
@@ -114,14 +119,19 @@ public class UserRolePermissionDto implements Serializable{
 	}
 	public void addAcPermissions(AssemblyConstituencyDto assemblyConstituencyDto, Set<AppPermission> oneAcPermissions) {
 		addLocationPermision(assemblyConstituencyDto.getId(), oneAcPermissions, this.acPermissions);
-		adminAcs.add(assemblyConstituencyDto);
+		if(!adminAcs.contains(assemblyConstituencyDto)){
+			adminAcs.add(assemblyConstituencyDto);	
+		}
+		
 	}
 	public Map<Long, Set<AppPermission>> getPcPermissions() {
 		return pcPermissions;
 	}
 	public void addPcPermissions(ParliamentConstituencyDto parliamentConstituencyDto, Set<AppPermission> onePcPermissions) {
 		addLocationPermision(parliamentConstituencyDto.getId(), onePcPermissions, this.pcPermissions);
-		adminPcs.add(parliamentConstituencyDto);
+		if(!adminPcs.contains(parliamentConstituencyDto)){
+			adminPcs.add(parliamentConstituencyDto);	
+		}
 	}
 	
 	public boolean isStateAdmin(){

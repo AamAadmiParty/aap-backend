@@ -81,44 +81,45 @@
 						</p:selectBooleanCheckbox>
 					</h:panelGrid>
 					<p:panel header="How to become Member, Choose your Language" toggleable="true" rendered="#{guestUserProfileBean.selectedUserForEditing.member}">
-					<p:outputPanel cellpadding="10" >
-						<p:tabView id="tabView">
+						<p:outputPanel cellpadding="10">
+							<p:tabView id="tabView">
 
-							<p:tab id="hindi" title="हिंदी">
+								<p:tab id="hindi" title="हिंदी">
 								मेम्बर बनने के लिए कृपया नीचे दी गयी चार चरणों की प्रक्रिया पूर्ण करें -
 								<ul>
-									<li><h:outputText value="चरण - 1 -	नीचे दिए गए फॉर्म में अपना विवरण भरें ।" /></li>
-									<li><h:outputText value="चरण - 2 -	आप दो तरह से 10 रुपये की अपनी सदस्यता शुल्क का भुगतान कर सकते हैं." /></li>
-									<li><h:outputText
-											value="चरण - 2a -	फॉर्म को भरकर क्रेडिट कार्ड / डेबिट कार्ड या नेट बैंकिंग के माध्यम से भी ऑनलाइन सदस्यता शुल्क (Membership fee) रु . 10/- का भुगतान कर सकते हैं | पुष्टि ईमेल जो आपको प्राप्त होगी वही आपकी सदस्यता की पुष्टि है |" /></li>
-									<li><b><h:outputText value="या" /></b></li>
-									<li><h:outputText
-											value="चरण - 2a -	अपने स्थानीय पोस्ट ऑफिस से दस रुपये का पोस्टल आर्डर लेकर (अगर दस रुपये का एक पोस्टल आर्डर न मिले तो आप पांच रुपये के दो या कोई अन्य मोल). अदा करें में 'आम आदमी पार्टी' लिखें. 'पोस्ट ऑफिस पर' की जगह खाली छोड़ दें. आधी जमा पर्ची अपने पास पावती के तौर पर रख लें." /></li>
-									<li><h:outputText
-											value="चरण - 2b -	इस प्रिंटआउट को रु . 10/- के पोस्टल आर्डर के साथ अपने शहर के पार्टी दफ्तर में जमा करें या पार्टी के केंद्रीय कार्यालय को इस पते पर डाक द्वारा भेजें - Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
-								</ul>
+										<li><h:outputText value="चरण - 1 -	नीचे दिए गए फॉर्म में अपना विवरण भरें ।" /></li>
+										<li><h:outputText value="चरण - 2 -	आप दो तरह से 10 रुपये की अपनी सदस्यता शुल्क का भुगतान कर सकते हैं." /></li>
+										<li><h:outputText
+												value="चरण - 2a -	फॉर्म को भरकर क्रेडिट कार्ड / डेबिट कार्ड या नेट बैंकिंग के माध्यम से भी ऑनलाइन सदस्यता शुल्क (Membership fee) रु . 10/- का भुगतान कर सकते हैं | पुष्टि ईमेल जो आपको प्राप्त होगी वही आपकी सदस्यता की पुष्टि है |" /></li>
+										<li><b><h:outputText value="या" /></b></li>
+										<li><h:outputText
+												value="चरण - 2a -	अपने स्थानीय पोस्ट ऑफिस से दस रुपये का पोस्टल आर्डर लेकर (अगर दस रुपये का एक पोस्टल आर्डर न मिले तो आप पांच रुपये के दो या कोई अन्य मोल). अदा करें में 'आम आदमी पार्टी' लिखें. 'पोस्ट ऑफिस पर' की जगह खाली छोड़ दें. आधी जमा पर्ची अपने पास पावती के तौर पर रख लें." /></li>
+										<li><h:outputText
+												value="चरण - 2b -	इस प्रिंटआउट को रु . 10/- के पोस्टल आर्डर के साथ अपने शहर के पार्टी दफ्तर में जमा करें या पार्टी के केंद्रीय कार्यालय को इस पते पर डाक द्वारा भेजें - Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
+									</ul>
 
-							</p:tab>
-							<p:tab id="english" title="English">
-								<ul>
-									<li><h:outputText value="STEP – 1 –	Complete Your Profile below" /></li>
-									<li><h:outputText value="STEP – 2 –	You can pay your membership fees of Rs 10 in two ways." /></li>
-									<li><h:outputText
-											value="STEP - 2a -	Submit the form and pay Rs. 10. online through Credit/Debit Card Or Internet Banking As Membership Fees and become a member.The email confirmation that you receive on making the payment in option is your confirmation of membership.." /></li>
-									<li><b><h:outputText value="or" /></b></li>
-									<li><h:outputText
-											value="STEP - 2a -	Purchase a Postal Order (PO) of Rs.10/- from your local Post Office (if a single PO is not available you can purchase two Rs.5/- POs or any other combination). In 'PAY TO' write 'Aam Aadmi Party'. Please leave 'AT THE POST OFFICE AT' column blank. You can keep the counterfoil with yourself as acknowledgement." /></li>
-									<li><h:outputText
-											value="STEP - 2b -	Submit this printout of the membership form along with a postal order of Rs.10/- at the party office of your city OR send the printout and postal order to our national office at -Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
-								</ul>
-							</p:tab>
-						</p:tabView>
+								</p:tab>
+								<p:tab id="english" title="English">
+									<ul>
+										<li><h:outputText value="STEP – 1 –	Complete Your Profile below" /></li>
+										<li><h:outputText value="STEP – 2 –	You can pay your membership fees of Rs 10 in two ways." /></li>
+										<li><h:outputText
+												value="STEP - 2a -	Submit the form and pay Rs. 10. online through Credit/Debit Card Or Internet Banking As Membership Fees and become a member.The email confirmation that you receive on making the payment in option is your confirmation of membership.." /></li>
+										<li><b><h:outputText value="or" /></b></li>
+										<li><h:outputText
+												value="STEP - 2a -	Purchase a Postal Order (PO) of Rs.10/- from your local Post Office (if a single PO is not available you can purchase two Rs.5/- POs or any other combination). In 'PAY TO' write 'Aam Aadmi Party'. Please leave 'AT THE POST OFFICE AT' column blank. You can keep the counterfoil with yourself as acknowledgement." /></li>
+										<li><h:outputText
+												value="STEP - 2b -	Submit this printout of the membership form along with a postal order of Rs.10/- at the party office of your city OR send the printout and postal order to our national office at -Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
+									</ul>
+								</p:tab>
+							</p:tabView>
 
-					</p:outputPanel>
+						</p:outputPanel>
 					</p:panel>
 					<h:panelGrid columns="4" cellpadding="5">
 						<h:outputLabel for="name" value="Name*" />
-						<p:inputText id="name" value="#{guestUserProfileBean.selectedUserForEditing.name}" label="Name">
+						<p:inputText id="name" value="#{guestUserProfileBean.selectedUserForEditing.name}" label="Name" requiredMessage="Please Enter Name" validatorMessage="Name can contain only alphabets">
+							<f:validateRegex pattern="[a-zA-Z]+" />
 						</p:inputText>
 						<h:outputLabel for="voterId" value="Voter Id" />
 						<p:inputText id="voterId" value="#{guestUserProfileBean.selectedUserForEditing.voterId}" label="Voter Id">
@@ -132,7 +133,7 @@
 						<h:outputLabel for="passportNumber" value="Passport Number" />
 						<p:inputText id="passportNumber" value="#{guestUserProfileBean.selectedUserForEditing.passportNumber}" label="Passport Number">
 						</p:inputText>
-						<h:outputLabel for="mobile" value="Mobile" />
+						<h:outputLabel for="mobile" value="Mobile*" />
 						<p:selectOneMenu value="#{guestUserProfileBean.selectedUserForEditing.countryCode}">
 							<f:selectItem itemLabel="India - 91" itemValue="91" />
 							<f:selectItems value="#{guestUserProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
@@ -142,9 +143,10 @@
 						<p:outputPanel></p:outputPanel>
 
 						<h:outputText value="Date of Birth*" />
-						<p:calendar id="cal" pattern="dd-MMM-yyyy" value="#{guestUserProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
-						<h:outputLabel for="email" value="Email" />
-						<p:inputText id="email" value="#{guestUserProfileBean.selectedUserForEditing.email}" label="Email">
+						<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{guestUserProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
+						<h:outputLabel for="email" value="Email*" />
+						<p:inputText id="email" value="#{guestUserProfileBean.selectedUserForEditing.email}" label="Email" validatorMessage="Email is not in correct format ,i.e. guest@aap.org">
+							<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
 						</p:inputText>
 					</h:panelGrid>
 

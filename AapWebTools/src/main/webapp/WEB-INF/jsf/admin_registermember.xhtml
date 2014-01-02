@@ -154,7 +154,7 @@
 							<f:selectItem itemLabel="Female" itemValue="Female" />
 						</p:selectOneMenu>
 						<h:outputLabel for="email" value="Email" />
-						<p:inputText id="email" value="#{adminRegisterMemberBean.searchedUser.email}" label="Email">
+						<p:inputText id="email" value="#{adminRegisterMemberBean.searchedUser.email}" label="Email" validatorMessage="Email is not in correct format ,i.e. guest@aap.org" >
 							<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
 						</p:inputText>
 						<h:outputLabel for="mobile" value="Mobile" />
@@ -166,7 +166,7 @@
 						</p:inputText>
 						<p:outputPanel></p:outputPanel>
 
-						<h:outputText value="Date of Birth*" />
+						<h:outputText value="Date of Birth" />
 						<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" readonlyInput="true" value="#{adminRegisterMemberBean.searchedUser.dateOfBirth}" navigator="true"
 							effect="slideDown" />
 

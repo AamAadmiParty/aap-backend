@@ -15,7 +15,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @Component
 @Scope("session")
-@URLMapping(id = "locationAdminBean", beanName="locationAdminBean", pattern = "/locationadmin", viewId = "/WEB-INF/jsf/location_admin.xhtml")
+@URLMapping(id = "locationAdminBean", beanName="locationAdminBean", pattern = "/admin/location", viewId = "/WEB-INF/jsf/location_admin.xhtml")
 @URLBeanName("locationAdminBean")
 public class LocationAdminBean extends BaseJsfBean {
 
@@ -27,7 +27,7 @@ public class LocationAdminBean extends BaseJsfBean {
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
 	public void init() throws Exception {
-		UserDto loggedInUser = getLoggedInUser(true,buildLoginUrl("/locationadmin"));
+		UserDto loggedInUser = getLoggedInUser(true,buildLoginUrl("/admin/location"));
 		if(loggedInUser == null){
 			return;
 		}

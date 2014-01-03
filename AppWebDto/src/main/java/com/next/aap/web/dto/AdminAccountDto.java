@@ -1,8 +1,11 @@
 package com.next.aap.web.dto;
 
+import java.io.Serializable;
 
-public class AdminAccountDto {
 
+public class AdminAccountDto implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private AccountType accountType;
 	private Double balance;

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.web.dto.AdminAccountDto;
+import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
@@ -17,7 +18,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 @Scope("session")
 @URLMapping(id = "treasuryIncomingPanelBean", beanName="treasuryIncomingPanelBean", pattern = "/admin/treasury", viewId = "/WEB-INF/jsf/treasury_incoming.xhtml")
 @URLBeanName("treasuryIncomingPanelBean")
-public class TreasuryIncomingPanelBean extends BaseJsfBean {
+public class TreasuryIncomingPanelBean extends BaseMultiPermissionAdminJsfBean {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -26,11 +27,13 @@ public class TreasuryIncomingPanelBean extends BaseJsfBean {
 	
 	private List<AdminAccountDto> accountList;
 
+	public TreasuryIncomingPanelBean(){
+		super("/admin/treasury" , AppPermission.TREASURY);
+	}
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
 	public void init() throws Exception {
-		UserDto loggedInUser = getLoggedInUser(true,buildLoginUrl("/admin/treasury"));
-		if(loggedInUser == null){
+		if(!checkUserAccess()){
 			return;
 		}
 		accountList = aapService.getAdminAccountDetails(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());

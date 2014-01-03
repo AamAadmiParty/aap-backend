@@ -6,6 +6,7 @@ import java.util.List;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.service.AapService;
+import com.next.aap.core.util.DataUtil;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.CountryDto;
@@ -69,6 +71,8 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	
 	private boolean showResult;
 	private boolean showSearchPanel;
+	
+	private double fee = DataUtil.MEMBERSHIP_FEE;
 	
 	
 	@Autowired
@@ -222,16 +226,26 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 			sendErrorMessageToJsfScreen("Please enter Member full name");
 		}
 		if (isValidInput()) {
-			boolean isNew = (selectedUserForEditing.getId() == null || selectedUserForEditing.getId() <= 0);
-			selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
-			ssaveLoggedInUserInSession(selectedUserForEditing);
-			sendInfoMessageToJsfScreen("Profile saved succesfully.");
-			if(isNew){
-				searchMemberResult.getUsers().add(0, selectedUserForEditing);
-			}else{
-				searchMemberResult = aapService.searchMembers(searchedUser);
+			try{
+				boolean isNew = (selectedUserForEditing.getId() == null || selectedUserForEditing.getId() <= 0);
+				selectedUserForEditing.setMember(true);
+				selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
+				ssaveLoggedInUserInSession(selectedUserForEditing);
+				sendInfoMessageToJsfScreen("Profile saved succesfully.");
+				if(isNew){
+					searchMemberResult.getUsers().add(0, selectedUserForEditing);
+				}else{
+					searchMemberResult = aapService.searchMembers(searchedUser);
+				}
+				
+				if(selectedUserForEditing.getMembershipStatus().equals("Payment Await")){
+					//Show the Payment Dialoge
+				    RequestContext.getCurrentInstance().execute("paymentDialog.show()");
+				}
+				showSearchPanel = true;
+			}catch(Exception ex){
+				sendErrorMessageToJsfScreen(ex.getMessage());
 			}
-			showSearchPanel = true;
 		}
 	}
 
@@ -239,7 +253,36 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 		searchMemberResult = aapService.searchMembers(searchedUser);
 		showResult = true;
 	}
-
+	
+	public void receiveMembershipPayment(){
+		if(fee < DataUtil.MEMBERSHIP_FEE){
+			sendErrorMessageToJsfScreen("Payment must be more then or equal to "+DataUtil.MEMBERSHIP_FEE+" Rs");
+		}
+		if(isValidInput()){
+			try{
+				UserDto loggedInAdmin = getLoggedInUser();
+				selectedUserForEditing = aapService.receiveMembershipFee(selectedUserForEditing.getId(), fee, loggedInAdmin.getId());
+				System.out.println("membership confirmed");
+				if(fee > DataUtil.MEMBERSHIP_FEE){
+					sendInfoMessageToJsfScreen("Membership is confirmed and donation of Rs " + (fee - DataUtil.MEMBERSHIP_FEE)+" has been received");	
+				}else{
+					sendInfoMessageToJsfScreen("Membership is confirmed");
+				}
+				searchMemberResult = aapService.searchMembers(searchedUser);
+				RequestContext.getCurrentInstance().execute("paymentDialog.hide()");
+				fee = DataUtil.MEMBERSHIP_FEE;
+			}catch(Exception ex){
+				ex.printStackTrace();
+				sendErrorMessageToJsfScreen(ex.getMessage(), ex);
+			}
+		}
+	}
+	public boolean isDisablePaymentReceiveButton(){
+		if(selectedUserForEditing.getMembershipStatus() == null){
+			return true;
+		}
+		return !selectedUserForEditing.getMembershipStatus().equals("Payment Await");
+	}
 	public void handleStateChange(AjaxBehaviorEvent event) {
 		try {
 			if (searchedUser.getStateVotingId() == 0 || searchedUser.getStateVotingId() == null) {
@@ -559,6 +602,14 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void setShowSearchPanel(boolean showSearchPanel) {
 		this.showSearchPanel = showSearchPanel;
+	}
+
+	public double getFee() {
+		return fee;
+	}
+
+	public void setFee(double fee) {
+		this.fee = fee;
 	}
 
 }

@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.AcRole;
+import com.next.aap.core.persistance.AccountTransaction;
 import com.next.aap.core.persistance.AssemblyConstituency;
 import com.next.aap.core.persistance.Blog;
 import com.next.aap.core.persistance.ContentTweet;
@@ -34,6 +35,7 @@ import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
+import com.next.aap.core.persistance.Account;
 import com.next.aap.core.persistance.FacebookAccount;
 import com.next.aap.core.persistance.FacebookApp;
 import com.next.aap.core.persistance.FacebookAppPermission;
@@ -58,6 +60,8 @@ import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
 import com.next.aap.core.persistance.dao.AcRoleDao;
+import com.next.aap.core.persistance.dao.AccountDao;
+import com.next.aap.core.persistance.dao.AccountTransactionDao;
 import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
 import com.next.aap.core.persistance.dao.BlogDao;
 import com.next.aap.core.persistance.dao.ContentTweetDao;
@@ -87,6 +91,10 @@ import com.next.aap.core.persistance.dao.StateRoleDao;
 import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
+import com.next.aap.core.util.DataUtil;
+import com.next.aap.web.dto.AccountTransactionMode;
+import com.next.aap.web.dto.AccountTransactionType;
+import com.next.aap.web.dto.AccountType;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
@@ -180,6 +188,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	private PollQuestionDao pollQuestionDao;
 	@Autowired
 	private PollAnswerDao pollAnswerDao;
+	@Autowired
+	private AccountDao accountDao;
+	@Autowired
+	private AccountTransactionDao accountTransactionDao;
 	
 
 	@Value("${voa_facebook_app_id}")
@@ -551,9 +563,9 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public UserDto saveUser(UserDto userDto) {
 		User user;
+		System.out.println("userDto.getId = "+userDto.getId());
 		if (userDto.getId() == null || userDto.getId() <= 0) {
 			user = new User();
-			user.setMember(true);
 		} else {
 			user = userDao.getUserById(userDto.getId());
 			if (user == null) {
@@ -2482,6 +2494,76 @@ public class AapServiceImpl implements AapService, Serializable {
 		pollQuestion.setContentStatus(ContentStatus.Published);
 		pollQuestion = pollQuestionDao.savePollQuestion(pollQuestion);
 		return convertPollQuestion(pollQuestion);
+	}
+
+	private Account getAdminAccount(User adminUser){
+		Account account = accountDao.getAdminAccountByUserId(adminUser.getId());
+		if(account == null){
+			account = new Account();
+			account.setAccountOwner(adminUser);
+			account.setAccountType(AccountType.Admin);
+			account.setBalance(0.0);
+			account.setDescription("Admin account for " +adminUser.getMembershipNumber());
+			account.setDateCreated(new Date());
+			account.setDateModified(new Date());
+			account.setGlobal(false);
+			account = accountDao.saveAccount(account);
+		}
+		return account;
+	}
+	private void addAccountTransaction(Account account, double amount, User adminUser, Date now, String description){
+		AccountTransaction accountTransaction = new AccountTransaction();
+		accountTransaction.setAccount(account);
+		accountTransaction.setAccountTransactionMode(AccountTransactionMode.Cash);
+		accountTransaction.setAccountTransactionType(AccountTransactionType.Credit);
+		accountTransaction.setAmount(amount);
+		accountTransaction.setBalance(account.getBalance() + amount);
+		accountTransaction.setDateCreated(now);
+		accountTransaction.setDateModified(now);
+		accountTransaction.setCreatorId(adminUser.getId());
+		accountTransaction.setModifierId(adminUser.getId());
+		accountTransaction.setDescription(description);
+		accountTransaction.setTransactionDate(now);
+		accountTransaction = accountTransactionDao.saveAccountTransaction(accountTransaction);
+		
+		account.setBalance(account.getBalance() + amount);
+	}
+	
+	@Override
+	@Transactional
+	public UserDto receiveMembershipFee(Long userId, double amount, Long adminUserId) {
+
+		if(amount < DataUtil.MEMBERSHIP_FEE){
+			throw new RuntimeException("Amount must be more then " + DataUtil.MEMBERSHIP_FEE+ " Rs");
+		}
+		User user = userDao.getUserById(userId);
+		User adminUser = userDao.getUserById(adminUserId);
+		
+		//First COnfirm Membership
+		user.setMembershipStatus("Confirmed");
+		user.setMembershipConfirmedBy(adminUser);
+		user = userDao.saveUser(user);
+		
+		//Now handle accounting
+		Account adminAccount = getAdminAccount(adminUser);
+		//create Membership transaction under this account
+		Date now = new Date();
+		
+		addAccountTransaction(adminAccount, DataUtil.MEMBERSHIP_FEE, adminUser, now, "Membership fee for "+user.getMembershipNumber());
+		
+		
+		if(amount > DataUtil.MEMBERSHIP_FEE){
+			double donationAmount = amount - DataUtil.MEMBERSHIP_FEE;
+			//TODO create a donation entry, will be done later
+			
+			addAccountTransaction(adminAccount, donationAmount, adminUser, now, "Donation by "+user.getMembershipNumber());
+		}
+		
+		//now update overall account balance
+		adminAccount.setBalance(adminAccount.getBalance() + amount);
+		adminAccount = accountDao.saveAccount(adminAccount);
+		
+		return convertUser(user);
 	}
 	
 	

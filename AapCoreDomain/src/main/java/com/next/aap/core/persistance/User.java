@@ -197,6 +197,12 @@ public class User {
 	@Column(name = "voter_id")
 	private String voterId;
 	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="membership_confirmed_by")
+    private User membershipConfirmedBy;
+	@Column(name="membership_confirmed_by", insertable=false,updatable=false)
+	private Long membershipConfirmedById;
+	
 	public Long getId() {
 		return id;
 	}
@@ -571,6 +577,22 @@ public class User {
 
 	public void setVoterId(String voterId) {
 		this.voterId = voterId;
+	}
+
+	public User getMembershipConfirmedBy() {
+		return membershipConfirmedBy;
+	}
+
+	public void setMembershipConfirmedBy(User membershipConfirmedBy) {
+		this.membershipConfirmedBy = membershipConfirmedBy;
+	}
+
+	public Long getMembershipConfirmedById() {
+		return membershipConfirmedById;
+	}
+
+	public void setMembershipConfirmedById(Long membershipConfirmedById) {
+		this.membershipConfirmedById = membershipConfirmedById;
 	}
 
 	@Override

@@ -8,7 +8,6 @@ import org.springframework.social.facebook.api.GroupMembership;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 
-import com.next.aap.core.persistance.dao.PollAnswerDao;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.ContentTweetDto;
@@ -161,4 +160,6 @@ public interface AapService {
 	List<PollAnswerDto> getPollAnswers(Long pollQuestionId);
 	
 	PollQuestionDto publishPollQuestion(Long pollQuestionId);
+	
+	UserDto receiveMembershipFee(Long userId, double amount, Long adminUserId);
 }

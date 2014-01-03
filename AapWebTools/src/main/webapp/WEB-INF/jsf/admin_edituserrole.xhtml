@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
-	<title>Search or Register Member</title>
+	<title>Edit User Roles</title>
 	<style>
 .topAlignPanelColumns td {
 	vertical-align: top;
@@ -50,7 +50,7 @@
 			Getting Assembly Constituency List<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
-			<p:blockUI block="userProfileForm" trigger=":userProfileForm:locationSelectionRadio,:userProfileForm:memberState,:userProfileForm:opt1,:userProfileForm:memberDistrict">
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:locationSelectionRadio,:userProfileForm:memberState,:userProfileForm:opt1,:userProfileForm:memberDistrict,:userProfileForm:roles">
 			Please wait<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
@@ -66,6 +66,7 @@
 
 			<h:form id="userProfileForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="userProfileFormMainPanel">
 				<p:outputPanel rendered="#{adminEditUserRoleBean.showSearchPanel}">
 					<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
 						<p:panelGrid columns="2" cellpadding="5" style="width:495px;">
@@ -209,7 +210,7 @@
 
 
 
-					<p:commandButton id="searchMember" update=":userProfileForm" value="Search Member" actionListener="#{adminEditUserRoleBean.searchMember}" />
+					<p:commandButton id="searchMember" update=":userProfileForm:userProfileFormMainPanel" value="Search Member" actionListener="#{adminEditUserRoleBean.searchMember}" />
 					<p:tooltip for="searchMember">Search Member</p:tooltip>
 					<br></br>
 					<p:outputPanel id="userResultPanelStart"></p:outputPanel>
@@ -262,7 +263,7 @@
 									<h:outputText value="Update" />
 								</f:facet>
 								<!-- <p:commandButton update=":userProfileForm" value="Update Roles" disabled="#{!adminEditUserRoleBean.isMemberUpdateAllowed(oneUser)}"> -->
-								<p:commandButton update=":userProfileForm" value="Update Roles">
+								<p:commandButton update=":userProfileForm:userProfileFormMainPanel" value="Update Roles">
 									<f:setPropertyActionListener value="#{oneUser}" target="#{adminEditUserRoleBean.selectedUserForEditing}" />
 								</p:commandButton>
 							</p:column>
@@ -297,21 +298,22 @@
 
 								</h:panelGrid>
 								<p:outputLabel value="You can not edit this member" rendered="#{!adminEditUserRoleBean.isMemberUpdateAllowed(oneUser)}"></p:outputLabel>
-								<p:commandButton id="editMemberButton" update=":userProfileForm" value="Update Roles" rendered="#{adminEditUserRoleBean.isMemberUpdateAllowed(oneUser)}">
+								<p:commandButton id="editMemberButton" update=":userProfileForm:userProfileFormMainPanel" value="Update Roles" rendered="#{adminEditUserRoleBean.isMemberUpdateAllowed(oneUser)}">
 									<f:setPropertyActionListener value="#{oneUser}" target="#{adminEditUserRoleBean.selectedUserForEditing}" />
 								</p:commandButton>
 
 							</p:rowExpansion>
 						</p:dataTable>
 						<br></br>
-						<p:commandButton id="createNewMember" update=":userProfileForm" value="Create New Member" disabled="#{adminEditUserRoleBean.searchMemberResult.userAlreadyExists}"
+						<p:commandButton id="createNewMember" update=":userProfileForm:userProfileFormMainPanel" value="Create New Member" disabled="#{adminEditUserRoleBean.searchMemberResult.userAlreadyExists}"
 							actionListener="#{adminEditUserRoleBean.createNewMember}" />
 						<p:outputLabel value="#{adminEditUserRoleBean.searchMemberResult.userAlreadyExistsMessage}" rendered="#{adminEditUserRoleBean.searchMemberResult.userAlreadyExists}"></p:outputLabel>
 					</p:outputPanel>
 				</p:outputPanel>
 				<p:outputPanel rendered="#{!adminEditUserRoleBean.showSearchPanel}">
 					<p:outputPanel id="GlobalAdminPanel">
-						<h:panelGrid columns="4">
+						<p:panelGrid columns="4" >
+							<f:facet name="header">User Detail</f:facet>
 							<h:outputText value="Name" />
 							<h:outputText value="#{adminEditUserRoleBean.selectedUserForEditing.name}" />
 
@@ -331,7 +333,7 @@
 
 							<h:outputText value="Membership Status" />
 							<h:outputText value="#{adminEditUserRoleBean.selectedUserForEditing.membershipStatus}" />
-						</h:panelGrid>
+						</p:panelGrid>
 
 						<br></br>
 						<p:outputPanel id="customPanel">
@@ -396,10 +398,10 @@
 
 							</h:panelGrid>
 
-							<p:dataTable id="multiCars" rendered="#{adminEditUserRoleBean.showRolesPanel}" var="oneRole" value="#{adminEditUserRoleBean.userLocationRoles}" paginator="true" rows="10"
+							<p:dataTable id="roles" rendered="#{adminEditUserRoleBean.showRolesPanel}" var="oneRole" value="#{adminEditUserRoleBean.userLocationRoles}" paginator="true" rows="10"
 								selection="#{adminEditUserRoleBean.editingUserLocationRoles}">
 
-								<f:facet name="header">  Assign Roles </f:facet>
+								<f:facet name="header"> Assign Roles </f:facet>
 
 								<p:column selectionMode="multiple" style="width:2%" />
 
@@ -408,7 +410,7 @@
 								<p:column headerText="Description" style="width:75%">#{oneRole.description}</p:column>
 							</p:dataTable>
 						</p:outputPanel>
-					<p:commandButton id="saveUserRoles" update=":userProfileForm" value="Save user Roles" actionListener="#{adminEditUserRoleBean.saveProfile}"
+					<p:commandButton id="saveUserRoles" update=":userProfileForm:userProfileFormMainPanel" value="Save user Roles" actionListener="#{adminEditUserRoleBean.saveProfile}"
 					disabled="#{adminEditUserRoleBean.disableSaveMemberRoleButton}" />
 					<p:commandButton id="cancel" update=":userProfileForm" value="Cancel" actionListener="#{adminEditUserRoleBean.cancelSaveMemberRole}" />
 					</p:outputPanel>
@@ -417,7 +419,7 @@
 
 				</p:outputPanel>
 
-
+			</p:outputPanel>
 
 			</h:form>
 			<!-- header ends -->

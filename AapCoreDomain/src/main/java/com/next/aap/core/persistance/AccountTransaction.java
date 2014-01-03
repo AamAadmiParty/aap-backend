@@ -17,10 +17,9 @@ import javax.persistence.Version;
 
 import com.next.aap.web.dto.AccountTransactionMode;
 import com.next.aap.web.dto.AccountTransactionType;
-import com.next.aap.web.dto.AccountType;
 
 @Entity
-@Table(name="accounts")
+@Table(name="account_transactions")
 public class AccountTransaction {
 
 	@Id

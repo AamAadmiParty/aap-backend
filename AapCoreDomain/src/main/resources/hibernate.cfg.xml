@@ -5,6 +5,8 @@
 
 <hibernate-configuration>
 	<session-factory>
+	    <mapping class="com.next.aap.core.persistance.Account" />
+	    <mapping class="com.next.aap.core.persistance.AccountTransaction" />
 		<mapping class="com.next.aap.core.persistance.AcRole" />
 		<mapping class="com.next.aap.core.persistance.AapAccount" />
 		<mapping class="com.next.aap.core.persistance.AssemblyConstituency" />

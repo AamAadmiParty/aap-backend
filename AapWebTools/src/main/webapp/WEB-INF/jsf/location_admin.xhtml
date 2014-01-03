@@ -33,15 +33,15 @@
 
 </h:head>
 <h:body>
-	<ui:include src="menu.xhtml" />
+	<ui:include src="admin_menu.xhtml" />
 	<!-- menu ends -->
+	<!--
 	<div style="width: 800px; margin: 0 auto;">
 		<div style="width: 800px; margin: 0;">
 
 			<p:outputPanel rendered="#{!menuBean.admin}">
 				You do not have access to Admin Panel
 			</p:outputPanel>
-			<!-- header starts -->
 			<h:form id="adminForm" rendered="#{menuBean.admin}">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<h3>Admin Panel</h3>
@@ -75,6 +75,10 @@
 						styleClass="ui-priority-primary">
 					</p:commandButton>
 
+					<p:commandButton value="Treasury" actionListener="#{locationAdminBean.goToTreasuryPage}" rendered="#{locationAdminBean.treasuryAllowed}"
+						styleClass="ui-priority-primary">
+					</p:commandButton>
+
 				</p:panelGrid>
 				<br></br>
 				<br></br>
@@ -83,10 +87,8 @@
 
 
 			</h:form>
-			<!-- header ends -->
 
 
-			<!-- footer starts -->
 			<div class="footerWrapper">
 				<div class="container_24">
 					<div class="grid_24 panel footer">
@@ -95,9 +97,9 @@
 				</div>
 				<div class="clear"></div>
 			</div>
-			<!-- footer ends -->
 		</div>
 	</div>
+	-->
 
 </h:body>
 </html>

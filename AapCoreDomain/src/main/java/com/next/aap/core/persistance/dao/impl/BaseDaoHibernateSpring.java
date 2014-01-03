@@ -97,7 +97,9 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 		
 		return (List<T>)hibernateQuery.list();
 	}
-	
+	public List<Long> executeSqlQueryGetListOfLong(String query){
+		return executeSqlQueryGetListOfLong(query, null);
+	}
 	public List<Long> executeSqlQueryGetListOfLong(String query,Map<String, Object> params){
 		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
 		if(params != null){

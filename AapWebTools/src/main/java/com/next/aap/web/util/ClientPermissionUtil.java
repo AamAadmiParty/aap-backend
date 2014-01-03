@@ -39,6 +39,10 @@ public class ClientPermissionUtil {
 				|| isAllowed(AppPermission.UPDATE_GLOBAL_MEMBER, userRolePermissionDto, locationId, locationType)
 				|| isAllowed(AppPermission.UPDATE_MEMBER, userRolePermissionDto, locationId, locationType);
 	}
+	public static boolean isTreasuryAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return 
+				isAllowed(AppPermission.TREASURY, userRolePermissionDto, locationId, locationType);
+	}
 
 	public static boolean isManageUserRoleAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return isAllowed(AppPermission.EDIT_USER_ROLES, userRolePermissionDto, locationId, locationType);

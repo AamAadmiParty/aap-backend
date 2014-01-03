@@ -95,6 +95,7 @@ import com.next.aap.core.util.DataUtil;
 import com.next.aap.web.dto.AccountTransactionMode;
 import com.next.aap.web.dto.AccountTransactionType;
 import com.next.aap.web.dto.AccountType;
+import com.next.aap.web.dto.AdminAccountDto;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
@@ -920,6 +921,10 @@ public class AapServiceImpl implements AapService, Serializable {
 		createRoleWithPermissions("PollApproverRole", "User of this role will be able to approve/publish existing poll for a location", true, true, true, true,
 				AppPermission.APPROVE_POLL);
 */
+		
+		createRoleWithPermissions("Treasury", "User of this role will be able to do all Treasury operation of a location", true, true, true, true,
+				AppPermission.TREASURY);
+		
 		
 
 		logger.info("All Roles and permissions are created");
@@ -2564,6 +2569,57 @@ public class AapServiceImpl implements AapService, Serializable {
 		adminAccount = accountDao.saveAccount(adminAccount);
 		
 		return convertUser(user);
+	}
+
+	@Override
+	@Transactional
+	public List<AdminAccountDto> getAdminAccountDetails(PostLocationType locationType, Long locationId) {
+		List<Account> accounts = null;
+		List<Long> admins = null;
+		switch (locationType) {
+		case Global:
+			admins = userDao.getAllAdminUserForGlobalTreasur();
+			break;
+		case STATE:
+			admins = userDao.getAllAdminUserForStateTreasure(locationId);
+			break;
+		case DISTRICT:
+			admins = userDao.getAllAdminUserForDistrictTreasure(locationId);
+			break;
+		case AC:
+			admins = userDao.getAllAdminUserForAcTreasure(locationId);
+			break;
+		case PC:
+			admins = userDao.getAllAdminUserForPcTreasure(locationId);
+			break;
+		default:
+		}
+		System.out.println("*** "+ locationType +" ,admins= "+ admins);
+		if(admins != null){
+			accounts = accountDao.getAccountsByUserId(admins);
+		}
+		System.out.println("*** "+ locationType +"  ,accounts= "+ accounts);
+		return convertAdminAccounts(accounts);
+	}
+	
+	private AdminAccountDto convertAdminAccount(Account oneAccount){
+		if(oneAccount == null){
+			return null;
+		}
+		AdminAccountDto adminAccountDto = new AdminAccountDto();
+		BeanUtils.copyProperties(oneAccount, adminAccountDto);
+		adminAccountDto.setAccountOwnerDto(convertUser(oneAccount.getAccountOwner()));
+		return adminAccountDto;
+	}
+	private List<AdminAccountDto> convertAdminAccounts(List<Account> accounts){
+		List<AdminAccountDto> adminAccountDtos = new ArrayList<>();
+		if(accounts == null){
+			return null;
+		}
+		for(Account oneAccount : accounts){
+			adminAccountDtos.add(convertAdminAccount(oneAccount));
+		}
+		return adminAccountDtos;
 	}
 	
 	

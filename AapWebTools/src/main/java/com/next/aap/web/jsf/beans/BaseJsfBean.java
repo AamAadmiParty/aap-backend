@@ -29,7 +29,7 @@ public class BaseJsfBean extends BaseController implements Serializable {
 		}
 	}
 	protected boolean isLocationNotSelected(MenuBean menuBean){
-		return (menuBean.getLocationType() == null || (menuBean.getLocationType() != PostLocationType.Global && (menuBean.getAdminSelectedLocationId() == null || menuBean.getAdminSelectedLocationId() <= 0)));
+		return (menuBean.getLocationType() == null || menuBean.getLocationType() == PostLocationType.NA || (menuBean.getLocationType() != PostLocationType.Global && (menuBean.getAdminSelectedLocationId() == null || menuBean.getAdminSelectedLocationId() <= 0)));
 	}
 
 	public void buildAndRedirect(String url) {

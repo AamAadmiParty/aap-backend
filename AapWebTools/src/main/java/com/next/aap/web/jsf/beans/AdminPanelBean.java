@@ -1,10 +1,12 @@
 package com.next.aap.web.jsf.beans;
 
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
@@ -44,6 +46,7 @@ public class AdminPanelBean extends BaseJsfBean {
 		if(menuBean.getAdminPcs() != null && menuBean.getAdminPcs().size() > 0){
 			totalLocation = totalLocation + menuBean.getAdminPcs().size();
 		}
+		System.out.println("Total Locations are "+totalLocation);
 		
 		if(totalLocation == 1){
 			if(menuBean.isGlobalAdmin()){
@@ -63,7 +66,11 @@ public class AdminPanelBean extends BaseJsfBean {
 			}
 			return;
 		}
-		
+		if(menuBean.getLocationType() == null || menuBean.getLocationType() == PostLocationType.NA){
+			System.out.println("Showing chooseLocation");
+			RequestContext.getCurrentInstance().execute("chooseLocation.show()");
+			
+		}
 	}
 
 	public LoginAccountDto getLoginAccounts() {

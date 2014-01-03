@@ -12,11 +12,13 @@ import org.springframework.stereotype.Component;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
+import com.next.aap.web.util.ClientPermissionUtil;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 
 @Component
@@ -26,8 +28,8 @@ public class MenuBean extends BaseJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long adminSelectedLocationId;
-	private PostLocationType locationType;
+	private Long adminSelectedLocationId = -1L;
+	private PostLocationType locationType = PostLocationType.NA;
 	private StateDto selectedAdminState;
 	private DistrictDto selectedAdminDistrict;
 	private AssemblyConstituencyDto selectedAdminAc;
@@ -172,6 +174,119 @@ public class MenuBean extends BaseJsfBean {
 		buildAndRedirect("/admin/location");
 	}
 	
+	public LoginAccountDto getLoginAccounts() {
+		return getLoggedInAccountsFromSesion();
+	}
+
+	public UserDto getUser() {
+		return getLoggedInUser();
+	}
+	
+	public void goToVoiceOfAapAdminPageFb(){
+		if(isVoiceOfAapFbAllowed()){
+			buildAndRedirect("/admin/voiceofaapfb");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	public void goToVoiceOfAapAdminPageTwitter(){
+		if(isVoiceOfAapTwitterAllowed()){
+			buildAndRedirect("/admin/voiceofaaptwitter");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	public void goToManageNewsPage(){
+		if(isManageNewsAllowed()){
+			buildAndRedirect("/admin/news");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	public void goToManageBlogPage(){
+		if(isManageBlogAllowed()){
+			buildAndRedirect("/admin/blog");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	public void goToManagePollPage(){
+		if(isManagePollAllowed()){
+			buildAndRedirect("/admin/poll");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	public void goToManageMemberPage(){
+		if(isManageMemberAllowed()){
+			buildAndRedirect("/admin/register");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	public void goToTreasuryPage(){
+		if(isTreasuryAllowed()){
+			buildAndRedirect("/admin/treasury");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	
+	
+	public void goToManageUserRolePage(){
+		if(isManageUserRoleAllowed()){
+			buildAndRedirect("/admin/roles");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	
+	
+	
+	public boolean isVoiceOfAapAllowed(){
+		return isVoiceOfAapFbAllowed() || isVoiceOfAapTwitterAllowed();
+	}
+	public boolean isVoiceOfAapFbAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isVoiceOfAapFbAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isVoiceOfAapTwitterAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isVoiceOfAapTwitterAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isContentAllowed(){
+		return isManageNewsAllowed() || isManageBlogAllowed() || isManagePollAllowed();
+	}
+	public boolean isManageNewsAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageNewsAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isManageBlogAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageBlogAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isManagePollAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManagePollAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isMemberAllowed(){
+		return isManageMemberAllowed();
+	}
+	public boolean isManageMemberAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageMemberAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isTreasuryAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isTreasuryAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isAdminAllowed(){
+		return isManageUserRoleAllowed();
+	}
+	public boolean isManageUserRoleAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageUserRoleAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
 
 	public PostLocationType getLocationType() {
 		return locationType;
@@ -189,7 +304,7 @@ public class MenuBean extends BaseJsfBean {
 		case PC :
 			return selectedAdminPc.getName();
 		}
-		return "";
+		return "No Location Selected";
 	}
 
 	public Long getAdminSelectedLocationId() {

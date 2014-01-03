@@ -23,10 +23,11 @@ public class BaseAdminJsfBean extends BaseJsfBean{
 		if(loggedInUser == null){
 			return false;
 		}
-		if(menuBean.getLocationType() == null){
+		if(isLocationNotSelected(menuBean)){
 			buildAndRedirect("/admin/home");
 			return false;
 		}
+
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		if(!ClientPermissionUtil.isAllowed(appPermission, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType())){
 			buildAndRedirect("/admin/notallowed");

@@ -20,7 +20,8 @@ public enum AppPermission {
 	CREATE_POLL,
 	UPDATE_POLL,
 	DELETE_POLL,
-	APPROVE_POLL
+	APPROVE_POLL,
+	TREASURY
 	;
 	
 }

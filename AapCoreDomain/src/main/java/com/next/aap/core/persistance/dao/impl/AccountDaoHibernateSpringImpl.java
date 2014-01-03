@@ -1,11 +1,14 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.persistance.Account;
+import com.next.aap.core.persistance.Blog;
 import com.next.aap.core.persistance.dao.AccountDao;
 import com.next.aap.web.dto.AccountType;
 
@@ -99,5 +102,17 @@ public class AccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Accoun
 		params.put("accountType", AccountType.Admin);
 		Account account = executeQueryGetObject("from Account where accountOwnerId = :accountOwnerId and accountType = :accountType", params);
 		return account;
+	}
+
+	@Override
+	public List<Account> getAccountsByUserId(List<Long> userids) {
+		if(userids == null || userids.isEmpty()){
+			return null;
+		}
+		String query = "from Account where accountOwnerId in (:ids) order by balance desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", userids);
+		List<Account> list = executeQueryGetList(query, queryParams);
+		return list;
 	}
 }

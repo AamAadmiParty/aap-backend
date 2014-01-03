@@ -1,5 +1,7 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.User;
 import com.next.aap.core.persistance.dao.UserDao;
+import com.next.aap.web.dto.AccountType;
 
 @Repository
 public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> implements UserDao {
@@ -118,6 +121,84 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 		params.put("votingAcId", votingAcId);
 		String query = "from User where (assemblyConstituencyLivingId = :livingAcId or assemblyConstituencyVotingId = :votingAcId) and UPPER(name) like :name";
 		return executeQueryGetList(query, params);
+	}
+
+	@Override
+	public List<Long> getAllAdminUserForGlobalTreasur() {
+		String sqlQuery = "select distinct uar.user_id from accounts a, user_all_roles uar where a.account_owner_id = uar.user_id and a.account_type = :accountType";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("accountType", AccountType.Admin.toString());
+		List<Long> userIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(userIds == null){
+			userIds =  new ArrayList<>();
+		}
+		return userIds;
+
+	}
+
+	@Override
+	public List<Long> getAllAdminUserForStateTreasure(long stateId) {
+		String sqlQuery = "select distinct uar.user_id from accounts a, user_state_roles uar , state_role sr " +
+				"where a.account_owner_id = uar.user_id and uar.state_role_id = sr.id and sr.state_id = :stateId " +
+				"  and a.account_type = :accountType";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("stateId", stateId);
+		sqlQueryParams.put("accountType", AccountType.Admin.toString());
+		List<Long> userIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(userIds == null){
+			userIds =  new ArrayList<>();
+		}
+		return userIds;
+	}
+
+	@Override
+	public List<Long> getAllAdminUserForDistrictTreasure(long districtId) {
+		String sqlQuery = "select distinct uar.user_id from accounts a, user_district_roles uar , district_role sr " +
+				"where a.account_owner_id = uar.user_id and uar.district_role_id = sr.id and sr.district_id = :districtId " +
+				" and a.account_type = :accountType";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("districtId", districtId);
+		sqlQueryParams.put("accountType", AccountType.Admin.toString());
+		List<Long> userIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(userIds == null){
+			userIds =  new ArrayList<>();
+		}
+		return userIds;
+	}
+
+	@Override
+	public List<Long> getAllAdminUserForAcTreasure(long acId) {
+		String sqlQuery = "select distinct uar.user_id from accounts a, user_ac_roles uar , ac_role sr " +
+				"where a.account_owner_id = uar.user_id and uar.ac_role_id = sr.id and sr.ac_id = :acId " +
+				" and a.account_type = :accountType";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("acId", acId);
+		sqlQueryParams.put("accountType", AccountType.Admin.toString());
+		List<Long> userIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(userIds == null){
+			userIds =  new ArrayList<>();
+		}
+		return userIds;
+	}
+
+	@Override
+	public List<Long> getAllAdminUserForPcTreasure(long pcId) {
+		String sqlQuery = "select distinct uar.user_id from accounts a, user_pc_roles uar , pc_role sr " +
+				"where a.pccount_owner_id = uar.user_id and uar.pc_role_id = sr.id and sr.pc_id = :pcId " +
+				" and a.account_type = :accountType";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("pcId", pcId);
+		sqlQueryParams.put("accountType", AccountType.Admin.toString());
+		List<Long> userIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(userIds == null){
+			userIds =  new ArrayList<>();
+		}
+		return userIds;
 	}
 		
 }

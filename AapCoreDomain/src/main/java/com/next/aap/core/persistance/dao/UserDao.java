@@ -70,5 +70,16 @@ public interface UserDao {
 
 
 	List<User> searchUserOfAssemblyConstituency(String name,Long livingAcId,Long votingAcId);
+	
+	
+	List<Long> getAllAdminUserForGlobalTreasur();
+	
+	List<Long> getAllAdminUserForStateTreasure(long stateId);
+	
+	List<Long> getAllAdminUserForDistrictTreasure(long districtId);
+	
+	List<Long> getAllAdminUserForAcTreasure(long acId);
+	
+	List<Long> getAllAdminUserForPcTreasure(long pcId);
 
 }

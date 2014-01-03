@@ -1,5 +1,7 @@
 package com.next.aap.core.persistance.dao;
 
+import java.util.List;
+
 import com.next.aap.core.persistance.Account;
 
 public interface AccountDao {
@@ -19,5 +21,7 @@ public interface AccountDao {
 	public abstract Account getPcTreasuryAccount(long acId);
 	
 	public abstract Account getAdminAccountByUserId(Long userId);
+	
+	public abstract List<Account> getAccountsByUserId(List<Long> userids);
 
 }

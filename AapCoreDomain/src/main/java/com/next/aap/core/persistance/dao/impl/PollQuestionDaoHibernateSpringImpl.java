@@ -89,9 +89,9 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		params.put("districtId", districtId);
 		params.put("stateId", stateId);
 		
-		String query = "select pollQuestionlist.pollQuestionId from ((select pollQuestion_id as pollQuestionId from pollQuestion_ac where ac_id = :acId) " +
-				"union (select pollQuestion_id as pollQuestionId from pollQuestion_district where district_id= :districtId) " +
-				"union (select pollQuestion_id as pollQuestionId from pollQuestion_state where state_id= :stateId) " +
+		String query = "select pollQuestionlist.pollQuestionId from ((select poll_question_id as pollQuestionId from poll_question_ac where ac_id = :acId) " +
+				"union (select poll_question_id as pollQuestionId from poll_question_district where district_id= :districtId) " +
+				"union (select poll_question_id as pollQuestionId from poll_question_state where state_id= :stateId) " +
 				"union (select id as pollQuestionId from pollQuestions where global_allowed= true)) pollQuestionlist order by pollQuestionlist.pollQuestionId desc";
 		List<Long> list = executeSqlQueryGetListOfLong(query, params);
 		return list;
@@ -103,9 +103,9 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		params.put("pcId", pcId);
 		params.put("stateId", stateId);
 		
-		String query = "select pollQuestionlist.pollQuestionId from ((select pollQuestion_id as pollQuestionId from pollQuestion_pc where pc_id = :pcId) " +
-				"union (select pollQuestion_id as pollQuestionId from pollQuestion_state where state_id= :stateId) " +
-				"union (select id as pollQuestionId from pollQuestions where global_allowed= true)) pollQuestionlist order by pollQuestionlist.pollQuestionId desc";
+		String query = "select pollQuestionlist.pollQuestionId from ((select poll_question_id as pollQuestionId from poll_question_pc where pc_id = :pcId) " +
+				"union (select poll_question_id as pollQuestionId from poll_question_state where state_id= :stateId) " +
+				"union (select id as pollQuestionId from poll_questions where global_allowed= true)) pollQuestionlist order by pollQuestionlist.pollQuestionId desc";
 		List<Long> list = executeSqlQueryGetListOfLong(query, params);
 		return list;
 	}
@@ -121,7 +121,7 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 
 	@Override
 	public List<PollQuestion> getStatePollQuestion(Long stateId) {
-		String sqlQuery = "select pollQuestion_id from pollQuestion_state where state_id = :stateId";
+		String sqlQuery = "select poll_question_id from poll_question_state where state_id = :stateId";
 		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
 		sqlQueryParams.put("stateId", stateId);
 		List<Long> pollQuestionIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
@@ -139,7 +139,7 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 
 	@Override
 	public List<PollQuestion> getDistrictPollQuestion(Long districtId) {
-		String sqlQuery = "select pollQuestion_id from pollQuestion_district where district_id = :districtId";
+		String sqlQuery = "select poll_question_id from poll_question_district where district_id = :districtId";
 		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
 		sqlQueryParams.put("districtId", districtId);
 		List<Long> pollQuestionIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
@@ -158,7 +158,7 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 
 	@Override
 	public List<PollQuestion> getAcPollQuestion(Long acId) {
-		String sqlQuery = "select pollQuestion_id from pollQuestion_ac where ac_id = :acId ";
+		String sqlQuery = "select poll_question_id from poll_question_ac where ac_id = :acId ";
 		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
 		sqlQueryParams.put("acId", acId);
 		List<Long> pollQuestionIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
@@ -176,7 +176,7 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 
 	@Override
 	public List<PollQuestion> getPcPollQuestion(Long pcId) {
-		String sqlQuery = "select pollQuestion_id from pollQuestion_pc where pc_id = :pcId ";
+		String sqlQuery = "select poll_question_id from poll_question_pc where pc_id = :pcId ";
 		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
 		sqlQueryParams.put("pcId", pcId);
 		List<Long> pollQuestionIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);

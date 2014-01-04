@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.AcRole;
+import com.next.aap.core.persistance.Account;
 import com.next.aap.core.persistance.AccountTransaction;
 import com.next.aap.core.persistance.AssemblyConstituency;
 import com.next.aap.core.persistance.Blog;
@@ -35,7 +36,6 @@ import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
-import com.next.aap.core.persistance.Account;
 import com.next.aap.core.persistance.FacebookAccount;
 import com.next.aap.core.persistance.FacebookApp;
 import com.next.aap.core.persistance.FacebookAppPermission;
@@ -44,6 +44,7 @@ import com.next.aap.core.persistance.FacebookGroupMembership;
 import com.next.aap.core.persistance.FacebookPage;
 import com.next.aap.core.persistance.FacebookPost;
 import com.next.aap.core.persistance.News;
+import com.next.aap.core.persistance.Office;
 import com.next.aap.core.persistance.ParliamentConstituency;
 import com.next.aap.core.persistance.PcRole;
 import com.next.aap.core.persistance.Permission;
@@ -77,6 +78,7 @@ import com.next.aap.core.persistance.dao.FacebookGroupMembershipDao;
 import com.next.aap.core.persistance.dao.FacebookPageDao;
 import com.next.aap.core.persistance.dao.FacebookPostDao;
 import com.next.aap.core.persistance.dao.NewsDao;
+import com.next.aap.core.persistance.dao.OfficeDao;
 import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
 import com.next.aap.core.persistance.dao.PcRoleDao;
 import com.next.aap.core.persistance.dao.PermissionDao;
@@ -108,6 +110,7 @@ import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
+import com.next.aap.web.dto.OfficeDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
@@ -193,6 +196,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private AccountDao accountDao;
 	@Autowired
 	private AccountTransactionDao accountTransactionDao;
+	@Autowired
+	private OfficeDao officeDao;
 	
 
 	@Value("${voa_facebook_app_id}")
@@ -922,8 +927,11 @@ public class AapServiceImpl implements AapService, Serializable {
 				AppPermission.APPROVE_POLL);
 */
 		
+		
 		createRoleWithPermissions("Treasury", "User of this role will be able to do all Treasury operation of a location", true, true, true, true,
 				AppPermission.TREASURY);
+		createRoleWithPermissions("OfficeAdmin", "User of this role will be able to do all Office related operation of a location, i.e. editing Office address,contact information etc", true, true, true, true,
+				AppPermission.EDIT_OFFICE_ADDRESS);
 		
 		
 
@@ -2594,11 +2602,9 @@ public class AapServiceImpl implements AapService, Serializable {
 			break;
 		default:
 		}
-		System.out.println("*** "+ locationType +" ,admins= "+ admins);
 		if(admins != null){
 			accounts = accountDao.getAccountsByUserId(admins);
 		}
-		System.out.println("*** "+ locationType +"  ,accounts= "+ accounts);
 		return convertAdminAccounts(accounts);
 	}
 	
@@ -2621,7 +2627,102 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return adminAccountDtos;
 	}
+
+	@Override
+	@Transactional
+	public List<OfficeDto> getLocationOffices(PostLocationType locationType, Long locationId) {
+		List<Office> offices = null;
+		switch (locationType) {
+		case Global:
+			offices = officeDao.getNationalOffices();
+			break;
+		case STATE:
+			offices = officeDao.getStateOffices(locationId);
+			break;
+		case DISTRICT:
+			offices = officeDao.getDistrictOffices(locationId);
+			break;
+		case AC:
+			offices = officeDao.getAcOffices(locationId);
+			break;
+		case PC:
+			offices = officeDao.getPcOffices(locationId);
+			break;
+		default:
+		}
+		return convertOffices(offices);
+	}
 	
+	private OfficeDto convertOffice(Office office){
+		if(office == null){
+			return null;
+		}
+		OfficeDto officeDto = new OfficeDto();
+		BeanUtils.copyProperties(office, officeDto);
+		return officeDto;
+	}
+	
+	private List<OfficeDto> convertOffices(Collection<Office> offices){
+		List<OfficeDto> returnList = new ArrayList<>();
+		if(offices == null){
+			return returnList;
+		}
+		for(Office oneOffice:offices){
+			returnList.add(convertOffice(oneOffice));
+		}
+		return returnList;
+	}
+
+	@Override
+	@Transactional
+	public OfficeDto saveOffice(OfficeDto officeDto) {
+		Office office = null;
+		if(officeDto.getId() == null || officeDto.getId() <= 0){
+			office = new Office();
+			office.setDateCreated(new Date());
+		}else{
+			office = officeDao.getOfficeById(officeDto.getId());
+		}
+		office.setAddress(officeDto.getAddress());
+		office.setDateModified(new Date());
+		office.setDepth(officeDto.getDepth());
+		office.setFbGroupId(officeDto.getFbGroupId());
+		office.setFbPageId(officeDto.getFbPageId());
+		office.setLandlineNumber1(officeDto.getLandlineNumber1());
+		office.setLandlineNumber2(officeDto.getLandlineNumber2());
+		office.setLattitude(officeDto.getLattitude());
+		office.setLongitude(officeDto.getLongitude());
+		office.setMobileNumber1(officeDto.getMobileNumber1());
+		office.setMobileNumber2(officeDto.getMobileNumber2());
+		office.setNational(officeDto.isNational());
+		office.setOtherInformation(officeDto.getOtherInformation());
+		office.setTwitterHandle(officeDto.getTwitterHandle());
+		
+		if(officeDto.getAssemblyConstituencyId() != null && officeDto.getAssemblyConstituencyId() >0){
+			AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(officeDto.getAssemblyConstituencyId());
+			office.setAssemblyConstituency(assemblyConstituency);
+			office.setAssemblyConstituencyId(officeDto.getAssemblyConstituencyId());
+		}
+		if(officeDto.getParliamentConstituencyId() != null && officeDto.getParliamentConstituencyId() >0){
+			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(officeDto.getParliamentConstituencyId());
+			office.setParliamentConstituency(parliamentConstituency);
+			office.setParliamentConstituencyId(officeDto.getParliamentConstituencyId());
+		}
+		if(officeDto.getDistrictId() != null && officeDto.getDistrictId() >0){
+			District district = districtDao.getDistrictById(officeDto.getDistrictId());
+			office.setDistrict(district);
+			office.setDistrictId(officeDto.getDistrictId());
+		}
+		if(officeDto.getStateId() != null && officeDto.getStateId() >0){
+			State state = stateDao.getStateById(officeDto.getStateId());
+			office.setState(state);
+			office.setStateId(officeDto.getStateId());
+		}
+		
+		office = officeDao.saveOffice(office);
+		
+		return convertOffice(office);
+	}
 	
 
 }

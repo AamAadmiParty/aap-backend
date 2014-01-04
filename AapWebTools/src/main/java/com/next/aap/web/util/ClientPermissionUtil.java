@@ -32,6 +32,11 @@ public class ClientPermissionUtil {
 				|| isAllowed(AppPermission.DELETE_POLL, userRolePermissionDto, locationId, locationType)
 				|| isAllowed(AppPermission.APPROVE_POLL, userRolePermissionDto, locationId, locationType);
 	}
+	public static boolean isEditOfficeDetailAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return 
+				isAllowed(AppPermission.EDIT_OFFICE_ADDRESS, userRolePermissionDto, locationId, locationType);
+	}
+	
 	public static boolean isManageMemberAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return 
 				isAllowed(AppPermission.ADD_MEMBER, userRolePermissionDto, locationId, locationType)

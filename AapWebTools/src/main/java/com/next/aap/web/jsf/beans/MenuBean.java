@@ -217,6 +217,14 @@ public class MenuBean extends BaseJsfBean {
 			buildAndRedirect("/admin/notallowed");
 		}
 	}
+	public void goToEditOfficeDetailPage(){
+		if(isEditOfficeDetailAllowed()){
+			buildAndRedirect("/admin/office");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	
 	public void goToManageMemberPage(){
 		if(isManageMemberAllowed()){
 			buildAndRedirect("/admin/register");
@@ -269,6 +277,11 @@ public class MenuBean extends BaseJsfBean {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isManagePollAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
 	}
+	public boolean isEditOfficeDetailAllowed(){
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isEditOfficeDetailAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	
 	public boolean isMemberAllowed(){
 		return isManageMemberAllowed();
 	}
@@ -281,7 +294,7 @@ public class MenuBean extends BaseJsfBean {
 		return ClientPermissionUtil.isTreasuryAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
 	}
 	public boolean isAdminAllowed(){
-		return isManageUserRoleAllowed();
+		return isManageUserRoleAllowed() || isEditOfficeDetailAllowed();
 	}
 	public boolean isManageUserRoleAllowed(){
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();

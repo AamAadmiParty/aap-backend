@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Edit Office Details - Admin Panel</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="admin_menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 800px; margin: 0 auto;">
+		<div style="width: 800px; margin: 0;">
+			<p:blockUI block="adminEditOfficeDetailForm" trigger=":adminEditOfficeDetailForm:saveOfficeDetail">
+			Saving Office Detail<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<h:form id="adminEditOfficeDetailForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="mainPanel">
+					<p:outputPanel id="listView" rendered="#{adminEditOfficeDetailBean.showList}">
+						<!-- 
+						<p:commandButton value="Create Office" actionListener="#{adminEditOfficeDetailBean.createNews}" update=":adminEditOfficeDetailForm:mainPanel">
+						</p:commandButton>
+						 -->
+						<p:dataTable id="listOfNews" var="oneOffice" value="#{adminEditOfficeDetailBean.officeList}" paginator="true" rows="25" paginatorPosition="bottom"
+							paginatorAlwaysVisible="false" emptyMessage="No News"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Offices</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Address" />
+								</f:facet>
+								<h:outputText value="#{oneOffice.address}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Landline" />
+								</f:facet>
+								<h:outputText value="#{oneOffice.landlineNumber1}" />
+								<h:outputText value="#{oneOffice.landlineNumber2}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Mobile" />
+								</f:facet>
+								<h:outputText value="#{oneOffice.mobileNumber1}" />
+								<h:outputText value="#{oneOffice.mobileNumber2}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fb Page Id" />
+								</f:facet>
+								<a href="http://www.facebook.com/#{oneOffice.fbPageId}"><h:outputText value="#{oneOffice.fbPageId}" /></a>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Fb Group Id" />
+								</f:facet>
+								<a href="http://www.facebook.com/#{oneOffice.fbGroupId}"><h:outputText value="#{oneOffice.fbGroupId}" /></a>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Twitter" />
+								</f:facet>
+								<a href="https://twitter.com/#{oneOffice.twitterHandle}"><h:outputText value="#{oneOffice.twitterHandle}" /></a>
+							</p:column>
+							<p:column style="width:100px;">
+								<f:facet name="header">
+									<h:outputText value="Update" />
+								</f:facet>
+								<p:commandLink update=":adminEditOfficeDetailForm:mainPanel" title="Update Office Details">
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+									<f:setPropertyActionListener value="#{oneOffice}" target="#{adminEditOfficeDetailBean.selectedOffice}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+					<p:outputPanel id="formView" rendered="#{!adminEditOfficeDetailBean.showList}">
+						<p:panelGrid columns="2">
+							<p:outputLabel value="Location"></p:outputLabel>
+							<p:outputLabel value="#{menuBean.locationType} - #{menuBean.currentLocationName}" />
+							<p:outputLabel value="Address"></p:outputLabel>
+							<p:inputTextarea value="#{adminEditOfficeDetailBean.selectedOffice.address}" rows="6" cols="33" />
+
+							<p:outputLabel value="Landline Number 1"></p:outputLabel>
+							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.landlineNumber1}"></p:inputText>
+
+							<p:outputLabel value="Landline Number 2"></p:outputLabel>
+							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.landlineNumber2}"></p:inputText>
+
+							<p:outputLabel value="Mobile Number 1"></p:outputLabel>
+							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.mobileNumber1}"></p:inputText>
+
+							<p:outputLabel value="Mobile Number 2"></p:outputLabel>
+							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.mobileNumber2}"></p:inputText>
+
+							<p:outputLabel value="Facebook Page ID"></p:outputLabel>
+							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.fbPageId}"></p:inputText>
+
+							<p:outputLabel value="Facebook Group ID"></p:outputLabel>
+							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.fbGroupId}"></p:inputText>
+
+							<p:outputLabel value="Twitter Handle"></p:outputLabel>
+							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.twitterHandle}"></p:inputText>
+
+							<p:outputLabel value="Other Information"></p:outputLabel>
+							<p:editor id="editor" value="#{adminEditOfficeDetailBean.selectedOffice.otherInformation}" width="600" height="200">
+							</p:editor>
+						</p:panelGrid>
+						<br></br>
+						<p:commandButton id="saveOfficeDetail" value="Save Office Detail" update=":adminEditOfficeDetailForm:mainPanel" actionListener="#{adminEditOfficeDetailBean.saveOfficeDetail}"
+							styleClass="ui-priority-primary" >
+						</p:commandButton>
+
+
+					</p:outputPanel>
+				</p:outputPanel>
+				<br></br>
+				<br></br>
+				<br></br>
+				<br></br>
+			</h:form>
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2014 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+		</div>
+	</div>
+
+</h:body>
+</html>

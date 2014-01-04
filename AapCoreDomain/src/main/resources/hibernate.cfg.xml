@@ -26,6 +26,7 @@
 		<mapping class="com.next.aap.core.persistance.FacebookPost" />
 		<mapping class="com.next.aap.core.persistance.GoogleAccount" />
 		<mapping class="com.next.aap.core.persistance.News" />
+		<mapping class="com.next.aap.core.persistance.Office" />
 		<mapping class="com.next.aap.core.persistance.PlannedTweet" />
 		<mapping class="com.next.aap.core.persistance.ParliamentConstituency" />
 		<mapping class="com.next.aap.core.persistance.PcRole" />

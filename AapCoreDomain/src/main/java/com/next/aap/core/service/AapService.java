@@ -19,6 +19,7 @@ import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
+import com.next.aap.web.dto.OfficeDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
@@ -165,4 +166,8 @@ public interface AapService {
 	UserDto receiveMembershipFee(Long userId, double amount, Long adminUserId);
 	
 	List<AdminAccountDto> getAdminAccountDetails(PostLocationType locationType, Long locationId);
+	
+	List<OfficeDto> getLocationOffices(PostLocationType locationType, Long locationId);
+	
+	OfficeDto saveOffice(OfficeDto officeDto);
 }

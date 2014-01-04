@@ -21,7 +21,8 @@ public enum AppPermission {
 	UPDATE_POLL,
 	DELETE_POLL,
 	APPROVE_POLL,
-	TREASURY
+	TREASURY,
+	EDIT_OFFICE_ADDRESS
 	;
 	
 }

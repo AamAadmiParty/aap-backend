@@ -1,6 +1,7 @@
 package com.next.aap.web.jsf.beans;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
@@ -79,6 +80,10 @@ public class UserProfileBean extends BaseJsfBean {
 		}
 		//Copy Logged In user to selectedUserForEditing
 		selectedUserForEditing = new UserDto();
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1981);
+		selectedUserForEditing.setDateOfBirth(cal.getTime());
+
 		BeanUtils.copyProperties(loggedInUser, selectedUserForEditing);
 		if (selectedUserForEditing.getStateVotingId() != null) {
 			enableDistrictCombo = true;

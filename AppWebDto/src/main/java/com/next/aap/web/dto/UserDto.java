@@ -17,6 +17,8 @@ public class UserDto implements Serializable{
 	private Date dateOfBirth;
 	private boolean nri;
 	private Long nriCountryId;
+	private Long nriCountryRegionId;
+	private Long nriCountryRegionAreaId;	
 	private Long stateLivingId;
 	private Long districtLivingId;
 	private Long assemblyConstituencyLivingId;
@@ -183,6 +185,22 @@ public class UserDto implements Serializable{
 
 	public void setNriCountryId(Long nriCountryId) {
 		this.nriCountryId = nriCountryId;
+	}
+
+	public Long getNriCountryRegionId() {
+		return nriCountryRegionId;
+	}
+
+	public void setNriCountryRegionId(Long nriCountryRegionId) {
+		this.nriCountryRegionId = nriCountryRegionId;
+	}
+
+	public Long getNriCountryRegionAreaId() {
+		return nriCountryRegionAreaId;
+	}
+
+	public void setNriCountryRegionAreaId(Long nriCountryRegionAreaId) {
+		this.nriCountryRegionAreaId = nriCountryRegionAreaId;
 	}
 
 	public String getMembershipNumber() {

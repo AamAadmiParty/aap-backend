@@ -53,6 +53,6 @@ public class AccountTransactionDaoHibernateSpringImpl extends BaseDaoHibernateSp
 	public List<AccountTransaction> getAccountTransactionsByAccountId(Long accountId) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("accountId", accountId);
-		return executeQueryGetList("from AccountTransaction where accountId = :accountId order by dateCreated", params);
+		return executeQueryGetList("from AccountTransaction where accountId = :accountId order by dateCreated desc, id desc", params);
 	}
 }

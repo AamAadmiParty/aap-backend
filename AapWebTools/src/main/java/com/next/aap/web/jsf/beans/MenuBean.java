@@ -240,6 +240,16 @@ public class MenuBean extends BaseJsfBean {
 		}
 	}
 	
+	public void goToTreasuryAccountDetailPage(){
+		if(isTreasuryAllowed()){
+			buildAndRedirect("/admin/treasurydetail");
+		}else{
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+	
+	
+	
 	
 	public void goToManageUserRolePage(){
 		if(isManageUserRoleAllowed()){
@@ -251,7 +261,7 @@ public class MenuBean extends BaseJsfBean {
 	
 	
 	
-	public boolean isVoiceOfAapAllowed(){
+	public boolean isCampaignAllowed(){
 		return isVoiceOfAapFbAllowed() || isVoiceOfAapTwitterAllowed();
 	}
 	public boolean isVoiceOfAapFbAllowed(){

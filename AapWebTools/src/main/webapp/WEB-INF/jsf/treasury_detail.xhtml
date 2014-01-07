@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Treasury Incoming</title>
+</h:head>
+<h:body>
+	<ui:include src="admin_menu.xhtml" />
+
+	<div style="width: 1200px; margin: 0 auto;">
+		<h:form id="treasuryForm">
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Cash Balance"></p:outputLabel>
+				<p:outputLabel value="#{treasuryDetailBean.cashBalance}"></p:outputLabel>
+				<p:outputLabel value="Bank Balance"></p:outputLabel>
+				<p:outputLabel value="#{treasuryDetailBean.bankBalance}"></p:outputLabel>
+			</p:panelGrid>
+			<p:tabView id="tabView">
+				<p:tab id="cash" title="Cash">
+					<p:dataTable id="listOfCashAccountTransactions" var="oneAccountTransaction" value="#{treasuryDetailBean.cashAccountTransactions}" paginator="true" rows="25"
+						paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Account Transactions"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+						<p:column width="20%">
+							<f:facet name="header">
+								<h:outputText value="Transaction Date" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.transactionDate}">
+								<f:convertDateTime pattern="dd-MMM-yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column width="50%">
+							<f:facet name="header">
+								<h:outputText value="Description" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.description}" />
+						</p:column>
+						<p:column width="10%">
+							<f:facet name="header">
+								<h:outputText value="Amount" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.amount}" />
+						</p:column>
+						<p:column width="10%">
+							<f:facet name="header">
+								<h:outputText value="Balance" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.balance}" />
+						</p:column>
+						<p:column width="10%">
+							<f:facet name="header">
+								<h:outputText value="TransactionType" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.accountTransactionType}/#{oneAccountTransaction.accountTransactionMode}" />
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+				<p:tab id="bank" title="Bank">
+					<p:dataTable id="listOfBankAccountTransactions" var="oneAccountTransaction" value="#{treasuryDetailBean.bankAccountTransactions}" paginator="true" rows="25"
+						paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Account Transactions"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Transaction Date" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.transactionDate}">
+								<f:convertDateTime pattern="dd-MMM-yyyy" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Description" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.description}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Amount" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.amount}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Balance" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.balance}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="TransactionType" />
+							</f:facet>
+							<h:outputText value="#{oneAccountTransaction.accountTransactionType}/#{oneAccountTransaction.accountTransactionMode}" />
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+
+		</h:form>
+	</div>
+</h:body>
+</html>

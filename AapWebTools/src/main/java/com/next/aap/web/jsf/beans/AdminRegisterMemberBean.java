@@ -1,6 +1,7 @@
 package com.next.aap.web.jsf.beans;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
@@ -114,9 +115,13 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 		searchedUser.setDistrictVotingId(loggedInAdminUser.getDistrictVotingId());
 		searchedUser.setAssemblyConstituencyVotingId(loggedInAdminUser.getAssemblyConstituencyVotingId());
 		searchedUser.setParliamentConstituencyVotingId(loggedInAdminUser.getParliamentConstituencyVotingId());
-		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1981);
+		searchedUser.setDateOfBirth(cal.getTime());
+
 		//Copy Logged In user to selectedUserForEditing
 		selectedUserForEditing = new UserDto();
+		selectedUserForEditing.setDateOfBirth(cal.getTime());
 		if (searchedUser.getStateVotingId() != null) {
 			enableDistrictCombo = true;
 			enableParliamentConstituencyCombo = true;
@@ -143,6 +148,9 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	public void createNewMember(){
 		showSearchPanel = false;
 		selectedUserForEditing = new UserDto();
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1981);
+		selectedUserForEditing.setDateOfBirth(cal.getTime());
 		BeanUtils.copyProperties(searchedUser, selectedUserForEditing);
 	}
 	

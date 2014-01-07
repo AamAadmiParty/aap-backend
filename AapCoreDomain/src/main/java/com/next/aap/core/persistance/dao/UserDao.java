@@ -81,5 +81,15 @@ public interface UserDao {
 	List<Long> getAllAdminUserForAcTreasure(long acId);
 	
 	List<Long> getAllAdminUserForPcTreasure(long pcId);
+	
+	List<Long> getAdminUserForGlobalTreasur();
+	
+	List<Long> getAdminUserForStateTreasure(long stateId);
+	
+	List<Long> getAdminUserForDistrictTreasure(long districtId);
+	
+	List<Long> getAdminUserForAcTreasure(long acId);
+	
+	List<Long> getAdminUserForPcTreasure(long pcId);
 
 }

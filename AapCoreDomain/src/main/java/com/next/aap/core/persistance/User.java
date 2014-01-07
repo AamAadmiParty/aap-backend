@@ -73,6 +73,19 @@ public class User {
 	private Long nriCountryId;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="nri_country_region_id")
+    private CountryRegion nriCountryRegion;
+	@Column(name="nri_country_region_id", insertable=false,updatable=false)
+	private Long nriCountryRegionId;
+
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="nri_country_region_area_id")
+    private CountryRegionArea nriCountryRegionArea;
+	@Column(name="nri_country_region_area_id", insertable=false,updatable=false)
+	private Long nriCountryRegionAreaId;
+
+	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="living_state_id")
     private State stateLiving;
 	@Column(name="living_state_id", insertable=false,updatable=false)
@@ -175,6 +188,46 @@ public class User {
 	@JoinColumn(name="pc_role_id")
 	})
 	Set<PcRole> pcRoles;
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_country_roles",
+	joinColumns = {
+	@JoinColumn(name="user_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="country_role_id")
+	})
+	Set<CountryRole> countryRoles;
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_country_region_roles",
+	joinColumns = {
+	@JoinColumn(name="user_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="country_region_role_id")
+	})
+	Set<CountryRegionRole> countryRegionRoles;
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_country_region_area_roles",
+	joinColumns = {
+	@JoinColumn(name="user_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="country_region_area_role_id")
+	})
+	Set<CountryRegionRole> countryRegionAreaRoles;
+	
+	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+	@JoinTable(name = "user_interests",
+	joinColumns = {
+	@JoinColumn(name="user_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="interest_id")
+	})
+	Set<Interest> interests;
 
 	@Column(name = "allow_tweets", nullable = false)
 	private boolean allowTweets;
@@ -593,6 +646,70 @@ public class User {
 
 	public void setMembershipConfirmedById(Long membershipConfirmedById) {
 		this.membershipConfirmedById = membershipConfirmedById;
+	}
+
+	public Set<Interest> getInterests() {
+		return interests;
+	}
+
+	public void setInterests(Set<Interest> interests) {
+		this.interests = interests;
+	}
+
+	public CountryRegion getNriCountryRegion() {
+		return nriCountryRegion;
+	}
+
+	public void setNriCountryRegion(CountryRegion nriCountryRegion) {
+		this.nriCountryRegion = nriCountryRegion;
+	}
+
+	public Long getNriCountryRegionId() {
+		return nriCountryRegionId;
+	}
+
+	public void setNriCountryRegionId(Long nriCountryRegionId) {
+		this.nriCountryRegionId = nriCountryRegionId;
+	}
+
+	public CountryRegionArea getNriCountryRegionArea() {
+		return nriCountryRegionArea;
+	}
+
+	public void setNriCountryRegionArea(CountryRegionArea nriCountryRegionArea) {
+		this.nriCountryRegionArea = nriCountryRegionArea;
+	}
+
+	public Long getNriCountryRegionAreaId() {
+		return nriCountryRegionAreaId;
+	}
+
+	public void setNriCountryRegionAreaId(Long nriCountryRegionAreaId) {
+		this.nriCountryRegionAreaId = nriCountryRegionAreaId;
+	}
+
+	public Set<CountryRole> getCountryRoles() {
+		return countryRoles;
+	}
+
+	public void setCountryRoles(Set<CountryRole> countryRoles) {
+		this.countryRoles = countryRoles;
+	}
+
+	public Set<CountryRegionRole> getCountryRegionRoles() {
+		return countryRegionRoles;
+	}
+
+	public void setCountryRegionRoles(Set<CountryRegionRole> countryRegionRoles) {
+		this.countryRegionRoles = countryRegionRoles;
+	}
+
+	public Set<CountryRegionRole> getCountryRegionAreaRoles() {
+		return countryRegionAreaRoles;
+	}
+
+	public void setCountryRegionAreaRoles(Set<CountryRegionRole> countryRegionAreaRoles) {
+		this.countryRegionAreaRoles = countryRegionAreaRoles;
 	}
 
 	@Override

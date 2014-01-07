@@ -125,7 +125,7 @@ public class TwitterAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("allowTweets", true);
 		params.put("stateId", stateId);
-		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets and allowTimeLine = :allowTimeLine and (user.stateLivingId = :stateId or user.stateVotingId = :stateId)", params);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where (user.stateLivingId = :stateId or user.stateVotingId = :stateId) and user.allowTweets = :allowTweets", params);
 		return list;
 	}
 
@@ -134,7 +134,7 @@ public class TwitterAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("allowTweets", true);
 		params.put("districtId", districtId);
-		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets and allowTimeLine = :allowTimeLine and (user.districtLivingId = :districtId or user.districtVotingId = :districtId)", params);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where (user.districtLivingId = :districtId or user.districtVotingId = :districtId) and user.allowTweets = :allowTweets ", params);
 		return list;
 	}
 
@@ -143,7 +143,7 @@ public class TwitterAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("allowTweets", true);
 		params.put("acId", acId);
-		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets and allowTimeLine = :allowTimeLine and (user.assemblyConstituencyLivingId = :acId or user.assemblyConstituencyVotingId = :acId)", params);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where (user.assemblyConstituencyLivingId = :acId or user.assemblyConstituencyVotingId = :acId) and user.allowTweets = :allowTweets", params);
 		return list;
 	}
 
@@ -152,7 +152,34 @@ public class TwitterAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("allowTweets", true);
 		params.put("pcId", pcId);
-		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.allowTweets = :allowTweets and allowTimeLine = :allowTimeLine and (user.parliamentConstituencyLivingId = :pcId or user.parliamentConstituencyVotingId = :pcId)", params);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where (user.parliamentConstituencyLivingId = :pcId or user.parliamentConstituencyVotingId = :pcId) and user.allowTweets = :allowTweets", params);
+		return list;
+	}
+
+	@Override
+	public List<TwitterAccount> getCountryTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long countryId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("allowTweets", true);
+		params.put("nriCountryId", countryId);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.nriCountryId = :nriCountryId and user.allowTweets = :allowTweets", params);
+		return list;
+	}
+
+	@Override
+	public List<TwitterAccount> getCountryRegionTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long nriCountryRegionId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("allowTweets", true);
+		params.put("nriCountryRegionId", nriCountryRegionId);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.nriCountryRegionId = :nriCountryRegionId and user.allowTweets = :allowTweets", params);
+		return list;
+	}
+
+	@Override
+	public List<TwitterAccount> getCountryRegionAreaTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long nriCountryRegionAreaId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("allowTweets", true);
+		params.put("nriCountryRegionAreaId", nriCountryRegionAreaId);
+		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.nriCountryRegionAreaId = :nriCountryRegionAreaId and user.allowTweets = :allowTweets", params);
 		return list;
 	}
 }

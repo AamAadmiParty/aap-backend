@@ -8,7 +8,6 @@ import java.util.TreeMap;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.persistance.Account;
-import com.next.aap.core.persistance.Blog;
 import com.next.aap.core.persistance.dao.AccountDao;
 import com.next.aap.web.dto.AccountType;
 
@@ -24,7 +23,7 @@ public class AccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Accoun
 	@Override
 	public Account saveAccount(Account account){
 		checkIfObjectMissing("Account Type", account.getAccountType());
-		if(account.getAccountType() == AccountType.Treasury){
+		if(account.getAccountType() == AccountType.TreasuryCash || account.getAccountType() == AccountType.TreasuryBank){
 			if(account.getAccountOwner() != null){
 				throw new RuntimeException("Treasury account can not have owner");
 			}
@@ -51,46 +50,46 @@ public class AccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Accoun
 	}
 
 	@Override
-	public Account getGlobalTreasuryAccount() {
+	public Account getGlobalTreasuryAccount(AccountType accountType) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("global", true);
-		params.put("accountType", AccountType.Treasury);
+		params.put("accountType", accountType);
 		Account account = executeQueryGetObject("from Account where global = :global and accountType = :accountType", params);
 		return account;
 	}
 
 	@Override
-	public Account getStateTreasuryAccount(long stateId) {
+	public Account getStateTreasuryAccount(long stateId, AccountType accountType) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("stateId", stateId);
-		params.put("accountType", AccountType.Treasury);
+		params.put("accountType", accountType);
 		Account account = executeQueryGetObject("from Account where stateId = :stateId and accountType = :accountType", params);
 		return account;
 	}
 
 	@Override
-	public Account getDistrictTreasuryAccount(long districtId) {
+	public Account getDistrictTreasuryAccount(long districtId, AccountType accountType) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("districtId", districtId);
-		params.put("accountType", AccountType.Treasury);
+		params.put("accountType", accountType);
 		Account account = executeQueryGetObject("from Account where districtId = :districtId and accountType = :accountType", params);
 		return account;
 	}
 
 	@Override
-	public Account getAcTreasuryAccount(long assemblyConstituencyId) {
+	public Account getAcTreasuryAccount(long assemblyConstituencyId, AccountType accountType) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("assemblyConstituencyId", assemblyConstituencyId);
-		params.put("accountType", AccountType.Treasury);
+		params.put("accountType", accountType);
 		Account account = executeQueryGetObject("from Account where assemblyConstituencyId = :assemblyConstituencyId and accountType = :accountType", params);
 		return account;
 	}
 
 	@Override
-	public Account getPcTreasuryAccount(long parliamentConstituencyId) {
+	public Account getPcTreasuryAccount(long parliamentConstituencyId, AccountType accountType) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("parliamentConstituencyId", parliamentConstituencyId);
-		params.put("accountType", AccountType.Treasury);
+		params.put("accountType", accountType);
 		Account account = executeQueryGetObject("from Account where parliamentConstituencyId = :parliamentConstituencyId and accountType = :accountType", params);
 		return account;
 	}

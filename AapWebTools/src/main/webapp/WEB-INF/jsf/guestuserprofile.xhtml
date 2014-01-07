@@ -41,11 +41,15 @@
 
 			<!-- header starts -->
 			<h2>Register as Member/Volunteer</h2>
-			<p:notificationBar widgetVar="topBar" autoDisplay="true">
-				We enocurage you to register your own account with us instead of filling this form. Please <a href="../profile">click here</a> to create your own
+			<!-- 
+			<p:outputPanel id="notificationPanel">
+				<p:notificationBar widgetVar="topBar" autoDisplay="#{guestUserProfileBean.showBanner}" rendered="#{guestUserProfileBean.showBanner}">
+				
 				<br></br>
-				<h:outputLink value="#" onclick="topBar.hide()">Hide</h:outputLink>
-			</p:notificationBar>
+					<h:outputLink value="#" onclick="topBar.hide()">Hide</h:outputLink>
+				</p:notificationBar>
+			</p:outputPanel>
+			-->
 			<!-- http://www.ajaxload.info/ -->
 			<p:blockUI block=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel" trigger=":guestMemberVoluteerForm:saveProfile">
 			Saving Profile<br />
@@ -67,7 +71,7 @@
 			<h:form id="guestMemberVoluteerForm">
 				<p:outputPanel id="guestMemberVoluteerMainPanel">
 					<p:messages id="messages" autoUpdate="true" closable="true" />
-
+<b><font color="#FF7788">We encourage you to register your own account with us instead of filling this form. Please <a href="../profile">click here</a> to create your own account</font></b>
 					<h:panelGrid columns="5">
 
 						<p:outputLabel value="Register As : "></p:outputLabel>
@@ -91,7 +95,9 @@
 										<li><h:outputText value="चरण - 2 -	आप दो तरह से 10 रुपये की अपनी सदस्यता शुल्क का भुगतान कर सकते हैं." /></li>
 										<li><h:outputText
 												value="चरण - 2a -	फॉर्म को भरकर क्रेडिट कार्ड / डेबिट कार्ड या नेट बैंकिंग के माध्यम से भी ऑनलाइन सदस्यता शुल्क (Membership fee) रु . 10/- का भुगतान कर सकते हैं | पुष्टि ईमेल जो आपको प्राप्त होगी वही आपकी सदस्यता की पुष्टि है |" /></li>
-										<li><b><h:outputText value="या" /></b></li>
+									</ul>
+									<b><h:outputText value="या" /></b>
+									<ul>
 										<li><h:outputText
 												value="चरण - 2a -	अपने स्थानीय पोस्ट ऑफिस से दस रुपये का पोस्टल आर्डर लेकर (अगर दस रुपये का एक पोस्टल आर्डर न मिले तो आप पांच रुपये के दो या कोई अन्य मोल). अदा करें में 'आम आदमी पार्टी' लिखें. 'पोस्ट ऑफिस पर' की जगह खाली छोड़ दें. आधी जमा पर्ची अपने पास पावती के तौर पर रख लें." /></li>
 										<li><h:outputText
@@ -105,7 +111,9 @@
 										<li><h:outputText value="STEP – 2 –	You can pay your membership fees of Rs 10 in two ways." /></li>
 										<li><h:outputText
 												value="STEP - 2a -	Submit the form and pay Rs. 10. online through Credit/Debit Card Or Internet Banking As Membership Fees and become a member.The email confirmation that you receive on making the payment in option is your confirmation of membership.." /></li>
-										<li><b><h:outputText value="or" /></b></li>
+									</ul>
+									<b><h:outputText value="or" /></b>
+									<ul>
 										<li><h:outputText
 												value="STEP - 2a -	Purchase a Postal Order (PO) of Rs.10/- from your local Post Office (if a single PO is not available you can purchase two Rs.5/- POs or any other combination). In 'PAY TO' write 'Aam Aadmi Party'. Please leave 'AT THE POST OFFICE AT' column blank. You can keep the counterfoil with yourself as acknowledgement." /></li>
 										<li><h:outputText
@@ -118,9 +126,13 @@
 					</p:panel>
 					<h:panelGrid columns="4" cellpadding="5">
 						<h:outputLabel for="name" value="Name*" />
-						<p:inputText id="name" value="#{guestUserProfileBean.selectedUserForEditing.name}" label="Name" requiredMessage="Please Enter Name" validatorMessage="Name can contain only alphabets">
-							<f:validateRegex pattern="[a-zA-Z]+" />
+						<p:outputPanel>
+						<p:inputText id="name" value="#{guestUserProfileBean.selectedUserForEditing.name}" label="Name" requiredMessage="Please Enter Name"
+							validatorMessage="Name can contain only alphabets">
+							<f:validateRegex pattern="[a-zA-Z ]+" />
 						</p:inputText>
+						<p:messages for="name" display="icon"  />
+						</p:outputPanel>
 						<h:outputLabel for="voterId" value="Voter Id" />
 						<p:inputText id="voterId" value="#{guestUserProfileBean.selectedUserForEditing.voterId}" label="Voter Id">
 						</p:inputText>
@@ -143,7 +155,8 @@
 						<p:outputPanel></p:outputPanel>
 
 						<h:outputText value="Date of Birth*" />
-						<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{guestUserProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
+						<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{guestUserProfileBean.selectedUserForEditing.dateOfBirth}" readonlyInput="true" navigator="true"
+							effect="slideDown" />
 						<h:outputLabel for="email" value="Email*" />
 						<p:inputText id="email" value="#{guestUserProfileBean.selectedUserForEditing.email}" label="Email" validatorMessage="Email is not in correct format ,i.e. guest@aap.org">
 							<f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
@@ -152,7 +165,13 @@
 
 					<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
 						<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
-							<f:facet name="header">  Select the place where you live</f:facet>
+							<f:facet name="header">  Select the place where you live <p:graphicImage width="24px" value="https://cdn1.iconfinder.com/data/icons/oxygen/32x32/categories/system-help.png"
+									id="livingLocationHelp"></p:graphicImage>
+								<p:overlayPanel my="left top" at="left bottom"  showEvent="mouseover" hideEvent="mouseout" for="livingLocationHelp" style="width:400px;">
+							Select the location where you live in india <br></br><b>or</b><br></br> your last known location in india in case of NRIs
+						</p:overlayPanel>
+
+							</f:facet>
 
 							<h:outputLabel for="livingState" value="State*" />
 							<p:selectOneMenu id="livingState" value="#{guestUserProfileBean.selectedUserForEditing.stateLivingId}" effect="fold" editable="false">
@@ -191,7 +210,7 @@
 							</p:selectOneMenu>
 
 						</p:panelGrid>
-
+						
 						<p:panelGrid columns="2" cellpadding="5" id="votingLocation" style="width:395px;">
 							<f:facet name="header">
         		Select the place where you registered as voter
@@ -266,10 +285,16 @@
 				<p:captcha validatorMessage="captcha Text did not match please try again" requiredMessage="Please enter captcha text" />
 				<br></br>
 				<p:commandButton ajax="false" id="saveProfile" update=":guestMemberVoluteerForm:guestMemberVoluteerMainPanel" value="Register"
-					actionListener="#{guestUserProfileBean.saveProfile}" />
-
+					actionListener="#{guestUserProfileBean.saveProfile}" oncomplete="popupVar.hide()" />
 
 			</h:form>
+			<!-- 
+			<p:outputPanel id="popup">
+				<p:dialog widgetVar="popupVar" visible="#{guestUserProfileBean.showBanner}" modal="true" >
+				We enocurage you to register your own account with us instead of filling this form. Please <a href="../profile">click here</a> to create your own
+			</p:dialog>
+			</p:outputPanel>
+			 -->
 			<!-- header ends -->
 
 

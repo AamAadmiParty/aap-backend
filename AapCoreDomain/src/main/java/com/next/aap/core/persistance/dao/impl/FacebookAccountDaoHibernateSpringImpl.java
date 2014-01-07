@@ -120,4 +120,34 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.parliamentConstituencyLivingId = :pcId or user.parliamentConstituencyVotingId = :pcId)");
 		return list;
 	}
+
+	@Override
+	public List<FacebookAccount> getCountryFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long countryId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("voiceOfAap", true);
+		params.put("allowTimeLine", true);
+		params.put("nriCountryId", countryId);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryId = :nriCountryId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine");
+		return list;
+	}
+
+	@Override
+	public List<FacebookAccount> getCountryRegionFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long countryRegionId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("voiceOfAap", true);
+		params.put("allowTimeLine", true);
+		params.put("nriCountryRegionId", countryRegionId);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryRegionId = :nriCountryRegionId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine");
+		return list;
+	}
+
+	@Override
+	public List<FacebookAccount> getCountryRegionAreaFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long countryRegionAreaId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("voiceOfAap", true);
+		params.put("allowTimeLine", true);
+		params.put("nriCountryRegionAreaId", countryRegionAreaId);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryRegionAreaId = :nriCountryRegionAreaId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine");
+		return list;
+	}
 }

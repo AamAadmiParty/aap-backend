@@ -7,32 +7,116 @@
 </h:head>
 <h:body>
 	<ui:include src="admin_menu.xhtml" />
-	
+
 	<div style="width: 800px; margin: 0 auto;">
-		
-	<p:dataTable id="listOfAccounts" var="oneAccount" value="#{treasuryIncomingPanelBean.accountList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
-		emptyMessage="No Pending Accounts" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="5,10,15">
-		<f:facet name="header">Money To Collect</f:facet>
-		<p:column>
-			<f:facet name="header">
-				<h:outputText value="Name" />
-			</f:facet>
-			<h:outputText value="#{oneAccount.accountOwnerDto.name}" />
-		</p:column>
-		<p:column>
-			<f:facet name="header">
-				<h:outputText value="Mobile" />
-			</f:facet>
-			<h:outputText value="#{oneAccount.accountOwnerDto.countryCode} - #{oneAccount.accountOwnerDto.mobileNumber}" escape="false" />
-		</p:column>
-		<p:column>
-			<f:facet name="header">
-				<h:outputText value="Balance" />
-			</f:facet>
-			<h:outputText value="#{oneAccount.balance}" />
-		</p:column>
-	</p:dataTable>
+
+		<p:blockUI block="treasuryForm" trigger=":treasuryForm:receiveButton">
+			Saving Profile<br />
+			<p:graphicImage value="/images/ajax-loader.gif" />
+		</p:blockUI>
+		<h:form id="treasuryForm">
+			<p:messages autoUpdate="true"></p:messages>
+			<p:dataTable id="listOfAccounts" var="oneAccount" value="#{treasuryIncomingPanelBean.accountList}" paginator="true" rows="25" paginatorPosition="bottom"
+				paginatorAlwaysVisible="false" emptyMessage="No Pending Accounts"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+				<f:facet name="header">Money To Collect</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Name" />
+					</f:facet>
+					<h:outputText value="#{oneAccount.accountOwnerDto.name}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Mobile" />
+					</f:facet>
+					<h:outputText value="#{oneAccount.accountOwnerDto.countryCode} - #{oneAccount.accountOwnerDto.mobileNumber}" escape="false" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Balance" />
+					</f:facet>
+					<h:outputText value="#{oneAccount.balance}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Receive" />
+					</f:facet>
+					<p:commandLink oncomplete="receiveMoneyDialog.show()" update=":treasuryForm:receiveMoneyId" title="Update Post">
+						<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+						<f:setPropertyActionListener value="#{oneAccount}" target="#{treasuryIncomingPanelBean.selectedAccount}" />
+					</p:commandLink>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Transactions" />
+					</f:facet>
+					<p:commandLink oncomplete="accountDetailsDialog.show()" update=":treasuryForm:accountDetailsDialogPanel" title="View Transactions">
+						<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+						<f:setPropertyActionListener value="#{oneAccount}" target="#{treasuryIncomingPanelBean.selectedAccountForDetail}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:dialog id="receiveMoneyId" widgetVar="receiveMoneyDialog" modal="true">
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Name"></p:outputLabel>
+					<p:outputLabel value="#{treasuryIncomingPanelBean.selectedAccount.accountOwnerDto.name}"></p:outputLabel>
+
+					<p:outputLabel value="Mobile Number"></p:outputLabel>
+					<h:outputText value="#{oneAccount.accountOwnerDto.countryCode} - #{oneAccount.accountOwnerDto.mobileNumber}" escape="false" />
+
+					<p:outputLabel value="Email"></p:outputLabel>
+					<h:outputText value="#{oneAccount.accountOwnerDto.email}" escape="false" />
+
+					<p:outputLabel value="Amount To Receive"></p:outputLabel>
+					<p:inputText value="#{treasuryIncomingPanelBean.amountToReceive}"></p:inputText>
+
+					<p:commandButton value="Cancel" oncomplete="receiveMoneyDialog.hide()"></p:commandButton>
+					<p:commandButton id="receiveButton" value="Receive" update=":treasuryForm" actionListener="#{treasuryIncomingPanelBean.receiveMoney}" oncomplete="receiveMoneyDialog.hide()"></p:commandButton>
+				</p:panelGrid>
+
+			</p:dialog>
+
+			<p:dialog id="accountDetailsDialogPanel" widgetVar="accountDetailsDialog" header="Account Transactions" modal="true">
+				<p:dataTable id="listOfAccountTransactions" var="oneAccountTransaction" value="#{treasuryIncomingPanelBean.accountTransactions}" paginator="true" rows="25" paginatorPosition="bottom"
+					paginatorAlwaysVisible="false" emptyMessage="No Account Transactions"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Transaction Date" />
+						</f:facet>
+						<h:outputText value="#{oneAccountTransaction.transactionDate}" >
+							<f:convertDateTime pattern="dd-MMM-yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Description" />
+						</f:facet>
+						<h:outputText value="#{oneAccountTransaction.description}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Amount" />
+						</f:facet>
+						<h:outputText value="#{oneAccountTransaction.amount}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Balance" />
+						</f:facet>
+						<h:outputText value="#{oneAccountTransaction.balance}" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="TransactionType"/>
+						</f:facet>
+						<h:outputText value="#{oneAccountTransaction.accountTransactionType}/#{oneAccountTransaction.accountTransactionMode}" />
+					</p:column>
+				</p:dataTable>
+			</p:dialog>
+
+		</h:form>
 	</div>
 </h:body>
 </html>

@@ -3,6 +3,7 @@ package com.next.aap.core.persistance.dao;
 import java.util.List;
 
 import com.next.aap.core.persistance.Account;
+import com.next.aap.web.dto.AccountType;
 
 public interface AccountDao {
 
@@ -10,15 +11,15 @@ public interface AccountDao {
 
 	public abstract Account getAccountById(Long id);
 
-	public abstract Account getGlobalTreasuryAccount();
+	public abstract Account getGlobalTreasuryAccount(AccountType accountType);
 	
-	public abstract Account getStateTreasuryAccount(long stateId);
+	public abstract Account getStateTreasuryAccount(long stateId, AccountType accountType);
 	
-	public abstract Account getDistrictTreasuryAccount(long districtId);
+	public abstract Account getDistrictTreasuryAccount(long districtId, AccountType accountType);
 	
-	public abstract Account getAcTreasuryAccount(long acId);
+	public abstract Account getAcTreasuryAccount(long acId, AccountType accountType);
 	
-	public abstract Account getPcTreasuryAccount(long acId);
+	public abstract Account getPcTreasuryAccount(long acId, AccountType accountType);
 	
 	public abstract Account getAdminAccountByUserId(Long userId);
 	

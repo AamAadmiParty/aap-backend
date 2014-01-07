@@ -6,6 +6,9 @@ public enum PostLocationType{
 	DISTRICT,
 	PC,
 	AC,
+	COUNTRY,
+	REGION,
+	AREA,
 	NA
 }
 

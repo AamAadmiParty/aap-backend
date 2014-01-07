@@ -28,5 +28,11 @@ public interface FacebookAccountDao {
 	public abstract List<FacebookAccount> getAcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long acId);
 	
 	public abstract List<FacebookAccount> getPcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId);
+	
+	public abstract List<FacebookAccount> getCountryFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long countryId);
+	
+	public abstract List<FacebookAccount> getCountryRegionFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long countryRegionId);
+	
+	public abstract List<FacebookAccount> getCountryRegionAreaFacebookAccountsForVoiceOfAapToPublishOnTimeLine(Long countryRegionAreaId);
 
 }

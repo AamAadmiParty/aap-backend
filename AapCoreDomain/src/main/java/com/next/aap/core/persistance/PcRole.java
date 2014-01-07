@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
-@Table(name = "ac_role")
+@Table(name = "pc_role")
 public class PcRole {
 
 	@Id

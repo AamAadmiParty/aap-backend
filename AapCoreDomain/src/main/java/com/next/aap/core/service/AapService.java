@@ -8,6 +8,7 @@ import org.springframework.social.facebook.api.GroupMembership;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 
+import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AdminAccountDto;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
@@ -170,4 +171,15 @@ public interface AapService {
 	List<OfficeDto> getLocationOffices(PostLocationType locationType, Long locationId);
 	
 	OfficeDto saveOffice(OfficeDto officeDto);
+	
+	void receiveMoneyIntoTreasuryAccount(PostLocationType locationType, Long locationId, Long treasuryUserId, double amount, Long adminUserId);
+	
+	List<AccountTransactionDto> getAccountTransactions(long accountId);
+	
+	
+	List<AccountTransactionDto> getTreasuryCashAccountTransactions(PostLocationType locationType, Long locationId);
+	
+	List<AccountTransactionDto> getTreasuryBankAccountTransactions(PostLocationType locationType, Long locationId);
+	
+	void importAllCountriesData();
 }

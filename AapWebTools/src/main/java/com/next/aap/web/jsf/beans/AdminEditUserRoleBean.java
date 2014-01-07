@@ -1,11 +1,13 @@
 package com.next.aap.web.jsf.beans;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.primefaces.model.map.MapModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -128,9 +130,15 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 		searchedUser.setDistrictVotingId(loggedInAdminUser.getDistrictVotingId());
 		searchedUser.setAssemblyConstituencyVotingId(loggedInAdminUser.getAssemblyConstituencyVotingId());
 		searchedUser.setParliamentConstituencyVotingId(loggedInAdminUser.getParliamentConstituencyVotingId());
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1981);
+		searchedUser.setDateOfBirth(cal.getTime());
 
 		// Copy Logged In user to selectedUserForEditing
 		selectedUserForEditing = new UserDto();
+		searchedUser.setDateOfBirth(cal.getTime());
+
 		if (searchedUser.getStateVotingId() != null) {
 			enableDistrictCombo = true;
 			enableParliamentConstituencyCombo = true;
@@ -174,6 +182,10 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 		showSearchPanel = false;
 		selectedUserForEditing = new UserDto();
 		BeanUtils.copyProperties(searchedUser, selectedUserForEditing);
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1981);
+		selectedUserForEditing.setDateOfBirth(cal.getTime());
+		MapModel draggableModel;
 	}
 
 	public void cancelSaveMemberRole() {

@@ -1,14 +1,19 @@
 package com.next.aap.core.service;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +29,8 @@ import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import au.com.bytecode.opencsv.CSVReader;
+
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.AcRole;
 import com.next.aap.core.persistance.Account;
@@ -32,10 +39,14 @@ import com.next.aap.core.persistance.AssemblyConstituency;
 import com.next.aap.core.persistance.Blog;
 import com.next.aap.core.persistance.ContentTweet;
 import com.next.aap.core.persistance.Country;
+import com.next.aap.core.persistance.CountryRegion;
+import com.next.aap.core.persistance.CountryRegionArea;
+import com.next.aap.core.persistance.CountryRegionRole;
 import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
+import com.next.aap.core.persistance.CountryRole;
 import com.next.aap.core.persistance.FacebookAccount;
 import com.next.aap.core.persistance.FacebookApp;
 import com.next.aap.core.persistance.FacebookAppPermission;
@@ -67,6 +78,10 @@ import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
 import com.next.aap.core.persistance.dao.BlogDao;
 import com.next.aap.core.persistance.dao.ContentTweetDao;
 import com.next.aap.core.persistance.dao.CountryDao;
+import com.next.aap.core.persistance.dao.CountryRegionAreaDao;
+import com.next.aap.core.persistance.dao.CountryRegionDao;
+import com.next.aap.core.persistance.dao.CountryRegionRoleDao;
+import com.next.aap.core.persistance.dao.CountryRoleDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
 import com.next.aap.core.persistance.dao.DistrictRoleDao;
 import com.next.aap.core.persistance.dao.EmailDao;
@@ -94,6 +109,7 @@ import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
 import com.next.aap.core.util.DataUtil;
+import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AccountTransactionMode;
 import com.next.aap.web.dto.AccountTransactionType;
 import com.next.aap.web.dto.AccountType;
@@ -177,6 +193,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Autowired
 	private CountryDao countryDao;
 	@Autowired
+	private CountryRegionDao countryRegionDao;
+	@Autowired
+	private CountryRegionAreaDao countryRegionAreaDao;
+	@Autowired
 	private FacebookPostDao facebookPostDao;
 	@Autowired
 	private PlannedTweetDao plannedTweetDao;
@@ -198,6 +218,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	private AccountTransactionDao accountTransactionDao;
 	@Autowired
 	private OfficeDao officeDao;
+	@Autowired
+	private CountryRoleDao countryRoleDao;
+	@Autowired
+	private CountryRegionRoleDao countryRegionRoleDao;
 	
 
 	@Value("${voa_facebook_app_id}")
@@ -872,74 +896,72 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 
 		// Now create all custom Roles
-/*
 		createRoleWithPermissions("VoiceOfAapFacebookAdminRole", " User of this role will be able to make Facebook post using voice of AAP Application", true,
-				true, false, false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
+				true, false, false,true, true,false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
 		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true,
-				true, false, false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
+				true, false, false,true, true,false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
 		// News Related Roles
 		createRoleWithPermissions("NewsAdminRole", "User of this role will be able to create/update/Approve/delete news for a location", true, true, true,
-				true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
+				true,true, true,false, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
 
 		createRoleWithPermissions("NewsReporterRole", "User of this role will be able to create/update news for a location", true, true, true, true,
-				AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS);
+				true, true,false,AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS);
 
 		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update/approve and publish news for a location", true, true,
-				true, true, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
+				true, true, true, true,false,AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
 
 		createRoleWithPermissions("NewsApproverRole", "User of this role will be able to approve/publish existing news for a location", true, true, true, true,
-				AppPermission.APPROVE_NEWS);
+				true, true,false,AppPermission.APPROVE_NEWS);
 
 		createRoleWithPermissions("GlobalMemberAdminRole",
 				"User of this role will be able to add new member at any location and will be able to update any member", false, false, false, false,
-				AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.VIEW_MEMBER);
+				true, true,false,AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.VIEW_MEMBER);
 
 		createRoleWithPermissions("MemberAdminRole",
 				"User of this role will be able to add new member at any location and will be able to update member at his location only", true, true, true,
-				true, AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
+				true, true, true,false,AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
 
 		createRoleWithPermissions("AdminEditUserRoles", "User of this role will be able to add or remove user roles on a location", true, true, true, true,
-				AppPermission.EDIT_USER_ROLES);
+				true, true,false,AppPermission.EDIT_USER_ROLES);
 
 		createRoleWithPermissions("BlogAdminRole", "User of this role will be able to create/update/Approve/delete blog for a location", true, true, true,
-				true, AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
+				true, true, true,false,AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
 
 		createRoleWithPermissions("BlogReporterRole", "User of this role will be able to create/update blog for a location", true, true, true, true,
-				AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG);
+				true, true,false,AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG);
 
 		createRoleWithPermissions("BlogEditorRole", "User of this role will be able to create/update/approve and publish blog for a location", true, true,
-				true, true, AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.APPROVE_BLOG);
+				true, true, true, true,false,AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.APPROVE_BLOG);
 
 		createRoleWithPermissions("BlogApproverRole", "User of this role will be able to approve/publish existing blog for a location", true, true, true, true,
-				AppPermission.APPROVE_BLOG);
+				true, true,false,AppPermission.APPROVE_BLOG);
 
 		//Poll
 		createRoleWithPermissions("PollAdminRole", "User of this role will be able to create/update/Approve/delete poll for a location", true, true, true,
-				true, AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL, AppPermission.DELETE_POLL, AppPermission.APPROVE_POLL);
+				true, true, true,false,AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL, AppPermission.DELETE_POLL, AppPermission.APPROVE_POLL);
 
 		createRoleWithPermissions("PollReporterRole", "User of this role will be able to create/update poll for a location", true, true, true, true,
-				AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL);
+				true, true,false,AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL);
 
 		createRoleWithPermissions("PollEditorRole", "User of this role will be able to create/update/approve and publish poll for a location", true, true,
-				true, true, AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL, AppPermission.APPROVE_POLL);
+				true, true, true, true,false,AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL, AppPermission.APPROVE_POLL);
 
 		createRoleWithPermissions("PollApproverRole", "User of this role will be able to approve/publish existing poll for a location", true, true, true, true,
-				AppPermission.APPROVE_POLL);
-*/
-		
+				true, true,false,AppPermission.APPROVE_POLL);
 		
 		createRoleWithPermissions("Treasury", "User of this role will be able to do all Treasury operation of a location", true, true, true, true,
-				AppPermission.TREASURY);
+				true, true,false,AppPermission.TREASURY);
 		createRoleWithPermissions("OfficeAdmin", "User of this role will be able to do all Office related operation of a location, i.e. editing Office address,contact information etc", true, true, true, true,
-				AppPermission.EDIT_OFFICE_ADDRESS);
+				true, true,false,AppPermission.EDIT_OFFICE_ADDRESS);
 		
 		
+
 
 		logger.info("All Roles and permissions are created");
 	}
 
 	private void createRoleWithPermissions(String name, String description, boolean addStateRoles, boolean addDistrictRoles, boolean addAcRoles,
-			boolean addPcRoles, AppPermission... appPermissions) {
+			boolean addPcRoles, boolean addCountryRole, boolean addCountryRegionRole, boolean addCuntryRegionAreaRole, AppPermission... appPermissions) {
 		logger.info("Creating Role " + name);
 
 		Role role = roleDao.getRoleByName(name);
@@ -1012,6 +1034,39 @@ public class AapServiceImpl implements AapService, Serializable {
 				}
 			}
 		}
+		if(addCountryRole){
+			List<Country> countries = countryDao.getAllCountries();
+			CountryRole oneCountryRole;
+			for(Country oneCountry:countries){
+				if(oneCountry.getName().equals("India")){
+					continue;
+				}
+				oneCountryRole = countryRoleDao.getCountryRoleByCountryIdAndRoleId(oneCountry.getId(), role.getId());
+				if(oneCountryRole == null){
+					oneCountryRole = new CountryRole();
+					oneCountryRole.setCountry(oneCountry);
+					oneCountryRole.setRole(role);
+					oneCountryRole = countryRoleDao.saveCountryRole(oneCountryRole);
+				}
+				
+			}
+		}
+		
+		if(addCountryRegionRole){
+			List<CountryRegion> countryRegions = countryRegionDao.getAllCountryRegions();
+			CountryRegionRole oneCountryRegionRole;
+			for(CountryRegion oneCountryRegion:countryRegions){
+				oneCountryRegionRole = countryRegionRoleDao.getCountryRegionRoleByCountryRegionIdAndRoleId(oneCountryRegion.getId(), role.getId());
+				if(oneCountryRegionRole == null){
+					oneCountryRegionRole = new CountryRegionRole();
+					oneCountryRegionRole.setCountryRegion(oneCountryRegion);
+					oneCountryRegionRole.setRole(role);
+					oneCountryRegionRole = countryRegionRoleDao.saveCountryRegionRole(oneCountryRegionRole);
+				}
+				
+			}
+		}
+		
 	}
 
 	@Override
@@ -1460,6 +1515,15 @@ public class AapServiceImpl implements AapService, Serializable {
 		case PC:
 			facebookAccounts = facebookAccountDao.getPcFacebookAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
 			break;
+		case COUNTRY:
+			facebookAccounts = facebookAccountDao.getCountryFacebookAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case REGION:
+			facebookAccounts = facebookAccountDao.getCountryRegionFacebookAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case AREA:
+			facebookAccounts = facebookAccountDao.getCountryRegionAreaFacebookAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
 		}
 		return convertFacebookAccounts(facebookAccounts);
 	}
@@ -1678,6 +1742,15 @@ public class AapServiceImpl implements AapService, Serializable {
 		case PC:
 			twitterAccounts = twitterAccountDao.getPcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
 			break;
+		case COUNTRY:
+			twitterAccounts = twitterAccountDao.getCountryTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case REGION:
+			twitterAccounts = twitterAccountDao.getCountryRegionTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
+		case AREA:
+			twitterAccounts = twitterAccountDao.getCountryRegionAreaTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId);
+			break;
 		}
 		return convertTwitterAccounts(twitterAccounts);
 	}
@@ -1732,6 +1805,27 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(locationId);
 			news.getParliamentConstituencies().add(parliamentConstituency);
+			break;
+		case COUNTRY:
+			if (news.getCountries() == null) {
+				news.setCountries(new ArrayList<Country>());
+			}
+			Country country = countryDao.getCountryById(locationId);
+			news.getCountries().add(country);
+			break;
+		case REGION:
+			if (news.getCountryRegions() == null) {
+				news.setCountryRegions(new ArrayList<CountryRegion>());
+			}
+			CountryRegion countryRegion = countryRegionDao.getCountryRegionById(locationId);
+			news.getCountryRegions().add(countryRegion);
+			break;
+		case AREA:
+			if (news.getCountryRegionsAreas() == null) {
+				news.setCountryRegionsAreas(new ArrayList<CountryRegionArea>());
+			}
+			CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaById(locationId);
+			news.getCountryRegionsAreas().add(countryRegionArea);
 			break;
 		}
 
@@ -1799,6 +1893,15 @@ public class AapServiceImpl implements AapService, Serializable {
 			break;
 		case PC:
 			news = newsDao.getPcNews(locationId);
+			break;
+		case COUNTRY:
+			news = newsDao.getCountryNews(locationId);
+			break;
+		case REGION:
+			news = newsDao.getCountryRegionNews(locationId);
+			break;
+		case AREA:
+			news = newsDao.getCountryRegionAreaNews(locationId);
 			break;
 		}
 		return convertNews(news);
@@ -2034,6 +2137,15 @@ public class AapServiceImpl implements AapService, Serializable {
 			break;
 		case PC:
 			roles = roleDao.getUserPcRoles(userId, locationId);
+			break;
+		case COUNTRY:
+			roles = roleDao.getUserCountryRoles(userId, locationId);
+			break;
+		case REGION:
+			roles = roleDao.getUserCountryRegionRoles(userId, locationId);
+			break;
+		case AREA:
+			roles = roleDao.getUserCountryRegionAreaRoles(userId, locationId);
 			break;
 		}
 		return convertRoles(roles);
@@ -2524,13 +2636,65 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return account;
 	}
-	private void addAccountTransaction(Account account, double amount, User adminUser, Date now, String description){
+	private Account getTreasuryCashAccount(PostLocationType locationType, Long locationId){
+		return getTreasuryAccount(locationType, locationId, AccountType.TreasuryCash);
+	}
+	private Account getTreasuryBankAccount(PostLocationType locationType, Long locationId){
+		return getTreasuryAccount(locationType, locationId, AccountType.TreasuryBank);
+	}
+	private Account getTreasuryAccount(PostLocationType locationType, Long locationId, AccountType accountType){
+		Account account = null;
+		switch (locationType) {
+		case Global:
+			account =  accountDao.getGlobalTreasuryAccount(accountType);
+			break;
+		case STATE:
+			account =  accountDao.getStateTreasuryAccount(locationId, accountType);
+			break;
+		case DISTRICT:
+			account =  accountDao.getDistrictTreasuryAccount(locationId, accountType);
+			break;
+		case AC:
+			account =  accountDao.getAcTreasuryAccount(locationId, accountType);
+			break;
+		case PC:
+			account =  accountDao.getPcTreasuryAccount(locationId, accountType);
+			break;
+
+		default:
+			break;
+		}
+		if(account == null){
+			account = new Account();
+			account.setAccountType(accountType);
+			account.setBalance(0.0);
+			if(locationType == PostLocationType.Global){
+				account.setDescription("National Treasury account" );
+				account.setGlobal(true);
+			}else{
+				account.setDescription("Treasury account for "+locationType+" locationId" );
+				account.setGlobal(false);
+			}
+			
+			account.setDateCreated(new Date());
+			account.setDateModified(new Date());
+			
+			account = accountDao.saveAccount(account);
+		}
+		return account;
+	}
+	private void addAccountTransaction(Account account, double amount, User adminUser, Date now, String description, 
+			AccountTransactionMode accountTransactionMode, AccountTransactionType accountTransactionType){
 		AccountTransaction accountTransaction = new AccountTransaction();
 		accountTransaction.setAccount(account);
-		accountTransaction.setAccountTransactionMode(AccountTransactionMode.Cash);
-		accountTransaction.setAccountTransactionType(AccountTransactionType.Credit);
+		accountTransaction.setAccountTransactionMode(accountTransactionMode);
+		accountTransaction.setAccountTransactionType(accountTransactionType);
 		accountTransaction.setAmount(amount);
-		accountTransaction.setBalance(account.getBalance() + amount);
+		if(accountTransactionType == AccountTransactionType.Credit){
+			accountTransaction.setBalance(account.getBalance() + amount);	
+		}else{
+			accountTransaction.setBalance(account.getBalance() - amount);
+		}
 		accountTransaction.setDateCreated(now);
 		accountTransaction.setDateModified(now);
 		accountTransaction.setCreatorId(adminUser.getId());
@@ -2539,7 +2703,12 @@ public class AapServiceImpl implements AapService, Serializable {
 		accountTransaction.setTransactionDate(now);
 		accountTransaction = accountTransactionDao.saveAccountTransaction(accountTransaction);
 		
-		account.setBalance(account.getBalance() + amount);
+		if(accountTransactionType == AccountTransactionType.Credit){
+			account.setBalance(account.getBalance() + amount);	
+		}else{
+			account.setBalance(account.getBalance() - amount);
+		}
+		
 	}
 	
 	@Override
@@ -2562,14 +2731,16 @@ public class AapServiceImpl implements AapService, Serializable {
 		//create Membership transaction under this account
 		Date now = new Date();
 		
-		addAccountTransaction(adminAccount, DataUtil.MEMBERSHIP_FEE, adminUser, now, "Membership fee for "+user.getMembershipNumber());
+		addAccountTransaction(adminAccount, DataUtil.MEMBERSHIP_FEE, adminUser, now, "Membership fee for "+user.getMembershipNumber()+" , "+user.getName(),
+				AccountTransactionMode.Cash, AccountTransactionType.Credit);
 		
 		
 		if(amount > DataUtil.MEMBERSHIP_FEE){
 			double donationAmount = amount - DataUtil.MEMBERSHIP_FEE;
 			//TODO create a donation entry, will be done later
 			
-			addAccountTransaction(adminAccount, donationAmount, adminUser, now, "Donation by "+user.getMembershipNumber());
+			addAccountTransaction(adminAccount, donationAmount, adminUser, now, "Donation by "+user.getMembershipNumber()+" , "+user.getName(),
+					AccountTransactionMode.Cash, AccountTransactionType.Credit);
 		}
 		
 		//now update overall account balance
@@ -2722,6 +2893,173 @@ public class AapServiceImpl implements AapService, Serializable {
 		office = officeDao.saveOffice(office);
 		
 		return convertOffice(office);
+	}
+
+	@Override
+	@Transactional
+	public void receiveMoneyIntoTreasuryAccount(PostLocationType locationType, Long locationId, Long treasuryUserId, double amount, Long adminUserId) {
+		User adminUser = userDao.getUserById(adminUserId);
+		User treasuryUser = userDao.getUserById(treasuryUserId);
+		
+		Account debitAdminAccount = getAdminAccount(adminUser);
+		Account creditTreasuryAccount = getTreasuryCashAccount(locationType, locationId);
+		
+		Date now = new Date();
+		
+		addAccountTransaction(debitAdminAccount, amount, adminUser, now, "Money transfered to treasury account, receiver : " + treasuryUser.getName() +"["+treasuryUser.getMembershipNumber()+"]",
+				AccountTransactionMode.Cash, AccountTransactionType.Debit);
+		
+		addAccountTransaction(creditTreasuryAccount, amount, treasuryUser, now, "Money received from : " + adminUser.getName() +"["+adminUser.getMembershipNumber()+"]",
+				AccountTransactionMode.Cash, AccountTransactionType.Credit);
+	}
+
+	@Override
+	@Transactional
+	public List<AccountTransactionDto> getAccountTransactions(long accountId) {
+		List<AccountTransaction> accountTransactions = accountTransactionDao.getAccountTransactionsByAccountId(accountId);
+		return convertAccountTransactions(accountTransactions);
+	}
+	
+	private AccountTransactionDto convertAccountTransaction(AccountTransaction accountTransaction){
+		if(accountTransaction == null){
+			return null;
+		}
+		AccountTransactionDto accountTransactionDto = new AccountTransactionDto();
+		BeanUtils.copyProperties(accountTransaction, accountTransactionDto);
+		return accountTransactionDto;
+	}
+	
+	private List<AccountTransactionDto> convertAccountTransactions(List<AccountTransaction> accountTransactions){
+		List<AccountTransactionDto> accountTransactionDtos = new ArrayList<>();
+		if(accountTransactions == null){
+			return accountTransactionDtos;
+		}
+		
+		for(AccountTransaction oneAccountTransaction : accountTransactions){
+			accountTransactionDtos.add(convertAccountTransaction(oneAccountTransaction));
+		}
+		return accountTransactionDtos;
+	}
+
+	@Override
+	@Transactional
+	public List<AccountTransactionDto> getTreasuryCashAccountTransactions(PostLocationType locationType, Long locationId) {
+		Account cashAccount = getTreasuryCashAccount(locationType, locationId);
+		return getAccountTransactions(cashAccount.getId());
+	}
+
+	@Override
+	@Transactional
+	public List<AccountTransactionDto> getTreasuryBankAccountTransactions(PostLocationType locationType, Long locationId) {
+		Account cashAccount = getTreasuryBankAccount(locationType, locationId);
+		return getAccountTransactions(cashAccount.getId());
+	}
+
+	@Override
+	@Transactional
+	public void importAllCountriesData() {
+		
+		try{
+			CSVReader csvReader = new CSVReader(new FileReader(new File("/Users/ravi/Downloads/forCSV.txt")));
+			List<String[]> allPcs = csvReader.readAll();
+			int totalCountries = 0;
+			int totalCountriesRegion = 0;
+			int totalCountriesRegionArea = 0;
+			Set<String> missingStates = new TreeSet<String>();
+			String countryName;
+			String prevCountryName = "";
+			Map<String, String> countryMap = new HashMap<String, String>();
+			countryMap.put("The Bahamas", "Bahamas");
+			countryMap.put("Brunei Darussalam", "Brunei");
+			countryMap.put("Burma", "Burma (Myanmar)");
+			countryMap.put("Congo, Democratic Republic of the", "Democratic Republic of the Congo");
+			countryMap.put("Democratic Republic of the", "Democratic Republic of the Congo");
+			countryMap.put("Republic of the", "Republic of the Congo");
+			countryMap.put("Congo, Republic of the", "Republic of the Congo");
+			countryMap.put("Cote d'Ivoire", "Ivory Coast");
+			countryMap.put("French Guiana", "Guinea");
+			countryMap.put("The Gambia", "Gambia");
+			countryMap.put("Guadeloupe", "CONTINUE");
+			countryMap.put("Guernsey", "CONTINUE");
+			countryMap.put("Hong Kong (SAR)", "Hong Kong");
+			countryMap.put("Korea, North", "North Korea");
+			countryMap.put("Korea, South", "South Korea");
+			countryMap.put("Macao", "Macau");
+			countryMap.put("Macedonia, The Former Yugoslav Republic of", "Macedonia");
+			countryMap.put("Man, Isle of", "Isle of Man");
+			countryMap.put("Martinique", "CONTINUE");
+			countryMap.put("Micronesia, Federated States of", "Micronesia");
+			countryMap.put("RTunion", "CONTINUE");
+			countryMap.put("Spo TomT", "CONTINUE");
+			countryMap.put("Spo TomT and Prfncipe", "CONTINUE");
+			countryMap.put("Virgin Islands", "US Virgin Islands");
+			countryMap.put("Yugoslavia", "CONTINUE");
+			countryMap.put("India", "CONTINUE");
+			countryMap.put("Palestinian Territory, Occupied", "CONTINUE");
+			
+			
+			
+			
+			String countryRegionName;
+			String countryRegionAreaName;
+			Country country = null;
+			int counter = 0;
+			for(String[] oneCountryRow:allPcs){
+				counter++;
+				countryName = oneCountryRow[0].trim();
+				countryRegionName = oneCountryRow[1].trim();
+				countryRegionAreaName = oneCountryRow[2].trim();
+				if(countryName.equals("") || countryRegionName.equals("") || countryRegionAreaName.equals("")){
+					continue;
+				}
+				
+				if(countryMap.get(countryName) != null){
+					countryName = countryMap.get(countryName);
+				}
+				if("CONTINUE".equals(countryName)){
+					//System.out.println("Country CONTINUE "+onePcRow[0] +" NOT FOUND");
+					continue;
+				}
+					
+				if(!countryName.equals(prevCountryName)){
+					totalCountries++;
+					country = countryDao.getCountryByName(countryName);
+				}
+				prevCountryName = countryName;
+				if(country == null){
+					System.out.println("ERROR : Country "+countryName +" NOT FOUND");
+				}
+				
+				CountryRegion countryRegion = countryRegionDao.getCountryRegionByNameAndCountryId(country.getId(), countryRegionName);
+				if(countryRegion == null){
+					System.out.println("Creating CountryRegion = " + countryRegionName);
+					countryRegion = new CountryRegion();
+					countryRegion.setName(countryRegionName);
+					countryRegion.setCountry(country);
+					countryRegion = countryRegionDao.saveCountryRegion(countryRegion);
+				}
+				
+				CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaByNameAndCountryRegionId(countryRegion.getId(), countryRegionAreaName);
+				if(countryRegionArea == null){
+					System.out.println("Creating CountryRegionArea = " + countryRegionAreaName);
+					countryRegionArea = new CountryRegionArea();
+					countryRegionArea.setName(countryRegionAreaName);
+					countryRegionArea.setCountryRegion(countryRegion);
+					countryRegionArea = countryRegionAreaDao.saveCountryRegionArea(countryRegionArea);
+				}
+				System.out.println(counter+" : Total Countries = " + totalCountries+","+countryName+","+prevCountryName);	
+			}
+			System.out.println("Total Rows = " + allPcs.size());
+			System.out.println("Total Pc = " + totalCountries);
+			System.out.println("Total Missing States = " + missingStates.size());
+			for(String oneStateName:missingStates){
+				System.out.println("     " + oneStateName);
+			}
+			csvReader.close();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
 	}
 	
 

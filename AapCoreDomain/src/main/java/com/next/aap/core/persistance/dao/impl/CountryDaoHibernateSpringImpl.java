@@ -12,6 +12,8 @@ import com.next.aap.core.persistance.dao.CountryDao;
 @Repository
 public class CountryDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Country> implements CountryDao  {
 
+	private static final long serialVersionUID = 1L;
+
 	/* (non-Javadoc)
 	 * @see com.next.aap.server.persistance.dao.impl.CountryDao#saveCountry(com.next.aap.server.persistance.Country)
 	 */

@@ -1,12 +1,16 @@
 package com.next.aap.web.jsf.beans;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.component.UIInput;
+import javax.faces.component.UISelectOne;
+import javax.faces.component.UIViewRoot;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,7 +26,6 @@ import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
-import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
 /*
  @Component
@@ -58,6 +61,8 @@ public class GuestUserProfileBean extends BaseJsfBean {
 	private boolean enableLivingParliamentConstituencyCombo = false;
 
 	private boolean sameAsLiving;
+	
+	private boolean showBanner;
 
 	private List<CountryDto> countries;
 
@@ -66,6 +71,8 @@ public class GuestUserProfileBean extends BaseJsfBean {
 
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
+		System.out.println("init");
+		showBanner = true;
 		if (countries == null || countries.isEmpty()) {
 			countries = aapService.getAllCountries();
 		}
@@ -74,6 +81,10 @@ public class GuestUserProfileBean extends BaseJsfBean {
 		}
 		//Copy Logged In user to selectedUserForEditing
 		selectedUserForEditing = new UserDto();
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1981);
+		selectedUserForEditing.setDateOfBirth(cal.getTime());
+
 		if (selectedUserForEditing.getStateVotingId() != null) {
 			enableDistrictCombo = true;
 			enableParliamentConstituencyCombo = true;
@@ -98,6 +109,8 @@ public class GuestUserProfileBean extends BaseJsfBean {
 	}
 
 	public void saveProfile(ActionEvent event) {
+		showBanner = false;
+		System.out.println("showBanner = "+showBanner);
 		if (sameAsLiving) {
 			selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
 			selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());
@@ -107,38 +120,54 @@ public class GuestUserProfileBean extends BaseJsfBean {
 
 		if (selectedUserForEditing.getStateLivingId() == null || selectedUserForEditing.getStateLivingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select State where you are living currently");
+			((UISelectOne)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("livingState")).setValid(false);
 		}
 		if (selectedUserForEditing.getDistrictLivingId() == null || selectedUserForEditing.getDistrictLivingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select District where you are living currently");
+			((UISelectOne)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("livingDistrict")).setValid(false);
 		}
 		if (selectedUserForEditing.getAssemblyConstituencyLivingId() == null || selectedUserForEditing.getAssemblyConstituencyLivingId() == 0) {
+			((UISelectOne)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("livingAssemblyConstituency")).setValid(false);
 			sendErrorMessageToJsfScreen("Please select Assembly Constituency where you are living currently");
 		}
 		if (selectedUserForEditing.getParliamentConstituencyLivingId() == null || selectedUserForEditing.getParliamentConstituencyLivingId() == 0) {
+			((UISelectOne)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("livingParliamentConstituency")).setValid(false);
 			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you are living currently");
 		}
 		if (selectedUserForEditing.getStateVotingId() == null || selectedUserForEditing.getStateVotingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select State where you are registered as Voter");
+			((UISelectOne)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("state")).setValid(false);
 		}
 		if (selectedUserForEditing.getDistrictVotingId() == null || selectedUserForEditing.getDistrictVotingId() == 0) {
+			((UISelectOne)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("district")).setValid(false);
 			sendErrorMessageToJsfScreen("Please select District where you are registered as Voter");
 		}
 		if (selectedUserForEditing.getAssemblyConstituencyVotingId() == null || selectedUserForEditing.getAssemblyConstituencyVotingId() == 0) {
+			((UISelectOne)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("assemblyConstituency")).setValid(false);
 			sendErrorMessageToJsfScreen("Please select Assembly Constituency where you registered as Voter");
 		}
 		if (selectedUserForEditing.getParliamentConstituencyVotingId() == null || selectedUserForEditing.getParliamentConstituencyVotingId() == 0) {
+			((UISelectOne)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("parliamentConstituency")).setValid(false);
 			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you registered as Voter");
 		}
 		if (selectedUserForEditing.isNri() ){
 			if((selectedUserForEditing.getNriCountryId() == null || selectedUserForEditing.getNriCountryId() == 0)) {
 				sendErrorMessageToJsfScreen("Please select Country where you Live");
+				((UIInput)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("nriCountry")).setValid(false);
 			}
 			if(selectedUserForEditing.isMember() && StringUtil.isEmpty(selectedUserForEditing.getPassportNumber())){
 				sendErrorMessageToJsfScreen("Please enter passport number. Its Required for NRIs to become member/Volunteer.");
+				((UIInput)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("passportNumber")).setValid(false);
 			}
+		}
+		if (!selectedUserForEditing.isMember() && !selectedUserForEditing.isVolunteer()) {
+			sendErrorMessageToJsfScreen("Please choose if you want to be Member or Volunteer or both");
+			((UIInput)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("member")).setValid(false);
+			((UIInput)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("volunteer")).setValid(false);
 		}
 		if (selectedUserForEditing.getDateOfBirth() == null) {
 			sendErrorMessageToJsfScreen("Please enter your Date of Birth");
+			((UIInput)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("cal")).setValid(false);
 		}
 		/*
 		 * else{ Calendar todayCalendar = Calendar.getInstance();
@@ -149,9 +178,13 @@ public class GuestUserProfileBean extends BaseJsfBean {
 		 */
 		if (StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getName())) {
 			sendErrorMessageToJsfScreen("Please enter your full name");
+			//sendErrorMessageToJsfScreen("name", "Please enter your full name");
+			((UIInput)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("name")).setValid(false);
 		}
 		if (StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getEmail()) && StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getMobileNumber())) {
 			sendErrorMessageToJsfScreen("Please enter either email or Mobile number or both");
+			((UIInput)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("email")).setValid(false);
+			((UIInput)UIViewRoot.getCurrentComponent(FacesContext.getCurrentInstance()).findComponent("mobile")).setValid(false);
 		}
 		if (isValidInput()) {
 			try{
@@ -397,6 +430,14 @@ public class GuestUserProfileBean extends BaseJsfBean {
 
 	public void setSelectedUserForEditing(UserDto selectedUserForEditing) {
 		this.selectedUserForEditing = selectedUserForEditing;
+	}
+
+	public boolean isShowBanner() {
+		return showBanner;
+	}
+
+	public void setShowBanner(boolean showBanner) {
+		this.showBanner = showBanner;
 	}
 
 }

@@ -43,7 +43,7 @@
 			<h5>Search Or Register Member</h5>
 			<!-- http://www.ajaxload.info/ -->
 			<p:blockUI block="userProfileForm" trigger=":userProfileForm:state,:userProfileForm:livingState">
-			Getting District List<br />
+			Getting District and Parliament Constituency List<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
 			<p:blockUI block="userProfileForm" trigger=":userProfileForm:district,:userProfileForm:livingDistrict">
@@ -54,6 +54,11 @@
 			Searching Members<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:createNewMember">
+			Please Wait<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			
 			<h:form id="userProfileForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:outputPanel id="userProfileFormMainPanel">
@@ -251,7 +256,7 @@
 										<f:facet name="header">
 											<h:outputText value="Update" />
 										</f:facet>
-										<p:commandButton update=":userProfileForm" value="Update" disabled="#{!adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}">
+										<p:commandButton update=":userProfileForm:userProfileFormMainPanel" value="Update" disabled="#{!adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}">
 											<f:setPropertyActionListener value="#{oneUser}" target="#{adminRegisterMemberBean.selectedUserForEditing}" />
 										</p:commandButton>
 									</p:column>
@@ -288,14 +293,14 @@
 										</p:panelGrid>
 										
 										<p:outputLabel value="You can not edit this member" rendered="#{!adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}"></p:outputLabel>
-										<p:commandButton id="editMemberButton" update=":userProfileForm" value="Update Member" rendered="#{adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}">
+										<p:commandButton id="editMemberButton" update=":userProfileForm:userProfileFormMainPanel" value="Update Member" rendered="#{adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}">
 											<f:setPropertyActionListener value="#{oneUser}" target="#{adminRegisterMemberBean.selectedUserForEditing}" />
 										</p:commandButton>
 
 									</p:rowExpansion>
 								</p:dataTable>
 								<br></br>
-								<p:commandButton id="createNewMember" update=":userProfileForm" value="Create New Member" disabled="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExists}"
+								<p:commandButton id="createNewMember" update=":userProfileForm:userProfileFormMainPanel" value="Create New Member" disabled="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExists}"
 									actionListener="#{adminRegisterMemberBean.createNewMember}" />
 								<p:outputLabel value="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExistsMessage}" rendered="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExists}"></p:outputLabel>
 							</p:outputPanel>
@@ -447,7 +452,7 @@
 							<p:graphicImage value="/images/ajax-loader.gif" />
 						</p:blockUI>
 
-						<p:commandButton id="saveMember" update=":userProfileForm:userProfileFormMainPanel" value="Save Member" actionListener="#{adminRegisterMemberBean.saveProfile}" />
+						<p:commandButton id="saveMember" update=":userProfileForm" value="Save Member" actionListener="#{adminRegisterMemberBean.saveProfile}" />
 						<p:commandButton id="receiveMembershipFee" onclick="paymentDialog.show()" value="Receive Membership Payment" disabled="#{adminRegisterMemberBean.disablePaymentReceiveButton}"/>
 						
 						<p:commandButton id="cancel" update=":userProfileForm:userProfileFormMainPanel" value="Cancel" actionListener="#{adminRegisterMemberBean.cancelSaveMember}" />
@@ -467,7 +472,7 @@
 							
 							<p:outputPanel>
 								<p:outputLabel value="Payment/Donation(CASH Only)"></p:outputLabel>
-								<p:graphicImage width="15px" value="https://cdn1.iconfinder.com/data/icons/TWG_Retina_Icons/64/help.png" id="donationHelp"></p:graphicImage>
+								<p:graphicImage width="24px" value="https://cdn1.iconfinder.com/data/icons/oxygen/32x32/categories/system-help.png" id="donationHelp"></p:graphicImage>
 							</p:outputPanel>
 							<p:inputText value="#{adminRegisterMemberBean.fee}" />
 							<p:commandButton value="Cancel" onsuccess="paymentDialog.hide()" />

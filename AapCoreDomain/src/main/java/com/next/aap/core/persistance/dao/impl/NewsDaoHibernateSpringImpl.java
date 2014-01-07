@@ -193,4 +193,58 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 		return list;
 	}
 
+	@Override
+	public List<News> getCountryNews(Long countryId) {
+		String sqlQuery = "select news_id from news_country where country_id = :countryId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("countryId", countryId);
+		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(newsIds == null || newsIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from News where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", newsIds);
+		List<News> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<News> getCountryRegionNews(Long countryRegionId) {
+		String sqlQuery = "select news_id from news_country_region where country_region_id = :countryRegionId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("countryRegionId", countryRegionId);
+		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(newsIds == null || newsIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from News where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", newsIds);
+		List<News> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<News> getCountryRegionAreaNews(Long countryRegionAreaId) {
+		String sqlQuery = "select news_id from news_country_region_area where country_region_area_id = :countryRegionAreaId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("countryRegionAreaId", countryRegionAreaId);
+		List<Long> newsIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(newsIds == null || newsIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from News where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", newsIds);
+		List<News> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
 }

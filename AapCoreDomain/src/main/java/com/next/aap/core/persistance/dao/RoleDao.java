@@ -30,6 +30,12 @@ public interface RoleDao {
 	
 	public abstract List<Role> getUserPcRoles(long userId, long pcId);
 	
+	public abstract List<Role> getUserCountryRoles(long userId, long countryId);
+	
+	public abstract List<Role> getUserCountryRegionRoles(long userId, long countryRegionId);
+	
+	public abstract List<Role> getUserCountryRegionAreaRoles(long userId, long countryRegionAreaId);
+	
 	public abstract List<Role> getGlobalRoles();
 	
 	public abstract List<Role> getStateRoles(long stateId);
@@ -40,4 +46,9 @@ public interface RoleDao {
 	
 	public abstract List<Role> getPcRoles(long pcId);
 
+	public abstract List<Role> getCountryRoles(long countryId);
+	
+	public abstract List<Role> getCountryRegionRoles(long countryRegionId);
+	
+	public abstract List<Role> getCountryRegionAreaRoles(long countryRegionAreaId);
 }

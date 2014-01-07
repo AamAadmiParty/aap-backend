@@ -38,9 +38,19 @@
 	<div style="width: 800px; margin: 0 auto;">
 		<div style="width: 800px; margin: 0;">
 			<p:blockUI block="adminPollQuestionForm" trigger=":adminPollQuestionForm:savePollQuestion,:adminPollQuestionForm:savePollQuestionAndPublish,:adminPollQuestionForm:publish">
-			Saving Profile<br />
+			Saving Question<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
+			<p:blockUI block="adminPollQuestionForm" trigger=":adminPollQuestionForm:addAnswer">
+			Saving Answer<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<p:blockUI block="adminPollQuestionForm" trigger=":adminPollQuestionForm:createPollAnswer">
+			Creating Answer<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			
+			
 			<h:form id="adminPollQuestionForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:outputPanel id="mainPanel">
@@ -96,19 +106,19 @@
 								<br></br>
 								<h:outputText id="counter" />
 								<br></br>
-								<p:commandButton value="Add Answer" update=":adminPollQuestionForm" actionListener="#{pollAdminBean.addPollQuestionTweet}" styleClass="ui-priority-primary">
+								<p:commandButton id="addAnswer" value="Add Answer" update=":adminPollQuestionForm" actionListener="#{pollAdminBean.addPollQuestionAnswer}" styleClass="ui-priority-primary">
 								</p:commandButton>
 								<p:commandButton value="Cancel" update=":adminPollQuestionForm:mainPanel" actionListener="#{pollAdminBean.cancelTweet}" styleClass="ui-priority-primary">
 								</p:commandButton>
 
 							</p:outputPanel>
 							<p:outputPanel rendered="#{pollAdminBean.showAnswerList}">
-								<p:commandButton value="Create Answers" update=":adminPollQuestionForm:answerPanel" actionListener="#{pollAdminBean.createPollQuestionTweet}" 
+								<p:commandButton id="createPollAnswer" value="Create Answers" update=":adminPollQuestionForm:answerPanel" actionListener="#{pollAdminBean.createPollQuestionAnswer}" 
 								rendered="#{pollAdminBean.editAllowed}" styleClass="ui-priority-primary">
 								</p:commandButton>
 								<br></br>
 								<p:dataTable id="listOfTweets" var="oneAnswer" value="#{pollAdminBean.answerList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
-									emptyMessage="No Tweet Related to this PollQuestion"
+									emptyMessage="No Answers to this PollQuestion"
 									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 									<p:column>
 										<f:facet name="header">
@@ -136,9 +146,8 @@
 									styleClass="ui-priority-primary" rendered="#{pollAdminBean.saveAndPublish}">
 								</p:commandButton>
 								<p:commandButton id="publish" value="Publish" update=":adminPollQuestionForm:mainPanel" actionListener="#{pollAdminBean.publishPost}" styleClass="ui-priority-primary"
-									rendered="#{pollAdminBean.publish}">
+									rendered="#{!pollAdminBean.saveAndPublish and pollAdminBean.publish}">
 								</p:commandButton>
-
 							</p:outputPanel>
 						</p:outputPanel>
 

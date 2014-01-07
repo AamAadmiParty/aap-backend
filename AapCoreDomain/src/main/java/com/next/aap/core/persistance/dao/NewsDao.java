@@ -39,4 +39,10 @@ public interface NewsDao {
 	
 	public abstract List<News> getPcNews(Long pcId);
 	
+	public abstract List<News> getCountryNews(Long countryId);
+	
+	public abstract List<News> getCountryRegionNews(Long countryRegionId);
+	
+	public abstract List<News> getCountryRegionAreaNews(Long countryRegionAreaId);
+	
 }

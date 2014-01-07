@@ -228,4 +228,109 @@ public class RoleDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Role> imp
 		return list;
 	}
 
+	@Override
+	public List<Role> getUserCountryRoles(long userId, long countryId) {
+		String sqlQuery = "select role_id from user_country_roles ucr, country_role cr where ucr.user_id = :userId and cr.country_id=:countryId and ucr.country_role_id=cr.id";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("userId", userId);
+		sqlQueryParams.put("countryId", countryId);
+		List<Long> roleIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+
+		if(roleIds == null || roleIds.isEmpty()){
+			return new ArrayList<>();
+		}
+		String query = "from Role where id in (:ids)";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", roleIds);
+		List<Role> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Role> getUserCountryRegionRoles(long userId, long countryRegionId) {
+		String sqlQuery = "select role_id from user_country_region_roles ucrr, country_region_role crr where ucrr.user_id = :userId and crr.country_region_id=:countryRegionId and ucrr.country_region_role_id=crr.id";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("userId", userId);
+		sqlQueryParams.put("countryRegionId", countryRegionId);
+		List<Long> roleIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+
+		if(roleIds == null || roleIds.isEmpty()){
+			return new ArrayList<>();
+		}
+		String query = "from Role where id in (:ids)";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", roleIds);
+		List<Role> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Role> getUserCountryRegionAreaRoles(long userId, long countryRegionAreaId) {
+		String sqlQuery = "select role_id from user_country_region_area_roles ucrar, country_region_area_role crar where ucrar.user_id = :userId and crar.country_region_area_id=:countryRegionAreaId and ucrar.country_region_area_role_id=crar.id";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("userId", userId);
+		sqlQueryParams.put("countryRegionAreaId", countryRegionAreaId);
+		List<Long> roleIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+
+		if(roleIds == null || roleIds.isEmpty()){
+			return new ArrayList<>();
+		}
+		String query = "from Role where id in (:ids)";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", roleIds);
+		List<Role> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Role> getCountryRoles(long countryId) {
+		String sqlQuery = "select cr.role_id from country_role cr where cr.country_id=:countryId";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("countryId", countryId);
+		List<Long> roleIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+
+		if(roleIds == null || roleIds.isEmpty()){
+			return new ArrayList<>();
+		}
+		String query = "from Role where id in (:ids)";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", roleIds);
+		List<Role> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Role> getCountryRegionRoles(long countryRegionId) {
+		String sqlQuery = "select crr.role_id from country_region_role crr where crr.country_region_id=:countryRegionId";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("countryRegionId", countryRegionId);
+		List<Long> roleIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+
+		if(roleIds == null || roleIds.isEmpty()){
+			return new ArrayList<>();
+		}
+		String query = "from Role where id in (:ids)";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", roleIds);
+		List<Role> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Role> getCountryRegionAreaRoles(long countryRegionAreaId) {
+		String sqlQuery = "select crar.role_id from country_region_area_roles crar where crar.country_region_id=:countryRegionAreaId";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(2);
+		sqlQueryParams.put("countryRegionAreaId", countryRegionAreaId);
+		List<Long> roleIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+
+		if(roleIds == null || roleIds.isEmpty()){
+			return new ArrayList<>();
+		}
+		String query = "from Role where id in (:ids)";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", roleIds);
+		List<Role> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
 }

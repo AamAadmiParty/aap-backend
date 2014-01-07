@@ -62,12 +62,12 @@ public class PollAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public void cancelTweet(){
 		showAnswerList = true;
 	}
-	public void createPollQuestionTweet(){
+	public void createPollQuestionAnswer(){
 		selectedAnswer = new PollAnswerDto();
 		newAnswer = true;
 		showAnswerList = false;
 	}
-	public void addPollQuestionTweet(){
+	public void addPollQuestionAnswer(){
 		if(newAnswer){
 			answerList.add(selectedAnswer);
 		}

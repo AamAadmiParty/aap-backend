@@ -49,4 +49,12 @@ public class CountryRegionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<
 		return list;
 	}
 
+	@Override
+	public List<CountryRegion> getCountryRegionsByCountryId(Long countryId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("countryId", countryId);
+		List<CountryRegion> list = executeQueryGetList("from CountryRegion where countryId = :countryId", params);
+		return list;
+	}
+
 }

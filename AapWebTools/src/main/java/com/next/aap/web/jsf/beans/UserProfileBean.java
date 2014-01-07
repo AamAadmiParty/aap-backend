@@ -2,6 +2,7 @@ package com.next.aap.web.jsf.beans;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.event.ActionEvent;
@@ -16,6 +17,8 @@ import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.CountryDto;
+import com.next.aap.web.dto.CountryRegionAreaDto;
+import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
@@ -61,6 +64,11 @@ public class UserProfileBean extends BaseJsfBean {
 	private boolean sameAsLiving;
 
 	private List<CountryDto> countries;
+	private List<CountryDto> nriCountries;
+	private List<CountryRegionDto> nriCountryRegions;
+	private List<CountryRegionAreaDto> nriCountryRegionAreas;
+	private boolean disableNriCountryRegionCombo = true;
+	private boolean disableNriCountryRegionAreaCombo = true;
 
 	@Autowired
 	private AapService aapService;
@@ -77,7 +85,18 @@ public class UserProfileBean extends BaseJsfBean {
 		}
 		if (countries == null || countries.isEmpty()) {
 			countries = aapService.getAllCountries();
+			nriCountries = new ArrayList<>(countries);
+			//Remove India from Nri Country List
+			Iterator<CountryDto> iterator = nriCountries.iterator();
+			while(iterator.hasNext()){
+				if(iterator.next().getName().equalsIgnoreCase("India")){
+					iterator.remove();
+					break;
+				}
+			}
 		}
+		disableNriCountryRegionCombo = true;
+		disableNriCountryRegionAreaCombo = true;
 		//Copy Logged In user to selectedUserForEditing
 		selectedUserForEditing = new UserDto();
 		Calendar cal = Calendar.getInstance();
@@ -85,6 +104,16 @@ public class UserProfileBean extends BaseJsfBean {
 		selectedUserForEditing.setDateOfBirth(cal.getTime());
 
 		BeanUtils.copyProperties(loggedInUser, selectedUserForEditing);
+		
+		if(selectedUserForEditing.getNriCountryId() != null){
+			disableNriCountryRegionCombo = false;
+			nriCountryRegions = aapService.getAllCountryRegionsOfCountry(selectedUserForEditing.getNriCountryId());
+		}
+		if(selectedUserForEditing.getNriCountryRegionId() != null){
+			disableNriCountryRegionAreaCombo = false;
+			nriCountryRegionAreas = aapService.getAllCountryRegionAreasOfCountryRegion(selectedUserForEditing.getNriCountryRegionId());
+		}
+
 		if (selectedUserForEditing.getStateVotingId() != null) {
 			enableDistrictCombo = true;
 			enableParliamentConstituencyCombo = true;
@@ -222,6 +251,36 @@ public class UserProfileBean extends BaseJsfBean {
 			} else {
 				enableAssemblyConstituencyCombo = true;
 				assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictVotingId());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void handleNriCountryChange(AjaxBehaviorEvent event) {
+		try {
+			if (selectedUserForEditing.getNriCountryId() == 0 || selectedUserForEditing.getNriCountryId() == null) {
+				disableNriCountryRegionCombo = true;
+				nriCountryRegions = new ArrayList<>();
+			} else {
+				disableNriCountryRegionCombo = false;
+				nriCountryRegions = aapService.getAllCountryRegionsOfCountry(selectedUserForEditing.getNriCountryId());
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void handleNriCountryRegionChange(AjaxBehaviorEvent event) {
+		try {
+			if (selectedUserForEditing.getNriCountryRegionId() == 0 || selectedUserForEditing.getNriCountryRegionId() == null) {
+				disableNriCountryRegionAreaCombo = true;
+				nriCountryRegions = new ArrayList<>();
+			} else {
+				disableNriCountryRegionAreaCombo = false;
+				nriCountryRegionAreas = aapService.getAllCountryRegionAreasOfCountryRegion(selectedUserForEditing.getNriCountryRegionId());
 			}
 
 		} catch (Exception e) {
@@ -398,6 +457,46 @@ public class UserProfileBean extends BaseJsfBean {
 
 	public void setSelectedUserForEditing(UserDto selectedUserForEditing) {
 		this.selectedUserForEditing = selectedUserForEditing;
+	}
+
+	public List<CountryDto> getNriCountries() {
+		return nriCountries;
+	}
+
+	public void setNriCountries(List<CountryDto> nriCountries) {
+		this.nriCountries = nriCountries;
+	}
+
+	public List<CountryRegionDto> getNriCountryRegions() {
+		return nriCountryRegions;
+	}
+
+	public void setNriCountryRegions(List<CountryRegionDto> nriCountryRegions) {
+		this.nriCountryRegions = nriCountryRegions;
+	}
+
+	public List<CountryRegionAreaDto> getNriCountryRegionAreas() {
+		return nriCountryRegionAreas;
+	}
+
+	public void setNriCountryRegionAreas(List<CountryRegionAreaDto> nriCountryRegionAreas) {
+		this.nriCountryRegionAreas = nriCountryRegionAreas;
+	}
+
+	public boolean isDisableNriCountryRegionCombo() {
+		return disableNriCountryRegionCombo;
+	}
+
+	public void setDisableNriCountryRegionCombo(boolean disableNriCountryRegionCombo) {
+		this.disableNriCountryRegionCombo = disableNriCountryRegionCombo;
+	}
+
+	public boolean isDisableNriCountryRegionAreaCombo() {
+		return disableNriCountryRegionAreaCombo;
+	}
+
+	public void setDisableNriCountryRegionAreaCombo(boolean disableNriCountryRegionAreaCombo) {
+		this.disableNriCountryRegionAreaCombo = disableNriCountryRegionAreaCombo;
 	}
 
 }

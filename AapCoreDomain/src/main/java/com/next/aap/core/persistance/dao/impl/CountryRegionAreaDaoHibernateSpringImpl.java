@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -39,6 +40,14 @@ public class CountryRegionAreaDaoHibernateSpringImpl extends BaseDaoHibernateSpr
 		params.put("nameUp", countryRegionAreaName.toUpperCase());
 		params.put("countryRegionId", countryRegionId);
 		CountryRegionArea countryRegionArea = executeQueryGetObject("from CountryRegionArea where nameUp = :nameUp and countryRegionId = :countryRegionId", params);
+		return countryRegionArea;
+	}
+
+	@Override
+	public List<CountryRegionArea> getCountryRegionAreasByCountryRegionId(Long countryRegionId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("countryRegionId", countryRegionId);
+		List<CountryRegionArea> countryRegionArea = executeQueryGetList("from CountryRegionArea where countryRegionId = :countryRegionId", params);
 		return countryRegionArea;
 	}
 

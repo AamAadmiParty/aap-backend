@@ -14,6 +14,8 @@ import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.CountryDto;
+import com.next.aap.web.dto.CountryRegionAreaDto;
+import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
@@ -50,6 +52,10 @@ public interface AapService {
 	List<StateDto> getAllStates() ;
 	
 	List<CountryDto> getAllCountries() ;
+	
+	List<CountryRegionDto> getAllCountryRegionsOfCountry(Long countryId);
+	
+	List<CountryRegionAreaDto> getAllCountryRegionAreasOfCountryRegion(Long countryRegionId);
 	
 	StateDto getStateById(Long stateId) ;
 	

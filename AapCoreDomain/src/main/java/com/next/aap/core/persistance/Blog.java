@@ -106,6 +106,38 @@ public class Blog {
 	@JoinColumn(name="state_id")
 	})
 	private List<State> states;
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "blog_country",
+	joinColumns = {
+	@JoinColumn(name="blog_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="country_id")
+	})
+	private List<Country> countries;
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "blog_country_region",
+	joinColumns = {
+	@JoinColumn(name="blog_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="country_region_id")
+	})
+	private List<CountryRegion> countryRegions;
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "blog_country_region_area",
+	joinColumns = {
+	@JoinColumn(name="blog_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="country_region_area_id")
+	})
+	private List<CountryRegionArea> countryRegionAreas;
+	
+	
 	@Column(name = "content_status", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private ContentStatus contentStatus;
@@ -235,6 +267,24 @@ public class Blog {
 	}
 	public void setContentStatus(ContentStatus contentStatus) {
 		this.contentStatus = contentStatus;
+	}
+	public List<Country> getCountries() {
+		return countries;
+	}
+	public void setCountries(List<Country> countries) {
+		this.countries = countries;
+	}
+	public List<CountryRegion> getCountryRegions() {
+		return countryRegions;
+	}
+	public void setCountryRegions(List<CountryRegion> countryRegions) {
+		this.countryRegions = countryRegions;
+	}
+	public List<CountryRegionArea> getCountryRegionAreas() {
+		return countryRegionAreas;
+	}
+	public void setCountryRegionAreas(List<CountryRegionArea> countryRegionAreas) {
+		this.countryRegionAreas = countryRegionAreas;
 	}
 
 	

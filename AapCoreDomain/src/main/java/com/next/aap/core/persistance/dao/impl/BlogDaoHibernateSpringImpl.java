@@ -14,6 +14,8 @@ import com.next.aap.core.persistance.dao.BlogDao;
 public class BlogDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Blog> implements BlogDao{
 
 
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	public Blog saveBlog(Blog blog) {
 		saveObject(blog);
@@ -178,6 +180,60 @@ public class BlogDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Blog> imp
 		String sqlQuery = "select blog_id from blog_pc where pc_id = :pcId ";
 		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
 		sqlQueryParams.put("pcId", pcId);
+		List<Long> blogIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(blogIds == null || blogIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from Blog where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", blogIds);
+		List<Blog> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Blog> getCountryBlog(Long countryId) {
+		String sqlQuery = "select blog_id from blog_country where country_id = :countryId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("countryId", countryId);
+		List<Long> blogIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(blogIds == null || blogIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from Blog where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", blogIds);
+		List<Blog> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Blog> getCountryRegionBlog(Long countryRegionId) {
+		String sqlQuery = "select blog_id from blog_country_region where country_region_id = :countryRegionId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("countryRegionId", countryRegionId);
+		List<Long> blogIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
+		
+		if(blogIds == null || blogIds.isEmpty()){
+			return new ArrayList<>();
+		}
+
+		String query = "from Blog where id in (:ids) order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		queryParams.put("ids", blogIds);
+		List<Blog> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Blog> getCountryRegionAreaBlog(Long countryRegionAreaId) {
+		String sqlQuery = "select blog_id from blog_country_region_area where country_region_area_id = :countryRegionAreaId ";
+		Map<String, Object> sqlQueryParams = new HashMap<String, Object>(1);
+		sqlQueryParams.put("countryRegionAreaId", countryRegionAreaId);
 		List<Long> blogIds = executeSqlQueryGetListOfLong(sqlQuery, sqlQueryParams);
 		
 		if(blogIds == null || blogIds.isEmpty()){

@@ -19,6 +19,12 @@ public interface OfficeDao {
 	public abstract List<Office> getAcOffices(Long acId);
 	
 	public abstract List<Office> getPcOffices(Long pcId);
+	
+	public abstract List<Office> getCountryOffices(Long countryId);
+	
+	public abstract List<Office> getCountryRegionOffices(Long countryRegionId);
+	
+	public abstract List<Office> getCountryRegionAreaOffices(Long countryRegionAreaId);
 
 
 }

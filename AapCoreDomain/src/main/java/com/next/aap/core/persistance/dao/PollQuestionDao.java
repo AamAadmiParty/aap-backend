@@ -38,5 +38,11 @@ public interface PollQuestionDao {
 	public abstract List<PollQuestion> getAcPollQuestion(Long acId);
 	
 	public abstract List<PollQuestion> getPcPollQuestion(Long pcId);
+	
+	public abstract List<PollQuestion> getCountryPollQuestion(Long pcId);
+	
+	public abstract List<PollQuestion> getCountryRegionPollQuestion(Long pcId);
+	
+	public abstract List<PollQuestion> getCountryRegionAreaPollQuestion(Long pcId);
 
 }

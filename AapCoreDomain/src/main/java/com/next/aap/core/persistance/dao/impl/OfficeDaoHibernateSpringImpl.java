@@ -71,4 +71,28 @@ public class OfficeDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Office>
 		List<Office> offices = executeQueryGetList("from Office where parliamentConstituencyId = :parliamentConstituencyId", params);
 		return offices;
 	}
+
+	@Override
+	public List<Office> getCountryOffices(Long countryId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("countryId", countryId);
+		List<Office> offices = executeQueryGetList("from Office where countryId = :countryId", params);
+		return offices;
+	}
+
+	@Override
+	public List<Office> getCountryRegionOffices(Long countryRegionId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("countryRegionId", countryRegionId);
+		List<Office> offices = executeQueryGetList("from Office where countryRegionId = :countryRegionId", params);
+		return offices;
+	}
+
+	@Override
+	public List<Office> getCountryRegionAreaOffices(Long countryRegionAreaId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("countryRegionAreaId", countryRegionAreaId);
+		List<Office> offices = executeQueryGetList("from Office where countryRegionAreaId = :countryRegionAreaId", params);
+		return offices;
+	}
 }

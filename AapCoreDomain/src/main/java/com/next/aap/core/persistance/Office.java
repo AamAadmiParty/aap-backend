@@ -96,6 +96,24 @@ public class Office {
 	@Column(name="pc_id", insertable=false,updatable=false)
 	private Long parliamentConstituencyId;
 	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="country_id")
+    private Country country;
+	@Column(name="country_id", insertable=false,updatable=false)
+	private Long countryId;
+	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="country_region_id")
+    private CountryRegion countryRegion;
+	@Column(name="country_region_id", insertable=false,updatable=false)
+	private Long countryRegionId;
+	
+	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinColumn(name="country_region_area_id")
+    private CountryRegionArea countryRegionArea;
+	@Column(name="country_region_area_id", insertable=false,updatable=false)
+	private Long countryRegionAreaId;
+	
 	
 	public Long getId() {
 		return id;
@@ -258,6 +276,42 @@ public class Office {
 	}
 	public void setParliamentConstituencyId(Long parliamentConstituencyId) {
 		this.parliamentConstituencyId = parliamentConstituencyId;
+	}
+	public Country getCountry() {
+		return country;
+	}
+	public void setCountry(Country country) {
+		this.country = country;
+	}
+	public Long getCountryId() {
+		return countryId;
+	}
+	public void setCountryId(Long countryId) {
+		this.countryId = countryId;
+	}
+	public CountryRegion getCountryRegion() {
+		return countryRegion;
+	}
+	public void setCountryRegion(CountryRegion countryRegion) {
+		this.countryRegion = countryRegion;
+	}
+	public Long getCountryRegionId() {
+		return countryRegionId;
+	}
+	public void setCountryRegionId(Long countryRegionId) {
+		this.countryRegionId = countryRegionId;
+	}
+	public CountryRegionArea getCountryRegionArea() {
+		return countryRegionArea;
+	}
+	public void setCountryRegionArea(CountryRegionArea countryRegionArea) {
+		this.countryRegionArea = countryRegionArea;
+	}
+	public Long getCountryRegionAreaId() {
+		return countryRegionAreaId;
+	}
+	public void setCountryRegionAreaId(Long countryRegionAreaId) {
+		this.countryRegionAreaId = countryRegionAreaId;
 	}
 	
 	

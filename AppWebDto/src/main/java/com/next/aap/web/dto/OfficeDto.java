@@ -21,6 +21,9 @@ public class OfficeDto {
 	private Long districtId;
 	private Long assemblyConstituencyId;
 	private Long parliamentConstituencyId;
+	private Long countryId;
+	private Long countryRegionId;
+	private Long countryRegionAreaId;
 	public Long getId() {
 		return id;
 	}
@@ -128,6 +131,24 @@ public class OfficeDto {
 	}
 	public void setParliamentConstituencyId(Long parliamentConstituencyId) {
 		this.parliamentConstituencyId = parliamentConstituencyId;
+	}
+	public Long getCountryId() {
+		return countryId;
+	}
+	public void setCountryId(Long countryId) {
+		this.countryId = countryId;
+	}
+	public Long getCountryRegionId() {
+		return countryRegionId;
+	}
+	public void setCountryRegionId(Long countryRegionId) {
+		this.countryRegionId = countryRegionId;
+	}
+	public Long getCountryRegionAreaId() {
+		return countryRegionAreaId;
+	}
+	public void setCountryRegionAreaId(Long countryRegionAreaId) {
+		this.countryRegionAreaId = countryRegionAreaId;
 	}
 	
 	

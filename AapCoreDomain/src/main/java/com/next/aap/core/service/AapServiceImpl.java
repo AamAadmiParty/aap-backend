@@ -121,6 +121,8 @@ import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.ContentStatus;
 import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.CountryDto;
+import com.next.aap.web.dto.CountryRegionAreaDto;
+import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
@@ -656,6 +658,16 @@ public class AapServiceImpl implements AapService, Serializable {
 					.getParliamentConstituencyVotingId());
 			user.setParliamentConstituencyVoting(parliamentConstituencyVoting);
 		}
+		if (userDto.getNriCountryRegionId() != null && userDto.getNriCountryRegionId() > 0) {
+			CountryRegion countryRegion = countryRegionDao.getCountryRegionById(userDto.getNriCountryRegionId());
+			user.setNriCountryRegion(countryRegion);
+			user.setNriCountryRegionId(userDto.getNriCountryRegionId());
+		}
+		if (userDto.getNriCountryRegionAreaId() != null && userDto.getNriCountryRegionAreaId() > 0) {
+			CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaById(userDto.getNriCountryRegionAreaId());
+			user.setNriCountryRegionArea(countryRegionArea);
+			user.setNriCountryRegionAreaId(userDto.getNriCountryRegionAreaId());
+		}
 		user.setGender(userDto.getGender());
 		user.setNri(userDto.isNri());
 		user.setMember(userDto.isMember());
@@ -951,7 +963,7 @@ public class AapServiceImpl implements AapService, Serializable {
 				true, true,false,AppPermission.APPROVE_POLL);
 		
 		createRoleWithPermissions("Treasury", "User of this role will be able to do all Treasury operation of a location", true, true, true, true,
-				true, true,false,AppPermission.TREASURY);
+				false, false,false,AppPermission.TREASURY);
 		createRoleWithPermissions("OfficeAdmin", "User of this role will be able to do all Office related operation of a location, i.e. editing Office address,contact information etc", true, true, true, true,
 				true, true,false,AppPermission.EDIT_OFFICE_ADDRESS);
 		
@@ -2478,6 +2490,27 @@ public class AapServiceImpl implements AapService, Serializable {
 			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(locationId);
 			blog.getParliamentConstituencies().add(parliamentConstituency);
 			break;
+		case COUNTRY:
+			if (blog.getCountries() == null) {
+				blog.setCountries(new ArrayList<Country>());
+			}
+			Country country = countryDao.getCountryById(locationId);
+			blog.getCountries().add(country);
+			break;
+		case REGION:
+			if (blog.getCountryRegions() == null) {
+				blog.setCountryRegions(new ArrayList<CountryRegion>());
+			}
+			CountryRegion countryRegion = countryRegionDao.getCountryRegionById(locationId);
+			blog.getCountryRegions().add(countryRegion);
+			break;
+		case AREA:
+			if (blog.getCountryRegionAreas() == null) {
+				blog.setCountryRegionAreas(new ArrayList<CountryRegionArea>());
+			}
+			CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaById(locationId);
+			blog.getCountryRegionAreas().add(countryRegionArea);
+			break;
 		}
 
 		blog = blogDao.saveBlog(blog);
@@ -2545,6 +2578,15 @@ public class AapServiceImpl implements AapService, Serializable {
 		case PC:
 			blog = blogDao.getPcBlog(locationId);
 			break;
+		case COUNTRY:
+			blog = blogDao.getCountryBlog(locationId);
+			break;
+		case REGION:
+			blog = blogDao.getCountryRegionBlog(locationId);
+			break;
+		case AREA:
+			blog = blogDao.getCountryRegionAreaBlog(locationId);
+			break;
 		}
 		return convertBlog(blog);
 	}
@@ -2605,6 +2647,27 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(locationId);
 			pollQuestion.getParliamentConstituencies().add(parliamentConstituency);
+			break;
+		case COUNTRY:
+			if (pollQuestion.getCountries() == null) {
+				pollQuestion.setCountries(new ArrayList<Country>());
+			}
+			Country country = countryDao.getCountryById(locationId);
+			pollQuestion.getCountries().add(country);
+			break;
+		case REGION:
+			if (pollQuestion.getCountryRegions() == null) {
+				pollQuestion.setCountryRegions(new ArrayList<CountryRegion>());
+			}
+			CountryRegion countryRegion = countryRegionDao.getCountryRegionById(locationId);
+			pollQuestion.getCountryRegions().add(countryRegion);
+			break;
+		case AREA:
+			if (pollQuestion.getCountryRegionAreas() == null) {
+				pollQuestion.setCountryRegionAreas(new ArrayList<CountryRegionArea>());
+			}
+			CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaById(locationId);
+			pollQuestion.getCountryRegionAreas().add(countryRegionArea);
 			break;
 		}
 
@@ -2669,6 +2732,15 @@ public class AapServiceImpl implements AapService, Serializable {
 			break;
 		case PC:
 			pollQuestions = pollQuestionDao.getPcPollQuestion(locationId);
+			break;
+		case COUNTRY:
+			pollQuestions = pollQuestionDao.getCountryPollQuestion(locationId);
+			break;
+		case REGION:
+			pollQuestions = pollQuestionDao.getCountryRegionPollQuestion(locationId);
+			break;
+		case AREA:
+			pollQuestions = pollQuestionDao.getCountryRegionAreaPollQuestion(locationId);
 			break;
 		}
 		return convertPollQuestions(pollQuestions);
@@ -2908,6 +2980,15 @@ public class AapServiceImpl implements AapService, Serializable {
 		case PC:
 			offices = officeDao.getPcOffices(locationId);
 			break;
+		case COUNTRY:
+			offices = officeDao.getCountryOffices(locationId);
+			break;
+		case REGION:
+			offices = officeDao.getCountryRegionOffices(locationId);
+			break;
+		case AREA:
+			offices = officeDao.getCountryRegionAreaOffices(locationId);
+			break;
 		default:
 		}
 		return convertOffices(offices);
@@ -2977,6 +3058,21 @@ public class AapServiceImpl implements AapService, Serializable {
 			State state = stateDao.getStateById(officeDto.getStateId());
 			office.setState(state);
 			office.setStateId(officeDto.getStateId());
+		}
+		if(officeDto.getCountryId() != null && officeDto.getCountryId() >0){
+			Country country = countryDao.getCountryById(officeDto.getCountryId());
+			office.setCountry(country);
+			office.setCountryId(officeDto.getCountryId());
+		}
+		if(officeDto.getCountryRegionId() != null && officeDto.getCountryRegionId() >0){
+			CountryRegion countryRegion = countryRegionDao.getCountryRegionById(officeDto.getCountryRegionId());
+			office.setCountryRegion(countryRegion);
+			office.setCountryRegionId(officeDto.getCountryRegionId());
+		}
+		if(officeDto.getCountryRegionAreaId() != null && officeDto.getCountryRegionAreaId() >0){
+			CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaById(officeDto.getCountryRegionAreaId());
+			office.setCountryRegionArea(countryRegionArea);
+			office.setCountryRegionAreaId(officeDto.getCountryRegionAreaId());
 		}
 		
 		office = officeDao.saveOffice(office);
@@ -3149,6 +3245,59 @@ public class AapServiceImpl implements AapService, Serializable {
 			ex.printStackTrace();
 		}
 		
+	}
+
+	@Override
+	@Transactional
+	public List<CountryRegionDto> getAllCountryRegionsOfCountry(Long countryId) {
+		List<CountryRegion> countryRegions = countryRegionDao.getCountryRegionsByCountryId(countryId);
+		return convertCountryRegions(countryRegions);
+	}
+	private CountryRegionDto convertCountryRegion(CountryRegion countryRegion){
+		if(countryRegion == null){
+			return null;
+		}
+		CountryRegionDto countryRegionDto = new CountryRegionDto();
+		BeanUtils.copyProperties(countryRegion, countryRegionDto);
+		return countryRegionDto;
+	}
+	
+	private List<CountryRegionDto> convertCountryRegions(List<CountryRegion> countryRegions){
+		List<CountryRegionDto> returnCountryRegions = new ArrayList<>();
+		if(countryRegions == null){
+			return returnCountryRegions;
+		}
+		for(CountryRegion oneCountryRegion:countryRegions){
+			returnCountryRegions.add(convertCountryRegion(oneCountryRegion));
+		}
+		return returnCountryRegions;
+	}
+
+	@Override
+	@Transactional
+	public List<CountryRegionAreaDto> getAllCountryRegionAreasOfCountryRegion(Long countryRegionId) {
+		List<CountryRegionArea> countryRegionAreas = countryRegionAreaDao.getCountryRegionAreasByCountryRegionId(countryRegionId);
+		return convertCountryRegionAreas(countryRegionAreas);
+	}
+	
+	private CountryRegionAreaDto convertCountryRegionArea(CountryRegionArea countryRegionArea){
+		if(countryRegionArea == null){
+			return null;
+		}
+		CountryRegionAreaDto countryRegionAreaDto = new CountryRegionAreaDto();
+		BeanUtils.copyProperties(countryRegionArea, countryRegionAreaDto);
+		return countryRegionAreaDto;
+	}
+	
+	private List<CountryRegionAreaDto> convertCountryRegionAreas(List<CountryRegionArea> countryRegionAreas){
+		List<CountryRegionAreaDto> returnCountryRegionAreas = new ArrayList<>();
+		if(countryRegionAreas == null){
+			return returnCountryRegionAreas;
+		}
+		for(CountryRegionArea oneCountryRegionArea:countryRegionAreas){
+			returnCountryRegionAreas.add(convertCountryRegionArea(oneCountryRegionArea));
+		}
+		return returnCountryRegionAreas;
 	}
 	
 

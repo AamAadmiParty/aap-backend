@@ -30,13 +30,19 @@
         </util:properties>
     </property>
 	</bean>
-
+	
+<!-- 
+		
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close" p:driverClassName="com.mysql.jdbc.Driver"
+		p:url="jdbc:mysql://${dbserver:aapcentraldb.cqwv4ttgwmsn.us-west-2.rds.amazonaws.com}:3306/aapcentraldb?autoReconnect=true&amp;characterEncoding=UTF-8"
+		p:username="${dbuser:admin}" p:password="${dbpassword:Linux11!}"></bean>
+-->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close" p:driverClassName="com.mysql.jdbc.Driver"
 		p:url="jdbc:mysql://${dbserver:localhost}:${dbport:3306}/${AapCentralDbName:aapcentraldb}?autoReconnect=true&amp;characterEncoding=UTF-8"
 		p:username="${dbuser:adfonic}" p:password="${dbpassword:adfon1c}"></bean>
-
-	<bean id="sessionFactory"
+ 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		
 		<property name="dataSource" ref="dataSource"></property>

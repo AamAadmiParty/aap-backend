@@ -58,6 +58,16 @@
 			Getting Assembly Constituency List<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:nriCountryRegion">
+			Getting Region/State List<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:nriCountryRegionArea">
+			Getting Area/City List<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			
+			
 			<h:form id="userProfileForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 
@@ -191,9 +201,27 @@
 
 					<p:selectOneMenu id="nriCountry" value="#{userProfileBean.selectedUserForEditing.nriCountryId}" disabled="#{!userProfileBean.selectedUserForEditing.nri}">
 						<f:selectItem itemLabel="Select Country" itemValue="0" />
-						<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
+						<f:selectItems value="#{userProfileBean.nriCountries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
+						
+						<p:ajax event="change" update=":userProfileForm:nriCountryRegion" listener="#{userProfileBean.handleNriCountryChange}" />
 					</p:selectOneMenu>
 
+					<h:outputLabel value="Region/State" />
+
+					<p:selectOneMenu id="nriCountryRegion" value="#{userProfileBean.selectedUserForEditing.nriCountryRegionId}" disabled="#{userProfileBean.disableNriCountryRegionCombo}">
+						<f:selectItem itemLabel="Select Region/State" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.nriCountryRegions}" var="oneCountryRegion" itemLabel="#{oneCountryRegion.name}" itemValue="#{oneCountryRegion.id}" />
+						
+						<p:ajax event="change" update=":userProfileForm:nriCountryRegionArea" listener="#{userProfileBean.handleNriCountryRegionChange}" />
+						
+					</p:selectOneMenu>
+					
+					<h:outputLabel value="Area/City" />
+
+					<p:selectOneMenu id="nriCountryRegionArea" value="#{userProfileBean.selectedUserForEditing.nriCountryRegionAreaId}" disabled="#{userProfileBean.disableNriCountryRegionAreaCombo}">
+						<f:selectItem itemLabel="Select Area/City" itemValue="0" />
+						<f:selectItems value="#{userProfileBean.nriCountryRegionAreas}" var="oneCountryRegionArea" itemLabel="#{oneCountryRegionArea.name}" itemValue="#{oneCountryRegionArea.id}" />
+					</p:selectOneMenu>
 
 				</p:panelGrid>
 				<br></br>

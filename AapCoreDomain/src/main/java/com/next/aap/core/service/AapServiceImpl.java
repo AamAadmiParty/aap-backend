@@ -41,6 +41,7 @@ import com.next.aap.core.persistance.ContentTweet;
 import com.next.aap.core.persistance.Country;
 import com.next.aap.core.persistance.CountryRegion;
 import com.next.aap.core.persistance.CountryRegionArea;
+import com.next.aap.core.persistance.CountryRegionAreaRole;
 import com.next.aap.core.persistance.CountryRegionRole;
 import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
@@ -2191,6 +2192,15 @@ public class AapServiceImpl implements AapService, Serializable {
 		case PC:
 			roles = roleDao.getPcRoles(locationId);
 			break;
+		case COUNTRY:
+			roles = roleDao.getCountryRoles(locationId);
+			break;
+		case REGION:
+			roles = roleDao.getCountryRegionRoles(locationId);
+			break;
+		case AREA:
+			roles = roleDao.getCountryRegionAreaRoles(locationId);
+			break;
 		}
 		return convertRoles(roles);
 	}
@@ -2253,6 +2263,47 @@ public class AapServiceImpl implements AapService, Serializable {
 				while (iterator.hasNext()) {
 					onePcRole = iterator.next();
 					if (onePcRole.getParliamentConstituencyId().equals(locationId)) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+			break;
+		case COUNTRY: {
+			Set<CountryRole> allCountryRoles = user.getCountryRoles();
+			if (allCountryRoles != null && !allCountryRoles.isEmpty()) {
+				Iterator<CountryRole> iterator = allCountryRoles.iterator();
+				CountryRole oneCountryRole;
+				while (iterator.hasNext()) {
+					oneCountryRole = iterator.next();
+					if (oneCountryRole.getCountryId().equals(locationId)) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+			break;
+		case REGION: {
+			Set<CountryRegionRole> allCountryRegionRoles = user.getCountryRegionRoles();
+			if (allCountryRegionRoles != null && !allCountryRegionRoles.isEmpty()) {
+				Iterator<CountryRegionRole> iterator = allCountryRegionRoles.iterator();
+				CountryRegionRole oneCountryRegionRole;
+				while (iterator.hasNext()) {
+					oneCountryRegionRole = iterator.next();
+					if (oneCountryRegionRole.getCountryRegionId().equals(locationId)) {
+						iterator.remove();
+					}
+				}
+			}
+		}
+		case AREA: {
+			Set<CountryRegionAreaRole> allCountryRegionRoles = user.getCountryRegionAreaRoles();
+			if (allCountryRegionRoles != null && !allCountryRegionRoles.isEmpty()) {
+				Iterator<CountryRegionAreaRole> iterator = allCountryRegionRoles.iterator();
+				CountryRegionAreaRole oneCountryRegionAreaRole;
+				while (iterator.hasNext()) {
+					oneCountryRegionAreaRole = iterator.next();
+					if (oneCountryRegionAreaRole.getCountryRegionAreaId().equals(locationId)) {
 						iterator.remove();
 					}
 				}
@@ -2334,6 +2385,44 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 		}
 			break;
+		case COUNTRY: {
+			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+				Set<CountryRole> allNewCountryRoles = new HashSet<>();
+				CountryRole oneCountryRole;
+				for (RoleDto oneRoleDto : userRoleDtos) {
+					oneCountryRole = countryRoleDao.getCountryRoleByCountryIdAndRoleId(locationId, oneRoleDto.getId());
+					allNewCountryRoles.add(oneCountryRole);
+				}
+				user.getCountryRoles().addAll(allNewCountryRoles);
+			}
+		}
+			break;
+		case REGION: {
+			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+				Set<CountryRegionRole> allNewCountryRoles = new HashSet<>();
+				CountryRegionRole oneCountryRegionRole;
+				for (RoleDto oneRoleDto : userRoleDtos) {
+					oneCountryRegionRole = countryRegionRoleDao.getCountryRegionRoleByCountryRegionIdAndRoleId(locationId, oneRoleDto.getId());
+					allNewCountryRoles.add(oneCountryRegionRole);
+				}
+				user.getCountryRegionRoles().addAll(allNewCountryRoles);
+			}
+		}
+			break;
+		case AREA: 
+			/*{
+			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+				Set<CountryRegionAreaRole> allNewCountryRegionAreaRoles = new HashSet<>();
+				CountryRegionAreaRole oneCountryRegionAreaRole;
+				for (RoleDto oneRoleDto : userRoleDtos) {
+					oneCountryRegionAreaRole = countryRegionAreaRoleDao.getCountryRegionRoleByCountryRegionIdAndRoleId(locationId, oneRoleDto.getId());
+					allNewCountryRegionAreaRoles.add(oneCountryRegionAreaRole);
+				}
+				user.getCountryRegionRoles().addAll(allNewCountryRegionAreaRoles);
+			}
+		}
+			break;*/
+			throw new RuntimeException("This has not been implemneted yet");
 		}
 		user = userDao.saveUser(user);
 	}

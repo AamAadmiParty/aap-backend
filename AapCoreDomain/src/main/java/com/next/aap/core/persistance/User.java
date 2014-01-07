@@ -217,7 +217,7 @@ public class User {
 	inverseJoinColumns = {
 	@JoinColumn(name="country_region_area_role_id")
 	})
-	Set<CountryRegionRole> countryRegionAreaRoles;
+	Set<CountryRegionAreaRole> countryRegionAreaRoles;
 	
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinTable(name = "user_interests",
@@ -704,11 +704,11 @@ public class User {
 		this.countryRegionRoles = countryRegionRoles;
 	}
 
-	public Set<CountryRegionRole> getCountryRegionAreaRoles() {
+	public Set<CountryRegionAreaRole> getCountryRegionAreaRoles() {
 		return countryRegionAreaRoles;
 	}
 
-	public void setCountryRegionAreaRoles(Set<CountryRegionRole> countryRegionAreaRoles) {
+	public void setCountryRegionAreaRoles(Set<CountryRegionAreaRole> countryRegionAreaRoles) {
 		this.countryRegionAreaRoles = countryRegionAreaRoles;
 	}
 

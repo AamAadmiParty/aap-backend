@@ -1,0 +1,43 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="banner">
+		<img src="https://lh6.googleusercontent.com/-tAPN3HAM2L8/Us8DLZohQ-I/AAAAAAAANwY/5CX8FZ0PYuo/s960/banner.jpg" />
+	</div>
+	<div class="top-row">
+		<div class="profile-pic">
+			<img src="#{menuBean.user.profilePic}?type=large" />
+		</div>
+		<div class="menubar">
+			<div id='cssmenu'>
+				<ul>
+
+					<li><a href='/home'><span>Home</span></a></li>
+					<li class='has-sub'><a href='/voiceofaap'><span>Voice of AAP</span></a>
+						<ul>
+							<li><a href='/voiceofaap'><span>Settings</span></a></li>
+							<li class='last'><a href='/voafactivity'><span>Activity</span></a></li>
+						</ul></li>
+						<li class='has-sub'><a href='#'><span>Donations</span></a>
+						<ul>
+							<li><a href='#'><span>My Donation</span></a></li>
+							<li class='last'><a href='#'><span>Ripple</span></a></li>
+						</ul></li>
+					<li class='has-sub'><a href='/profile'><span>Profile</span></a>
+						<ul>
+							<li><a href='/socialaccounts'><span>Social Accounts</span></a></li>
+							<li class='last'><a href='/profile'><span>Edit Profile</span></a></li>
+						</ul></li>
+					<li><a href='#'><span>Contact Us</span></a></li>
+					<li class='last'><a href='/logout'><p:outputPanel rendered="#{menuBean.loggedIn}"><span>Sign Out</span></p:outputPanel></a></li>
+					
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="profile-name">
+		<p>#{menuBean.user.name}</p>
+	</div>
+
+
+</ui:composition>

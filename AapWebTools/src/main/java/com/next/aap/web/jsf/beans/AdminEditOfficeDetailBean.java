@@ -117,6 +117,15 @@ public class AdminEditOfficeDetailBean extends BaseMultiPermissionAdminJsfBean {
 			case PC:
 				selectedOffice.setParliamentConstituencyId(menuBean.getAdminSelectedLocationId());
 				break;
+			case COUNTRY:
+				selectedOffice.setCountryId(menuBean.getAdminSelectedLocationId());
+				break;
+			case REGION:
+				selectedOffice.setCountryRegionId(menuBean.getAdminSelectedLocationId());
+				break;
+			case AREA:
+				selectedOffice.setCountryRegionAreaId(menuBean.getAdminSelectedLocationId());
+				break;
 			default:
 				sendErrorMessageToJsfScreen("No Location selected");
 			}

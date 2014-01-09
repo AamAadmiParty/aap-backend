@@ -2,15 +2,20 @@ package com.next.aap.web.jsf.beans;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
@@ -20,9 +25,12 @@ import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.InterestDto;
+import com.next.aap.web.dto.InterestGroupDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.jsf.beans.model.InterestGroupDtoModel;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -36,8 +44,13 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
  @URLBeanName("userProfileBean")
  */
 @Component
-@Scope("session")
-@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
+//@Scope("session")
+@ViewScoped
+//@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
+@URLMappings(mappings={
+		@URLMapping(id = "userProfileBean1", beanName="userProfileBean", pattern = "/orig/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml"),
+		@URLMapping(id = "userProfileBean2", beanName="userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/aapstyle/userprofile.xhtml")
+		})
 @URLBeanName("userProfileBean")
 public class UserProfileBean extends BaseJsfBean {
 
@@ -69,6 +82,9 @@ public class UserProfileBean extends BaseJsfBean {
 	private List<CountryRegionAreaDto> nriCountryRegionAreas;
 	private boolean disableNriCountryRegionCombo = true;
 	private boolean disableNriCountryRegionAreaCombo = true;
+	private List<InterestGroupDtoModel> interestGroupDtoModels;
+	
+	private Map<Long, Boolean> selectedInterestMap = new HashMap<Long, Boolean>();
 
 	@Autowired
 	private AapService aapService;
@@ -76,10 +92,20 @@ public class UserProfileBean extends BaseJsfBean {
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
+		Long startTime = System.currentTimeMillis();
 		UserDto loggedInUser = getLoggedInUser(true, buildLoginUrl("/profile"));
 		if (loggedInUser == null) {
 			return;
 		}
+		List<InterestGroupDto> interestGroups = aapService.getAllVolunterInterests();
+		selectedInterestMap.clear();
+		interestGroupDtoModels = new ArrayList<>();
+		if(interestGroups != null && !interestGroups.isEmpty()){
+			for(InterestGroupDto oneInterestGroupDto:interestGroups){
+				interestGroupDtoModels.add(new InterestGroupDtoModel(oneInterestGroupDto));
+			}
+		}
+		
 		if (stateList == null || stateList.isEmpty()) {
 			livingStateList = stateList = aapService.getAllStates();
 		}
@@ -134,10 +160,16 @@ public class UserProfileBean extends BaseJsfBean {
 				livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictLivingId());
 			}
 		}
+		Long endTime = System.currentTimeMillis();
+		System.out.println("Total Init Time = " +(endTime - startTime)+" ms");
 		
 	}
 
 	public void saveProfile(ActionEvent event) {
+		System.out.println("Total Selected : " + selectedInterestMap.size());
+		for(Entry<Long, Boolean> oneInterest:selectedInterestMap.entrySet()){
+			System.out.println("OneInterest : " + oneInterest.getKey() +" , "+oneInterest.getValue());
+		}
 		if (sameAsLiving) {
 			selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
 			selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());
@@ -499,4 +531,20 @@ public class UserProfileBean extends BaseJsfBean {
 		this.disableNriCountryRegionAreaCombo = disableNriCountryRegionAreaCombo;
 	}
 
+	public List<InterestGroupDtoModel> getInterestGroupDtoModels() {
+		return interestGroupDtoModels;
+	}
+
+	public void setInterestGroupDtoModels(List<InterestGroupDtoModel> interestGroupDtoModels) {
+		this.interestGroupDtoModels = interestGroupDtoModels;
+	}
+
+	public Map<Long, Boolean> getSelectedInterestMap() {
+		return selectedInterestMap;
+	}
+
+	public void setSelectedInterestMap(Map<Long, Boolean> selectedInterestMap) {
+		this.selectedInterestMap = selectedInterestMap;
+	}
+	
 }

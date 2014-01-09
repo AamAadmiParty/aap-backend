@@ -20,6 +20,7 @@ import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
+import com.next.aap.web.dto.InterestGroupDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.OfficeDto;
@@ -188,4 +189,6 @@ public interface AapService {
 	List<AccountTransactionDto> getTreasuryBankAccountTransactions(PostLocationType locationType, Long locationId);
 	
 	void importAllCountriesData();
+	
+	List<InterestGroupDto> getAllVolunterInterests();
 }

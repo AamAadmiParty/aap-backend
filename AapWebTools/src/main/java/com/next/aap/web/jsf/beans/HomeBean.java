@@ -14,17 +14,14 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 @Scope("session")
 //@URLMapping(id = "homeBean", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/home.xhtml")
 @URLMappings(mappings={
-		@URLMapping(id = "homeBean1", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/home.xhtml"),
+		@URLMapping(id = "homeBean1", beanName="homeBean", pattern = "/orig/home", viewId = "/WEB-INF/jsf/home.xhtml"),
 		@URLMapping(id = "homeBean2", beanName="homeBean", pattern = "/design1/home", viewId = "/WEB-INF/jsf/design1/home.xhtml"),
-		@URLMapping(id = "homeBean3", beanName="homeBean", pattern = "/design2/home", viewId = "/WEB-INF/jsf/design2/home.xhtml")
+		@URLMapping(id = "homeBean3", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/aapstyle/home.xhtml")
 		})
 @URLBeanName("homeBean")
 public class HomeBean extends BaseJsfBean {
 
 	private static final long serialVersionUID = 1L;
-
-	private LoginAccountDto loginAccounts;
-	private UserDto user;
 
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
@@ -34,14 +31,5 @@ public class HomeBean extends BaseJsfBean {
 			return;
 		}
 	}
-
-	public LoginAccountDto getLoginAccounts() {
-		return getLoggedInAccountsFromSesion();
-	}
-
-	public UserDto getUser() {
-		return getLoggedInUser();
-	}
-
 
 }

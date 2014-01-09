@@ -22,6 +22,7 @@ import com.next.aap.web.dto.VoiceOfAapData;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
+import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
 /*
 @Component
@@ -32,7 +33,11 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 */
 @Component
 @Scope("session")
-@URLMapping(id = "voiceOfAapBean", beanName="voiceOfAapBean", pattern = "/voiceofaap", viewId = "/WEB-INF/jsf/voiceofaap.xhtml")
+@URLMappings(mappings={
+		@URLMapping(id = "voiceOfAapBean1", beanName="voiceOfAapBean", pattern = "/orig/voiceofaap", viewId = "/WEB-INF/jsf/voiceofaap.xhtml"),
+		@URLMapping(id = "voiceOfAapBean2", beanName="voiceOfAapBean", pattern = "/voiceofaap", viewId = "/WEB-INF/jsf/aapstyle/voiceofaap.xhtml")
+		})
+//@URLMapping(id = "voiceOfAapBean", beanName="voiceOfAapBean", pattern = "/voiceofaap", viewId = "/WEB-INF/jsf/voiceofaap.xhtml")
 @URLBeanName("voiceOfAapBean")
 public class VoiceOfAapBean extends BaseJsfBean {
 

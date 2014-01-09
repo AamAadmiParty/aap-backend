@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.facebook.api.Facebook;
@@ -55,6 +56,8 @@ import com.next.aap.core.persistance.FacebookGroup;
 import com.next.aap.core.persistance.FacebookGroupMembership;
 import com.next.aap.core.persistance.FacebookPage;
 import com.next.aap.core.persistance.FacebookPost;
+import com.next.aap.core.persistance.Interest;
+import com.next.aap.core.persistance.InterestGroup;
 import com.next.aap.core.persistance.News;
 import com.next.aap.core.persistance.Office;
 import com.next.aap.core.persistance.ParliamentConstituency;
@@ -93,6 +96,8 @@ import com.next.aap.core.persistance.dao.FacebookGroupDao;
 import com.next.aap.core.persistance.dao.FacebookGroupMembershipDao;
 import com.next.aap.core.persistance.dao.FacebookPageDao;
 import com.next.aap.core.persistance.dao.FacebookPostDao;
+import com.next.aap.core.persistance.dao.InterestDao;
+import com.next.aap.core.persistance.dao.InterestGroupDao;
 import com.next.aap.core.persistance.dao.NewsDao;
 import com.next.aap.core.persistance.dao.OfficeDao;
 import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
@@ -127,6 +132,8 @@ import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
+import com.next.aap.web.dto.InterestDto;
+import com.next.aap.web.dto.InterestGroupDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.OfficeDto;
@@ -225,6 +232,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	private CountryRoleDao countryRoleDao;
 	@Autowired
 	private CountryRegionRoleDao countryRegionRoleDao;
+	@Autowired
+	private InterestDao interestDao;
+	@Autowired
+	private InterestGroupDao interestGroupDao;
 	
 
 	@Value("${voa_facebook_app_id}")
@@ -490,6 +501,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public List<StateDto> getAllStates() {
 		List<State> allStates = stateDao.getAllStates();
 		List<StateDto> returnList = new ArrayList<StateDto>();
@@ -512,6 +524,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public List<DistrictDto> getAllDistrictOfState(long stateId) {
 		List<District> allDistricts = districtDao.getDistrictOfState(stateId);
 		List<DistrictDto> returnList = new ArrayList<DistrictDto>();
@@ -529,6 +542,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfDistrict(long districtId) {
 		List<AssemblyConstituency> allAssemblyConstituencies = assemblyConstituencyDao.getAssemblyConstituencyOfDistrict(districtId);
 		return convertAssemblyConstituencies(allAssemblyConstituencies);
@@ -553,6 +567,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public StateDto getStateById(Long stateId) {
 		State state = stateDao.getStateById(stateId);
 		return convertState(state);
@@ -560,6 +575,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfState(long stateId) {
 		List<AssemblyConstituency> allAssemblyConstituencies = assemblyConstituencyDao.getAssemblyConstituencyOfState(stateId);
 		List<AssemblyConstituencyDto> returnList = convertAssemblyConstituencies(allAssemblyConstituencies);
@@ -587,6 +603,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(long stateId) {
 		List<ParliamentConstituency> parliamentConstituencies = parliamentConstituencyDao.getParliamentConstituencyOfState(stateId);
 		return convertParliamentConstituencyList(parliamentConstituencies);
@@ -1211,6 +1228,26 @@ public class AapServiceImpl implements AapService, Serializable {
 				}
 			}
 		}
+		
+		Set<CountryRole> countryRoles = user.getCountryRoles();
+		if (countryRoles != null && !countryRoles.isEmpty()) {
+			for (CountryRole oneCountryRole : countryRoles) {
+				if (!oneCountryRole.getRole().getPermissions().isEmpty()) {
+					userRolePermissionDto.addCountryPermissions(convertCountry(oneCountryRole.getCountry()),
+							convertPermissionToAppPermission(oneCountryRole.getRole().getPermissions()));
+				}
+			}
+		}
+		
+		Set<CountryRegionRole> countryRegionRoles = user.getCountryRegionRoles();
+		if (countryRoles != null && !countryRoles.isEmpty()) {
+			for (CountryRegionRole oneCountryRegionRole : countryRegionRoles) {
+				if (!oneCountryRegionRole.getRole().getPermissions().isEmpty()) {
+					userRolePermissionDto.addCountryRegionPermissions(convertCountryRegion(oneCountryRegionRole.getCountryRegion()),
+							convertPermissionToAppPermission(oneCountryRegionRole.getRole().getPermissions()));
+				}
+			}
+		}
 		return userRolePermissionDto;
 	}
 
@@ -1472,6 +1509,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public List<CountryDto> getAllCountries() {
 		List<Country> countries = countryDao.getAllCountries();
 		return convertCountries(countries);
@@ -2105,6 +2143,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public DistrictDto getDistrictByNameAndStateId(String name, Long stateId) {
 		District district = districtDao.getDistrictByNameAndStateId(stateId, name);
 		return convertDistrict(district);
@@ -2112,6 +2151,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public DistrictDto getDistrictById(Long districtId) {
 		District district = districtDao.getDistrictById(districtId);
 		return convertDistrict(district);
@@ -2119,6 +2159,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public AssemblyConstituencyDto getAssemblyConstituencyById(long stateId) {
 		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(stateId);
 		return convertAssemblyConstituency(assemblyConstituency);
@@ -2126,6 +2167,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public ParliamentConstituencyDto getParliamentConstituencyById(long pcId) {
 		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
 		return convertParliamentConstituency(parliamentConstituency);
@@ -3249,6 +3291,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public List<CountryRegionDto> getAllCountryRegionsOfCountry(Long countryId) {
 		List<CountryRegion> countryRegions = countryRegionDao.getCountryRegionsByCountryId(countryId);
 		return convertCountryRegions(countryRegions);
@@ -3275,6 +3318,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
+	@Cacheable("location")
 	public List<CountryRegionAreaDto> getAllCountryRegionAreasOfCountryRegion(Long countryRegionId) {
 		List<CountryRegionArea> countryRegionAreas = countryRegionAreaDao.getCountryRegionAreasByCountryRegionId(countryRegionId);
 		return convertCountryRegionAreas(countryRegionAreas);
@@ -3298,6 +3342,53 @@ public class AapServiceImpl implements AapService, Serializable {
 			returnCountryRegionAreas.add(convertCountryRegionArea(oneCountryRegionArea));
 		}
 		return returnCountryRegionAreas;
+	}
+
+	@Override
+	@Transactional
+	public List<InterestGroupDto> getAllVolunterInterests() {
+		List<InterestGroup> interestGroups = interestGroupDao.getAllInterestGroups();
+		return convertInterestGroups(interestGroups);
+	}
+	private InterestDto convertInterest(Interest interest){
+		if(interest == null){
+			return null;
+		}
+		InterestDto interestDto = new InterestDto();
+		BeanUtils.copyProperties(interest, interestDto);
+		return interestDto;
+	}
+	
+	private List<InterestDto> convertInterests(List<Interest> interests){
+		List<InterestDto> returnInterests = new ArrayList<>();
+		if(interests == null){
+			return returnInterests;
+		}
+		for(Interest interest:interests){
+			returnInterests.add(convertInterest(interest));
+		}
+		return returnInterests;
+	}
+	
+	private InterestGroupDto convertInterestGroup(InterestGroup interestGroup){
+		if(interestGroup == null){
+			return null;
+		}
+		InterestGroupDto interestGroupDto = new InterestGroupDto();
+		BeanUtils.copyProperties(interestGroup, interestGroupDto);
+		interestGroupDto.setInterestDtos(convertInterests(interestGroup.getInterests()));
+		return interestGroupDto;
+	}
+	
+	private List<InterestGroupDto> convertInterestGroups(List<InterestGroup> interestGroups){
+		List<InterestGroupDto> returnInterestGroups = new ArrayList<>();
+		if(interestGroups == null){
+			return returnInterestGroups;
+		}
+		for(InterestGroup interestGroup:interestGroups){
+			returnInterestGroups.add(convertInterestGroup(interestGroup));
+		}
+		return returnInterestGroups;
 	}
 	
 

@@ -1,12 +1,15 @@
 package com.next.aap.core.persistance;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -33,6 +36,9 @@ public class InterestGroup {
 	
 	@Column(name = "description")
 	private String description;
+	
+	@OneToMany(mappedBy="interestGroup", fetch=FetchType.EAGER)
+	private List<Interest> interests;
 
 
 	public Long getId() {
@@ -102,6 +108,16 @@ public class InterestGroup {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+
+	public List<Interest> getInterests() {
+		return interests;
+	}
+
+
+	public void setInterests(List<Interest> interests) {
+		this.interests = interests;
 	}
 
 

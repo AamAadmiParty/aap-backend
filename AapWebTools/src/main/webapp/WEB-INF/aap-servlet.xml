@@ -26,7 +26,9 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 	<mvc:annotation-driven />
 	<context:annotation-config />
 	<context:component-scan base-package="com.next.aap.web.controller.login" />
+	<context:component-scan base-package="com.next.aap.web.controller" />
 	<context:component-scan base-package="com.next.aap.web.util" />
+	
 	
 
 	<bean id="propertyPlaceholderConfigurer"
@@ -35,6 +37,7 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 		<property name="searchSystemEnvironment" value="true" />
 		<property name="properties">
         <util:properties>
+            <prop key="design">aapstyle</prop>
         </util:properties>
     </property>
 	</bean>

@@ -18,6 +18,8 @@ import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.CountryDto;
+import com.next.aap.web.dto.CountryRegionAreaDto;
+import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PostLocationType;
@@ -76,10 +78,16 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	private Long selectedDistrictIdForRoles;
 	private Long selectedAcIdForRoles;
 	private Long selectedPcIdForRoles;
+	private Long selectedCountryIdForRoles;
+	private Long selectedCountryRegionIdForRoles;
+	private Long selectedCountryRegionAreaIdForRoles;
 
 	private List<DistrictDto> memberDistrictList;
 	private List<AssemblyConstituencyDto> memberAssemblyConstituencyList;
 	private List<ParliamentConstituencyDto> memberParliamentConstituencyList;
+	private List<CountryDto> memberCountryList;
+	private List<CountryRegionDto> memberCountryRegionList;
+	private List<CountryRegionAreaDto> memberCountryRegionAreaList;
 
 	private boolean showRolesPanel;
 	private boolean disableSaveMemberRoleButton = true;
@@ -163,13 +171,21 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 
 		switch (menuBean.getLocationType()) {
 		case Global:
+			memberCountryList = aapService.getAllCountries();
 			break;
 		case STATE:
 			memberDistrictList = aapService.getAllDistrictOfState(menuBean.getAdminSelectedLocationId());
 			memberParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(menuBean.getAdminSelectedLocationId());
+			break;
 		case DISTRICT:
 			memberAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(menuBean.getAdminSelectedLocationId());
-
+			break;
+		case COUNTRY:
+			memberCountryRegionList = aapService.getAllCountryRegionsOfCountry(menuBean.getAdminSelectedLocationId());
+			break;
+		case REGION:
+			memberCountryRegionAreaList = aapService.getAllCountryRegionAreasOfCountryRegion(menuBean.getAdminSelectedLocationId());
+			break;
 		}
 		// assemblyConstituencyList =
 		// aapService.getAllAssemblyConstituenciesOfState(selectedStateId);
@@ -433,6 +449,26 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 		boolean returnValue = (PostLocationType.STATE == menuBean.getLocationType());
 		return returnValue;
 	}
+	
+	public boolean isDisableCountryComobForRoles() {
+		boolean returnValue = !"Country".equals(location);
+		return returnValue;
+	}
+
+	public boolean isRenderCountryComboForRoles() {
+		boolean returnValue = (PostLocationType.Global == menuBean.getLocationType());
+		return returnValue;
+	}
+
+	public boolean isDisableCountryRegionComobForRoles() {
+		boolean returnValue = !"CountryRegion".equals(location);
+		return returnValue;
+	}
+
+	public boolean isRenderCountryRegionComboForRoles() {
+		boolean returnValue = (PostLocationType.COUNTRY == menuBean.getLocationType());
+		return returnValue;
+	}
 
 	public boolean isDisableAcComobForRoles() {
 		boolean returnValue = !"Ac".equals(location);
@@ -461,6 +497,20 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	public void handleRoleStateChange(AjaxBehaviorEvent event) {
 		try {
 			loadLocationRoles(PostLocationType.STATE, selectedStateIdForRoles, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void handleRoleCountryChange(AjaxBehaviorEvent event) {
+		try {
+			loadLocationRoles(PostLocationType.COUNTRY, selectedCountryIdForRoles, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void handleRoleCountryRegionChange(AjaxBehaviorEvent event) {
+		try {
+			loadLocationRoles(PostLocationType.REGION, selectedCountryRegionIdForRoles, true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -778,6 +828,54 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void setDisableSaveMemberRoleButton(boolean disableSaveMemberRoleButton) {
 		this.disableSaveMemberRoleButton = disableSaveMemberRoleButton;
+	}
+
+	public List<CountryRegionDto> getMemberCountryRegionList() {
+		return memberCountryRegionList;
+	}
+
+	public void setMemberCountryRegionList(List<CountryRegionDto> memberCountryRegionList) {
+		this.memberCountryRegionList = memberCountryRegionList;
+	}
+
+	public List<CountryRegionAreaDto> getMemberCountryRegionAreaList() {
+		return memberCountryRegionAreaList;
+	}
+
+	public void setMemberCountryRegionAreaList(List<CountryRegionAreaDto> memberCountryRegionAreaList) {
+		this.memberCountryRegionAreaList = memberCountryRegionAreaList;
+	}
+
+	public List<CountryDto> getMemberCountryList() {
+		return memberCountryList;
+	}
+
+	public void setMemberCountryList(List<CountryDto> memberCountryList) {
+		this.memberCountryList = memberCountryList;
+	}
+
+	public Long getSelectedCountryIdForRoles() {
+		return selectedCountryIdForRoles;
+	}
+
+	public void setSelectedCountryIdForRoles(Long selectedCountryIdForRoles) {
+		this.selectedCountryIdForRoles = selectedCountryIdForRoles;
+	}
+
+	public Long getSelectedCountryRegionIdForRoles() {
+		return selectedCountryRegionIdForRoles;
+	}
+
+	public void setSelectedCountryRegionIdForRoles(Long selectedCountryRegionIdForRoles) {
+		this.selectedCountryRegionIdForRoles = selectedCountryRegionIdForRoles;
+	}
+
+	public Long getSelectedCountryRegionAreaIdForRoles() {
+		return selectedCountryRegionAreaIdForRoles;
+	}
+
+	public void setSelectedCountryRegionAreaIdForRoles(Long selectedCountryRegionAreaIdForRoles) {
+		this.selectedCountryRegionAreaIdForRoles = selectedCountryRegionAreaIdForRoles;
 	}
 
 }

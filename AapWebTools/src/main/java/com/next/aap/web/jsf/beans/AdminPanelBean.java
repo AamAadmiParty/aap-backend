@@ -46,6 +46,12 @@ public class AdminPanelBean extends BaseJsfBean {
 		if(menuBean.getAdminPcs() != null && menuBean.getAdminPcs().size() > 0){
 			totalLocation = totalLocation + menuBean.getAdminPcs().size();
 		}
+		if(menuBean.getAdminCountries() != null && menuBean.getAdminCountries().size() > 0){
+			totalLocation = totalLocation + menuBean.getAdminCountries().size();
+		}
+		if(menuBean.getAdminCountryRegions() != null && menuBean.getAdminCountryRegions().size() > 0){
+			totalLocation = totalLocation + menuBean.getAdminCountryRegions().size();
+		}
 		System.out.println("Total Locations are "+totalLocation);
 		
 		if(totalLocation == 1){
@@ -63,6 +69,12 @@ public class AdminPanelBean extends BaseJsfBean {
 			}
 			if(menuBean.getAdminPcs() != null && menuBean.getAdminPcs().size() > 0){
 				menuBean.setSelectedAdminPc(menuBean.getAdminPcs().get(0));
+			}
+			if(menuBean.getAdminCountries() != null && menuBean.getAdminCountries().size() > 0){
+				menuBean.setSelectedAdminCountry(menuBean.getAdminCountries().get(0));
+			}
+			if(menuBean.getAdminCountryRegions() != null && menuBean.getAdminCountryRegions().size() > 0){
+				menuBean.setSelectedAdminCountryRegion(menuBean.getAdminCountryRegions().get(0));
 			}
 			return;
 		}

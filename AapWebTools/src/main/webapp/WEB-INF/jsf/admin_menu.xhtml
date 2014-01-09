@@ -8,6 +8,7 @@ body {
 	padding: 0;
 	font-family: geneva, arial, helvetica, sans-serif;
 }
+
 .topAlignPanelColumns td {
 	vertical-align: top;
 }
@@ -28,6 +29,7 @@ body {
 .ui-dialog.terminalDialog .ui-dialog-content {
 	padding: 0;
 }
+
 .ui-widget,.ui-widget .ui-widget {
 	font-size: 90% !important;
 }
@@ -112,18 +114,57 @@ body {
 		<h:form id="adminForm" rendered="#{menuBean.admin}">
 			<p:messages id="messages" autoUpdate="true" closable="true" />
 			<p:outputPanel rendered="#{menuBean.superUser}">
+				<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
+					<f:facet name="header"> Select the Location</f:facet>
 
+					<h:outputLabel for="state" value="State" />
+					<p:selectOneMenu id="state" value="#{menuBean.selectedStateId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select State" itemValue="0" />
+						<f:selectItems value="#{menuBean.states}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+
+						<p:ajax event="change" update=":adminForm:district,:adminForm:parliamentConstituency" listener="#{menuBean.handleStateChange}" />
+					</p:selectOneMenu>
+					<h:outputLabel for="district" value="District*" />
+					<p:selectOneMenu id="district" value="#{menuBean.selectedDistrictId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select District" itemValue="0" />
+						<f:selectItems value="#{menuBean.districtOfState}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+						<p:ajax event="change" update=":adminForm:assemblyConstituency" listener="#{menuBean.handleDistrictChange}" />
+					</p:selectOneMenu>
+
+					<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
+
+					<p:selectOneMenu id="parliamentConstituency" value="#{menuBean.selectedPcId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+						<f:selectItems value="#{menuBean.parliamentConstituencyOfState}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+							itemValue="#{oneParliamentConstituency.id}" />
+
+					</p:selectOneMenu>
+
+					<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
+					<p:selectOneMenu id="assemblyConstituency" value="#{menuBean.selectedAcId}" effect="fold" editable="false">
+						<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+						<f:selectItems value="#{menuBean.assemblyConstituencyOfDistrict}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+							itemValue="#{oneAssemblyConstituency.id}" />
+
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+				<p:commandButton value="Cancel" oncomplete="chooseLocation.hide()" styleClass="ui-priority-primary">
+				</p:commandButton>
+				<p:commandButton value="Select" actionListener="#{menuBean.selectCurrent}" styleClass="ui-priority-primary">
+				</p:commandButton>
 			</p:outputPanel>
 			<p:outputPanel rendered="#{!menuBean.superUser and menuBean.admin}">
 
-				<h:panelGrid columns="3"  styleClass="topAlignPanelColumns">
+				<h:panelGrid columns="3" styleClass="topAlignPanelColumns">
 					<p:panelGrid var="oneState" columns="1" rendered="#{menuBean.globalAdmin}">
 						<f:facet name="header"> Global</f:facet>
 						<p:commandButton value="Select" actionListener="#{menuBean.selectGlobal}" styleClass="ui-priority-primary">
 						</p:commandButton>
 					</p:panelGrid>
 					<p:dataTable var="oneState" value="#{menuBean.adminStates}" rendered="#{menuBean.stateAdmin}">
-					<f:facet name="header"> State</f:facet>
+						<f:facet name="header"> State</f:facet>
 						<p:column>
 							<h:outputText value="#{oneState.name}" />
 						</p:column>

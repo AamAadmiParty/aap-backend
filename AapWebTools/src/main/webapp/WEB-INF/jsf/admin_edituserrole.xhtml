@@ -343,6 +343,8 @@
 								<f:selectItem itemLabel="District" itemValue="District" />
 								<f:selectItem itemLabel="Assembly Constituency" itemValue="Ac" />
 								<f:selectItem itemLabel="Parliament Constituency" itemValue="Pc" />
+								<f:selectItem itemLabel="Country" itemValue="Country" />
+								<f:selectItem itemLabel="CountryRegion" itemValue="CountryRegion" />
 								<p:ajax process="@this" event="change" update=":userProfileForm:GlobalAdminPanel" listener="#{adminEditUserRoleBean.handleLocationClick}" />
 							</p:selectOneRadio>
 
@@ -394,6 +396,26 @@
 										itemValue="#{oneParliamentConstituency.id}" />
 
 									<p:ajax event="change" listener="#{adminEditUserRoleBean.handleRolePcChange}" update=":userProfileForm:GlobalAdminPanel" />
+								</p:selectOneMenu>
+								
+								<p:radioButton id="opt6" for="locationSelectionRadio" itemIndex="5" rendered="#{adminEditUserRoleBean.renderCountryComboForRoles}" />
+								<h:outputLabel for="opt6" value="Country" rendered="#{adminEditUserRoleBean.renderCountryComboForRoles}" />
+								<p:selectOneMenu id="memberCountry" disabled="#{adminEditUserRoleBean.disableCountryComobForRoles}" rendered="#{adminEditUserRoleBean.renderCountryComboForRoles}"
+									value="#{adminEditUserRoleBean.selectedCountryIdForRoles}" effect="fold" editable="false">
+									<f:selectItem itemLabel="Select Country" itemValue="0" />
+									<f:selectItems value="#{adminEditUserRoleBean.memberCountryList}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
+
+									<p:ajax event="change" listener="#{adminEditUserRoleBean.handleRoleCountryChange}" update=":userProfileForm:GlobalAdminPanel" />
+								</p:selectOneMenu>
+								
+								<p:radioButton id="opt7" for="locationSelectionRadio" itemIndex="5" rendered="#{adminEditUserRoleBean.renderCountryRegionComboForRoles}" />
+								<h:outputLabel for="opt7" value="CountryRegion" rendered="#{adminEditUserRoleBean.renderCountryRegionComboForRoles}" />
+								<p:selectOneMenu id="memberCountry" disabled="#{adminEditUserRoleBean.disableCountryRegionComobForRoles}" rendered="#{adminEditUserRoleBean.renderCountryRegionComboForRoles}"
+									value="#{adminEditUserRoleBean.selectedCountryRegionIdForRoles}" effect="fold" editable="false">
+									<f:selectItem itemLabel="Select Region/State" itemValue="0" />
+									<f:selectItems value="#{adminEditUserRoleBean.memberCountryRegionList}" var="oneCountryRegion" itemLabel="#{oneCountryRegion.name}" itemValue="#{oneCountryRegion.id}" />
+
+									<p:ajax event="change" listener="#{adminEditUserRoleBean.handleRoleCountryRegionChange}" update=":userProfileForm:GlobalAdminPanel" />
 								</p:selectOneMenu>
 
 							</h:panelGrid>

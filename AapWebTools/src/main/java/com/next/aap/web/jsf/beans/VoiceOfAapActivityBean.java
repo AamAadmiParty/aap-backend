@@ -14,10 +14,15 @@ import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
+import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
 @Component
 @Scope("session")
-@URLMapping(id = "voiceOfAapActivityBean", beanName="voiceOfAapActivityBean", pattern = "/voafactivity", viewId = "/WEB-INF/jsf/voafactivity.xhtml")
+//@URLMapping(id = "voiceOfAapActivityBean", beanName="voiceOfAapActivityBean", pattern = "/voafactivity", viewId = "/WEB-INF/jsf/voafactivity.xhtml")
+@URLMappings(mappings={
+		@URLMapping(id = "voiceOfAapActivityBean1", beanName="voiceOfAapActivityBean", pattern = "/orig/voafactivity", viewId = "/WEB-INF/jsf/voafactivity.xhtml"),
+		@URLMapping(id = "voiceOfAapActivityBean2", beanName="voiceOfAapActivityBean", pattern = "/voafactivity", viewId = "/WEB-INF/jsf/aapstyle/voafactivity.xhtml")
+		})
 @URLBeanName("voiceOfAapActivityBean")
 public class VoiceOfAapActivityBean extends BaseJsfBean {
 

@@ -14,10 +14,15 @@ import com.next.aap.web.util.CookieUtil;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
+import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
 @Component
 @Scope("session")
-@URLMapping(id = "socialAccountBean", beanName="socialAccountBean", pattern = "/socialaccounts", viewId = "/WEB-INF/jsf/socialaccounts.xhtml")
+//@URLMapping(id = "socialAccountBean", beanName="socialAccountBean", pattern = "/socialaccounts", viewId = "/WEB-INF/jsf/socialaccounts.xhtml")
+@URLMappings(mappings={
+		@URLMapping(id = "socialAccountBean1", beanName="socialAccountBean", pattern = "/orig/socialaccounts", viewId = "/WEB-INF/jsf/socialaccounts.xhtml"),
+		@URLMapping(id = "socialAccountBean2", beanName="socialAccountbean", pattern = "/socialaccounts", viewId = "/WEB-INF/jsf/aapstyle/socialaccounts.xhtml")
+		})
 @URLBeanName("socialAccountBean")
 public class SocialAccountBean extends BaseJsfBean {
 

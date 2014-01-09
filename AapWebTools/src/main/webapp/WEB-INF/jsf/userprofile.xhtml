@@ -66,8 +66,8 @@
 			Getting Area/City List<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
-			
-			
+
+
 			<h:form id="userProfileForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 
@@ -97,12 +97,13 @@
 					<p:outputPanel></p:outputPanel>
 
 					<h:outputText value="Date of Birth*" />
-					<p:calendar id="cal" readonlyInput="true" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
+					<p:calendar id="cal" readonlyInput="true" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true"
+						effect="slideDown" />
 					<!-- 
 					<p:inputMask id="dob" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" mask="99/99/9999" />
 					 -->
 				</h:panelGrid>
-				
+
 				<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
 					<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
 						<f:facet name="header">  Select the place where you live</f:facet>
@@ -202,7 +203,7 @@
 					<p:selectOneMenu id="nriCountry" value="#{userProfileBean.selectedUserForEditing.nriCountryId}" disabled="#{!userProfileBean.selectedUserForEditing.nri}">
 						<f:selectItem itemLabel="Select Country" itemValue="0" />
 						<f:selectItems value="#{userProfileBean.nriCountries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
-						
+
 						<p:ajax event="change" update=":userProfileForm:nriCountryRegion" listener="#{userProfileBean.handleNriCountryChange}" />
 					</p:selectOneMenu>
 
@@ -211,14 +212,15 @@
 					<p:selectOneMenu id="nriCountryRegion" value="#{userProfileBean.selectedUserForEditing.nriCountryRegionId}" disabled="#{userProfileBean.disableNriCountryRegionCombo}">
 						<f:selectItem itemLabel="Select Region/State" itemValue="0" />
 						<f:selectItems value="#{userProfileBean.nriCountryRegions}" var="oneCountryRegion" itemLabel="#{oneCountryRegion.name}" itemValue="#{oneCountryRegion.id}" />
-						
+
 						<p:ajax event="change" update=":userProfileForm:nriCountryRegionArea" listener="#{userProfileBean.handleNriCountryRegionChange}" />
-						
+
 					</p:selectOneMenu>
-					
+
 					<h:outputLabel value="Area/City" />
 
-					<p:selectOneMenu id="nriCountryRegionArea" value="#{userProfileBean.selectedUserForEditing.nriCountryRegionAreaId}" disabled="#{userProfileBean.disableNriCountryRegionAreaCombo}">
+					<p:selectOneMenu id="nriCountryRegionArea" value="#{userProfileBean.selectedUserForEditing.nriCountryRegionAreaId}"
+						disabled="#{userProfileBean.disableNriCountryRegionAreaCombo}">
 						<f:selectItem itemLabel="Select Area/City" itemValue="0" />
 						<f:selectItems value="#{userProfileBean.nriCountryRegionAreas}" var="oneCountryRegionArea" itemLabel="#{oneCountryRegionArea.name}" itemValue="#{oneCountryRegionArea.id}" />
 					</p:selectOneMenu>
@@ -284,6 +286,24 @@
 				" value="Save Profile" actionListener="#{userProfileBean.saveProfile}" />
 				<p:tooltip for="saveProfile">Save Profile</p:tooltip>
 
+				<ui:repeat value="#{userProfileBean.interestGroupDtoModels}" var="oneInterestGroup">
+					<p:dataTable var="oneInterest" value="#{oneInterestGroup.interestDtoModels}" >
+						<f:facet name="header">#{oneInterestGroup.description}</f:facet>
+						<p:column width="4%">  
+						<p:selectBooleanCheckbox value="#{userProfileBean.selectedInterestMap[oneInterest.id]}">
+							<p:ajax update=":userProfileForm:votingLocation"/>
+						</p:selectBooleanCheckbox>
+						</p:column>
+						<!-- 
+						<p:selectBooleanCheckbox value="#{userProfileBean.sameAsLiving}">
+							<p:ajax update=":userProfileForm:votingLocation" listener="#{userProfileBean.onClickSameAsLiving}" />
+						</p:selectBooleanCheckbox>
+						 -->
+						<p:column>  
+                			#{oneInterest.description}  
+            			</p:column>
+					</p:dataTable>
+				</ui:repeat>
 
 			</h:form>
 			<!-- header ends -->

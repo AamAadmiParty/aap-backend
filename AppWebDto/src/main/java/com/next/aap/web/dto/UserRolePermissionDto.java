@@ -24,18 +24,24 @@ public class UserRolePermissionDto implements Serializable{
 		adminDistricts = new ArrayList<DistrictDto>();
 		adminAcs = new ArrayList<AssemblyConstituencyDto>();
 		adminPcs = new ArrayList<ParliamentConstituencyDto>();
+		adminCountries = new ArrayList<CountryDto>();
+		adminCountryRegions = new ArrayList<CountryRegionDto>();
 	}
 	private boolean superUser;
 	private List<StateDto> adminStates;
 	private List<DistrictDto> adminDistricts;
 	private List<AssemblyConstituencyDto> adminAcs;
 	private List<ParliamentConstituencyDto> adminPcs;
+	private List<CountryDto> adminCountries;
+	private List<CountryRegionDto> adminCountryRegions;
 	
 	private Set<AppPermission> allPermissions;
 	private Map<Long,Set<AppPermission>> statePermissions;
 	private Map<Long,Set<AppPermission>> districtPermissions;
 	private Map<Long,Set<AppPermission>> acPermissions;
 	private Map<Long,Set<AppPermission>> pcPermissions;
+	private Map<Long,Set<AppPermission>> countryPermissions;
+	private Map<Long,Set<AppPermission>> countryRegionPermissions;
 	public boolean isSuperUser() {
 		return superUser;
 	}
@@ -152,6 +158,44 @@ public class UserRolePermissionDto implements Serializable{
 	public boolean isAdmin(){
 		return isSuperUser() || isStateAdmin() || isDistrictAdmin() || isAcAdmin() || isPcAdmin() || isAllAdmin();
 	}
+	public List<CountryDto> getAdminCountries() {
+		return adminCountries;
+	}
+	public List<CountryRegionDto> getAdminCountryRegions() {
+		return adminCountryRegions;
+	}
+	public Map<Long, Set<AppPermission>> getCountryPermissions() {
+		return countryPermissions;
+	}
+	public Map<Long, Set<AppPermission>> getCountryRegionPermissions() {
+		return countryRegionPermissions;
+	}
 	
+	public void addAdminCountry(CountryDto countryDto) {
+		addAdminLocation(countryDto, adminCountries);
+	}
+	public void addAdminCountry(CountryRegionDto countryRegionDto) {
+		addAdminLocation(countryRegionDto, adminCountryRegions);
+	}
+	public boolean isCountryAdmin(){
+		return !countryPermissions.isEmpty(); 
+	}
+	public boolean isCountryRegionAdmin(){
+		return !countryRegionPermissions.isEmpty(); 
+	}
 	
+	public void addCountryPermissions(CountryDto countryDto, Set<AppPermission> countryPermissions) {
+		addLocationPermision(countryDto.getId(), countryPermissions, this.countryPermissions);
+		if(!adminCountries.contains(countryDto)){
+			adminCountries.add(countryDto);	
+		}
+	}
+	
+	public void addCountryRegionPermissions(CountryRegionDto countryRegionDto, Set<AppPermission> countryPermissions) {
+		addLocationPermision(countryRegionDto.getId(), countryPermissions, this.countryRegionPermissions);
+		if(!adminCountryRegions.contains(countryRegionDto)){
+			adminCountryRegions.add(countryRegionDto);	
+		}
+	}
+
 }

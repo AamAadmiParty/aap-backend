@@ -1,5 +1,7 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.persistance.Interest;
@@ -27,6 +29,11 @@ public class InterestDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Inter
 	@Override
 	public Interest getInterestById(Long id) {
 		return super.getObjectById(Interest.class, id);
+	}
+
+	@Override
+	public List<Interest> getAllInterests() {
+		return executeQueryGetList("from Interest");
 	}
 
 

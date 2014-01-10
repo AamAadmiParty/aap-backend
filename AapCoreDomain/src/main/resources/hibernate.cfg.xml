@@ -34,11 +34,13 @@
 		<mapping class="com.next.aap.core.persistance.InterestGroup" />
 		<mapping class="com.next.aap.core.persistance.News" />
 		<mapping class="com.next.aap.core.persistance.Office" />
-		<mapping class="com.next.aap.core.persistance.PlannedTweet" />
 		<mapping class="com.next.aap.core.persistance.ParliamentConstituency" />
 		<mapping class="com.next.aap.core.persistance.PcRole" />
 		<mapping class="com.next.aap.core.persistance.Permission" />
+		<mapping class="com.next.aap.core.persistance.PlannedEmail" />
 		<mapping class="com.next.aap.core.persistance.PlannedFacebookPost" />
+		<mapping class="com.next.aap.core.persistance.PlannedSms" />
+		<mapping class="com.next.aap.core.persistance.PlannedTweet" />
 		<mapping class="com.next.aap.core.persistance.PollAnswer" />
 		<mapping class="com.next.aap.core.persistance.PollQuestion" />
 		<mapping class="com.next.aap.core.persistance.Phone" />

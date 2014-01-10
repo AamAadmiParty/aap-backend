@@ -65,7 +65,9 @@ import com.next.aap.core.persistance.PcRole;
 import com.next.aap.core.persistance.Permission;
 import com.next.aap.core.persistance.Phone;
 import com.next.aap.core.persistance.Phone.PhoneType;
+import com.next.aap.core.persistance.PlannedEmail;
 import com.next.aap.core.persistance.PlannedFacebookPost;
+import com.next.aap.core.persistance.PlannedSms;
 import com.next.aap.core.persistance.PlannedTweet;
 import com.next.aap.core.persistance.PollAnswer;
 import com.next.aap.core.persistance.PollQuestion;
@@ -104,7 +106,9 @@ import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
 import com.next.aap.core.persistance.dao.PcRoleDao;
 import com.next.aap.core.persistance.dao.PermissionDao;
 import com.next.aap.core.persistance.dao.PhoneDao;
+import com.next.aap.core.persistance.dao.PlannedEmailDao;
 import com.next.aap.core.persistance.dao.PlannedFacebookPostDao;
+import com.next.aap.core.persistance.dao.PlannedSmsDao;
 import com.next.aap.core.persistance.dao.PlannedTweetDao;
 import com.next.aap.core.persistance.dao.PollAnswerDao;
 import com.next.aap.core.persistance.dao.PollQuestionDao;
@@ -138,8 +142,10 @@ import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.OfficeDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
+import com.next.aap.web.dto.PlannedEmailDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
+import com.next.aap.web.dto.PlannedSmsDto;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.PollAnswerDto;
 import com.next.aap.web.dto.PollQuestionDto;
@@ -236,6 +242,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	private InterestDao interestDao;
 	@Autowired
 	private InterestGroupDao interestGroupDao;
+	@Autowired
+	private PlannedSmsDao plannedSmsDao;
+	@Autowired
+	private PlannedEmailDao plannedEmailDao;
 	
 
 	@Value("${voa_facebook_app_id}")
@@ -926,6 +936,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 
 		// Now create all custom Roles
+		/*
 		createRoleWithPermissions("VoiceOfAapFacebookAdminRole", " User of this role will be able to make Facebook post using voice of AAP Application", true,
 				true, false, false,true, true,false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
 		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true,
@@ -983,7 +994,11 @@ public class AapServiceImpl implements AapService, Serializable {
 				false, false,false,AppPermission.TREASURY);
 		createRoleWithPermissions("OfficeAdmin", "User of this role will be able to do all Office related operation of a location, i.e. editing Office address,contact information etc", true, true, true, true,
 				true, true,false,AppPermission.EDIT_OFFICE_ADDRESS);
-		
+		*/
+		createRoleWithPermissions("SmsSender", "User of this role will be able to send SMS to all people in his/her location", true, true, true, true,
+				true, true,false,AppPermission.ADMIN_SMS);
+		createRoleWithPermissions("EmailSender", "User of this role will be able to send EMAIL to all people in his/her location", true, true, true, true,
+				true, true,false,AppPermission.ADMIN_EMAIL);
 		
 
 
@@ -3389,6 +3404,127 @@ public class AapServiceImpl implements AapService, Serializable {
 			returnInterestGroups.add(convertInterestGroup(interestGroup));
 		}
 		return returnInterestGroups;
+	}
+
+	
+	private PlannedSmsDto convertPlannedSms(PlannedSms plannedSms) {
+		if (plannedSms == null) {
+			return null;
+		}
+		PlannedSmsDto plannedSmsDto = new PlannedSmsDto();
+		BeanUtils.copyProperties(plannedSms, plannedSmsDto);
+		return plannedSmsDto;
+	}
+
+	private List<PlannedSmsDto> convertPlannedSmss(List<PlannedSms> plannedSmss) {
+		if (plannedSmss == null) {
+			return null;
+		}
+		List<PlannedSmsDto> plannedSmsDtos = new ArrayList<>(plannedSmss.size());
+		for (PlannedSms onePlannedSms : plannedSmss) {
+			plannedSmsDtos.add(convertPlannedSms(onePlannedSms));
+		}
+		return plannedSmsDtos;
+	}
+	@Override
+	@Transactional
+	public PlannedSmsDto savePlannedSms(PlannedSmsDto plannedSmsDto) {
+		PlannedSms plannedSms = null;
+		if (plannedSmsDto.getId() != null && plannedSmsDto.getId() > 0) {
+			plannedSms = plannedSmsDao.getPlannedSmsById(plannedSmsDto.getId());
+			if (plannedSms == null) {
+				throw new RuntimeException("No such Sms found[id=" + plannedSmsDto.getId() + "]");
+			}
+		} else {
+			plannedSms = new PlannedSms();
+			plannedSms.setDateCreated(new Date());
+			plannedSms.setStatus(PlannedPostStatus.PENDING);
+		}
+		plannedSms.setMessage(plannedSmsDto.getMessage());
+		plannedSms.setPostingTime(plannedSmsDto.getPostingTime());
+		plannedSms.setLocationType(plannedSmsDto.getLocationType());
+		plannedSms.setLocationId(plannedSmsDto.getLocationId());
+		plannedSms = plannedSmsDao.savePlannedSms(plannedSms);
+
+		return convertPlannedSms(plannedSms);
+	}
+
+	@Override
+	@Transactional
+	public PlannedSmsDto updatePlannedSmsStatus(Long plannedSmsId, PlannedPostStatus status, String errorMessage) {
+		PlannedSms plannedSms = plannedSmsDao.getPlannedSmsById(plannedSmsId);
+		plannedSms.setStatus(status);
+		plannedSms.setErrorMessage(errorMessage);
+		plannedSms = plannedSmsDao.savePlannedSms(plannedSms);
+		return convertPlannedSms(plannedSms);
+	}
+
+	@Override
+	@Transactional
+	public List<PlannedSmsDto> getPlannedSmssForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize) {
+		List<PlannedSms> plannedSmses = plannedSmsDao.getPlannedSmsByLocationTypeAndLocationId(locationType, locationId);
+		return convertPlannedSmss(plannedSmses);
+	}
+	
+	private PlannedEmailDto convertPlannedEmail(PlannedEmail plannedEmail) {
+		if (plannedEmail == null) {
+			return null;
+		}
+		PlannedEmailDto plannedEmailDto = new PlannedEmailDto();
+		BeanUtils.copyProperties(plannedEmail, plannedEmailDto);
+		return plannedEmailDto;
+	}
+
+	private List<PlannedEmailDto> convertPlannedEmails(List<PlannedEmail> plannedEmails) {
+		if (plannedEmails == null) {
+			return null;
+		}
+		List<PlannedEmailDto> plannedEmailDtos = new ArrayList<>(plannedEmails.size());
+		for (PlannedEmail onePlannedEmail : plannedEmails) {
+			plannedEmailDtos.add(convertPlannedEmail(onePlannedEmail));
+		}
+		return plannedEmailDtos;
+	}
+
+	@Override
+	@Transactional
+	public PlannedEmailDto savePlannedEmail(PlannedEmailDto plannedEmailDto) {
+		PlannedEmail plannedEmail = null;
+		if (plannedEmailDto.getId() != null && plannedEmailDto.getId() > 0) {
+			plannedEmail = plannedEmailDao.getPlannedEmailById(plannedEmailDto.getId());
+			if (plannedEmail == null) {
+				throw new RuntimeException("No such Email found[id=" + plannedEmailDto.getId() + "]");
+			}
+		} else {
+			plannedEmail = new PlannedEmail();
+			plannedEmail.setDateCreated(new Date());
+			plannedEmail.setStatus(PlannedPostStatus.PENDING);
+		}
+		plannedEmail.setMessage(plannedEmailDto.getMessage());
+		plannedEmail.setSubject(plannedEmailDto.getSubject());
+		plannedEmail.setPostingTime(plannedEmailDto.getPostingTime());
+		plannedEmail.setLocationType(plannedEmailDto.getLocationType());
+		plannedEmail.setLocationId(plannedEmailDto.getLocationId());
+		plannedEmail = plannedEmailDao.savePlannedEmail(plannedEmail);
+
+		return convertPlannedEmail(plannedEmail);
+	}
+
+	@Override
+	@Transactional
+	public PlannedEmailDto updatePlannedEmailStatus(Long plannedEmailId, PlannedPostStatus status, String message) {
+		PlannedEmail plannedEmail = plannedEmailDao.getPlannedEmailById(plannedEmailId);
+		plannedEmail.setStatus(status);
+		plannedEmail.setErrorMessage(message);
+		plannedEmail = plannedEmailDao.savePlannedEmail(plannedEmail);
+		return convertPlannedEmail(plannedEmail);
+	}
+
+	@Override
+	@Transactional
+	public List<PlannedEmailDto> getPlannedEmailsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize) {
+		List<PlannedEmail> plannedEmails = plannedEmailDao.getPlannedEmailByLocationTypeAndLocationId(locationType, locationId);
+		return convertPlannedEmails(plannedEmails);
 	}
 	
 

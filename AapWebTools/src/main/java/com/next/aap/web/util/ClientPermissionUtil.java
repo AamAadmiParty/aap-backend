@@ -27,6 +27,16 @@ public class ClientPermissionUtil {
 				|| isAllowed(AppPermission.DELETE_NEWS, userRolePermissionDto, locationId, locationType)
 				|| isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, locationId, locationType));
 	}
+	public static boolean isSmsAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return checkLocationType(locationType, locationId) &&
+				(userRolePermissionDto.isSuperUser() || 
+				isAllowed(AppPermission.ADMIN_SMS, userRolePermissionDto, locationId, locationType));
+	}
+	public static boolean isEmailAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return checkLocationType(locationType, locationId) &&
+				(userRolePermissionDto.isSuperUser() || 
+				isAllowed(AppPermission.ADMIN_EMAIL, userRolePermissionDto, locationId, locationType));
+	}
 	public static boolean isManageBlogAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return checkLocationType(locationType, locationId) &&
 				(userRolePermissionDto.isSuperUser() || 

@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>SMS - Admin Panel</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="admin_menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 800px; margin: 0 auto;">
+		<div style="width: 800px; margin: 0;">
+
+			<h:form id="adminSmsForm">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="mainPanel">
+					<p:outputPanel id="listView" rendered="#{adminSmsBean.showList}">
+
+						<p:commandButton value="New Sms" actionListener="#{adminSmsBean.newPost}" update=":adminSmsForm:mainPanel">
+						</p:commandButton>
+						<p:dataTable id="listOfPlannedPosts" var="onePost" value="#{adminSmsBean.plannedSmss}" paginator="true" rows="#{adminSmsBean.pageSize}"
+							paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Smss"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Planned Smss</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Id" />
+								</f:facet>
+								<h:outputText value="#{onePost.id}" />
+							</p:column>
+							<p:column width="300px">
+								<f:facet name="header">
+									<h:outputText value="Messasge" />
+								</f:facet>
+								<h:outputText value="#{onePost.message}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Post Time" />
+								</f:facet>
+								<h:outputText value="#{onePost.postingTime}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Status" />
+								</f:facet>
+								<h:outputText value="#{onePost.status}" />
+							</p:column>
+							<p:column style="width:100px;">
+								<f:facet name="header">
+									<h:outputText value="Update" />
+								</f:facet>
+								<p:commandLink update=":adminSmsForm:mainPanel" title="Update Sms">
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+									<f:setPropertyActionListener value="#{onePost}" target="#{adminSmsBean.selectedPlannedSms}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+					<p:outputPanel id="formView" rendered="#{!adminSmsBean.showList}">
+						<p:panelGrid columns="2" styleClass="topAlignPanelColumns">
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Message"></p:outputLabel>
+								<p:outputPanel >
+									<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining."
+										value="#{adminSmsBean.selectedPlannedSms.message}">
+										<p:ajax event="change" update=":adminSmsForm" />
+									</p:inputTextarea>
+									<br></br>
+									<h:outputText id="counter" />
+								</p:outputPanel>
+								<p:outputLabel value="Post Time"></p:outputLabel>
+								<p:calendar value="#{adminSmsBean.selectedPlannedSms.postingTime}" pattern="MM/dd/yyyy HH:mm" />
+							</p:panelGrid>
+						</p:panelGrid>
+						<p:commandButton value="Cancel" update=":adminSmsForm:mainPanel" actionListener="#{adminSmsBean.cancel}" styleClass="ui-priority-primary">
+						</p:commandButton>
+						<p:commandButton value="Save" update=":adminSmsForm:mainPanel" actionListener="#{adminSmsBean.savePost}" styleClass="ui-priority-primary">
+						</p:commandButton>
+						<br></br>
+
+					</p:outputPanel>
+
+				</p:outputPanel>
+				<br></br>
+				<br></br>
+				<br></br>
+				<br></br>
+			</h:form>
+		</div>
+	</div>
+
+</h:body>
+</html>

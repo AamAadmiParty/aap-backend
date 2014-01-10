@@ -271,6 +271,22 @@ public class MenuBean extends BaseJsfBean {
 		}
 	}
 
+	public void goToEmailAdminPageTwitter() {
+		if (isEmailAllowed()) {
+			buildAndRedirect("/admin/email");
+		} else {
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+
+	public void goToSmsAdminPageTwitter() {
+		if (isSmsAllowed()) {
+			buildAndRedirect("/admin/sms");
+		} else {
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+
 	public void goToManageNewsPage() {
 		if (isManageNewsAllowed()) {
 			buildAndRedirect("/admin/news");
@@ -356,6 +372,16 @@ public class MenuBean extends BaseJsfBean {
 	public boolean isManageNewsAllowed() {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isManageNewsAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	
+	public boolean isSmsAllowed() {
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isSmsAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	
+	public boolean isEmailAllowed() {
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isEmailAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
 	}
 
 	public boolean isManageBlogAllowed() {

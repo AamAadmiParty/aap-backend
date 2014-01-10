@@ -25,8 +25,10 @@ import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.OfficeDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
+import com.next.aap.web.dto.PlannedEmailDto;
 import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
+import com.next.aap.web.dto.PlannedSmsDto;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.PollAnswerDto;
 import com.next.aap.web.dto.PollQuestionDto;
@@ -191,4 +193,17 @@ public interface AapService {
 	void importAllCountriesData();
 	
 	List<InterestGroupDto> getAllVolunterInterests();
+	
+	PlannedSmsDto savePlannedSms(PlannedSmsDto plannedSmsDto);
+	
+	PlannedSmsDto updatePlannedSmsStatus(Long plannedSmsId, PlannedPostStatus status, String message);
+	
+	List<PlannedSmsDto> getPlannedSmssForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
+	
+	PlannedEmailDto savePlannedEmail(PlannedEmailDto plannedEmailDto);
+	
+	PlannedEmailDto updatePlannedEmailStatus(Long plannedEmailId, PlannedPostStatus status, String message);
+	
+	List<PlannedEmailDto> getPlannedEmailsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
+
 }

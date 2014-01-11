@@ -6,7 +6,7 @@ import com.next.aap.web.dto.UserRolePermissionDto;
 
 public class ClientPermissionUtil {
 	private static boolean checkLocationType(PostLocationType locationType, Long locationId){
-		if(locationType == null || locationType == PostLocationType.NA || locationId <= 0){
+		if(locationType == null || locationType == PostLocationType.NA || (locationType != PostLocationType.Global && locationId <= 0)){
 			return false;
 		}
 		return true;

@@ -241,6 +241,9 @@ public class User {
 	@Column(name = "member", nullable = false)
 	private boolean member;
 	
+	@Column(name = "volunteer", nullable = false)
+	private boolean volunteer;
+
 	@Column(name = "membership_status")
 	private String membershipStatus;
 	
@@ -710,6 +713,14 @@ public class User {
 
 	public void setCountryRegionAreaRoles(Set<CountryRegionAreaRole> countryRegionAreaRoles) {
 		this.countryRegionAreaRoles = countryRegionAreaRoles;
+	}
+
+	public boolean isVolunteer() {
+		return volunteer;
+	}
+
+	public void setVolunteer(boolean volunteer) {
+		this.volunteer = volunteer;
 	}
 
 	@Override

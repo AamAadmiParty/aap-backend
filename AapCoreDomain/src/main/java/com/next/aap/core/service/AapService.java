@@ -8,6 +8,7 @@ import org.springframework.social.facebook.api.GroupMembership;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 
+import com.next.aap.core.exception.AppException;
 import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AdminAccountDto;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
@@ -20,6 +21,7 @@ import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
+import com.next.aap.web.dto.InterestDto;
 import com.next.aap.web.dto.InterestGroupDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
@@ -41,6 +43,7 @@ import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.dto.VoiceOfAapData;
+import com.next.aap.web.dto.VolunteerDto;
 
 public interface AapService {
 
@@ -76,7 +79,9 @@ public interface AapService {
 	
 	ParliamentConstituencyDto getParliamentConstituencyById(long pcId) ;
 	
-	UserDto saveUser(UserDto userDto);
+	UserDto saveUser(UserDto userDto) throws AppException ;
+	
+	UserDto saveUserFromAdmiPanel(UserDto userDto, VolunteerDto volunteerDto, List<Long> interests) throws AppException ;
 	
 	FacebookAppPermissionDto getFacebookPermission(long facebookAppId, long facebookAccountId);
 	
@@ -206,4 +211,9 @@ public interface AapService {
 	
 	List<PlannedEmailDto> getPlannedEmailsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
 
+	VolunteerDto saveVolunteerDetails(VolunteerDto volunteerDto, List<Long> selectedInterests) throws AppException;
+	
+	VolunteerDto getVolunteerDataForUser(Long userId) throws AppException;
+	
+	List<InterestDto> getuserInterests(Long userId) throws AppException;
 }

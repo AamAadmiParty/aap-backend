@@ -1,15 +1,8 @@
 package com.next.aap.web.jsf.beans;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -19,18 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.exception.AppException;
 import com.next.aap.core.service.AapService;
-import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.CountryDto;
-import com.next.aap.web.dto.CountryRegionAreaDto;
-import com.next.aap.web.dto.CountryRegionDto;
-import com.next.aap.web.dto.DistrictDto;
-import com.next.aap.web.dto.InterestDto;
-import com.next.aap.web.dto.InterestGroupDto;
-import com.next.aap.web.dto.ParliamentConstituencyDto;
-import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
-import com.next.aap.web.jsf.beans.model.InterestGroupDtoModel;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -58,71 +43,30 @@ public class UserProfileBean extends BaseJsfBean {
 
 	private UserDto selectedUserForEditing;
 
-	private List<StateDto> stateList;
-	private List<DistrictDto> districtList;
-	private List<AssemblyConstituencyDto> assemblyConstituencyList;
-	private List<ParliamentConstituencyDto> parliamentConstituencyList;
-	private boolean enableDistrictCombo = false;
-	private boolean enableAssemblyConstituencyCombo = false;
-	private boolean enableParliamentConstituencyCombo = false;
-
-	private List<StateDto> livingStateList;
-	private List<DistrictDto> livingDistrictList;
-	private List<AssemblyConstituencyDto> livingAssemblyConstituencyList;
-	private List<ParliamentConstituencyDto> livingParliamentConstituencyList;
-	private boolean enableLivingDistrictCombo = false;
-	private boolean enableLivingAssemblyConstituencyCombo = false;
-	private boolean enableLivingParliamentConstituencyCombo = false;
+	@Autowired
+	private LocationBean votingLocation;
+	
+	@Autowired
+	private LocationBean livingLocation;
+	
+	@Autowired
+	private NriLocationBean nriLocationBean;
 
 	private boolean sameAsLiving;
 
 	private List<CountryDto> countries;
-	private List<CountryDto> nriCountries;
-	private List<CountryRegionDto> nriCountryRegions;
-	private List<CountryRegionAreaDto> nriCountryRegionAreas;
-	private boolean disableNriCountryRegionCombo = true;
-	private boolean disableNriCountryRegionAreaCombo = true;
-	private List<InterestGroupDtoModel> interestGroupDtoModels;
 	
-	private Map<Long, Boolean> selectedInterestMap = new HashMap<Long, Boolean>();
-
 	@Autowired
 	private AapService aapService;
 
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
-		Long startTime = System.currentTimeMillis();
 		UserDto loggedInUser = getLoggedInUser(true, buildLoginUrl("/profile"));
 		if (loggedInUser == null) {
 			return;
 		}
-		List<InterestGroupDto> interestGroups = aapService.getAllVolunterInterests();
-		selectedInterestMap.clear();
-		interestGroupDtoModels = new ArrayList<>();
-		if(interestGroups != null && !interestGroups.isEmpty()){
-			for(InterestGroupDto oneInterestGroupDto:interestGroups){
-				interestGroupDtoModels.add(new InterestGroupDtoModel(oneInterestGroupDto));
-			}
-		}
 		
-		if (stateList == null || stateList.isEmpty()) {
-			livingStateList = stateList = aapService.getAllStates();
-		}
-		if (countries == null || countries.isEmpty()) {
-			countries = aapService.getAllCountries();
-			nriCountries = new ArrayList<>(countries);
-			//Remove India from Nri Country List
-			Iterator<CountryDto> iterator = nriCountries.iterator();
-			while(iterator.hasNext()){
-				if(iterator.next().getName().equalsIgnoreCase("India")){
-					iterator.remove();
-					break;
-				}
-			}
-		}
-		disableNriCountryRegionCombo = true;
-		disableNriCountryRegionAreaCombo = true;
 		//Copy Logged In user to selectedUserForEditing
 		selectedUserForEditing = new UserDto();
 		Calendar cal = Calendar.getInstance();
@@ -131,51 +75,37 @@ public class UserProfileBean extends BaseJsfBean {
 
 		BeanUtils.copyProperties(loggedInUser, selectedUserForEditing);
 		
-		if(selectedUserForEditing.getNriCountryId() != null){
-			disableNriCountryRegionCombo = false;
-			nriCountryRegions = aapService.getAllCountryRegionsOfCountry(selectedUserForEditing.getNriCountryId());
-		}
-		if(selectedUserForEditing.getNriCountryRegionId() != null){
-			disableNriCountryRegionAreaCombo = false;
-			nriCountryRegionAreas = aapService.getAllCountryRegionAreasOfCountryRegion(selectedUserForEditing.getNriCountryRegionId());
-		}
-
-		if (selectedUserForEditing.getStateVotingId() != null) {
-			enableDistrictCombo = true;
-			enableParliamentConstituencyCombo = true;
-			parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getStateVotingId());
-			districtList = aapService.getAllDistrictOfState(selectedUserForEditing.getStateVotingId());
-			if (selectedUserForEditing.getDistrictVotingId() != null) {
-				enableAssemblyConstituencyCombo = true;
-				assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictVotingId());
-			}
-		}
-		if (selectedUserForEditing.getStateLivingId() != null) {
-			enableLivingDistrictCombo = true;
-			enableLivingParliamentConstituencyCombo = true;
-			livingParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getStateLivingId());
-			livingDistrictList = aapService.getAllDistrictOfState(selectedUserForEditing.getStateLivingId());
-			if (selectedUserForEditing.getDistrictLivingId() != null) {
-				enableLivingAssemblyConstituencyCombo = true;
-				livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictLivingId());
-			}
-		}
-		Long endTime = System.currentTimeMillis();
-		System.out.println("Total Init Time = " +(endTime - startTime)+" ms");
-		
+		refreshLocationData();
+	}
+	private void refreshLocationData() throws Exception{
+		livingLocation.init(selectedUserForEditing.getStateLivingId(), selectedUserForEditing.getDistrictLivingId(), selectedUserForEditing.getParliamentConstituencyLivingId(), selectedUserForEditing.getAssemblyConstituencyLivingId());
+		votingLocation.init(selectedUserForEditing.getStateVotingId(), selectedUserForEditing.getDistrictVotingId(), selectedUserForEditing.getParliamentConstituencyVotingId(), selectedUserForEditing.getAssemblyConstituencyVotingId());
+		nriLocationBean.init(selectedUserForEditing.isNri(), selectedUserForEditing.getNriCountryId(), selectedUserForEditing.getNriCountryRegionId(), selectedUserForEditing.getNriCountryRegionAreaId());
 	}
 
 	public void saveProfile(ActionEvent event) {
-		System.out.println("Total Selected : " + selectedInterestMap.size());
-		for(Entry<Long, Boolean> oneInterest:selectedInterestMap.entrySet()){
-			System.out.println("OneInterest : " + oneInterest.getKey() +" , "+oneInterest.getValue());
-		}
+		//Copy location first
+		selectedUserForEditing.setStateLivingId(livingLocation.getSelectedStateId());
+		selectedUserForEditing.setDistrictLivingId(livingLocation.getSelectedDistrictId());
+		selectedUserForEditing.setAssemblyConstituencyLivingId(livingLocation.getSelectedAcId());
+		selectedUserForEditing.setParliamentConstituencyLivingId(livingLocation.getSelectedPcId());
+		System.out.println("livingLocation.getSelectedAcId()="+livingLocation.getSelectedAcId());
+		System.out.println("votingLocation.getSelectedAcId()="+votingLocation.getSelectedAcId());
 		if (sameAsLiving) {
 			selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
 			selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());
 			selectedUserForEditing.setAssemblyConstituencyVotingId(selectedUserForEditing.getAssemblyConstituencyLivingId());
 			selectedUserForEditing.setParliamentConstituencyVotingId(selectedUserForEditing.getParliamentConstituencyLivingId());
+		}else{
+			selectedUserForEditing.setStateVotingId(votingLocation.getSelectedStateId());
+			selectedUserForEditing.setDistrictVotingId(votingLocation.getSelectedDistrictId());
+			selectedUserForEditing.setAssemblyConstituencyVotingId(votingLocation.getSelectedAcId());
+			selectedUserForEditing.setParliamentConstituencyVotingId(votingLocation.getSelectedPcId());
 		}
+		selectedUserForEditing.setNri(nriLocationBean.isNri());
+		selectedUserForEditing.setNriCountryId(nriLocationBean.getSelectedNriCountryId());
+		selectedUserForEditing.setNriCountryRegionId(nriLocationBean.getSelectedNriCountryRegionId());
+		selectedUserForEditing.setNriCountryRegionAreaId(nriLocationBean.getSelectedNriCountryRegionAreaId());
 
 		if (selectedUserForEditing.getStateLivingId() == null || selectedUserForEditing.getStateLivingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select State where you are living currently");
@@ -212,20 +142,20 @@ public class UserProfileBean extends BaseJsfBean {
 		if (selectedUserForEditing.getDateOfBirth() == null) {
 			sendErrorMessageToJsfScreen("Please enter your Date of Birth");
 		}
-		/*
-		 * else{ Calendar todayCalendar = Calendar.getInstance();
-		 * todayCalendar.add(Calendar.YEAR, -18);
-		 * if(dobCalendar.after(todayCalendar)){
-		 * sendErrorMessageToJsfScreen("You must be 18 to be eligible for vote"
-		 * ); } }
-		 */
 		if (StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getName())) {
 			sendErrorMessageToJsfScreen("Please enter your full name");
 		}
 		if (isValidInput()) {
-			selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
-			ssaveLoggedInUserInSession(selectedUserForEditing);
-			sendInfoMessageToJsfScreen("Profile saved succesfully.");
+			try {
+				selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
+				ssaveLoggedInUserInSession(selectedUserForEditing);
+				sendInfoMessageToJsfScreen("Profile saved succesfully.");
+				refreshLocationData();
+			} catch (AppException e) {
+				sendErrorMessageToJsfScreen(e.getMessage(), e);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		/*
 		 * String url =
@@ -240,101 +170,8 @@ public class UserProfileBean extends BaseJsfBean {
 		// This fucntion doesnt do anything but
 	}
 
-	public void handleStateChange(AjaxBehaviorEvent event) {
-		try {
-			if (selectedUserForEditing.getStateVotingId() == 0 || selectedUserForEditing.getStateVotingId() == null) {
-				enableDistrictCombo = false;
-				enableParliamentConstituencyCombo = false;
-				districtList = new ArrayList<>();
-				parliamentConstituencyList = new ArrayList<>();
-			} else {
-				districtList = aapService.getAllDistrictOfState(selectedUserForEditing.getStateVotingId());
-				parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getStateVotingId());
-				enableDistrictCombo = true;
-				enableParliamentConstituencyCombo = true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void handleLivingStateChange(AjaxBehaviorEvent event) {
-		try {
-			if (selectedUserForEditing.getStateLivingId() == 0 || selectedUserForEditing.getStateLivingId() == null) {
-				enableLivingDistrictCombo = false;
-				enableLivingParliamentConstituencyCombo = false;
-				livingDistrictList = new ArrayList<>();
-			} else {
-				livingParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedUserForEditing.getStateLivingId());
-				livingDistrictList = aapService.getAllDistrictOfState(selectedUserForEditing.getStateLivingId());
-				enableLivingParliamentConstituencyCombo = true;
-				enableLivingDistrictCombo = true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void handleDistrictChange(AjaxBehaviorEvent event) {
-		try {
-			if (selectedUserForEditing.getDistrictVotingId() == 0 || selectedUserForEditing.getDistrictVotingId() == null) {
-				enableAssemblyConstituencyCombo = false;
-				assemblyConstituencyList = new ArrayList<>();
-			} else {
-				enableAssemblyConstituencyCombo = true;
-				assemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictVotingId());
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void handleNriCountryChange(AjaxBehaviorEvent event) {
-		try {
-			if (selectedUserForEditing.getNriCountryId() == 0 || selectedUserForEditing.getNriCountryId() == null) {
-				disableNriCountryRegionCombo = true;
-				nriCountryRegions = new ArrayList<>();
-			} else {
-				disableNriCountryRegionCombo = false;
-				nriCountryRegions = aapService.getAllCountryRegionsOfCountry(selectedUserForEditing.getNriCountryId());
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
-	public void handleNriCountryRegionChange(AjaxBehaviorEvent event) {
-		try {
-			if (selectedUserForEditing.getNriCountryRegionId() == 0 || selectedUserForEditing.getNriCountryRegionId() == null) {
-				disableNriCountryRegionAreaCombo = true;
-				nriCountryRegions = new ArrayList<>();
-			} else {
-				disableNriCountryRegionAreaCombo = false;
-				nriCountryRegionAreas = aapService.getAllCountryRegionAreasOfCountryRegion(selectedUserForEditing.getNriCountryRegionId());
-			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void handleLivingDistrictChange(AjaxBehaviorEvent event) {
-		try {
-			if (selectedUserForEditing.getDistrictLivingId() == 0 || selectedUserForEditing.getDistrictLivingId() == null) {
-				enableLivingAssemblyConstituencyCombo = false;
-				livingAssemblyConstituencyList = new ArrayList<>();
-			} else {
-				enableLivingAssemblyConstituencyCombo = true;
-				livingAssemblyConstituencyList = aapService.getAllAssemblyConstituenciesOfDistrict(selectedUserForEditing.getDistrictLivingId());
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public boolean isShowMemberPanel(){
 		return StringUtil.isEmpty(selectedUserForEditing.getMembershipNumber());
 	}
@@ -345,86 +182,18 @@ public class UserProfileBean extends BaseJsfBean {
 	}
 
 	public void onClickSameAsLiving() {
-	}
-
-	public List<StateDto> getStateList() {
-		return stateList;
-	}
-
-	public void setStateList(List<StateDto> stateList) {
-		this.stateList = stateList;
-	}
-
-	public List<AssemblyConstituencyDto> getAssemblyConstituencyList() {
-		return assemblyConstituencyList;
-	}
-
-	public void setAssemblyConstituencyList(List<AssemblyConstituencyDto> assemblyConstituencyList) {
-		this.assemblyConstituencyList = assemblyConstituencyList;
-	}
-
-	public boolean isEnableAssemblyConstituencyCombo() {
-		return enableAssemblyConstituencyCombo;
-	}
-
-	public void setEnableAssemblyConstituencyCombo(boolean enableAssemblyConstituencyCombo) {
-		this.enableAssemblyConstituencyCombo = enableAssemblyConstituencyCombo;
-	}
-
-	public List<DistrictDto> getDistrictList() {
-		return districtList;
-	}
-
-	public void setDistrictList(List<DistrictDto> districtList) {
-		this.districtList = districtList;
-	}
-
-	public boolean isEnableDistrictCombo() {
-		return enableDistrictCombo;
-	}
-
-	public void setEnableDistrictCombo(boolean enableDistrictCombo) {
-		this.enableDistrictCombo = enableDistrictCombo;
-	}
-
-	public List<StateDto> getLivingStateList() {
-		return livingStateList;
-	}
-
-	public void setLivingStateList(List<StateDto> livingStateList) {
-		this.livingStateList = livingStateList;
-	}
-
-	public List<DistrictDto> getLivingDistrictList() {
-		return livingDistrictList;
-	}
-
-	public void setLivingDistrictList(List<DistrictDto> livingDistrictList) {
-		this.livingDistrictList = livingDistrictList;
-	}
-
-	public List<AssemblyConstituencyDto> getLivingAssemblyConstituencyList() {
-		return livingAssemblyConstituencyList;
-	}
-
-	public void setLivingAssemblyConstituencyList(List<AssemblyConstituencyDto> livingAssemblyConstituencyList) {
-		this.livingAssemblyConstituencyList = livingAssemblyConstituencyList;
-	}
-
-	public boolean isEnableLivingDistrictCombo() {
-		return enableLivingDistrictCombo;
-	}
-
-	public void setEnableLivingDistrictCombo(boolean enableLivingDistrictCombo) {
-		this.enableLivingDistrictCombo = enableLivingDistrictCombo;
-	}
-
-	public boolean isEnableLivingAssemblyConstituencyCombo() {
-		return enableLivingAssemblyConstituencyCombo;
-	}
-
-	public void setEnableLivingAssemblyConstituencyCombo(boolean enableLivingAssemblyConstituencyCombo) {
-		this.enableLivingAssemblyConstituencyCombo = enableLivingAssemblyConstituencyCombo;
+		if(sameAsLiving){
+			votingLocation.setEnableAssemblyConstituencyCombo(false);
+			votingLocation.setEnableDistrictCombo(false);
+			votingLocation.setEnableParliamentConstituencyCombo(false);
+			votingLocation.setEnableStateCombo(false);
+		}else{
+			votingLocation.setEnableAssemblyConstituencyCombo(false);
+			votingLocation.setEnableDistrictCombo(false);
+			votingLocation.setEnableParliamentConstituencyCombo(false);
+			votingLocation.setEnableStateCombo(true);
+		}
+		
 	}
 
 	public boolean isSameAsLiving() {
@@ -435,44 +204,12 @@ public class UserProfileBean extends BaseJsfBean {
 		this.sameAsLiving = sameAsLiving;
 	}
 
-	public List<ParliamentConstituencyDto> getParliamentConstituencyList() {
-		return parliamentConstituencyList;
-	}
-
-	public void setParliamentConstituencyList(List<ParliamentConstituencyDto> parliamentConstituencyList) {
-		this.parliamentConstituencyList = parliamentConstituencyList;
-	}
-
-	public List<ParliamentConstituencyDto> getLivingParliamentConstituencyList() {
-		return livingParliamentConstituencyList;
-	}
-
-	public void setLivingParliamentConstituencyList(List<ParliamentConstituencyDto> livingParliamentConstituencyList) {
-		this.livingParliamentConstituencyList = livingParliamentConstituencyList;
-	}
-
-	public boolean isEnableLivingParliamentConstituencyCombo() {
-		return enableLivingParliamentConstituencyCombo;
-	}
-
-	public void setEnableLivingParliamentConstituencyCombo(boolean enableLivingParliamentConstituencyCombo) {
-		this.enableLivingParliamentConstituencyCombo = enableLivingParliamentConstituencyCombo;
-	}
-
 	public AapService getAapService() {
 		return aapService;
 	}
 
 	public void setAapService(AapService aapService) {
 		this.aapService = aapService;
-	}
-
-	public boolean isEnableParliamentConstituencyCombo() {
-		return enableParliamentConstituencyCombo;
-	}
-
-	public void setEnableParliamentConstituencyCombo(boolean enableParliamentConstituencyCombo) {
-		this.enableParliamentConstituencyCombo = enableParliamentConstituencyCombo;
 	}
 
 	public List<CountryDto> getCountries() {
@@ -491,60 +228,26 @@ public class UserProfileBean extends BaseJsfBean {
 		this.selectedUserForEditing = selectedUserForEditing;
 	}
 
-	public List<CountryDto> getNriCountries() {
-		return nriCountries;
+	public LocationBean getVotingLocation() {
+		return votingLocation;
 	}
 
-	public void setNriCountries(List<CountryDto> nriCountries) {
-		this.nriCountries = nriCountries;
+	public void setVotingLocation(LocationBean votingLocation) {
+		this.votingLocation = votingLocation;
 	}
 
-	public List<CountryRegionDto> getNriCountryRegions() {
-		return nriCountryRegions;
+	public LocationBean getLivingLocation() {
+		return livingLocation;
 	}
 
-	public void setNriCountryRegions(List<CountryRegionDto> nriCountryRegions) {
-		this.nriCountryRegions = nriCountryRegions;
+	public void setLivingLocation(LocationBean livingLocation) {
+		this.livingLocation = livingLocation;
+	}
+	public NriLocationBean getNriLocationBean() {
+		return nriLocationBean;
+	}
+	public void setNriLocationBean(NriLocationBean nriLocationBean) {
+		this.nriLocationBean = nriLocationBean;
 	}
 
-	public List<CountryRegionAreaDto> getNriCountryRegionAreas() {
-		return nriCountryRegionAreas;
-	}
-
-	public void setNriCountryRegionAreas(List<CountryRegionAreaDto> nriCountryRegionAreas) {
-		this.nriCountryRegionAreas = nriCountryRegionAreas;
-	}
-
-	public boolean isDisableNriCountryRegionCombo() {
-		return disableNriCountryRegionCombo;
-	}
-
-	public void setDisableNriCountryRegionCombo(boolean disableNriCountryRegionCombo) {
-		this.disableNriCountryRegionCombo = disableNriCountryRegionCombo;
-	}
-
-	public boolean isDisableNriCountryRegionAreaCombo() {
-		return disableNriCountryRegionAreaCombo;
-	}
-
-	public void setDisableNriCountryRegionAreaCombo(boolean disableNriCountryRegionAreaCombo) {
-		this.disableNriCountryRegionAreaCombo = disableNriCountryRegionAreaCombo;
-	}
-
-	public List<InterestGroupDtoModel> getInterestGroupDtoModels() {
-		return interestGroupDtoModels;
-	}
-
-	public void setInterestGroupDtoModels(List<InterestGroupDtoModel> interestGroupDtoModels) {
-		this.interestGroupDtoModels = interestGroupDtoModels;
-	}
-
-	public Map<Long, Boolean> getSelectedInterestMap() {
-		return selectedInterestMap;
-	}
-
-	public void setSelectedInterestMap(Map<Long, Boolean> selectedInterestMap) {
-		this.selectedInterestMap = selectedInterestMap;
-	}
-	
 }

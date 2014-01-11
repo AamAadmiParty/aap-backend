@@ -286,25 +286,6 @@
 				" value="Save Profile" actionListener="#{userProfileBean.saveProfile}" />
 				<p:tooltip for="saveProfile">Save Profile</p:tooltip>
 
-				<ui:repeat value="#{userProfileBean.interestGroupDtoModels}" var="oneInterestGroup">
-					<p:dataTable var="oneInterest" value="#{oneInterestGroup.interestDtoModels}" >
-						<f:facet name="header">#{oneInterestGroup.description}</f:facet>
-						<p:column width="4%">  
-						<p:selectBooleanCheckbox value="#{userProfileBean.selectedInterestMap[oneInterest.id]}">
-							<p:ajax update=":userProfileForm:votingLocation"/>
-						</p:selectBooleanCheckbox>
-						</p:column>
-						<!-- 
-						<p:selectBooleanCheckbox value="#{userProfileBean.sameAsLiving}">
-							<p:ajax update=":userProfileForm:votingLocation" listener="#{userProfileBean.onClickSameAsLiving}" />
-						</p:selectBooleanCheckbox>
-						 -->
-						<p:column>  
-                			#{oneInterest.description}  
-            			</p:column>
-					</p:dataTable>
-				</ui:repeat>
-
 			</h:form>
 			<!-- header ends -->
 

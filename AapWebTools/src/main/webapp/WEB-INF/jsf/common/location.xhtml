@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<!--
+		This File accepts foolowing params
+		 param_Form  the name of from under which u include this file
+		 param_HeaderMessage like "Select the place where you live"
+		 param_LocationBean is server side backing bean for this component
+	 -->
+	<p:blockUI block="#{param_Form}" trigger="#{param_PanelId}state">
+			Getting District and Parliament Constituency List<br />
+		<p:graphicImage value="/images/ajax-loader.gif" />
+	</p:blockUI>
+	 
+	 <!-- 
+	<p:blockUI block="${param_Form}" trigger="${param_Form}:district">
+			Getting Assembly Constituency List<br />
+		<p:graphicImage value="/images/ajax-loader.gif" />
+	</p:blockUI>
+	 -->
+	<p:panelGrid columns="2" cellpadding="5" id="#{param_PanelId}" style="width:395px;">
+		<f:facet name="header">
+        		${param_HeaderMessage}
+        		<br></br>
+		</f:facet>
+
+		<h:outputLabel for="#{param_PanelId}state" value="State*" />
+		<p:selectOneMenu id="#{param_PanelId}state" disabled="#{!param_LocationBean.enableStateCombo}" value="#{param_LocationBean.selectedStateId}" effect="fold" editable="false">
+			<f:selectItem itemLabel="Select State" itemValue="0" />
+			<f:selectItems value="#{param_LocationBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
+			<p:ajax event="change" update="#{param_PanelId}district,#{param_PanelId}parliamentConstituency" listener="#{param_LocationBean.handleStateChange}" />
+		</p:selectOneMenu>
+		<h:outputLabel for="#{param_PanelId}district" value="District*" />
+		<p:selectOneMenu id="#{param_PanelId}district" disabled="#{!param_LocationBean.enableDistrictCombo}"
+			value="#{param_LocationBean.selectedDistrictId}" effect="fold" editable="false">
+			<f:selectItem itemLabel="Select District" itemValue="0" />
+			<f:selectItems value="#{param_LocationBean.districtList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
+
+			<p:ajax event="change" update="#{param_PanelId}assemblyConstituency" listener="#{param_LocationBean.handleDistrictChange}" />
+		</p:selectOneMenu>
+		<h:outputLabel for="#{param_PanelId}parliamentConstituency" value="Parliament Constituency*" />
+		<p:selectOneMenu id="#{param_PanelId}parliamentConstituency" disabled="#{!param_LocationBean.enableParliamentConstituencyCombo}"
+			value="#{param_LocationBean.selectedPcId}" effect="fold" editable="false">
+			<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
+			<f:selectItems value="#{param_LocationBean.parliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
+				itemValue="#{oneParliamentConstituency.id}" />
+		</p:selectOneMenu>
+		<h:outputLabel for="#{param_PanelId}assemblyConstituency" value="Assembly Constituency*" />
+		<p:selectOneMenu id="#{param_PanelId}assemblyConstituency" disabled="#{!param_LocationBean.enableAssemblyConstituencyCombo}"
+			value="#{param_LocationBean.selectedAcId}" effect="fold" editable="false">
+			<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+			<f:selectItems value="#{param_LocationBean.assemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+				itemValue="#{oneAssemblyConstituency.id}" />
+
+		</p:selectOneMenu>
+	</p:panelGrid>
+</ui:composition>

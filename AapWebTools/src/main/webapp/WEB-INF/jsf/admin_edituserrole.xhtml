@@ -410,7 +410,7 @@
 								
 								<p:radioButton id="opt7" for="locationSelectionRadio" itemIndex="5" rendered="#{adminEditUserRoleBean.renderCountryRegionComboForRoles}" />
 								<h:outputLabel for="opt7" value="CountryRegion" rendered="#{adminEditUserRoleBean.renderCountryRegionComboForRoles}" />
-								<p:selectOneMenu id="memberCountry" disabled="#{adminEditUserRoleBean.disableCountryRegionComobForRoles}" rendered="#{adminEditUserRoleBean.renderCountryRegionComboForRoles}"
+								<p:selectOneMenu id="memberCountryRegion" disabled="#{adminEditUserRoleBean.disableCountryRegionComobForRoles}" rendered="#{adminEditUserRoleBean.renderCountryRegionComboForRoles}"
 									value="#{adminEditUserRoleBean.selectedCountryRegionIdForRoles}" effect="fold" editable="false">
 									<f:selectItem itemLabel="Select Region/State" itemValue="0" />
 									<f:selectItems value="#{adminEditUserRoleBean.memberCountryRegionList}" var="oneCountryRegion" itemLabel="#{oneCountryRegion.name}" itemValue="#{oneCountryRegion.id}" />

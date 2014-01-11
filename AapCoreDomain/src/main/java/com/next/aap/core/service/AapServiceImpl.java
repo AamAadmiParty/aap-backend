@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.exception.AppException;
 import com.next.aap.core.persistance.AcRole;
 import com.next.aap.core.persistance.Account;
 import com.next.aap.core.persistance.AccountTransaction;
@@ -44,11 +45,11 @@ import com.next.aap.core.persistance.CountryRegion;
 import com.next.aap.core.persistance.CountryRegionArea;
 import com.next.aap.core.persistance.CountryRegionAreaRole;
 import com.next.aap.core.persistance.CountryRegionRole;
+import com.next.aap.core.persistance.CountryRole;
 import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
-import com.next.aap.core.persistance.CountryRole;
 import com.next.aap.core.persistance.FacebookAccount;
 import com.next.aap.core.persistance.FacebookApp;
 import com.next.aap.core.persistance.FacebookAppPermission;
@@ -77,6 +78,7 @@ import com.next.aap.core.persistance.StateRole;
 import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
+import com.next.aap.core.persistance.Volunteer;
 import com.next.aap.core.persistance.dao.AcRoleDao;
 import com.next.aap.core.persistance.dao.AccountDao;
 import com.next.aap.core.persistance.dao.AccountTransactionDao;
@@ -118,6 +120,7 @@ import com.next.aap.core.persistance.dao.StateRoleDao;
 import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
+import com.next.aap.core.persistance.dao.VolunteerDao;
 import com.next.aap.core.util.DataUtil;
 import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AccountTransactionMode;
@@ -158,6 +161,7 @@ import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.dto.VoiceOfAapData;
+import com.next.aap.web.dto.VolunteerDto;
 
 @Service("aapService")
 public class AapServiceImpl implements AapService, Serializable {
@@ -246,6 +250,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private PlannedSmsDao plannedSmsDao;
 	@Autowired
 	private PlannedEmailDao plannedEmailDao;
+	@Autowired
+	private VolunteerDao volunteerDao;
 	
 
 	@Value("${voa_facebook_app_id}")
@@ -621,7 +627,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public UserDto saveUser(UserDto userDto) {
+	public UserDto saveUser(UserDto userDto)  throws AppException {
 		User user;
 		System.out.println("userDto.getId = "+userDto.getId());
 		if (userDto.getId() == null || userDto.getId() <= 0) {
@@ -629,8 +635,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		} else {
 			user = userDao.getUserById(userDto.getId());
 			if (user == null) {
-				logger.error("User DO NOT Exists [id=" + userDto.getId() + "]");
-				return null;
+				throw new AppException("User DO NOT Exists [id=" + userDto.getId() + "]");
 			}
 		}
 
@@ -652,38 +657,46 @@ public class AapServiceImpl implements AapService, Serializable {
 		if (userDto.getStateLivingId() != null && userDto.getStateLivingId() > 0) {
 			State stateLiving = stateDao.getStateById(userDto.getStateLivingId());
 			user.setStateLiving(stateLiving);
+			user.setStateLivingId(stateLiving.getId());
 		}
 		if (userDto.getDistrictLivingId() != null && userDto.getDistrictLivingId() > 0) {
 			District districtLiving = districtDao.getDistrictById(userDto.getDistrictLivingId());
 			user.setDistrictLiving(districtLiving);
+			user.setDistrictLivingId(userDto.getDistrictLivingId());
 		}
 		if (userDto.getAssemblyConstituencyLivingId() != null && userDto.getAssemblyConstituencyLivingId() > 0) {
 			AssemblyConstituency assemblyConstituencyLiving = assemblyConstituencyDao.getAssemblyConstituencyById(userDto.getAssemblyConstituencyLivingId());
 			user.setAssemblyConstituencyLiving(assemblyConstituencyLiving);
+			user.setAssemblyConstituencyLivingId(userDto.getAssemblyConstituencyLivingId());
 		}
 
 		if (userDto.getParliamentConstituencyLivingId() != null && userDto.getParliamentConstituencyLivingId() > 0) {
 			ParliamentConstituency parliamentConstituencyLiving = parliamentConstituencyDao.getParliamentConstituencyById(userDto
 					.getParliamentConstituencyLivingId());
 			user.setParliamentConstituencyLiving(parliamentConstituencyLiving);
+			user.setParliamentConstituencyLivingId(userDto.getParliamentConstituencyLivingId());
 		}
 
 		if (userDto.getStateVotingId() != null && userDto.getStateVotingId() > 0) {
 			State stateVoting = stateDao.getStateById(userDto.getStateVotingId());
 			user.setStateVoting(stateVoting);
+			user.setStateVotingId(userDto.getStateVotingId());
 		}
 		if (userDto.getDistrictVotingId() != null && userDto.getDistrictVotingId() > 0) {
 			District districtVoting = districtDao.getDistrictById(userDto.getDistrictVotingId());
 			user.setDistrictVoting(districtVoting);
+			user.setDistrictVotingId(userDto.getDistrictVotingId());
 		}
 		if (userDto.getAssemblyConstituencyVotingId() != null && userDto.getAssemblyConstituencyVotingId() > 0) {
 			AssemblyConstituency assemblyConstituencyVoting = assemblyConstituencyDao.getAssemblyConstituencyById(userDto.getAssemblyConstituencyVotingId());
 			user.setAssemblyConstituencyVoting(assemblyConstituencyVoting);
+			user.setAssemblyConstituencyVotingId(userDto.getAssemblyConstituencyVotingId());
 		}
 		if (userDto.getParliamentConstituencyVotingId() != null && userDto.getParliamentConstituencyVotingId() > 0) {
 			ParliamentConstituency parliamentConstituencyVoting = parliamentConstituencyDao.getParliamentConstituencyById(userDto
 					.getParliamentConstituencyVotingId());
 			user.setParliamentConstituencyVoting(parliamentConstituencyVoting);
+			user.setParliamentConstituencyVotingId(userDto.getParliamentConstituencyVotingId());
 		}
 		if (userDto.getNriCountryRegionId() != null && userDto.getNriCountryRegionId() > 0) {
 			CountryRegion countryRegion = countryRegionDao.getCountryRegionById(userDto.getNriCountryRegionId());
@@ -707,6 +720,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			if (userDto.getNriCountryId() != null && userDto.getNriCountryId() > 0) {
 				Country country = countryDao.getCountryById(userDto.getNriCountryId());
 				user.setNriCountry(country);
+				user.setNriCountryId(userDto.getNriCountryId());
 			}
 		}
 		user = userDao.saveUser(user);
@@ -3374,7 +3388,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		return interestDto;
 	}
 	
-	private List<InterestDto> convertInterests(List<Interest> interests){
+	private List<InterestDto> convertInterests(Collection<Interest> interests){
 		List<InterestDto> returnInterests = new ArrayList<>();
 		if(interests == null){
 			return returnInterests;
@@ -3525,6 +3539,86 @@ public class AapServiceImpl implements AapService, Serializable {
 	public List<PlannedEmailDto> getPlannedEmailsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize) {
 		List<PlannedEmail> plannedEmails = plannedEmailDao.getPlannedEmailByLocationTypeAndLocationId(locationType, locationId);
 		return convertPlannedEmails(plannedEmails);
+	}
+
+	@Override
+	@Transactional
+	public VolunteerDto saveVolunteerDetails(VolunteerDto volunteerDto, List<Long> selectedInterests) throws AppException{
+		if(volunteerDto.getUserId() == null || volunteerDto.getUserId() <= 0){
+			throw new AppException("No User id found");
+		}
+		User user = userDao.getUserById(volunteerDto.getUserId());
+		if(user == null){
+			throw new AppException("No User found");
+		}
+		
+		Volunteer volunteer = volunteerDao.getVolunteersByUserId(user.getId());
+		if(volunteer == null){
+			volunteer = new Volunteer();
+			volunteer.setDateCreated(new Date());
+		}
+		volunteer.setDateModified(new Date());
+		volunteer.setDomainExpertise(volunteerDto.getDomainExpertise());
+		volunteer.setEducation(volunteerDto.getEducation());
+		volunteer.setEmergencyContactName(volunteerDto.getEmergencyContactName());
+		volunteer.setEmergencyContactNo(volunteerDto.getEmergencyContactNo());
+		volunteer.setEmergencyContactRelation(volunteerDto.getEmergencyContactRelation());
+		volunteer.setInfoRecordedAt(volunteerDto.getInfoRecordedAt());
+		volunteer.setInfoRecordedBy(volunteerDto.getInfoRecordedBy());
+		volunteer.setOffences(volunteerDto.getOffences());
+		volunteer.setProfessionalBackground(volunteerDto.getProfessionalBackground());
+		volunteer.setUser(user);
+		volunteer.setUserId(user.getId());
+		
+		volunteer = volunteerDao.saveVolunteer(volunteer);
+		
+		user.setVolunteer(true);
+		
+		if(volunteer.getInterests() == null){
+			volunteer.setInterests(new HashSet<Interest>());
+		}else{
+			volunteer.getInterests().clear();
+		}
+		for(Long oneInterestId : selectedInterests){
+			Interest oneInterest = interestDao.getInterestById(oneInterestId);
+			volunteer.getInterests().add(oneInterest);
+		}
+		
+		return convertVolunteer(volunteer);
+	}
+	private VolunteerDto convertVolunteer(Volunteer volunteer){
+		if(volunteer == null){
+			return null;
+		}
+		VolunteerDto volunteerDto = new VolunteerDto();
+		BeanUtils.copyProperties(volunteer, volunteerDto);
+		return volunteerDto;
+	}
+
+	@Override
+	@Transactional
+	public VolunteerDto getVolunteerDataForUser(Long userId) throws AppException {
+		Volunteer volunteer = volunteerDao.getVolunteersByUserId(userId);
+		return convertVolunteer(volunteer);
+	}
+
+	@Override
+	@Transactional
+	public List<InterestDto> getuserInterests(Long userId) throws AppException {
+		Volunteer volunteer = volunteerDao.getVolunteersByUserId(userId);
+		if(volunteer == null){
+			return null;
+		}
+		return convertInterests(volunteer.getInterests());
+	}
+
+	@Override
+	@Transactional
+	public UserDto saveUserFromAdmiPanel(UserDto userDto, VolunteerDto volunteerDto, List<Long> interests) throws AppException {
+		userDto = saveUser(userDto);
+		volunteerDto.setUserId(userDto.getId());
+		saveVolunteerDetails(volunteerDto, interests);
+		return userDto;
 	}
 	
 

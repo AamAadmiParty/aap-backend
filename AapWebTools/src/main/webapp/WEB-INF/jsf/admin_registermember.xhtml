@@ -40,7 +40,7 @@
 		<div style="width: 1000px; margin: 0;">
 
 			<!-- header starts -->
-			<h5>Search Or Register Member</h5>
+			<h2>Search Or Register Member</h2>
 			<!-- http://www.ajaxload.info/ -->
 			<p:blockUI block="userProfileForm" trigger=":userProfileForm:state,:userProfileForm:livingState">
 			Getting District and Parliament Constituency List<br />
@@ -54,11 +54,11 @@
 			Searching Members<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
-			<p:blockUI block="userProfileForm" trigger=":userProfileForm:createNewMember">
+			<p:blockUI block="userProfileForm" trigger=":userProfileForm:createNewMember,:userProfileForm:member,:userProfileForm:volunteer">
 			Please Wait<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
-			
+
 			<h:form id="userProfileForm">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<p:outputPanel id="userProfileFormMainPanel">
@@ -269,39 +269,40 @@
 											<h:panelGrid id="display" columns="4" cellpadding="4">
 
 
-											<h:outputText value="Name" />
-											<h:outputText value="#{oneUser.name}" />
+												<h:outputText value="Name" />
+												<h:outputText value="#{oneUser.name}" />
 
-											<h:outputText value="Gender" />
-											<h:outputText value="#{oneUser.gender}" />
+												<h:outputText value="Gender" />
+												<h:outputText value="#{oneUser.gender}" />
 
-											<h:outputText value="Date Of Birth" />
-											<h:outputText value="#{oneUser.dateOfBirth}">
-												<f:convertDateTime pattern="dd-MMM-yyyy" />
-											</h:outputText>
+												<h:outputText value="Date Of Birth" />
+												<h:outputText value="#{oneUser.dateOfBirth}">
+													<f:convertDateTime pattern="dd-MMM-yyyy" />
+												</h:outputText>
 
-											<h:outputText value="Phone" />
-											<h:outputText value="#{oneUser.countryCode} - #{oneUser.mobileNumber}" />
+												<h:outputText value="Phone" />
+												<h:outputText value="#{oneUser.countryCode} - #{oneUser.mobileNumber}" />
 
-											<h:outputText value="Membership Number" />
-											<h:outputText value="#{oneUser.membershipNumber}" />
+												<h:outputText value="Membership Number" />
+												<h:outputText value="#{oneUser.membershipNumber}" />
 
-											<h:outputText value="Membership Status" />
-											<h:outputText value="#{oneUser.membershipStatus}" />
+												<h:outputText value="Membership Status" />
+												<h:outputText value="#{oneUser.membershipStatus}" />
 
-										</h:panelGrid>
+											</h:panelGrid>
 										</p:panelGrid>
-										
+
 										<p:outputLabel value="You can not edit this member" rendered="#{!adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}"></p:outputLabel>
-										<p:commandButton id="editMemberButton" update=":userProfileForm:userProfileFormMainPanel" value="Update Member" rendered="#{adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}">
+										<p:commandButton id="editMemberButton" update=":userProfileForm:userProfileFormMainPanel" value="Update Member"
+											rendered="#{adminRegisterMemberBean.isMemberUpdateAllowed(oneUser)}">
 											<f:setPropertyActionListener value="#{oneUser}" target="#{adminRegisterMemberBean.selectedUserForEditing}" />
 										</p:commandButton>
 
 									</p:rowExpansion>
 								</p:dataTable>
 								<br></br>
-								<p:commandButton id="createNewMember" update=":userProfileForm:userProfileFormMainPanel" value="Create New Member" disabled="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExists}"
-									actionListener="#{adminRegisterMemberBean.createNewMember}" />
+								<p:commandButton id="createNewMember" update=":userProfileForm:userProfileFormMainPanel" value="Create New Member"
+									disabled="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExists}" actionListener="#{adminRegisterMemberBean.createNewMember}" />
 								<p:outputLabel value="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExistsMessage}" rendered="#{adminRegisterMemberBean.searchMemberResult.userAlreadyExists}"></p:outputLabel>
 							</p:outputPanel>
 						</p:outputPanel>
@@ -447,14 +448,38 @@
 							</p:inputText>
 
 						</h:panelGrid>
+						<h:panelGrid columns="5">
+
+							<p:outputLabel value="Register As : "></p:outputLabel>
+							<p:outputLabel value="Member"></p:outputLabel>
+							<p:selectBooleanCheckbox id="member" value="#{adminRegisterMemberBean.selectedUserForEditing.member}"
+							 disabled="#{adminRegisterMemberBean.disableMemberCheckForSelectedUserEditing}">
+								<p:ajax update=":userProfileForm" />
+							</p:selectBooleanCheckbox>
+							<p:outputLabel value="Volunteer"></p:outputLabel>
+							<p:selectBooleanCheckbox id="volunteer" value="#{adminRegisterMemberBean.selectedUserForEditing.volunteer}"
+							disabled="#{adminRegisterMemberBean.disableVolunteerCheckForSelectedUserEditing}">
+								<p:ajax update=":userProfileForm" listener="#{adminRegisterMemberBean.onClickVolunteer}" />
+							</p:selectBooleanCheckbox>
+						</h:panelGrid>
+
+						<p:outputPanel id="volunteerPanel">
+							<p:outputPanel rendered="#{adminRegisterMemberBean.showVolunteerPanel}">
+								<ui:include src="aapstyle/volunteer.xhtml">
+									<ui:param name="param_VolunteerBean" value="#{adminRegisterMemberBean.volunteerBean}" />
+								</ui:include>
+
+							</p:outputPanel>
+						</p:outputPanel>
+
 						<p:blockUI block="userProfileForm" trigger=":userProfileForm:saveMember">
 						Saving Profile<br />
 							<p:graphicImage value="/images/ajax-loader.gif" />
 						</p:blockUI>
 
-						<p:commandButton id="saveMember" update=":userProfileForm" value="Save Member" actionListener="#{adminRegisterMemberBean.saveProfile}" />
-						<p:commandButton id="receiveMembershipFee" onclick="paymentDialog.show()" value="Receive Membership Payment" disabled="#{adminRegisterMemberBean.disablePaymentReceiveButton}"/>
-						
+						<p:commandButton id="saveMember" update=":userProfileForm" value="Save Member/Volunteer" actionListener="#{adminRegisterMemberBean.saveProfile}" />
+						<p:commandButton id="receiveMembershipFee" onclick="paymentDialog.show()" value="Receive Membership Payment" disabled="#{adminRegisterMemberBean.disablePaymentReceiveButton}" />
+
 						<p:commandButton id="cancel" update=":userProfileForm:userProfileFormMainPanel" value="Cancel" actionListener="#{adminRegisterMemberBean.cancelSaveMember}" />
 					</p:outputPanel>
 
@@ -464,19 +489,19 @@
 						<p:panelGrid columns="2" cellpadding="5" style="width:495px;">
 							<f:facet name="header">Membership Payment</f:facet>
 							<p:outputLabel value="Membership Fee"></p:outputLabel>
-							
+
 							<p:outputPanel>
 								<p:graphicImage width="12px" value="https://cdn1.iconfinder.com/data/icons/indian-rupee-symbol/32/IndianRupee2-32x32.png"></p:graphicImage>
 								<p:outputLabel value="10"></p:outputLabel>
 							</p:outputPanel>
-							
+
 							<p:outputPanel>
 								<p:outputLabel value="Payment/Donation(CASH Only)"></p:outputLabel>
 								<p:graphicImage width="24px" value="https://cdn1.iconfinder.com/data/icons/oxygen/32x32/categories/system-help.png" id="donationHelp"></p:graphicImage>
 							</p:outputPanel>
 							<p:inputText value="#{adminRegisterMemberBean.fee}" />
 							<p:commandButton value="Cancel" onsuccess="paymentDialog.hide()" />
-							<p:commandButton value="Receive Membership Payment" actionListener="#{adminRegisterMemberBean.receiveMembershipPayment}" update=":userProfileForm:userProfileFormMainPanel"/>
+							<p:commandButton value="Receive Membership Payment" actionListener="#{adminRegisterMemberBean.receiveMembershipPayment}" update=":userProfileForm:userProfileFormMainPanel" />
 						</p:panelGrid>
 						<p:overlayPanel showEvent="mouseover" hideEvent="mouseout" for="donationHelp" style="width:400px;">
 							At the time of Memeber registration user may want to give some donation also, please add any donation in this box

@@ -67,6 +67,10 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	private boolean enableLivingParliamentConstituencyCombo = false;
 
 	private boolean sameAsLiving;
+	private boolean showVolunteerPanel = false;
+	
+	private boolean disableMemberCheckForSelectedUserEditing = false;
+	private boolean disableVolunteerCheckForSelectedUserEditing = false;
 
 	private List<CountryDto> countries;
 	
@@ -74,6 +78,9 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	private boolean showSearchPanel;
 	
 	private double fee = DataUtil.MEMBERSHIP_FEE;
+	
+	@Autowired
+	private VolunteerBean volunteerBean;
 	
 	
 	@Autowired
@@ -90,7 +97,7 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 		if(!checkUserAccess()){
 			return;
 		}
-
+		volunteerBean.init(null);
 		searchMemberResult = new SearchMemberResultDto();
 		showResult = false;
 		showSearchPanel = true;
@@ -152,6 +159,16 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 		cal.set(Calendar.YEAR, 1981);
 		selectedUserForEditing.setDateOfBirth(cal.getTime());
 		BeanUtils.copyProperties(searchedUser, selectedUserForEditing);
+		disableVolunteerCheckForSelectedUserEditing = false;
+		disableMemberCheckForSelectedUserEditing = false;
+		try {
+			volunteerBean.init(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void onClickVolunteer(){
+		showVolunteerPanel = selectedUserForEditing.isVolunteer();
 	}
 	
 	public void cancelSaveMember(){
@@ -233,11 +250,13 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 		if (StringUtil.isEmptyOrWhitespace(selectedUserForEditing.getName())) {
 			sendErrorMessageToJsfScreen("Please enter Member full name");
 		}
+		if(!selectedUserForEditing.isMember() && !selectedUserForEditing.isVolunteer()){
+			sendErrorMessageToJsfScreen("Please select if you are registering user as Member or Volunteer or both");
+		}
 		if (isValidInput()) {
 			try{
 				boolean isNew = (selectedUserForEditing.getId() == null || selectedUserForEditing.getId() <= 0);
-				selectedUserForEditing.setMember(true);
-				selectedUserForEditing = aapService.saveUser(selectedUserForEditing);
+				selectedUserForEditing = aapService.saveUserFromAdmiPanel(selectedUserForEditing, volunteerBean.getSelectedVolunteer(), volunteerBean.getSelectedInterestIds());
 				ssaveLoggedInUserInSession(selectedUserForEditing);
 				sendInfoMessageToJsfScreen("Profile saved succesfully.");
 				if(isNew){
@@ -251,6 +270,9 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 				    RequestContext.getCurrentInstance().execute("paymentDialog.show()");
 				}
 				showSearchPanel = true;
+				disableVolunteerCheckForSelectedUserEditing = selectedUserForEditing.isVolunteer();
+				disableMemberCheckForSelectedUserEditing = selectedUserForEditing.isMember();
+
 			}catch(Exception ex){
 				sendErrorMessageToJsfScreen(ex.getMessage());
 			}
@@ -577,6 +599,15 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void setSelectedUserForEditing(UserDto selectedUserForEditing) {
 		this.selectedUserForEditing = selectedUserForEditing;
+		disableVolunteerCheckForSelectedUserEditing = selectedUserForEditing.isVolunteer();
+		disableMemberCheckForSelectedUserEditing = selectedUserForEditing.isMember();
+		showVolunteerPanel = selectedUserForEditing.isVolunteer();
+
+		try {
+			volunteerBean.init(selectedUserForEditing);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		showSearchPanel = false;
 	}
 
@@ -618,6 +649,38 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 
 	public void setFee(double fee) {
 		this.fee = fee;
+	}
+
+	public VolunteerBean getVolunteerBean() {
+		return volunteerBean;
+	}
+
+	public void setVolunteerBean(VolunteerBean volunteerBean) {
+		this.volunteerBean = volunteerBean;
+	}
+
+	public boolean isShowVolunteerPanel() {
+		return showVolunteerPanel;
+	}
+
+	public void setShowVolunteerPanel(boolean showVolunteerPanel) {
+		this.showVolunteerPanel = showVolunteerPanel;
+	}
+
+	public boolean isDisableMemberCheckForSelectedUserEditing() {
+		return disableMemberCheckForSelectedUserEditing;
+	}
+
+	public void setDisableMemberCheckForSelectedUserEditing(boolean disableMemberCheckForSelectedUserEditing) {
+		this.disableMemberCheckForSelectedUserEditing = disableMemberCheckForSelectedUserEditing;
+	}
+
+	public boolean isDisableVolunteerCheckForSelectedUserEditing() {
+		return disableVolunteerCheckForSelectedUserEditing;
+	}
+
+	public void setDisableVolunteerCheckForSelectedUserEditing(boolean disableVolunteerCheckForSelectedUserEditing) {
+		this.disableVolunteerCheckForSelectedUserEditing = disableVolunteerCheckForSelectedUserEditing;
 	}
 
 }

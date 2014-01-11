@@ -41,14 +41,6 @@
 			Please wait<br />
 					<p:graphicImage value="/images/ajax-loader.gif" />
 				</p:blockUI>
-				<p:blockUI block="userProfileForm" trigger=":userProfileForm:state,:userProfileForm:livingState">
-			Getting District List<br />
-					<p:graphicImage value="/images/ajax-loader.gif" />
-				</p:blockUI>
-				<p:blockUI block="userProfileForm" trigger=":userProfileForm:district,:userProfileForm:livingDistrict">
-			Getting Assembly Constituency List<br />
-					<p:graphicImage value="/images/ajax-loader.gif" />
-				</p:blockUI>
 				<h:form id="userProfileForm">
 					<p:messages id="messages" autoUpdate="true" closable="true" />
 
@@ -85,108 +77,38 @@
 					</h:panelGrid>
 
 					<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
-						<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
-							<f:facet name="header">  Select the place where you live</f:facet>
-
-							<h:outputLabel for="livingState" value="State*" />
-							<p:selectOneMenu id="livingState" value="#{userProfileBean.selectedUserForEditing.stateLivingId}" effect="fold" editable="false">
-								<f:selectItem itemLabel="Select State" itemValue="0" />
-								<f:selectItems value="#{userProfileBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
-
-								<p:ajax event="change" update=":userProfileForm:livingDistrict,:userProfileForm:livingParliamentConstituency" listener="#{userProfileBean.handleLivingStateChange}" />
-							</p:selectOneMenu>
-							<h:outputLabel for="livingDistrict" value="District*" />
-							<p:selectOneMenu id="livingDistrict" disabled="#{!userProfileBean.enableLivingDistrictCombo}" value="#{userProfileBean.selectedUserForEditing.districtLivingId}"
-								effect="fold" editable="false">
-								<f:selectItem itemLabel="Select District" itemValue="0" />
-								<f:selectItems value="#{userProfileBean.livingDistrictList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
-
-								<p:ajax event="change" update=":userProfileForm:livingAssemblyConstituency" listener="#{userProfileBean.handleLivingDistrictChange}" />
-							</p:selectOneMenu>
-							<h:outputLabel for="livingParliamentConstituency" value="Parliament Constituency*" />
-
-							<p:selectOneMenu id="livingParliamentConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableLivingParliamentConstituencyCombo}"
-								value="#{userProfileBean.selectedUserForEditing.parliamentConstituencyLivingId}" effect="fold" editable="false">
-								<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
-								<f:selectItems value="#{userProfileBean.livingParliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
-									itemValue="#{oneParliamentConstituency.id}" />
-
-								<p:ajax update="livingAssemblyConstituency" />
-							</p:selectOneMenu>
-
-							<h:outputLabel for="livingAssemblyConstituency" value="Assembly Constituency*" />
-							<p:selectOneMenu id="livingAssemblyConstituency" disabled="#{!userProfileBean.enableLivingAssemblyConstituencyCombo}"
-								value="#{userProfileBean.selectedUserForEditing.assemblyConstituencyLivingId}" effect="fold" editable="false">
-								<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
-								<f:selectItems value="#{userProfileBean.livingAssemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
-									itemValue="#{oneAssemblyConstituency.id}" />
-
-							</p:selectOneMenu>
-
-						</p:panelGrid>
-
-						<p:panelGrid columns="2" cellpadding="5" id="votingLocation" style="width:395px;">
-							<f:facet name="header">
-        		Select the place where you registered as voter
-        		<br></br>
-							</f:facet>
-
-							<p:selectBooleanCheckbox value="#{userProfileBean.sameAsLiving}">
-								<p:ajax update=":userProfileForm:votingLocation" listener="#{userProfileBean.onClickSameAsLiving}" />
-							</p:selectBooleanCheckbox>
-							<h:outputLabel value="Same as Living Location" />
-
-							<h:outputLabel for="state" value="State*" />
-							<p:selectOneMenu id="state" disabled="#{userProfileBean.sameAsLiving}" value="#{userProfileBean.selectedUserForEditing.stateVotingId}" effect="fold" editable="false">
-								<f:selectItem itemLabel="Select State" itemValue="0" />
-								<f:selectItems value="#{userProfileBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
-								<p:ajax event="change" update=":userProfileForm:district,:userProfileForm:parliamentConstituency" listener="#{userProfileBean.handleStateChange}" />
-							</p:selectOneMenu>
-							<h:outputLabel for="district" value="District*" />
-							<p:selectOneMenu id="district" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableDistrictCombo}"
-								value="#{userProfileBean.selectedUserForEditing.districtVotingId}" effect="fold" editable="false">
-								<f:selectItem itemLabel="Select District" itemValue="0" />
-								<f:selectItems value="#{userProfileBean.districtList}" var="oneDistrict" itemLabel="#{oneDistrict.name}" itemValue="#{oneDistrict.id}" />
-
-								<p:ajax event="change" update=":userProfileForm:assemblyConstituency" listener="#{userProfileBean.handleDistrictChange}" />
-							</p:selectOneMenu>
-							<h:outputLabel for="parliamentConstituency" value="Parliament Constituency*" />
-							<p:selectOneMenu id="parliamentConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableParliamentConstituencyCombo}"
-								value="#{userProfileBean.selectedUserForEditing.parliamentConstituencyVotingId}" effect="fold" editable="false">
-								<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
-								<f:selectItems value="#{userProfileBean.parliamentConstituencyList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
-									itemValue="#{oneParliamentConstituency.id}" />
-							</p:selectOneMenu>
-							<h:outputLabel for="assemblyConstituency" value="Assembly Constituency*" />
-							<p:selectOneMenu id="assemblyConstituency" disabled="#{userProfileBean.sameAsLiving or !userProfileBean.enableAssemblyConstituencyCombo}"
-								value="#{userProfileBean.selectedUserForEditing.assemblyConstituencyVotingId}" effect="fold" editable="false">
-								<f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
-								<f:selectItems value="#{userProfileBean.assemblyConstituencyList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
-									itemValue="#{oneAssemblyConstituency.id}" />
-
-							</p:selectOneMenu>
-
-
-						</p:panelGrid>
+						<h:column>
+							<ui:include src="../common/location.xhtml">
+								<ui:param name="param_Form" value=":userProfileForm" />
+								<ui:param name="param_HeaderMessage" value="Select the place where you live" />
+								<ui:param name="param_PanelId" value="livingLocationPanel" />
+								<ui:param name="param_LocationBean" value="#{userProfileBean.livingLocation}" />
+							</ui:include>
+						</h:column>
+						<h:column>
+							<h:panelGrid columns="1" id="votingLocation">
+								<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
+									<p:selectBooleanCheckbox value="#{userProfileBean.sameAsLiving}">
+										<p:ajax update=":userProfileForm:votingLocation" listener="#{userProfileBean.onClickSameAsLiving}" />
+									</p:selectBooleanCheckbox>
+									<h:outputLabel value="Same as Living Location" />
+								</p:panelGrid>
+								<ui:include src="../common/location.xhtml">
+									<ui:param name="param_Form" value=":userProfileForm" />
+									<ui:param name="param_HeaderMessage" value="Select the place where you registered as voter" />
+									<ui:param name="param_PanelId" value="votingLocationPanel" />
+									<ui:param name="param_LocationBean" value="#{userProfileBean.votingLocation}" />
+								</ui:include>
+							</h:panelGrid>
+						</h:column>
 					</h:panelGrid>
 
+					<ui:include src="../common/nri_location.xhtml">
+						<ui:param name="param_Form" value=":userProfileForm" />
+						<ui:param name="param_PanelId" value="nriLocationPanel" />
+						<ui:param name="param_NriLocationBean" value="#{userProfileBean.nriLocationBean}" />
+					</ui:include>
 
-					<p:panelGrid columns="2" cellpadding="5" id="nriLocation">
-						<f:facet name="header">
-							<h:outputLabel for="nri" value="I am NRI" />
-							<p:selectBooleanCheckbox id="nri" value="#{userProfileBean.selectedUserForEditing.nri}">
-								<p:ajax update=":userProfileForm:nriCountry" listener="#{userProfileBean.onClickNri}" />
-							</p:selectBooleanCheckbox>
-						</f:facet>
-						<h:outputLabel value="Country" />
-
-						<p:selectOneMenu id="nriCountry" value="#{userProfileBean.selectedUserForEditing.nriCountryId}" disabled="#{!userProfileBean.selectedUserForEditing.nri}">
-							<f:selectItem itemLabel="Select Country" itemValue="0" />
-							<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
-						</p:selectOneMenu>
-
-
-					</p:panelGrid>
 					<br></br>
 					<br></br>
 					<p:outputPanel id="memberId" rendered="#{!userProfileBean.showMemberPanel}">

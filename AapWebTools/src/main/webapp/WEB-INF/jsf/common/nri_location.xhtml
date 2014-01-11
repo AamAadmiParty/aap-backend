@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<!--
+		This File accepts foolowing params
+		 param_Form  the name of from under which u include this file
+		 param_NriLocationBean is server side backing bean for this component
+	 -->
+	<p:blockUI block="#{param_Form}" trigger="#{param_PanelId}nriCountry">
+			Getting Regions of Countryt<br />
+		<p:graphicImage value="/images/ajax-loader.gif" />
+	</p:blockUI>
+	<p:blockUI block="#{param_Form}" trigger="#{param_PanelId}nriCountryRegion">
+			Getting City/Areas<br />
+		<p:graphicImage value="/images/ajax-loader.gif" />
+	</p:blockUI>
+
+	<p:panelGrid columns="2" cellpadding="5" id="#{param_PanelId}">
+		<f:facet name="header">
+			<h:outputLabel for="nri" value="I am NRI" />
+			<p:selectBooleanCheckbox id="nri" value="#{param_NriLocationBean.nri}">
+				<p:ajax update="#{param_PanelId}nriCountry" listener="#{param_NriLocationBean.onClickNri}" />
+			</p:selectBooleanCheckbox>
+		</f:facet>
+		<h:outputLabel value="Country" />
+
+		<p:selectOneMenu id="#{param_PanelId}nriCountry" value="#{param_NriLocationBean.selectedNriCountryId}" disabled="#{!param_NriLocationBean.nri}">
+			<f:selectItem itemLabel="Select Country" itemValue="0" />
+			<f:selectItems value="#{param_NriLocationBean.nriCountries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
+
+			<p:ajax event="change" update="#{param_PanelId}nriCountryRegion" listener="#{param_NriLocationBean.handleNriCountryChange}" />
+		</p:selectOneMenu>
+
+		<h:outputLabel value="Region/State" />
+
+		<p:selectOneMenu id="#{param_PanelId}nriCountryRegion" value="#{param_NriLocationBean.selectedNriCountryRegionId}" disabled="#{param_NriLocationBean.disableNriCountryRegionCombo}">
+			<f:selectItem itemLabel="Select Region/State" itemValue="0" />
+			<f:selectItems value="#{param_NriLocationBean.nriCountryRegions}" var="oneCountryRegion" itemLabel="#{oneCountryRegion.name}" itemValue="#{oneCountryRegion.id}" />
+
+			<p:ajax event="change" update="#{param_PanelId}nriCountryRegionArea" listener="#{param_NriLocationBean.handleNriCountryRegionChange}" />
+
+		</p:selectOneMenu>
+
+		<h:outputLabel value="Area/City" />
+
+		<p:selectOneMenu id="#{param_PanelId}nriCountryRegionArea" value="#{param_NriLocationBean.selectedNriCountryRegionAreaId}" disabled="#{param_NriLocationBean.disableNriCountryRegionAreaCombo}">
+			<f:selectItem itemLabel="Select Area/City" itemValue="0" />
+			<f:selectItems value="#{param_NriLocationBean.nriCountryRegionAreas}" var="oneCountryRegionArea" itemLabel="#{oneCountryRegionArea.name}" itemValue="#{oneCountryRegionArea.id}" />
+		</p:selectOneMenu>
+
+
+	</p:panelGrid>
+</ui:composition>

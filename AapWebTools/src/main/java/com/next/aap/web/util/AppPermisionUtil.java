@@ -14,7 +14,13 @@ public class AppPermisionUtil {
 	private AapService aapService;
 	@PostConstruct
 	public void init(){
-		//aapService.updateAllPermissionsAndRole();
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				aapService.updateAllPermissionsAndRole();
+			}
+		};
+		new Thread(runnable).run();
 		//aapService.saveAllCountries();
 	}
 }

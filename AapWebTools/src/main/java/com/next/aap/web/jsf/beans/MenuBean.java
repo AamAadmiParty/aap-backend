@@ -352,7 +352,7 @@ public class MenuBean extends BaseJsfBean {
 	}
 
 	public boolean isCampaignAllowed() {
-		return isVoiceOfAapFbAllowed() || isVoiceOfAapTwitterAllowed();
+		return isVoiceOfAapFbAllowed() || isVoiceOfAapTwitterAllowed() || isEmailAllowed() || isSmsAllowed();
 	}
 
 	public boolean isVoiceOfAapFbAllowed() {

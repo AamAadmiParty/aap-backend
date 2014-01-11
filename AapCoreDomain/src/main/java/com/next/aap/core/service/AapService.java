@@ -18,6 +18,7 @@ import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
@@ -209,6 +210,8 @@ public interface AapService {
 	
 	PlannedEmailDto updatePlannedEmailStatus(Long plannedEmailId, PlannedPostStatus status, String message);
 	
+	PlannedEmailDto getNextPlannedEmailToSend();
+	
 	List<PlannedEmailDto> getPlannedEmailsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
 
 	VolunteerDto saveVolunteerDetails(VolunteerDto volunteerDto, List<Long> selectedInterests) throws AppException;
@@ -216,4 +219,6 @@ public interface AapService {
 	VolunteerDto getVolunteerDataForUser(Long userId) throws AppException;
 	
 	List<InterestDto> getuserInterests(Long userId) throws AppException;
+	
+	List<EmailUserDto> getEmailsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
 }

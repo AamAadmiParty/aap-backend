@@ -136,6 +136,7 @@ import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
@@ -303,7 +304,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			facebookAppPermission.setToken(fbConnectionData.getAccessToken());
 			if (fbConnectionData.getExpireTime() == null) {
 				Calendar today = Calendar.getInstance();
-				today.add(Calendar.HOUR, 2);
+				today.add(Calendar.YEAR, 10);
 				facebookAppPermission.setExpireTime(today.getTime());
 			} else {
 				facebookAppPermission.setExpireTime(new Date(fbConnectionData.getExpireTime()));
@@ -3619,6 +3620,66 @@ public class AapServiceImpl implements AapService, Serializable {
 		volunteerDto.setUserId(userDto.getId());
 		saveVolunteerDetails(volunteerDto, interests);
 		return userDto;
+	}
+
+	@Override
+	@Transactional
+	public PlannedEmailDto getNextPlannedEmailToSend() {
+		PlannedEmail plannedEmail = plannedEmailDao.getNextPlannedEmailToPublish();
+		return convertPlannedEmail(plannedEmail);
+	}
+
+	@Override
+	@Transactional
+	public List<EmailUserDto> getEmailsOfLocation(PostLocationType locationType, Long locationId) throws AppException {
+		List<Email> emails = null;
+		switch(locationType){
+		case Global :
+			//emails = emailDao.getStateEmails(locationId);
+			break;
+		case STATE :
+			emails = emailDao.getStateEmails(locationId);
+			break;
+		case DISTRICT :
+			emails = emailDao.getDistrictEmails(locationId);
+			break;
+		case AC :
+			emails = emailDao.getAcEmails(locationId);
+			break;
+		case PC :
+			emails = emailDao.getPcEmails(locationId);
+			break;
+		case COUNTRY :
+			emails = emailDao.getCountryEmails(locationId);
+			break;
+		case REGION :
+			emails = emailDao.getCountryRegionEmails(locationId);
+			break;
+		case AREA :
+			emails = emailDao.getCountryRegionAreaEmails(locationId);
+			break;
+			default:
+		}
+		return convertEmailUsers(emails);
+	}
+	
+	private EmailUserDto convertEmailUser(Email oneEmail){
+		if(oneEmail == null){
+			return null;
+		}
+		EmailUserDto emailUserDto = new EmailUserDto();
+		BeanUtils.copyProperties(oneEmail, emailUserDto);
+		return emailUserDto;
+	}
+	private List<EmailUserDto> convertEmailUsers(List<Email> emails){
+		List<EmailUserDto> emailUserDtos = new ArrayList<>();
+		if(emails == null){
+			return emailUserDtos;
+		}
+		for(Email oneEmail:emails){
+			emailUserDtos.add(convertEmailUser(oneEmail));
+		}
+		return emailUserDtos;
 	}
 	
 

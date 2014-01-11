@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -58,5 +59,55 @@ public class EmailDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Email> i
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("userId", userId);
 		return executeQueryGetList("from Email where userId = :userId", params);
+	}
+
+	
+	@Override
+	public List<Email> getStateEmails(Long stateId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("stateId", stateId);
+		return executeQueryGetList("from Email where user.stateVotingId = :stateId or user.stateLivingId = :stateId", params);
+	}
+
+	@Override
+	public List<Email> getDistrictEmails(Long districtId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("districtId", districtId);
+		return executeQueryGetList("from Email where user.districtVotingId = :districtId or user.districtLivingId = :districtId", params);
+	}
+
+	@Override
+	public List<Email> getAcEmails(Long acId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("acId", acId);
+		return executeQueryGetList("from Email where user.assemblyConstituencyVotingId = :acId or user.assemblyConstituencyLivingId = :acId", params);
+	}
+
+	@Override
+	public List<Email> getPcEmails(Long pcId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("pcId", pcId);
+		return executeQueryGetList("from Email where user.parliamentConstituencyVotingId = :pcId or user.parliamentConstituencyLivingId = :pcId", params);
+	}
+
+	@Override
+	public List<Email> getCountryEmails(Long nriCountryId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("nriCountryId", nriCountryId);
+		return executeQueryGetList("from Email where user.nriCountryId = :nriCountryId", params);
+	}
+
+	@Override
+	public List<Email> getCountryRegionEmails(Long nriCountryRegionId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("nriCountryRegionId", nriCountryRegionId);
+		return executeQueryGetList("from Email where user.nriCountryRegionId = :nriCountryRegionId", params);
+	}
+
+	@Override
+	public List<Email> getCountryRegionAreaEmails(Long nriCountryRegionAreaId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("nriCountryRegionAreaId", nriCountryRegionAreaId);
+		return executeQueryGetList("from Email where user.nriCountryRegionAreaId = :nriCountryRegionAreaId", params);
 	}
 }

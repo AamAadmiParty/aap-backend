@@ -98,7 +98,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 	}
 
 	@Override
-	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) {
+	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) throws Exception {
 		UserDto user;
 		if(loggedInUser == null){
 			user = aapService.saveFacebookUser(null, socialConnection, appFacebokAppId);	

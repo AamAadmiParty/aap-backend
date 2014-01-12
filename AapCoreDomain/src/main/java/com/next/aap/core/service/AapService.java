@@ -48,7 +48,7 @@ import com.next.aap.web.dto.VolunteerDto;
 
 public interface AapService {
 
-	UserDto saveFacebookUser(Long existingUserid, Connection<Facebook> connection, String facebookAppId);
+	UserDto saveFacebookUser(Long existingUserid, Connection<Facebook> connection, String facebookAppId) throws AppException;
 	
 	UserDto saveGoogleUser(Long existingUserid, Connection<Google> connection);
 	
@@ -221,4 +221,6 @@ public interface AapService {
 	List<InterestDto> getuserInterests(Long userId) throws AppException;
 	
 	List<EmailUserDto> getEmailsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
+	
+	int importDonationRecords(int totalRecords);
 }

@@ -14,6 +14,7 @@ public class AppPermisionUtil {
 	private AapService aapService;
 	@PostConstruct
 	public void init(){
+		/*
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
@@ -21,6 +22,7 @@ public class AppPermisionUtil {
 			}
 		};
 		new Thread(runnable).run();
+		*/
 		//aapService.saveAllCountries();
 	}
 }

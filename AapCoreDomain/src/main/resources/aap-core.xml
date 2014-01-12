@@ -62,6 +62,7 @@
 				<!-- <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
 				<prop key="hibernate.cache.region.factory_class" >org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
 				 <prop key="hibernate.cache.region.factory_class" >org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
+				 
 				 -->
 				<prop key="hibernate.hbm2ddl.auto">update</prop>
 			</props>

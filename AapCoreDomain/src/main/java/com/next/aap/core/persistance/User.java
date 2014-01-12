@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
+
+import com.next.aap.web.dto.CreationType;
 
 @Entity
 @Table(name="users")
@@ -60,6 +64,11 @@ public class User {
 	@Column(name = "gender")
 	private String gender;
 
+	@Column(name = "creation_type", nullable = false)
+	@Enumerated(EnumType.STRING)
+	private CreationType creationType;
+
+	
 	@Column(name = "date_of_birth")
 	private Date dateOfBirth;
 
@@ -139,6 +148,15 @@ public class User {
 	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
 	private Set<TwitterAccount> twitterAccounts; 
 	
+	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+	private Set<Donation> donations;
+
+	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+	private Set<Email> emails;
+
+	@OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+	private Set<Phone> phones;
+
 	@ManyToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@JoinTable(name = "user_all_roles",
 	joinColumns = {
@@ -241,6 +259,9 @@ public class User {
 	@Column(name = "member", nullable = false)
 	private boolean member;
 	
+	@Column(name = "donor", nullable = false)
+	private boolean donor;
+
 	@Column(name = "volunteer", nullable = false)
 	private boolean volunteer;
 
@@ -721,6 +742,46 @@ public class User {
 
 	public void setVolunteer(boolean volunteer) {
 		this.volunteer = volunteer;
+	}
+
+	public boolean isDonor() {
+		return donor;
+	}
+
+	public void setDonor(boolean donor) {
+		this.donor = donor;
+	}
+
+	public CreationType getCreationType() {
+		return creationType;
+	}
+
+	public void setCreationType(CreationType creationType) {
+		this.creationType = creationType;
+	}
+
+	public Set<Donation> getDonations() {
+		return donations;
+	}
+
+	public void setDonations(Set<Donation> donations) {
+		this.donations = donations;
+	}
+
+	public Set<Email> getEmails() {
+		return emails;
+	}
+
+	public void setEmails(Set<Email> emails) {
+		this.emails = emails;
+	}
+
+	public Set<Phone> getPhones() {
+		return phones;
+	}
+
+	public void setPhones(Set<Phone> phones) {
+		this.phones = phones;
 	}
 
 	@Override

@@ -17,9 +17,9 @@ public abstract class BaseSocialLoginController<T> extends BaseController {
 	@Autowired 
 	protected ConnectionFactoryLocator connectionFactoryLocator;
 	
-	protected abstract UserDto saveSocialUser(Connection<T> socialConnection, UserDto loggedInUser);
+	protected abstract UserDto saveSocialUser(Connection<T> socialConnection, UserDto loggedInUser) throws Exception;
 
-	protected void afterSuccesfullLogin(HttpServletRequest httpServletRequest, Connection<T> socialConnection){
+	protected void afterSuccesfullLogin(HttpServletRequest httpServletRequest, Connection<T> socialConnection) throws Exception{
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		UserDto user = saveSocialUser(socialConnection, loggedInUser);
 		setLoggedInUserInSesion(httpServletRequest, user);

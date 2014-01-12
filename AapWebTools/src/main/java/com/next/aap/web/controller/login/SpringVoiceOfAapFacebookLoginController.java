@@ -117,7 +117,7 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 	}
 
 	@Override
-	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) {
+	protected UserDto saveSocialUser(Connection<Facebook> socialConnection,UserDto loggedInUser) throws Exception{
 		UserDto user;
 		if(loggedInUser == null){
 			user = aapService.saveFacebookUser(null, socialConnection, voiceOfAapAppId);	
@@ -127,6 +127,5 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 		return user;
 	}
 
-	
 
 }

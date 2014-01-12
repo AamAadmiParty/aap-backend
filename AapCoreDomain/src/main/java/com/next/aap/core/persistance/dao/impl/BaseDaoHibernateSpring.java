@@ -119,6 +119,48 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
         }
 		return returnList;
 	}
+	public List executeSqlQueryGetObjectList(String query){
+		return executeSqlQueryGetListOfLong(query, null);
+	}
+	public List executeSqlQueryGetObjectList(String query,Map<String, Object> params){
+		return executeSqlQueryGetObjectList(query, params, 0, 0);
+	}
+	public List executeSqlQueryGetObjectList(String query,Map<String, Object> params, int pageSize){
+		return executeSqlQueryGetObjectList(query, params, pageSize, 0);
+	}
+	public List executeSqlQueryGetObjectList(String query,Map<String, Object> params, int pageSize, int pageNumber){
+		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
+		if(params != null){
+			for(Entry<String, Object> oneEntry:params.entrySet()){
+				if(oneEntry.getValue() instanceof Collection){
+					sqlQuery.setParameterList(oneEntry.getKey(), (Collection)oneEntry.getValue());
+				}else{
+					sqlQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());	
+				}
+			}
+		}
+		if(pageSize > 0 ){
+			sqlQuery.setMaxResults(pageSize);	
+		}
+		if(pageNumber > 0){
+			sqlQuery.setFirstResult((pageNumber - 1) * pageSize);
+		}
+		return sqlQuery.list();
+	}
+	
+	public void executeSqlQueryUpdate(String query,Map<String, Object> params){
+		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
+		if(params != null){
+			for(Entry<String, Object> oneEntry:params.entrySet()){
+				if(oneEntry.getValue() instanceof Collection){
+					sqlQuery.setParameterList(oneEntry.getKey(), (Collection)oneEntry.getValue());
+				}else{
+					sqlQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());	
+				}
+			}
+		}
+		sqlQuery.executeUpdate();
+	}
 	public String getOnlyName(Class<T> abc){
 		String className = getClassName(abc.toString());
 		return className;

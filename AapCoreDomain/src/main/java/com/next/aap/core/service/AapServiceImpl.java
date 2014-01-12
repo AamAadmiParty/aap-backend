@@ -3,6 +3,7 @@ package com.next.aap.core.service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +51,8 @@ import com.next.aap.core.persistance.CountryRegionRole;
 import com.next.aap.core.persistance.CountryRole;
 import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
+import com.next.aap.core.persistance.Donation;
+import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
 import com.next.aap.core.persistance.FacebookAccount;
@@ -92,6 +97,8 @@ import com.next.aap.core.persistance.dao.CountryRegionRoleDao;
 import com.next.aap.core.persistance.dao.CountryRoleDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
 import com.next.aap.core.persistance.dao.DistrictRoleDao;
+import com.next.aap.core.persistance.dao.DonationDao;
+import com.next.aap.core.persistance.dao.DonationDumpDao;
 import com.next.aap.core.persistance.dao.EmailDao;
 import com.next.aap.core.persistance.dao.FacebookAccountDao;
 import com.next.aap.core.persistance.dao.FacebookAppDao;
@@ -135,6 +142,7 @@ import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
+import com.next.aap.web.dto.CreationType;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
@@ -253,14 +261,250 @@ public class AapServiceImpl implements AapService, Serializable {
 	private PlannedEmailDao plannedEmailDao;
 	@Autowired
 	private VolunteerDao volunteerDao;
-	
+	@Autowired
+	private DonationDao donationDao;
+	@Autowired
+	private DonationDumpDao donationDumpDao;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
 
+	Map<String, String> countryCodeMap = new HashMap<>();
+	
+	@PostConstruct
+	public void init(){
+		countryCodeMap.put("AF", "Afghanistan");
+		countryCodeMap.put("AL", "Albania");
+		countryCodeMap.put("DZ", "Algeria");
+		countryCodeMap.put("AS", "American Samoa");
+		countryCodeMap.put("AD", "Andorra");
+		countryCodeMap.put("AO", "Angola");
+		countryCodeMap.put("AI", "Anguilla");
+		countryCodeMap.put("AQ", "Antarctica");
+		countryCodeMap.put("AG", "Antigua and Barbuda");
+		countryCodeMap.put("AR", "Argentina");
+		countryCodeMap.put("AM", "Armenia");
+		countryCodeMap.put("AW", "Aruba");
+		countryCodeMap.put("AU", "Australia");
+		countryCodeMap.put("AT", "Austria");
+		countryCodeMap.put("AZ", "Azerbaijan");
+		countryCodeMap.put("BS", "Bahamas");
+		countryCodeMap.put("BH", "Bahrain");
+		countryCodeMap.put("BD", "Bangladesh");
+		countryCodeMap.put("BB", "Barbados");
+		countryCodeMap.put("BY", "Belarus");
+		countryCodeMap.put("BE", "Belgium");
+		countryCodeMap.put("BZ", "Belize");
+		countryCodeMap.put("BJ", "Benin");
+		countryCodeMap.put("BM", "Bermuda");
+		countryCodeMap.put("BT", "Bhutan");
+		countryCodeMap.put("BO", "Bolivia");
+		countryCodeMap.put("BA", "Bosnia and Herzegovina");
+		countryCodeMap.put("BW", "Botswana");
+		countryCodeMap.put("BR", "Brazil");
+		countryCodeMap.put("IO", "British Indian Ocean Territory");
+		countryCodeMap.put("BN", "Brunei");
+		countryCodeMap.put("BG", "Bulgaria");
+		countryCodeMap.put("BF", "Burkina Faso");
+		countryCodeMap.put("BI", "Burundi");
+		countryCodeMap.put("KH", "Cambodia");
+		countryCodeMap.put("CM", "Cameroon");
+		countryCodeMap.put("CA", "Canada");
+		countryCodeMap.put("CV", "Cape Verde");
+		countryCodeMap.put("KY", "Cayman Islands");
+		countryCodeMap.put("CF", "Central African Republic");
+		countryCodeMap.put("TD", "Chad");
+		countryCodeMap.put("CL", "Chile");
+		countryCodeMap.put("CN", "China");
+		countryCodeMap.put("CX", "Christmas Island");
+		countryCodeMap.put("CC", "Cocos (Keeling) Islands");
+		countryCodeMap.put("CO", "Colombia");
+		countryCodeMap.put("KM", "Comoros");
+		countryCodeMap.put("CG", "Comoros");
+		countryCodeMap.put("CK", "Cook Islands");
+		countryCodeMap.put("CR", "Costa Rica");
+		countryCodeMap.put("HR", "Croatia");
+		countryCodeMap.put("CU", "Cuba");
+		countryCodeMap.put("CY", "Cyprus");
+		countryCodeMap.put("CZ", "Czech Republic");
+		countryCodeMap.put("DK", "Denmark");
+		countryCodeMap.put("DJ", "Djibouti");
+		countryCodeMap.put("DM", "Dominica");
+		countryCodeMap.put("DO", "Dominican Republic");
+		countryCodeMap.put("EC", "Ecuador");
+		countryCodeMap.put("EG", "Egypt");
+		countryCodeMap.put("SV", "El Salvador");
+		countryCodeMap.put("GQ", "Equatorial Guinea");
+		countryCodeMap.put("ER", "Eritrea");
+		countryCodeMap.put("EE", "Estonia");
+		countryCodeMap.put("ET", "Ethiopia");
+		countryCodeMap.put("FK", "Falkland Islands");
+		countryCodeMap.put("FO", "Faroe Islands");
+		countryCodeMap.put("FJ", "Fiji");
+		countryCodeMap.put("FI", "Finland");
+		countryCodeMap.put("FR", "France");
+		countryCodeMap.put("PF", "French Polynesia");
+		countryCodeMap.put("GA", "Gabon");
+		countryCodeMap.put("GM", "Gambia");
+		countryCodeMap.put("GE", "Georgia");
+		countryCodeMap.put("DE", "Germany");
+		countryCodeMap.put("GH", "Ghana");
+		countryCodeMap.put("GI", "Gibraltar");
+		countryCodeMap.put("GR", "Greece");
+		countryCodeMap.put("GL", "Greenland");
+		countryCodeMap.put("GD", "Grenada");
+		countryCodeMap.put("GU", "Guam");
+		countryCodeMap.put("GT", "Guatemala");
+		countryCodeMap.put("GN", "Guinea");
+		countryCodeMap.put("GW", "Guinea-Bissau");
+		countryCodeMap.put("GY", "Guyana");
+		countryCodeMap.put("HT", "Haiti");
+		countryCodeMap.put("VA", "Holy See (Vatican City)");
+		countryCodeMap.put("HN", "Honduras");
+		countryCodeMap.put("HK", "Hong Kong");
+		countryCodeMap.put("HU", "Hungary");
+		countryCodeMap.put("IS", "Iceland");
+		countryCodeMap.put("IN", "India");
+		countryCodeMap.put("ID", "Indonesia");
+		countryCodeMap.put("IR", "Iran");
+		countryCodeMap.put("IQ", "Iraq");
+		countryCodeMap.put("IE", "Ireland");
+		countryCodeMap.put("IL", "Israel");
+		countryCodeMap.put("IT", "Italy");
+		countryCodeMap.put("JM", "Jamaica");
+		countryCodeMap.put("JP", "Japan");
+		countryCodeMap.put("JO", "Jordan");
+		countryCodeMap.put("KZ", "Kazakhstan");
+		countryCodeMap.put("KE", "Kenya");
+		countryCodeMap.put("KI", "Kiribati");
+		countryCodeMap.put("KW", "Kuwait");
+		countryCodeMap.put("KG", "Kyrgyzstan");
+		countryCodeMap.put("LA", "Laos");
+		countryCodeMap.put("LV", "Latvia");
+		countryCodeMap.put("LB", "Lebanon");
+		countryCodeMap.put("LS", "Lesotho");
+		countryCodeMap.put("LR", "Liberia");
+		countryCodeMap.put("LY", "Libya");
+		countryCodeMap.put("LI", "Liechtenstein");
+		countryCodeMap.put("LT", "Lithuania");
+		countryCodeMap.put("LU", "Luxembourg");
+		countryCodeMap.put("MO", "Macau");
+		countryCodeMap.put("MK", "Macedonia");
+		countryCodeMap.put("MG", "Madagascar");
+		countryCodeMap.put("MW", "Malawi");
+		countryCodeMap.put("MY", "Malaysia");
+		countryCodeMap.put("MV", "Maldives");
+		countryCodeMap.put("ML", "Mali");
+		countryCodeMap.put("MT", "Malta");
+		countryCodeMap.put("MH", "Marshall Islands");
+		countryCodeMap.put("MR", "Mauritania");
+		countryCodeMap.put("MU", "Mauritius");
+		countryCodeMap.put("YT", "Mayotte");
+		countryCodeMap.put("MX", "Mexico");
+		countryCodeMap.put("FM", "Micronesia");
+		countryCodeMap.put("MD", "Moldova");
+		countryCodeMap.put("MC", "Monaco");
+		countryCodeMap.put("MN", "Mongolia");
+		countryCodeMap.put("MS", "Montserrat");
+		countryCodeMap.put("MA", "Morocco");
+		countryCodeMap.put("MZ", "Mozambique");
+		countryCodeMap.put("MM", "Burma (Myanmar)");
+		countryCodeMap.put("NA", "Namibia");
+		countryCodeMap.put("NR", "Nauru");
+		countryCodeMap.put("NP", "Nepal");
+		countryCodeMap.put("NL", "Netherlands");
+		countryCodeMap.put("AN", "Netherlands Antilles");
+		countryCodeMap.put("NC", "New Caledonia");
+		countryCodeMap.put("NZ", "New Zealand");
+		countryCodeMap.put("NI", "Nicaragua");
+		countryCodeMap.put("NE", "Niger");
+		countryCodeMap.put("NG", "Nigeria");
+		countryCodeMap.put("NU", "Niue");
+		countryCodeMap.put("NF", "Norfolk Island");
+		countryCodeMap.put("MP", "Northern Mariana Islands");
+		countryCodeMap.put("NO", "Norway");
+		countryCodeMap.put("OM", "Oman");
+		countryCodeMap.put("PW", "Palau");
+		countryCodeMap.put("PA", "Panama");
+		countryCodeMap.put("PG", "Papua New Guinea");
+		countryCodeMap.put("PY", "Paraguay");
+		countryCodeMap.put("PE", "Peru");
+		countryCodeMap.put("PH", "Philippines");
+		countryCodeMap.put("PN", "Pitcairn Islands");
+		countryCodeMap.put("PL", "Poland");
+		countryCodeMap.put("PT", "Portugal");
+		countryCodeMap.put("PR", "Puerto Rico");
+		countryCodeMap.put("QA", "Qatar");
+		countryCodeMap.put("RO", "Romania");
+		countryCodeMap.put("RU", "Russia");
+		countryCodeMap.put("RW", "Rwanda");
+		countryCodeMap.put("KN", "Saint Kitts and Nevis");
+		countryCodeMap.put("LC", "Saint Lucia");
+		countryCodeMap.put("VC", "Saint Vincent and the Grenadines");
+		countryCodeMap.put("WS", "Samoa");
+		countryCodeMap.put("SM", "San Marino");
+		countryCodeMap.put("ST", "Sao Tome and Principe");
+		countryCodeMap.put("SA", "Saudi Arabia");
+		countryCodeMap.put("SN", "Senegal");
+		countryCodeMap.put("SC", "Seychelles");
+		countryCodeMap.put("SL", "Sierra Leone");
+		countryCodeMap.put("SG", "Singapore");
+		countryCodeMap.put("SK", "Slovakia");
+		countryCodeMap.put("SI", "Slovenia");
+		countryCodeMap.put("SB", "Solomon Islands");
+		countryCodeMap.put("SO", "Somalia");
+		countryCodeMap.put("ZA", "South Africa");
+		countryCodeMap.put("ES", "Spain");
+		countryCodeMap.put("LK", "Sri Lanka");
+		countryCodeMap.put("SH", "Saint Helena");
+		countryCodeMap.put("PM", "Saint Pierre and Miquelon");
+		countryCodeMap.put("SD", "Sudan");
+		countryCodeMap.put("SR", "Suriname");
+		countryCodeMap.put("SJ", "Svalbard");
+		countryCodeMap.put("SZ", "Swaziland");
+		countryCodeMap.put("SE", "Sweden");
+		countryCodeMap.put("CH", "Switzerland");
+		countryCodeMap.put("SY", "Syria");
+		countryCodeMap.put("TW", "Taiwan");
+		countryCodeMap.put("TJ", "Tajikistan");
+		countryCodeMap.put("TZ", "Tanzania");
+		countryCodeMap.put("TH", "Thailand");
+		countryCodeMap.put("TG", "Togo");
+		countryCodeMap.put("TK", "Tokelau");
+		countryCodeMap.put("TO", "Tonga");
+		countryCodeMap.put("TT", "Trinidad and Tobago");
+		countryCodeMap.put("TN", "Tunisia");
+		countryCodeMap.put("TR", "Turkey");
+		countryCodeMap.put("TM", "Turkmenistan");
+		countryCodeMap.put("TC", "Turks and Caicos Islands");
+		countryCodeMap.put("TV", "Tuvalu");
+		countryCodeMap.put("UG", "Uganda");
+		countryCodeMap.put("UA", "Ukraine");
+		countryCodeMap.put("AE", "United Arab Emirates");
+		countryCodeMap.put("GB", "United Kingdom");
+		countryCodeMap.put("US", "United States");
+		countryCodeMap.put("UY", "Uruguay");
+		countryCodeMap.put("UZ", "Uzbekistan");
+		countryCodeMap.put("VU", "Vanuatu");
+		countryCodeMap.put("VE", "Venezuela");
+		countryCodeMap.put("VN", "Vietnam");
+		countryCodeMap.put("VI", "US Virgin Islands");
+		countryCodeMap.put("VG", "British Virgin Islands");
+		countryCodeMap.put("WF", "Wallis and Futuna");
+		countryCodeMap.put("EH", "Western Sahara");
+		countryCodeMap.put("YE", "Yemen");
+		countryCodeMap.put("YU", "Serbia");
+		countryCodeMap.put("ZM", "Zambia");
+		countryCodeMap.put("ZW", "Zimbabwe");
+		countryCodeMap.put("CG", "Republic of the Congo");
+		countryCodeMap.put("CD", "Democratic Republic of the Congo");
+		countryCodeMap.put("KP", "North Korea");
+		countryCodeMap.put("KR", "South Korea");
+	}
+
 	@Override
 	@Transactional
-	public UserDto saveFacebookUser(Long existingUserId, Connection<Facebook> connection, String facebookAppId) {
+	public UserDto saveFacebookUser(Long existingUserId, Connection<Facebook> connection, String facebookAppId) throws AppException{
 		User user = null;
 		// See if user exists
 		if (existingUserId != null && existingUserId > 0) {
@@ -412,8 +656,125 @@ public class AapServiceImpl implements AapService, Serializable {
 		return returnUsers;
 	}
 
-	private void mergeUser(User targetUser, User sourceUser) {
-
+	private void mergeUser(User targetUser, User sourceUser) throws AppException {
+		if(targetUser == null || sourceUser == null){
+			//Nothing to merge
+			return;
+		}
+		if(targetUser.equals(sourceUser)){
+			//Nothing to merge, both are same user
+			return;
+		}
+		if(targetUser.getMembershipNumber() != null && sourceUser.getMembershipNumber() != null){
+			if(!targetUser.getMembershipNumber().equals(sourceUser.getMembershipNumber())){
+				throw new AppException("User "+targetUser.getId() +" and User "+ sourceUser.getId()+" can not be merged as both have different membership number");
+			}
+		}
+		if(targetUser.getCreationType() == CreationType.SelfServiceUser && sourceUser.getCreationType() == CreationType.SelfServiceUser){
+			throw new AppException("User "+targetUser.getId() +" and User "+ sourceUser.getId()+" can not be merged as both created by self Service user");
+		}
+		//We will not copy any Admin related roles from source user to target user.
+		//Only Donation, Facebook Accounts, twitter acounts etc will be merged
+		if(sourceUser.getAssemblyConstituencyLiving() != null && targetUser.getAssemblyConstituencyLiving() == null){
+			targetUser.setAssemblyConstituencyLiving(sourceUser.getAssemblyConstituencyLiving());
+		}
+		if(sourceUser.getAssemblyConstituencyVoting() != null && targetUser.getAssemblyConstituencyVoting() == null){
+			targetUser.setAssemblyConstituencyVoting(sourceUser.getAssemblyConstituencyVoting());
+		}
+		if(sourceUser.getCreationType() == CreationType.SelfServiceUser || targetUser.getCreationType() == CreationType.SelfServiceUser){
+			targetUser.setCreationType(CreationType.SelfServiceUser);
+		}
+		if(sourceUser.getDateOfBirth() != null && targetUser.getDateOfBirth() == null){
+			targetUser.setDateOfBirth(sourceUser.getDateOfBirth());
+		}
+		if(!StringUtil.isEmpty(sourceUser.getAddress()) && StringUtil.isEmpty(targetUser.getAddress())){
+			targetUser.setAddress(sourceUser.getAddress());
+		}
+		if(sourceUser.getDistrictLiving() != null && targetUser.getDistrictLiving() == null){
+			targetUser.setDistrictLiving(sourceUser.getDistrictLiving());
+		}
+		if(sourceUser.getDistrictVoting() != null && targetUser.getDistrictVoting() == null){
+			targetUser.setDistrictVoting(sourceUser.getDistrictVoting());
+		}
+		//Currently we support only one facebook account so no need to merge Facebook accounts
+		//all facebook account user's creation type will be SelfService User 
+		/*
+		if(sourceUser.getFacebookAccounts() != null && !sourceUser.getFacebookAccounts().isEmpty()){
+			targetUser.setDistrictVoting(sourceUser.getDistrictVoting());
+		}
+		*/
+		if(!StringUtil.isEmpty(sourceUser.getFatherName()) && StringUtil.isEmpty(targetUser.getFatherName())){
+			targetUser.setFatherName(sourceUser.getFatherName());
+		}
+		if(!StringUtil.isEmpty(sourceUser.getGender()) && (StringUtil.isEmpty(targetUser.getGender()) || targetUser.getGender().equals("NotSpecified"))){
+			targetUser.setGender(sourceUser.getGender());
+		}
+		//Interests can be merged
+		if(sourceUser.getInterests() != null && !sourceUser.getInterests().isEmpty()){
+			if(targetUser.getInterests() == null){
+				targetUser.setInterests(new HashSet<Interest>());
+			}
+			targetUser.getInterests().addAll(sourceUser.getInterests());
+		}
+		
+		if(!StringUtil.isEmpty(sourceUser.getMembershipNumber()) && StringUtil.isEmpty(targetUser.getMembershipNumber())){
+			targetUser.setMembershipNumber(sourceUser.getMembershipNumber());
+			targetUser.setMembershipStatus(sourceUser.getMembershipStatus());
+			targetUser.setMembershipConfirmedBy(sourceUser.getMembershipConfirmedBy());
+		}
+		if(!StringUtil.isEmpty(sourceUser.getMotherName()) && StringUtil.isEmpty(targetUser.getMotherName())){
+			targetUser.setMotherName(sourceUser.getMotherName());
+		}
+		if(sourceUser.getNriCountry() != null && targetUser.getNriCountry() == null){
+			targetUser.setNriCountry(sourceUser.getNriCountry());
+		}
+		if(sourceUser.getNriCountryRegion() != null && targetUser.getNriCountryRegion() == null){
+			targetUser.setNriCountryRegion(sourceUser.getNriCountryRegion());
+		}
+		if(sourceUser.getNriCountryRegionArea() != null && targetUser.getNriCountryRegionArea() == null){
+			targetUser.setNriCountryRegionArea(sourceUser.getNriCountryRegionArea());
+		}
+		if(sourceUser.getParliamentConstituencyLiving() != null && targetUser.getParliamentConstituencyLiving() == null){
+			targetUser.setParliamentConstituencyLiving(sourceUser.getParliamentConstituencyLiving());
+		}
+		if(sourceUser.getParliamentConstituencyVoting() != null && targetUser.getParliamentConstituencyVoting() == null){
+			targetUser.setParliamentConstituencyVoting(sourceUser.getParliamentConstituencyVoting());
+		}
+		if(sourceUser.getPassportNumber() != null && targetUser.getPassportNumber() == null){
+			targetUser.setPassportNumber(sourceUser.getPassportNumber());
+		}
+		if(!StringUtil.isEmpty(sourceUser.getProfilePic()) && StringUtil.isEmpty(targetUser.getProfilePic())){
+			targetUser.setProfilePic(sourceUser.getProfilePic());
+		}
+		if(sourceUser.getStateLiving() != null && targetUser.getStateLiving() == null){
+			targetUser.setStateLiving(sourceUser.getStateLiving());
+		}
+		if(sourceUser.getStateVoting() != null && targetUser.getStateVoting() == null){
+			targetUser.setStateVoting(sourceUser.getStateVoting());
+		}
+		if(!StringUtil.isEmpty(sourceUser.getVoterId()) && StringUtil.isEmpty(targetUser.getVoterId())){
+			targetUser.setVoterId(sourceUser.getVoterId());
+		}
+		//Twiitter accounts can not be merged as they will belongs to different Self Service uSer, but in future we will
+		//give option to user to merge users
+		
+		//Move donations from source user to target user
+		if(sourceUser.getDonations() != null && !sourceUser.getDonations().isEmpty()){
+			for(Donation oneDonation:sourceUser.getDonations()){
+				oneDonation.setUser(targetUser);
+			}
+		}
+		if(sourceUser.getEmails() != null && !sourceUser.getEmails().isEmpty()){
+			for(Email oneEmail:sourceUser.getEmails()){
+				oneEmail.setUser(targetUser);
+			}
+		}
+		if(sourceUser.getPhones() != null && !sourceUser.getPhones().isEmpty()){
+			for(Phone onePhone:sourceUser.getPhones()){
+				onePhone.setUser(targetUser);
+			}
+		}
+		
 	}
 
 	@Override
@@ -628,9 +989,9 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public UserDto saveUser(UserDto userDto)  throws AppException {
+	public UserDto saveUser(UserDto userDto) throws AppException {
 		User user;
-		System.out.println("userDto.getId = "+userDto.getId());
+		System.out.println("userDto.getId = " + userDto.getId());
 		if (userDto.getId() == null || userDto.getId() <= 0) {
 			user = new User();
 		} else {
@@ -641,11 +1002,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 
 		SearchMemberResultDto searchMemberResultDto = searchExistingUser(userDto);
-		if(searchMemberResultDto != null && searchMemberResultDto.isUserAlreadyExists()){
-			if(userDto.getId() == null || userDto.getId() <= 0){
+		if (searchMemberResultDto != null && searchMemberResultDto.isUserAlreadyExists()) {
+			if (userDto.getId() == null || userDto.getId() <= 0) {
 				throw new RuntimeException(searchMemberResultDto.getUserAlreadyExistsMessage());
-			}else{
-				if(!searchMemberResultDto.getUsers().get(0).getId().equals(userDto.getId())){
+			} else {
+				if (!searchMemberResultDto.getUsers().get(0).getId().equals(userDto.getId())) {
 					throw new RuntimeException(searchMemberResultDto.getUserAlreadyExistsMessage());
 				}
 			}
@@ -952,70 +1313,105 @@ public class AapServiceImpl implements AapService, Serializable {
 
 		// Now create all custom Roles
 		/*
-		createRoleWithPermissions("VoiceOfAapFacebookAdminRole", " User of this role will be able to make Facebook post using voice of AAP Application", true,
-				true, false, false,true, true,false, AppPermission.ADMIN_VOICE_OF_AAP_FB);
-		createRoleWithPermissions("VoiceOfAapTwitterAdminRole", "User of this role will be able to make Twitter post using voice of AAP Application", true,
-				true, false, false,true, true,false, AppPermission.ADMIN_VOICE_OF_AAP_TWITTER);
-		// News Related Roles
-		createRoleWithPermissions("NewsAdminRole", "User of this role will be able to create/update/Approve/delete news for a location", true, true, true,
-				true,true, true,false, AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
-
-		createRoleWithPermissions("NewsReporterRole", "User of this role will be able to create/update news for a location", true, true, true, true,
-				true, true,false,AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS);
-
-		createRoleWithPermissions("NewsEditorRole", "User of this role will be able to create/update/approve and publish news for a location", true, true,
-				true, true, true, true,false,AppPermission.CREATE_NEWS, AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
-
-		createRoleWithPermissions("NewsApproverRole", "User of this role will be able to approve/publish existing news for a location", true, true, true, true,
-				true, true,false,AppPermission.APPROVE_NEWS);
-
-		createRoleWithPermissions("GlobalMemberAdminRole",
-				"User of this role will be able to add new member at any location and will be able to update any member", false, false, false, false,
-				true, true,false,AppPermission.ADD_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.VIEW_MEMBER);
-
-		createRoleWithPermissions("MemberAdminRole",
-				"User of this role will be able to add new member at any location and will be able to update member at his location only", true, true, true,
-				true, true, true,false,AppPermission.ADD_MEMBER, AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
-
-		createRoleWithPermissions("AdminEditUserRoles", "User of this role will be able to add or remove user roles on a location", true, true, true, true,
-				true, true,false,AppPermission.EDIT_USER_ROLES);
-
-		createRoleWithPermissions("BlogAdminRole", "User of this role will be able to create/update/Approve/delete blog for a location", true, true, true,
-				true, true, true,false,AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
-
-		createRoleWithPermissions("BlogReporterRole", "User of this role will be able to create/update blog for a location", true, true, true, true,
-				true, true,false,AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG);
-
-		createRoleWithPermissions("BlogEditorRole", "User of this role will be able to create/update/approve and publish blog for a location", true, true,
-				true, true, true, true,false,AppPermission.CREATE_BLOG, AppPermission.UPDATE_BLOG, AppPermission.APPROVE_BLOG);
-
-		createRoleWithPermissions("BlogApproverRole", "User of this role will be able to approve/publish existing blog for a location", true, true, true, true,
-				true, true,false,AppPermission.APPROVE_BLOG);
-
-		//Poll
-		createRoleWithPermissions("PollAdminRole", "User of this role will be able to create/update/Approve/delete poll for a location", true, true, true,
-				true, true, true,false,AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL, AppPermission.DELETE_POLL, AppPermission.APPROVE_POLL);
-
-		createRoleWithPermissions("PollReporterRole", "User of this role will be able to create/update poll for a location", true, true, true, true,
-				true, true,false,AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL);
-
-		createRoleWithPermissions("PollEditorRole", "User of this role will be able to create/update/approve and publish poll for a location", true, true,
-				true, true, true, true,false,AppPermission.CREATE_POLL, AppPermission.UPDATE_POLL, AppPermission.APPROVE_POLL);
-
-		createRoleWithPermissions("PollApproverRole", "User of this role will be able to approve/publish existing poll for a location", true, true, true, true,
-				true, true,false,AppPermission.APPROVE_POLL);
-		
-		createRoleWithPermissions("Treasury", "User of this role will be able to do all Treasury operation of a location", true, true, true, true,
-				false, false,false,AppPermission.TREASURY);
-		createRoleWithPermissions("OfficeAdmin", "User of this role will be able to do all Office related operation of a location, i.e. editing Office address,contact information etc", true, true, true, true,
-				true, true,false,AppPermission.EDIT_OFFICE_ADDRESS);
-		*/
-		createRoleWithPermissions("SmsSender", "User of this role will be able to send SMS to all people in his/her location", true, true, true, true,
-				true, true,false,AppPermission.ADMIN_SMS);
+		 * createRoleWithPermissions("VoiceOfAapFacebookAdminRole",
+		 * " User of this role will be able to make Facebook post using voice of AAP Application"
+		 * , true, true, false, false,true, true,false,
+		 * AppPermission.ADMIN_VOICE_OF_AAP_FB);
+		 * createRoleWithPermissions("VoiceOfAapTwitterAdminRole",
+		 * "User of this role will be able to make Twitter post using voice of AAP Application"
+		 * , true, true, false, false,true, true,false,
+		 * AppPermission.ADMIN_VOICE_OF_AAP_TWITTER); // News Related Roles
+		 * createRoleWithPermissions("NewsAdminRole",
+		 * "User of this role will be able to create/update/Approve/delete news for a location"
+		 * , true, true, true, true,true, true,false, AppPermission.CREATE_NEWS,
+		 * AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS,
+		 * AppPermission.APPROVE_NEWS);
+		 * 
+		 * createRoleWithPermissions("NewsReporterRole",
+		 * "User of this role will be able to create/update news for a location"
+		 * , true, true, true, true, true, true,false,AppPermission.CREATE_NEWS,
+		 * AppPermission.UPDATE_NEWS);
+		 * 
+		 * createRoleWithPermissions("NewsEditorRole",
+		 * "User of this role will be able to create/update/approve and publish news for a location"
+		 * , true, true, true, true, true, true,false,AppPermission.CREATE_NEWS,
+		 * AppPermission.UPDATE_NEWS, AppPermission.APPROVE_NEWS);
+		 * 
+		 * createRoleWithPermissions("NewsApproverRole",
+		 * "User of this role will be able to approve/publish existing news for a location"
+		 * , true, true, true, true, true,
+		 * true,false,AppPermission.APPROVE_NEWS);
+		 * 
+		 * createRoleWithPermissions("GlobalMemberAdminRole",
+		 * "User of this role will be able to add new member at any location and will be able to update any member"
+		 * , false, false, false, false, true,
+		 * true,false,AppPermission.ADD_MEMBER,
+		 * AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.VIEW_MEMBER);
+		 * 
+		 * createRoleWithPermissions("MemberAdminRole",
+		 * "User of this role will be able to add new member at any location and will be able to update member at his location only"
+		 * , true, true, true, true, true, true,false,AppPermission.ADD_MEMBER,
+		 * AppPermission.UPDATE_MEMBER, AppPermission.VIEW_MEMBER);
+		 * 
+		 * createRoleWithPermissions("AdminEditUserRoles",
+		 * "User of this role will be able to add or remove user roles on a location"
+		 * , true, true, true, true, true,
+		 * true,false,AppPermission.EDIT_USER_ROLES);
+		 * 
+		 * createRoleWithPermissions("BlogAdminRole",
+		 * "User of this role will be able to create/update/Approve/delete blog for a location"
+		 * , true, true, true, true, true, true,false,AppPermission.CREATE_BLOG,
+		 * AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG,
+		 * AppPermission.APPROVE_BLOG);
+		 * 
+		 * createRoleWithPermissions("BlogReporterRole",
+		 * "User of this role will be able to create/update blog for a location"
+		 * , true, true, true, true, true, true,false,AppPermission.CREATE_BLOG,
+		 * AppPermission.UPDATE_BLOG);
+		 * 
+		 * createRoleWithPermissions("BlogEditorRole",
+		 * "User of this role will be able to create/update/approve and publish blog for a location"
+		 * , true, true, true, true, true, true,false,AppPermission.CREATE_BLOG,
+		 * AppPermission.UPDATE_BLOG, AppPermission.APPROVE_BLOG);
+		 * 
+		 * createRoleWithPermissions("BlogApproverRole",
+		 * "User of this role will be able to approve/publish existing blog for a location"
+		 * , true, true, true, true, true,
+		 * true,false,AppPermission.APPROVE_BLOG);
+		 * 
+		 * //Poll createRoleWithPermissions("PollAdminRole",
+		 * "User of this role will be able to create/update/Approve/delete poll for a location"
+		 * , true, true, true, true, true, true,false,AppPermission.CREATE_POLL,
+		 * AppPermission.UPDATE_POLL, AppPermission.DELETE_POLL,
+		 * AppPermission.APPROVE_POLL);
+		 * 
+		 * createRoleWithPermissions("PollReporterRole",
+		 * "User of this role will be able to create/update poll for a location"
+		 * , true, true, true, true, true, true,false,AppPermission.CREATE_POLL,
+		 * AppPermission.UPDATE_POLL);
+		 * 
+		 * createRoleWithPermissions("PollEditorRole",
+		 * "User of this role will be able to create/update/approve and publish poll for a location"
+		 * , true, true, true, true, true, true,false,AppPermission.CREATE_POLL,
+		 * AppPermission.UPDATE_POLL, AppPermission.APPROVE_POLL);
+		 * 
+		 * createRoleWithPermissions("PollApproverRole",
+		 * "User of this role will be able to approve/publish existing poll for a location"
+		 * , true, true, true, true, true,
+		 * true,false,AppPermission.APPROVE_POLL);
+		 * 
+		 * createRoleWithPermissions("Treasury",
+		 * "User of this role will be able to do all Treasury operation of a location"
+		 * , true, true, true, true, false, false,false,AppPermission.TREASURY);
+		 * createRoleWithPermissions("OfficeAdmin",
+		 * "User of this role will be able to do all Office related operation of a location, i.e. editing Office address,contact information etc"
+		 * , true, true, true, true, true,
+		 * true,false,AppPermission.EDIT_OFFICE_ADDRESS);
+		 */
+		createRoleWithPermissions("SmsSender", "User of this role will be able to send SMS to all people in his/her location", true, true, true, true, true,
+				true, false, AppPermission.ADMIN_SMS);
 		createRoleWithPermissions("EmailSender", "User of this role will be able to send EMAIL to all people in his/her location", true, true, true, true,
-				true, true,false,AppPermission.ADMIN_EMAIL);
-		
-
+				true, true, false, AppPermission.ADMIN_EMAIL);
 
 		logger.info("All Roles and permissions are created");
 	}
@@ -1094,39 +1490,39 @@ public class AapServiceImpl implements AapService, Serializable {
 				}
 			}
 		}
-		if(addCountryRole){
+		if (addCountryRole) {
 			List<Country> countries = countryDao.getAllCountries();
 			CountryRole oneCountryRole;
-			for(Country oneCountry:countries){
-				if(oneCountry.getName().equals("India")){
+			for (Country oneCountry : countries) {
+				if (oneCountry.getName().equals("India")) {
 					continue;
 				}
 				oneCountryRole = countryRoleDao.getCountryRoleByCountryIdAndRoleId(oneCountry.getId(), role.getId());
-				if(oneCountryRole == null){
+				if (oneCountryRole == null) {
 					oneCountryRole = new CountryRole();
 					oneCountryRole.setCountry(oneCountry);
 					oneCountryRole.setRole(role);
 					oneCountryRole = countryRoleDao.saveCountryRole(oneCountryRole);
 				}
-				
+
 			}
 		}
-		
-		if(addCountryRegionRole){
+
+		if (addCountryRegionRole) {
 			List<CountryRegion> countryRegions = countryRegionDao.getAllCountryRegions();
 			CountryRegionRole oneCountryRegionRole;
-			for(CountryRegion oneCountryRegion:countryRegions){
+			for (CountryRegion oneCountryRegion : countryRegions) {
 				oneCountryRegionRole = countryRegionRoleDao.getCountryRegionRoleByCountryRegionIdAndRoleId(oneCountryRegion.getId(), role.getId());
-				if(oneCountryRegionRole == null){
+				if (oneCountryRegionRole == null) {
 					oneCountryRegionRole = new CountryRegionRole();
 					oneCountryRegionRole.setCountryRegion(oneCountryRegion);
 					oneCountryRegionRole.setRole(role);
 					oneCountryRegionRole = countryRegionRoleDao.saveCountryRegionRole(oneCountryRegionRole);
 				}
-				
+
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -1258,17 +1654,17 @@ public class AapServiceImpl implements AapService, Serializable {
 				}
 			}
 		}
-		
+
 		Set<CountryRole> countryRoles = user.getCountryRoles();
 		if (countryRoles != null && !countryRoles.isEmpty()) {
 			for (CountryRole oneCountryRole : countryRoles) {
 				if (!oneCountryRole.getRole().getPermissions().isEmpty()) {
-					userRolePermissionDto.addCountryPermissions(convertCountry(oneCountryRole.getCountry()),
-							convertPermissionToAppPermission(oneCountryRole.getRole().getPermissions()));
+					userRolePermissionDto.addCountryPermissions(convertCountry(oneCountryRole.getCountry()), convertPermissionToAppPermission(oneCountryRole
+							.getRole().getPermissions()));
 				}
 			}
 		}
-		
+
 		Set<CountryRegionRole> countryRegionRoles = user.getCountryRegionRoles();
 		if (countryRoles != null && !countryRoles.isEmpty()) {
 			for (CountryRegionRole oneCountryRegionRole : countryRegionRoles) {
@@ -2023,7 +2419,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		News news = newsDao.getNewsById(newsId);
 		return convertContentTweets(news.getTweets());
 	}
-	
+
 	@Override
 	@Transactional
 	public List<ContentTweetDto> getBlogContentTweets(Long newsId) {
@@ -2085,13 +2481,14 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return null;
 	}
+
 	@Override
 	@Transactional
 	public SearchMemberResultDto searchMembers(UserDto searchUserDto) {
 		SearchMemberResultDto searchMemberResult = searchExistingUser(searchUserDto);
-		if(searchMemberResult == null){
+		if (searchMemberResult == null) {
 			searchMemberResult = new SearchMemberResultDto();
-		}else{
+		} else {
 			return searchMemberResult;
 		}
 
@@ -2493,19 +2890,20 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 		}
 			break;
-		case AREA: 
-			/*{
-			if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
-				Set<CountryRegionAreaRole> allNewCountryRegionAreaRoles = new HashSet<>();
-				CountryRegionAreaRole oneCountryRegionAreaRole;
-				for (RoleDto oneRoleDto : userRoleDtos) {
-					oneCountryRegionAreaRole = countryRegionAreaRoleDao.getCountryRegionRoleByCountryRegionIdAndRoleId(locationId, oneRoleDto.getId());
-					allNewCountryRegionAreaRoles.add(oneCountryRegionAreaRole);
-				}
-				user.getCountryRegionRoles().addAll(allNewCountryRegionAreaRoles);
-			}
-		}
-			break;*/
+		case AREA:
+			/*
+			 * { if (userRoleDtos != null && !userRoleDtos.isEmpty()) {
+			 * Set<CountryRegionAreaRole> allNewCountryRegionAreaRoles = new
+			 * HashSet<>(); CountryRegionAreaRole oneCountryRegionAreaRole; for
+			 * (RoleDto oneRoleDto : userRoleDtos) { oneCountryRegionAreaRole =
+			 * countryRegionAreaRoleDao
+			 * .getCountryRegionRoleByCountryRegionIdAndRoleId(locationId,
+			 * oneRoleDto.getId());
+			 * allNewCountryRegionAreaRoles.add(oneCountryRegionAreaRole); }
+			 * user
+			 * .getCountryRegionRoles().addAll(allNewCountryRegionAreaRoles); }
+			 * } break;
+			 */
 			throw new RuntimeException("This has not been implemneted yet");
 		}
 		user = userDao.saveUser(user);
@@ -2765,21 +3163,22 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return convertPollQuestion(pollQuestion);
 	}
-	private PollQuestionDto convertPollQuestion(PollQuestion pollQuestion){
-		if(pollQuestion == null){
+
+	private PollQuestionDto convertPollQuestion(PollQuestion pollQuestion) {
+		if (pollQuestion == null) {
 			return null;
 		}
 		PollQuestionDto pollQuestionDto = new PollQuestionDto();
 		BeanUtils.copyProperties(pollQuestion, pollQuestionDto);
 		return pollQuestionDto;
 	}
-	
-	private List<PollQuestionDto> convertPollQuestions(List<PollQuestion> pollQuestions){
+
+	private List<PollQuestionDto> convertPollQuestions(List<PollQuestion> pollQuestions) {
 		List<PollQuestionDto> pollQuestionDtos = new ArrayList<>();
-		if(pollQuestions == null){
+		if (pollQuestions == null) {
 			return pollQuestionDtos;
 		}
-		for(PollQuestion onePollQuestion:pollQuestions){
+		for (PollQuestion onePollQuestion : pollQuestions) {
 			pollQuestionDtos.add(convertPollQuestion(onePollQuestion));
 		}
 		return pollQuestionDtos;
@@ -2824,22 +3223,22 @@ public class AapServiceImpl implements AapService, Serializable {
 		PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionId);
 		return convertPollAnswers(pollQuestion.getPollAnswers());
 	}
-	
-	private PollAnswerDto convertPollAnswer(PollAnswer pollAnswer){
-		if(pollAnswer == null){
+
+	private PollAnswerDto convertPollAnswer(PollAnswer pollAnswer) {
+		if (pollAnswer == null) {
 			return null;
 		}
 		PollAnswerDto pollAnswerDto = new PollAnswerDto();
 		BeanUtils.copyProperties(pollAnswer, pollAnswerDto);
 		return pollAnswerDto;
 	}
-	
-	private List<PollAnswerDto> convertPollAnswers(Collection<PollAnswer> pollAnswers){
+
+	private List<PollAnswerDto> convertPollAnswers(Collection<PollAnswer> pollAnswers) {
 		List<PollAnswerDto> pollAnswerDtos = new ArrayList<>();
-		if(pollAnswers == null){
+		if (pollAnswers == null) {
 			return pollAnswerDtos;
 		}
-		for(PollAnswer onePollAnswer:pollAnswers){
+		for (PollAnswer onePollAnswer : pollAnswers) {
 			pollAnswerDtos.add(convertPollAnswer(onePollAnswer));
 		}
 		return pollAnswerDtos;
@@ -2854,14 +3253,14 @@ public class AapServiceImpl implements AapService, Serializable {
 		return convertPollQuestion(pollQuestion);
 	}
 
-	private Account getAdminAccount(User adminUser){
+	private Account getAdminAccount(User adminUser) {
 		Account account = accountDao.getAdminAccountByUserId(adminUser.getId());
-		if(account == null){
+		if (account == null) {
 			account = new Account();
 			account.setAccountOwner(adminUser);
 			account.setAccountType(AccountType.Admin);
 			account.setBalance(0.0);
-			account.setDescription("Admin account for " +adminUser.getMembershipNumber());
+			account.setDescription("Admin account for " + adminUser.getMembershipNumber());
 			account.setDateCreated(new Date());
 			account.setDateModified(new Date());
 			account.setGlobal(false);
@@ -2869,63 +3268,67 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return account;
 	}
-	private Account getTreasuryCashAccount(PostLocationType locationType, Long locationId){
+
+	private Account getTreasuryCashAccount(PostLocationType locationType, Long locationId) {
 		return getTreasuryAccount(locationType, locationId, AccountType.TreasuryCash);
 	}
-	private Account getTreasuryBankAccount(PostLocationType locationType, Long locationId){
+
+	private Account getTreasuryBankAccount(PostLocationType locationType, Long locationId) {
 		return getTreasuryAccount(locationType, locationId, AccountType.TreasuryBank);
 	}
-	private Account getTreasuryAccount(PostLocationType locationType, Long locationId, AccountType accountType){
+
+	private Account getTreasuryAccount(PostLocationType locationType, Long locationId, AccountType accountType) {
 		Account account = null;
 		switch (locationType) {
 		case Global:
-			account =  accountDao.getGlobalTreasuryAccount(accountType);
+			account = accountDao.getGlobalTreasuryAccount(accountType);
 			break;
 		case STATE:
-			account =  accountDao.getStateTreasuryAccount(locationId, accountType);
+			account = accountDao.getStateTreasuryAccount(locationId, accountType);
 			break;
 		case DISTRICT:
-			account =  accountDao.getDistrictTreasuryAccount(locationId, accountType);
+			account = accountDao.getDistrictTreasuryAccount(locationId, accountType);
 			break;
 		case AC:
-			account =  accountDao.getAcTreasuryAccount(locationId, accountType);
+			account = accountDao.getAcTreasuryAccount(locationId, accountType);
 			break;
 		case PC:
-			account =  accountDao.getPcTreasuryAccount(locationId, accountType);
+			account = accountDao.getPcTreasuryAccount(locationId, accountType);
 			break;
 
 		default:
 			break;
 		}
-		if(account == null){
+		if (account == null) {
 			account = new Account();
 			account.setAccountType(accountType);
 			account.setBalance(0.0);
-			if(locationType == PostLocationType.Global){
-				account.setDescription("National Treasury account" );
+			if (locationType == PostLocationType.Global) {
+				account.setDescription("National Treasury account");
 				account.setGlobal(true);
-			}else{
-				account.setDescription("Treasury account for "+locationType+" locationId" );
+			} else {
+				account.setDescription("Treasury account for " + locationType + " locationId");
 				account.setGlobal(false);
 			}
-			
+
 			account.setDateCreated(new Date());
 			account.setDateModified(new Date());
-			
+
 			account = accountDao.saveAccount(account);
 		}
 		return account;
 	}
-	private void addAccountTransaction(Account account, double amount, User adminUser, Date now, String description, 
-			AccountTransactionMode accountTransactionMode, AccountTransactionType accountTransactionType){
+
+	private void addAccountTransaction(Account account, double amount, User adminUser, Date now, String description,
+			AccountTransactionMode accountTransactionMode, AccountTransactionType accountTransactionType) {
 		AccountTransaction accountTransaction = new AccountTransaction();
 		accountTransaction.setAccount(account);
 		accountTransaction.setAccountTransactionMode(accountTransactionMode);
 		accountTransaction.setAccountTransactionType(accountTransactionType);
 		accountTransaction.setAmount(amount);
-		if(accountTransactionType == AccountTransactionType.Credit){
-			accountTransaction.setBalance(account.getBalance() + amount);	
-		}else{
+		if (accountTransactionType == AccountTransactionType.Credit) {
+			accountTransaction.setBalance(account.getBalance() + amount);
+		} else {
 			accountTransaction.setBalance(account.getBalance() - amount);
 		}
 		accountTransaction.setDateCreated(now);
@@ -2935,51 +3338,50 @@ public class AapServiceImpl implements AapService, Serializable {
 		accountTransaction.setDescription(description);
 		accountTransaction.setTransactionDate(now);
 		accountTransaction = accountTransactionDao.saveAccountTransaction(accountTransaction);
-		
-		if(accountTransactionType == AccountTransactionType.Credit){
-			account.setBalance(account.getBalance() + amount);	
-		}else{
+
+		if (accountTransactionType == AccountTransactionType.Credit) {
+			account.setBalance(account.getBalance() + amount);
+		} else {
 			account.setBalance(account.getBalance() - amount);
 		}
-		
+
 	}
-	
+
 	@Override
 	@Transactional
 	public UserDto receiveMembershipFee(Long userId, double amount, Long adminUserId) {
 
-		if(amount < DataUtil.MEMBERSHIP_FEE){
-			throw new RuntimeException("Amount must be more then " + DataUtil.MEMBERSHIP_FEE+ " Rs");
+		if (amount < DataUtil.MEMBERSHIP_FEE) {
+			throw new RuntimeException("Amount must be more then " + DataUtil.MEMBERSHIP_FEE + " Rs");
 		}
 		User user = userDao.getUserById(userId);
 		User adminUser = userDao.getUserById(adminUserId);
-		
-		//First COnfirm Membership
+
+		// First COnfirm Membership
 		user.setMembershipStatus("Confirmed");
 		user.setMembershipConfirmedBy(adminUser);
 		user = userDao.saveUser(user);
-		
-		//Now handle accounting
+
+		// Now handle accounting
 		Account adminAccount = getAdminAccount(adminUser);
-		//create Membership transaction under this account
+		// create Membership transaction under this account
 		Date now = new Date();
-		
-		addAccountTransaction(adminAccount, DataUtil.MEMBERSHIP_FEE, adminUser, now, "Membership fee for "+user.getMembershipNumber()+" , "+user.getName(),
-				AccountTransactionMode.Cash, AccountTransactionType.Credit);
-		
-		
-		if(amount > DataUtil.MEMBERSHIP_FEE){
+
+		addAccountTransaction(adminAccount, DataUtil.MEMBERSHIP_FEE, adminUser, now,
+				"Membership fee for " + user.getMembershipNumber() + " , " + user.getName(), AccountTransactionMode.Cash, AccountTransactionType.Credit);
+
+		if (amount > DataUtil.MEMBERSHIP_FEE) {
 			double donationAmount = amount - DataUtil.MEMBERSHIP_FEE;
-			//TODO create a donation entry, will be done later
-			
-			addAccountTransaction(adminAccount, donationAmount, adminUser, now, "Donation by "+user.getMembershipNumber()+" , "+user.getName(),
+			// TODO create a donation entry, will be done later
+
+			addAccountTransaction(adminAccount, donationAmount, adminUser, now, "Donation by " + user.getMembershipNumber() + " , " + user.getName(),
 					AccountTransactionMode.Cash, AccountTransactionType.Credit);
 		}
-		
-		//now update overall account balance
+
+		// now update overall account balance
 		adminAccount.setBalance(adminAccount.getBalance() + amount);
 		adminAccount = accountDao.saveAccount(adminAccount);
-		
+
 		return convertUser(user);
 	}
 
@@ -3006,14 +3408,14 @@ public class AapServiceImpl implements AapService, Serializable {
 			break;
 		default:
 		}
-		if(admins != null){
+		if (admins != null) {
 			accounts = accountDao.getAccountsByUserId(admins);
 		}
 		return convertAdminAccounts(accounts);
 	}
-	
-	private AdminAccountDto convertAdminAccount(Account oneAccount){
-		if(oneAccount == null){
+
+	private AdminAccountDto convertAdminAccount(Account oneAccount) {
+		if (oneAccount == null) {
 			return null;
 		}
 		AdminAccountDto adminAccountDto = new AdminAccountDto();
@@ -3021,12 +3423,13 @@ public class AapServiceImpl implements AapService, Serializable {
 		adminAccountDto.setAccountOwnerDto(convertUser(oneAccount.getAccountOwner()));
 		return adminAccountDto;
 	}
-	private List<AdminAccountDto> convertAdminAccounts(List<Account> accounts){
+
+	private List<AdminAccountDto> convertAdminAccounts(List<Account> accounts) {
 		List<AdminAccountDto> adminAccountDtos = new ArrayList<>();
-		if(accounts == null){
+		if (accounts == null) {
 			return null;
 		}
-		for(Account oneAccount : accounts){
+		for (Account oneAccount : accounts) {
 			adminAccountDtos.add(convertAdminAccount(oneAccount));
 		}
 		return adminAccountDtos;
@@ -3065,22 +3468,22 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return convertOffices(offices);
 	}
-	
-	private OfficeDto convertOffice(Office office){
-		if(office == null){
+
+	private OfficeDto convertOffice(Office office) {
+		if (office == null) {
 			return null;
 		}
 		OfficeDto officeDto = new OfficeDto();
 		BeanUtils.copyProperties(office, officeDto);
 		return officeDto;
 	}
-	
-	private List<OfficeDto> convertOffices(Collection<Office> offices){
+
+	private List<OfficeDto> convertOffices(Collection<Office> offices) {
 		List<OfficeDto> returnList = new ArrayList<>();
-		if(offices == null){
+		if (offices == null) {
 			return returnList;
 		}
-		for(Office oneOffice:offices){
+		for (Office oneOffice : offices) {
 			returnList.add(convertOffice(oneOffice));
 		}
 		return returnList;
@@ -3090,10 +3493,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public OfficeDto saveOffice(OfficeDto officeDto) {
 		Office office = null;
-		if(officeDto.getId() == null || officeDto.getId() <= 0){
+		if (officeDto.getId() == null || officeDto.getId() <= 0) {
 			office = new Office();
 			office.setDateCreated(new Date());
-		}else{
+		} else {
 			office = officeDao.getOfficeById(officeDto.getId());
 		}
 		office.setAddress(officeDto.getAddress());
@@ -3110,45 +3513,45 @@ public class AapServiceImpl implements AapService, Serializable {
 		office.setNational(officeDto.isNational());
 		office.setOtherInformation(officeDto.getOtherInformation());
 		office.setTwitterHandle(officeDto.getTwitterHandle());
-		
-		if(officeDto.getAssemblyConstituencyId() != null && officeDto.getAssemblyConstituencyId() >0){
+
+		if (officeDto.getAssemblyConstituencyId() != null && officeDto.getAssemblyConstituencyId() > 0) {
 			AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(officeDto.getAssemblyConstituencyId());
 			office.setAssemblyConstituency(assemblyConstituency);
 			office.setAssemblyConstituencyId(officeDto.getAssemblyConstituencyId());
 		}
-		if(officeDto.getParliamentConstituencyId() != null && officeDto.getParliamentConstituencyId() >0){
+		if (officeDto.getParliamentConstituencyId() != null && officeDto.getParliamentConstituencyId() > 0) {
 			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(officeDto.getParliamentConstituencyId());
 			office.setParliamentConstituency(parliamentConstituency);
 			office.setParliamentConstituencyId(officeDto.getParliamentConstituencyId());
 		}
-		if(officeDto.getDistrictId() != null && officeDto.getDistrictId() >0){
+		if (officeDto.getDistrictId() != null && officeDto.getDistrictId() > 0) {
 			District district = districtDao.getDistrictById(officeDto.getDistrictId());
 			office.setDistrict(district);
 			office.setDistrictId(officeDto.getDistrictId());
 		}
-		if(officeDto.getStateId() != null && officeDto.getStateId() >0){
+		if (officeDto.getStateId() != null && officeDto.getStateId() > 0) {
 			State state = stateDao.getStateById(officeDto.getStateId());
 			office.setState(state);
 			office.setStateId(officeDto.getStateId());
 		}
-		if(officeDto.getCountryId() != null && officeDto.getCountryId() >0){
+		if (officeDto.getCountryId() != null && officeDto.getCountryId() > 0) {
 			Country country = countryDao.getCountryById(officeDto.getCountryId());
 			office.setCountry(country);
 			office.setCountryId(officeDto.getCountryId());
 		}
-		if(officeDto.getCountryRegionId() != null && officeDto.getCountryRegionId() >0){
+		if (officeDto.getCountryRegionId() != null && officeDto.getCountryRegionId() > 0) {
 			CountryRegion countryRegion = countryRegionDao.getCountryRegionById(officeDto.getCountryRegionId());
 			office.setCountryRegion(countryRegion);
 			office.setCountryRegionId(officeDto.getCountryRegionId());
 		}
-		if(officeDto.getCountryRegionAreaId() != null && officeDto.getCountryRegionAreaId() >0){
+		if (officeDto.getCountryRegionAreaId() != null && officeDto.getCountryRegionAreaId() > 0) {
 			CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaById(officeDto.getCountryRegionAreaId());
 			office.setCountryRegionArea(countryRegionArea);
 			office.setCountryRegionAreaId(officeDto.getCountryRegionAreaId());
 		}
-		
+
 		office = officeDao.saveOffice(office);
-		
+
 		return convertOffice(office);
 	}
 
@@ -3157,17 +3560,18 @@ public class AapServiceImpl implements AapService, Serializable {
 	public void receiveMoneyIntoTreasuryAccount(PostLocationType locationType, Long locationId, Long treasuryUserId, double amount, Long adminUserId) {
 		User adminUser = userDao.getUserById(adminUserId);
 		User treasuryUser = userDao.getUserById(treasuryUserId);
-		
+
 		Account debitAdminAccount = getAdminAccount(adminUser);
 		Account creditTreasuryAccount = getTreasuryCashAccount(locationType, locationId);
-		
+
 		Date now = new Date();
-		
-		addAccountTransaction(debitAdminAccount, amount, adminUser, now, "Money transfered to treasury account, receiver : " + treasuryUser.getName() +"["+treasuryUser.getMembershipNumber()+"]",
-				AccountTransactionMode.Cash, AccountTransactionType.Debit);
-		
-		addAccountTransaction(creditTreasuryAccount, amount, treasuryUser, now, "Money received from : " + adminUser.getName() +"["+adminUser.getMembershipNumber()+"]",
-				AccountTransactionMode.Cash, AccountTransactionType.Credit);
+
+		addAccountTransaction(debitAdminAccount, amount, adminUser, now, "Money transfered to treasury account, receiver : " + treasuryUser.getName() + "["
+				+ treasuryUser.getMembershipNumber() + "]", AccountTransactionMode.Cash, AccountTransactionType.Debit);
+
+		addAccountTransaction(creditTreasuryAccount, amount, treasuryUser, now,
+				"Money received from : " + adminUser.getName() + "[" + adminUser.getMembershipNumber() + "]", AccountTransactionMode.Cash,
+				AccountTransactionType.Credit);
 	}
 
 	@Override
@@ -3176,23 +3580,23 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<AccountTransaction> accountTransactions = accountTransactionDao.getAccountTransactionsByAccountId(accountId);
 		return convertAccountTransactions(accountTransactions);
 	}
-	
-	private AccountTransactionDto convertAccountTransaction(AccountTransaction accountTransaction){
-		if(accountTransaction == null){
+
+	private AccountTransactionDto convertAccountTransaction(AccountTransaction accountTransaction) {
+		if (accountTransaction == null) {
 			return null;
 		}
 		AccountTransactionDto accountTransactionDto = new AccountTransactionDto();
 		BeanUtils.copyProperties(accountTransaction, accountTransactionDto);
 		return accountTransactionDto;
 	}
-	
-	private List<AccountTransactionDto> convertAccountTransactions(List<AccountTransaction> accountTransactions){
+
+	private List<AccountTransactionDto> convertAccountTransactions(List<AccountTransaction> accountTransactions) {
 		List<AccountTransactionDto> accountTransactionDtos = new ArrayList<>();
-		if(accountTransactions == null){
+		if (accountTransactions == null) {
 			return accountTransactionDtos;
 		}
-		
-		for(AccountTransaction oneAccountTransaction : accountTransactions){
+
+		for (AccountTransaction oneAccountTransaction : accountTransactions) {
 			accountTransactionDtos.add(convertAccountTransaction(oneAccountTransaction));
 		}
 		return accountTransactionDtos;
@@ -3215,8 +3619,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Override
 	@Transactional
 	public void importAllCountriesData() {
-		
-		try{
+
+		try {
 			CSVReader csvReader = new CSVReader(new FileReader(new File("/Users/ravi/Downloads/forCSV.txt")));
 			List<String[]> allPcs = csvReader.readAll();
 			int totalCountries = 0;
@@ -3253,70 +3657,69 @@ public class AapServiceImpl implements AapService, Serializable {
 			countryMap.put("Yugoslavia", "CONTINUE");
 			countryMap.put("India", "CONTINUE");
 			countryMap.put("Palestinian Territory, Occupied", "CONTINUE");
-			
-			
-			
-			
+
 			String countryRegionName;
 			String countryRegionAreaName;
 			Country country = null;
 			int counter = 0;
-			for(String[] oneCountryRow:allPcs){
+			for (String[] oneCountryRow : allPcs) {
 				counter++;
 				countryName = oneCountryRow[0].trim();
 				countryRegionName = oneCountryRow[1].trim();
 				countryRegionAreaName = oneCountryRow[2].trim();
-				if(countryName.equals("") || countryRegionName.equals("") || countryRegionAreaName.equals("")){
+				if (countryName.equals("") || countryRegionName.equals("") || countryRegionAreaName.equals("")) {
 					continue;
 				}
-				
-				if(countryMap.get(countryName) != null){
+
+				if (countryMap.get(countryName) != null) {
 					countryName = countryMap.get(countryName);
 				}
-				if("CONTINUE".equals(countryName)){
-					//System.out.println("Country CONTINUE "+onePcRow[0] +" NOT FOUND");
+				if ("CONTINUE".equals(countryName)) {
+					// System.out.println("Country CONTINUE "+onePcRow[0]
+					// +" NOT FOUND");
 					continue;
 				}
-					
-				if(!countryName.equals(prevCountryName)){
+
+				if (!countryName.equals(prevCountryName)) {
 					totalCountries++;
 					country = countryDao.getCountryByName(countryName);
 				}
 				prevCountryName = countryName;
-				if(country == null){
-					System.out.println("ERROR : Country "+countryName +" NOT FOUND");
+				if (country == null) {
+					System.out.println("ERROR : Country " + countryName + " NOT FOUND");
 				}
-				
+
 				CountryRegion countryRegion = countryRegionDao.getCountryRegionByNameAndCountryId(country.getId(), countryRegionName);
-				if(countryRegion == null){
+				if (countryRegion == null) {
 					System.out.println("Creating CountryRegion = " + countryRegionName);
 					countryRegion = new CountryRegion();
 					countryRegion.setName(countryRegionName);
 					countryRegion.setCountry(country);
 					countryRegion = countryRegionDao.saveCountryRegion(countryRegion);
 				}
-				
-				CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaByNameAndCountryRegionId(countryRegion.getId(), countryRegionAreaName);
-				if(countryRegionArea == null){
+
+				CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaByNameAndCountryRegionId(countryRegion.getId(),
+						countryRegionAreaName);
+				if (countryRegionArea == null) {
 					System.out.println("Creating CountryRegionArea = " + countryRegionAreaName);
 					countryRegionArea = new CountryRegionArea();
 					countryRegionArea.setName(countryRegionAreaName);
 					countryRegionArea.setCountryRegion(countryRegion);
 					countryRegionArea = countryRegionAreaDao.saveCountryRegionArea(countryRegionArea);
 				}
-				System.out.println(counter+" : Total Countries = " + totalCountries+","+countryName+","+prevCountryName);	
+				System.out.println(counter + " : Total Countries = " + totalCountries + "," + countryName + "," + prevCountryName);
 			}
 			System.out.println("Total Rows = " + allPcs.size());
 			System.out.println("Total Pc = " + totalCountries);
 			System.out.println("Total Missing States = " + missingStates.size());
-			for(String oneStateName:missingStates){
+			for (String oneStateName : missingStates) {
 				System.out.println("     " + oneStateName);
 			}
 			csvReader.close();
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
@@ -3326,21 +3729,22 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<CountryRegion> countryRegions = countryRegionDao.getCountryRegionsByCountryId(countryId);
 		return convertCountryRegions(countryRegions);
 	}
-	private CountryRegionDto convertCountryRegion(CountryRegion countryRegion){
-		if(countryRegion == null){
+
+	private CountryRegionDto convertCountryRegion(CountryRegion countryRegion) {
+		if (countryRegion == null) {
 			return null;
 		}
 		CountryRegionDto countryRegionDto = new CountryRegionDto();
 		BeanUtils.copyProperties(countryRegion, countryRegionDto);
 		return countryRegionDto;
 	}
-	
-	private List<CountryRegionDto> convertCountryRegions(List<CountryRegion> countryRegions){
+
+	private List<CountryRegionDto> convertCountryRegions(List<CountryRegion> countryRegions) {
 		List<CountryRegionDto> returnCountryRegions = new ArrayList<>();
-		if(countryRegions == null){
+		if (countryRegions == null) {
 			return returnCountryRegions;
 		}
-		for(CountryRegion oneCountryRegion:countryRegions){
+		for (CountryRegion oneCountryRegion : countryRegions) {
 			returnCountryRegions.add(convertCountryRegion(oneCountryRegion));
 		}
 		return returnCountryRegions;
@@ -3353,22 +3757,22 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<CountryRegionArea> countryRegionAreas = countryRegionAreaDao.getCountryRegionAreasByCountryRegionId(countryRegionId);
 		return convertCountryRegionAreas(countryRegionAreas);
 	}
-	
-	private CountryRegionAreaDto convertCountryRegionArea(CountryRegionArea countryRegionArea){
-		if(countryRegionArea == null){
+
+	private CountryRegionAreaDto convertCountryRegionArea(CountryRegionArea countryRegionArea) {
+		if (countryRegionArea == null) {
 			return null;
 		}
 		CountryRegionAreaDto countryRegionAreaDto = new CountryRegionAreaDto();
 		BeanUtils.copyProperties(countryRegionArea, countryRegionAreaDto);
 		return countryRegionAreaDto;
 	}
-	
-	private List<CountryRegionAreaDto> convertCountryRegionAreas(List<CountryRegionArea> countryRegionAreas){
+
+	private List<CountryRegionAreaDto> convertCountryRegionAreas(List<CountryRegionArea> countryRegionAreas) {
 		List<CountryRegionAreaDto> returnCountryRegionAreas = new ArrayList<>();
-		if(countryRegionAreas == null){
+		if (countryRegionAreas == null) {
 			return returnCountryRegionAreas;
 		}
-		for(CountryRegionArea oneCountryRegionArea:countryRegionAreas){
+		for (CountryRegionArea oneCountryRegionArea : countryRegionAreas) {
 			returnCountryRegionAreas.add(convertCountryRegionArea(oneCountryRegionArea));
 		}
 		return returnCountryRegionAreas;
@@ -3380,28 +3784,29 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<InterestGroup> interestGroups = interestGroupDao.getAllInterestGroups();
 		return convertInterestGroups(interestGroups);
 	}
-	private InterestDto convertInterest(Interest interest){
-		if(interest == null){
+
+	private InterestDto convertInterest(Interest interest) {
+		if (interest == null) {
 			return null;
 		}
 		InterestDto interestDto = new InterestDto();
 		BeanUtils.copyProperties(interest, interestDto);
 		return interestDto;
 	}
-	
-	private List<InterestDto> convertInterests(Collection<Interest> interests){
+
+	private List<InterestDto> convertInterests(Collection<Interest> interests) {
 		List<InterestDto> returnInterests = new ArrayList<>();
-		if(interests == null){
+		if (interests == null) {
 			return returnInterests;
 		}
-		for(Interest interest:interests){
+		for (Interest interest : interests) {
 			returnInterests.add(convertInterest(interest));
 		}
 		return returnInterests;
 	}
-	
-	private InterestGroupDto convertInterestGroup(InterestGroup interestGroup){
-		if(interestGroup == null){
+
+	private InterestGroupDto convertInterestGroup(InterestGroup interestGroup) {
+		if (interestGroup == null) {
 			return null;
 		}
 		InterestGroupDto interestGroupDto = new InterestGroupDto();
@@ -3409,19 +3814,18 @@ public class AapServiceImpl implements AapService, Serializable {
 		interestGroupDto.setInterestDtos(convertInterests(interestGroup.getInterests()));
 		return interestGroupDto;
 	}
-	
-	private List<InterestGroupDto> convertInterestGroups(List<InterestGroup> interestGroups){
+
+	private List<InterestGroupDto> convertInterestGroups(List<InterestGroup> interestGroups) {
 		List<InterestGroupDto> returnInterestGroups = new ArrayList<>();
-		if(interestGroups == null){
+		if (interestGroups == null) {
 			return returnInterestGroups;
 		}
-		for(InterestGroup interestGroup:interestGroups){
+		for (InterestGroup interestGroup : interestGroups) {
 			returnInterestGroups.add(convertInterestGroup(interestGroup));
 		}
 		return returnInterestGroups;
 	}
 
-	
 	private PlannedSmsDto convertPlannedSms(PlannedSms plannedSms) {
 		if (plannedSms == null) {
 			return null;
@@ -3441,6 +3845,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return plannedSmsDtos;
 	}
+
 	@Override
 	@Transactional
 	public PlannedSmsDto savePlannedSms(PlannedSmsDto plannedSmsDto) {
@@ -3480,7 +3885,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<PlannedSms> plannedSmses = plannedSmsDao.getPlannedSmsByLocationTypeAndLocationId(locationType, locationId);
 		return convertPlannedSmss(plannedSmses);
 	}
-	
+
 	private PlannedEmailDto convertPlannedEmail(PlannedEmail plannedEmail) {
 		if (plannedEmail == null) {
 			return null;
@@ -3544,17 +3949,17 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public VolunteerDto saveVolunteerDetails(VolunteerDto volunteerDto, List<Long> selectedInterests) throws AppException{
-		if(volunteerDto.getUserId() == null || volunteerDto.getUserId() <= 0){
+	public VolunteerDto saveVolunteerDetails(VolunteerDto volunteerDto, List<Long> selectedInterests) throws AppException {
+		if (volunteerDto.getUserId() == null || volunteerDto.getUserId() <= 0) {
 			throw new AppException("No User id found");
 		}
 		User user = userDao.getUserById(volunteerDto.getUserId());
-		if(user == null){
+		if (user == null) {
 			throw new AppException("No User found");
 		}
-		
+
 		Volunteer volunteer = volunteerDao.getVolunteersByUserId(user.getId());
-		if(volunteer == null){
+		if (volunteer == null) {
 			volunteer = new Volunteer();
 			volunteer.setDateCreated(new Date());
 		}
@@ -3570,25 +3975,26 @@ public class AapServiceImpl implements AapService, Serializable {
 		volunteer.setProfessionalBackground(volunteerDto.getProfessionalBackground());
 		volunteer.setUser(user);
 		volunteer.setUserId(user.getId());
-		
+
 		volunteer = volunteerDao.saveVolunteer(volunteer);
-		
+
 		user.setVolunteer(true);
-		
-		if(volunteer.getInterests() == null){
+
+		if (volunteer.getInterests() == null) {
 			volunteer.setInterests(new HashSet<Interest>());
-		}else{
+		} else {
 			volunteer.getInterests().clear();
 		}
-		for(Long oneInterestId : selectedInterests){
+		for (Long oneInterestId : selectedInterests) {
 			Interest oneInterest = interestDao.getInterestById(oneInterestId);
 			volunteer.getInterests().add(oneInterest);
 		}
-		
+
 		return convertVolunteer(volunteer);
 	}
-	private VolunteerDto convertVolunteer(Volunteer volunteer){
-		if(volunteer == null){
+
+	private VolunteerDto convertVolunteer(Volunteer volunteer) {
+		if (volunteer == null) {
 			return null;
 		}
 		VolunteerDto volunteerDto = new VolunteerDto();
@@ -3607,7 +4013,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public List<InterestDto> getuserInterests(Long userId) throws AppException {
 		Volunteer volunteer = volunteerDao.getVolunteersByUserId(userId);
-		if(volunteer == null){
+		if (volunteer == null) {
 			return null;
 		}
 		return convertInterests(volunteer.getInterests());
@@ -3633,54 +4039,463 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public List<EmailUserDto> getEmailsOfLocation(PostLocationType locationType, Long locationId) throws AppException {
 		List<Email> emails = null;
-		switch(locationType){
-		case Global :
-			//emails = emailDao.getStateEmails(locationId);
+		switch (locationType) {
+		case Global:
+			// emails = emailDao.getStateEmails(locationId);
 			break;
-		case STATE :
+		case STATE:
 			emails = emailDao.getStateEmails(locationId);
 			break;
-		case DISTRICT :
+		case DISTRICT:
 			emails = emailDao.getDistrictEmails(locationId);
 			break;
-		case AC :
+		case AC:
 			emails = emailDao.getAcEmails(locationId);
 			break;
-		case PC :
+		case PC:
 			emails = emailDao.getPcEmails(locationId);
 			break;
-		case COUNTRY :
+		case COUNTRY:
 			emails = emailDao.getCountryEmails(locationId);
 			break;
-		case REGION :
+		case REGION:
 			emails = emailDao.getCountryRegionEmails(locationId);
 			break;
-		case AREA :
+		case AREA:
 			emails = emailDao.getCountryRegionAreaEmails(locationId);
 			break;
-			default:
+		default:
 		}
 		return convertEmailUsers(emails);
 	}
-	
-	private EmailUserDto convertEmailUser(Email oneEmail){
-		if(oneEmail == null){
+
+	private EmailUserDto convertEmailUser(Email oneEmail) {
+		if (oneEmail == null) {
 			return null;
 		}
 		EmailUserDto emailUserDto = new EmailUserDto();
 		BeanUtils.copyProperties(oneEmail, emailUserDto);
 		return emailUserDto;
 	}
-	private List<EmailUserDto> convertEmailUsers(List<Email> emails){
+
+	private List<EmailUserDto> convertEmailUsers(List<Email> emails) {
 		List<EmailUserDto> emailUserDtos = new ArrayList<>();
-		if(emails == null){
+		if (emails == null) {
 			return emailUserDtos;
 		}
-		for(Email oneEmail:emails){
+		for (Email oneEmail : emails) {
 			emailUserDtos.add(convertEmailUser(oneEmail));
 		}
 		return emailUserDtos;
 	}
+
+	// 07 Jan 2013 17:55:41:917
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:S");
+
+	@Override
+	@Transactional
+	public int importDonationRecords(int totalRecords) {
+
+		List<DonationDump> donations = donationDao.getDonationsToImport(totalRecords);
+
+		String emailId = null;
+		String donorId = null;
+
+		Email email;
+		Phone phone;
+		
+		int totalDonations = 0;
+		for (DonationDump oneDonation : donations) {
+			try {
+				//System.out.println("Doantion Data " + oneDonation.getId()+"," + oneDonation.getDonorId()+" , "+oneDonation.getTransactionId() +" , "+oneDonation.getStatus());
+				totalDonations++;
+				User phoneUser = null;
+				User emailUser = null;
+				User mainUser = null;
+				emailId = oneDonation.getDonorEmail();
+				donorId = oneDonation.getDonorId();
+
+				email = getDbEmail(emailId, oneDonation);
+				
+				if(email != null){
+					emailUser = email.getUser();
+				}
+				phone = getDbPhone(oneDonation, emailUser);
+				if(email == null && phone == null){
+					donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", "No Email or Phone Number found");
+					continue;
+				}
+				
+				//Both email and Phone number are provided
+				if(email != null && phone != null){
+					//Try to merge user or error out this Record
+					emailUser = email.getUser();
+					phoneUser = phone.getUser();
+					if(emailUser.getId().equals(phoneUser.getId())){
+						//nothing to merge they are same user
+						mainUser = emailUser;
+					}else{
+						//Merge these users
+						try{
+							mergeUser(emailUser, phoneUser);
+							mainUser = emailUser;
+						}catch(AppException ex){
+							donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
+							continue;
+						}catch(Exception ex){
+							donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
+							continue;
+						}
+					}
+				}
+				if(email != null && phone == null){
+					mainUser = email.getUser();
+				}
+				if(email == null && phone != null){
+					mainUser = phone.getUser();
+				}
+				if(mainUser == null){
+					donationDao.updateDonationStatus(oneDonation.getDonorId(), "CodeError", "No Main User found");
+				}
+				System.out.println("oneDonation.getDonationDate()="+oneDonation.getDonationDate());
+				Date donationDate = null;
+				if(!StringUtil.isEmpty(oneDonation.getDonationDate())){
+					donationDate = simpleDateFormat.parse(oneDonation.getDonationDate());	
+				}
+				
+				System.out.println("donationDate="+donationDate);
+				//Update User State
+				updateUserLocation(mainUser, oneDonation.getDonorCountryId(), oneDonation.getDonorStateId());
+				
+				updateUserAddress(mainUser, oneDonation);
+				
+				updateUserName(mainUser, oneDonation);
+				
+				updateUserDob(mainUser, oneDonation, donationDate);
+				
+				
+				
+				
+				Donation donation = donationDao.getDonationByDonorId(donorId.toString());
+				if(donation == null){
+					donation = new Donation();
+					donation.setUser(mainUser);
+					donation.setAmount(oneDonation.getAmount());
+					donation.setCid(oneDonation.getCid());
+					donation.setDonationDate(donationDate);
+					donation.setDateCreated(donationDate);
+					donation.setDateModified(donationDate);
+					donation.setDonorId(donorId.toString());
+
+					donation.setDonorIp(oneDonation.getDonorIp());
+					donation.setMerchantReferenceNumber(oneDonation.getMerchantReferenceNumber());
+
+					donation.setPaymentGateway(oneDonation.getPaymentGateway());
+					donation.setPgErrorDetail(oneDonation.getPgErrorDetail());
+					donation.setPgErrorMessage(oneDonation.getPgErrorMessage());
+					donation.setRemark(oneDonation.getRemark());
+					donation.setTransactionId(oneDonation.getTransactionId());
+					donation.setTransactionType(oneDonation.getTransactionType());
+					donation.setUtmCampaign(oneDonation.getUtmCampaign());
+					donation.setUtmContent(oneDonation.getUtmContent());
+					donation.setUtmMedium(oneDonation.getUtmMedium());
+					donation.setUtmSource(oneDonation.getUtmSource());
+					donation.setUtmTerm(oneDonation.getUtmTerm());
+
+					donation = donationDao.saveDonation(donation);
+				}
+				//System.out.println(oneDonation[0] + ", " + oneDonation[1] + " , " + oneDonation[oneDonation.length - 2]);
+				donationDao.updateDonationStatus(oneDonation.getDonorId(), "Imported", "");
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
+			}
+		}
+		return totalDonations;
+	}
+		
+	private void updateUserName(User mainUser,DonationDump oneDonation){
+		try{
+			if(mainUser.getName().indexOf("@") >= 0){
+				mainUser.setName(oneDonation.getDonorName());
+			}
+		}catch(Exception ex){
+			//Ignore exception
+		}
+	}
+	private void updateUserDob(User mainUser,DonationDump oneDonation, Date donationDate){
+		try{
+			System.out.println("mainUser.getDateOfBirth() == null ="+mainUser.getDateOfBirth() == null +", donationDate="+donationDate);
+			if(mainUser.getDateOfBirth() == null && donationDate != null){
+				//try to guess date of birth using Donation Record
+				//atleast we will have year right
+				if(oneDonation.getDonorAge() == null){
+					Calendar calendar = Calendar.getInstance();
+					calendar.add(Calendar.YEAR, 0 - oneDonation.getDonorAge());
+					mainUser.setDateOfBirth(calendar.getTime());
+				}
+			}
+		}catch(Exception ex){
+			//Ignore exception
+		}
+	}
+	private void updateUserAddress(User mainUser,DonationDump oneDonation){
+		try{
+			if(StringUtil.isEmpty(mainUser.getAddress())){
+				mainUser.setAddress(oneDonation.getDonorAddress());
+			}
+		}catch(Exception ex){
+			//Ignore exception
+		}
+	}
+	private Email getDbEmail(String emailId, DonationDump oneDonation){
+		if (StringUtil.isEmpty(emailId)) {
+			return null;
+		}
+
+		Email email = emailDao.getEmailByEmail(emailId);
+		User user;
+
+		if (email == null) {
+			// means create new User and email
+			user = createUserFromDonationData(oneDonation);
+
+			email = new Email();
+			email.setEmail(emailId);
+			email.setConfirmationType(ConfirmationType.DONOR_ENTERED);
+			email.setConfirmed(true);
+			email.setUser(user);
+			email.setDateCreated(new Date());
+
+			email = emailDao.saveEmail(email);
+		} else {
+			user = email.getUser();
+		}
+		return email;
+	}
+	private User createUserFromDonationData(DonationDump oneDonation){
+		User user = new User();
+		user.setAddress(oneDonation.getDonorAddress());
+		if (!StringUtil.isEmpty(oneDonation.getDonorGender())) {
+			if ("F".equals(oneDonation.getDonorGender())) {
+				user.setGender("Female");
+			}
+			if ("M".equals(oneDonation.getDonorGender())) {
+				user.setGender("Male");
+			}
+			if ("O".equals(oneDonation.getDonorGender())) {
+				user.setGender("NotSpecified");
+			}
+			if (user.getGender() == null) {
+				user.setGender("NotSpecified");
+			}
+		}
+		user.setDonor(true);
+		user.setName(oneDonation.getDonorName());
+		user.setCreationType(CreationType.Imported);
+		user.setDateCreated(new Date());
+		user = userDao.saveUser(user);
+		return user;
+	}
 	
+	private Phone getDbPhone(DonationDump oneDonation, User user){
+		String phoneNumber = oneDonation.getDonorMobile();
+		if (StringUtil.isEmpty(phoneNumber)) {
+			return null;
+		}
+		String countryName = countryCodeMap.get(oneDonation.getDonorCountryId());
+		if(countryName == null){
+			return null;
+		}
+		Country country = countryDao.getCountryByName(countryName);
+		if(country == null){
+			return null;
+		}
+		phoneNumber = removeCountryCode(phoneNumber, country.getIsdCode());
+		Phone phone = phoneDao.getPhoneByPhone(phoneNumber, country.getIsdCode());
+
+		if (phone == null) {
+			// means create new User and email
+			if(user == null){
+				user = createUserFromDonationData(oneDonation);
+			}
+			
+			phone = new Phone();
+			phone.setCountryCode(country.getIsdCode());
+			phone.setPhoneNumber(phoneNumber);
+			phone.setPhoneType(PhoneType.MOBILE);
+			phone.setUser(user);
+			phone.setDateCreated(new Date());
+			phone.setDateModified(new Date());
+
+			phone = phoneDao.savePhone(phone);
+		} 
+		return phone;
+	}
+	private String removeCountryCode(String phoneNumber,String countryCode){
+		phoneNumber = phoneNumber.replace("+", "");
+		if(phoneNumber.indexOf(countryCode) == 0){
+			phoneNumber = phoneNumber.substring(countryCode.length());
+		}
+		return phoneNumber;
+	}
+	
+	private void updateUserLocation(User user, String countryId, String stateId){
+		try{
+			if(StringUtil.isEmpty(countryId)){
+				return;
+			}
+			if("IN".equalsIgnoreCase(countryId)){
+				//Update indian State
+				if(StringUtil.isEmpty(stateId)){
+					return;
+				}
+				State state = null;
+				if("AN".equals(stateId)){
+					state = stateDao.getStateByName("Andaman and Nicobar");
+				}
+				if("AP".equals(stateId)){
+					state = stateDao.getStateByName("Andhra Pradesh");
+				}
+				if("AR".equals(stateId)){
+					state = stateDao.getStateByName("Arunachal Pradesh");
+				}
+				if("AS".equals(stateId)){
+					state = stateDao.getStateByName("Assam");
+				}
+				if("BR".equals(stateId)){
+					state = stateDao.getStateByName("Bihar");
+				}
+				if("CN".equals(stateId)){
+					state = stateDao.getStateByName("Chandigarh");
+				}
+				if("CG".equals(stateId)){
+					state = stateDao.getStateByName("Chhattisgarh");
+				}
+				if("DN".equals(stateId)){
+					state = stateDao.getStateByName("Dadra and Nagar Haveli(UT)");
+				}
+				if("DD".equals(stateId)){
+					state = stateDao.getStateByName("Daman and Diu(UT)");
+				}
+				if("DL".equals(stateId)){
+					state = stateDao.getStateByName("Delhi");
+				}
+				if("GO".equals(stateId)){
+					state = stateDao.getStateByName("Goa");
+				}
+				if("GJ".equals(stateId)){
+					state = stateDao.getStateByName("Gujarat");
+				}
+				if("HR".equals(stateId)){
+					state = stateDao.getStateByName("Haryana");
+				}
+				if("HP".equals(stateId)){
+					state = stateDao.getStateByName("Himachal Pradesh");
+				}
+				if("JK".equals(stateId)){
+					state = stateDao.getStateByName("Jammu and Kashmir");
+				}
+				if("JH".equals(stateId)){
+					state = stateDao.getStateByName("Jharkhand");
+				}
+				if("KA".equals(stateId)){
+					state = stateDao.getStateByName("Karnataka");
+				}
+				if("KL".equals(stateId)){
+					state = stateDao.getStateByName("Kerala");
+				}
+				if("LD".equals(stateId)){
+					state = stateDao.getStateByName("Lakshadweep");
+				}
+				if("MP".equals(stateId)){
+					state = stateDao.getStateByName("Madhya Pradesh");
+				}
+				if("MH".equals(stateId)){
+					state = stateDao.getStateByName("Maharashtra");
+				}
+				if("MN".equals(stateId)){
+					state = stateDao.getStateByName("Manipur");
+				}
+				if("ML".equals(stateId)){
+					state = stateDao.getStateByName("Meghalaya");
+				}
+				if("MZ".equals(stateId)){
+					state = stateDao.getStateByName("Mizoram");
+				}
+				if("NG".equals(stateId)){
+					state = stateDao.getStateByName("Nagaland");
+				}
+				if("OR".equals(stateId)){
+					state = stateDao.getStateByName("Odisha");
+				}
+				if("PY".equals(stateId)){
+					state = stateDao.getStateByName("Puducherry");
+				}
+				if("PB".equals(stateId)){
+					state = stateDao.getStateByName("Punjab");
+				}
+				if("RJ".equals(stateId)){
+					state = stateDao.getStateByName("Rajasthan");
+				}
+				if("SK".equals(stateId)){
+					state = stateDao.getStateByName("Sikkim");
+				}
+				if("TN".equals(stateId)){
+					state = stateDao.getStateByName("Tamil Nadu");
+				}
+				if("TR".equals(stateId)){
+					state = stateDao.getStateByName("Tripura");
+				}
+				if("UP".equals(stateId)){
+					state = stateDao.getStateByName("Uttar Pradesh");
+				}
+				if("UA".equals(stateId)){
+					state = stateDao.getStateByName("Uttarakhand");
+				}
+				if("WB".equals(stateId)){
+					state = stateDao.getStateByName("West Bengal");
+				}
+				if(state != null){
+					user.setStateLiving(state);
+					user.setStateVoting(state);
+				}
+				
+				
+			}else{
+				//Update NRI Location
+				if(user.getNriCountry() == null){
+					user.setNri(true);
+					Country country = null;
+					String countryName = countryCodeMap.get(countryId);
+					if(countryName != null){
+						country = countryDao.getCountryByName(countryName);
+						user.setNriCountry(country);
+					}
+				}
+				/*
+				 * Not Found
+				<option value="BV">BOUVET ISLAND</option>
+				<option value="CI">COTE D&#39;IVOIRE</option>
+				<option value="TP">EAST TIMOR</option>
+				<option value="FX">FRANCE, METROPOLITAN</option>
+				<option value="GF">FRENCH GUIANA</option>
+				<option value="TF">FRENCH SOUTHERN TERRITORIES</option>
+				Gaza Strip
+				<option value="GP">GUADELOUPE</option>
+				<option value="HM">HEARD AND MC DONALD ISLANDS</option>
+				Ivory Coast
+				<option value="MQ">MARTINIQUE</option>
+				<option value="RE">REUNION</option>
+				<option value="GS">SOUTH GEORGIA AND SOUTH S.S.</option>
+				<option value="SS">SOUTH SUDAN</option>
+				<option value="UM">U.S. MINOR ISLANDS</option>
+				*/
+			}
+		}catch(Exception ex){
+			//ignore exception
+		}
+		
+	}
 
 }

@@ -140,6 +140,7 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 				donationDump.setDonorGender(getStringValue(oneRow[index++]));
 				donationDump.setDonorAge(getIntegerValue(oneRow[index++]));
 				donationDump.setDonorMobile(getStringValue(oneRow[index++]));
+				donationDump.setDonorEmail(getStringValue(oneRow[index++]));
 				donationDump.setDonorCountryId(getStringValue(oneRow[index++]));
 				donationDump.setDonorStateId(getStringValue(oneRow[index++]));
 				donationDump.setDonorDistrictId(getStringValue(oneRow[index++]));
@@ -206,7 +207,7 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 			if(data instanceof Double){
 				return (Double)data;
 			}
-			Double.parseDouble(data.toString());
+			return Double.parseDouble(data.toString());
 		}catch(Exception ex){
 			
 		}

@@ -10,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-@Entity
-@Table(name="donation_dump")
+//@Entity
+//@Table(name="donation_dump")
 public class DonationDump {
 
 	@Id

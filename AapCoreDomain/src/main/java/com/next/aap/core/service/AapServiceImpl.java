@@ -144,6 +144,7 @@ import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.CreationType;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.DonationDto;
 import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
@@ -4120,8 +4121,9 @@ public class AapServiceImpl implements AapService, Serializable {
 				if(email != null){
 					emailUser = email.getUser();
 				}
-				phone = getDbPhone(oneDonation, emailUser);
+				phone = null;//getDbPhone(oneDonation, emailUser);
 				if(email == null && phone == null){
+					//System.out.println("email == null && phone == null");
 					donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", "No Email or Phone Number found");
 					continue;
 				}
@@ -4141,13 +4143,18 @@ public class AapServiceImpl implements AapService, Serializable {
 							mainUser = emailUser;
 						}catch(AppException ex){
 							donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
+							System.out.println("AppException : "+ex.getMessage());
+							ex.printStackTrace();
 							continue;
 						}catch(Exception ex){
 							donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
+							ex.printStackTrace();
+							System.out.println("Exception : "+ex.getMessage());
 							continue;
 						}
 					}
 				}
+				
 				if(email != null && phone == null){
 					mainUser = email.getUser();
 				}
@@ -4156,14 +4163,19 @@ public class AapServiceImpl implements AapService, Serializable {
 				}
 				if(mainUser == null){
 					donationDao.updateDonationStatus(oneDonation.getDonorId(), "CodeError", "No Main User found");
+					System.out.println("Exception : No Main User Found");
+					continue;
 				}
-				System.out.println("oneDonation.getDonationDate()="+oneDonation.getDonationDate());
 				Date donationDate = null;
 				if(!StringUtil.isEmpty(oneDonation.getDonationDate())){
-					donationDate = simpleDateFormat.parse(oneDonation.getDonationDate());	
+					try{
+						donationDate = simpleDateFormat.parse(oneDonation.getDonationDate());	
+					}catch(Exception ex){
+						
+					}
+						
 				}
 				
-				System.out.println("donationDate="+donationDate);
 				//Update User State
 				updateUserLocation(mainUser, oneDonation.getDonorCountryId(), oneDonation.getDonorStateId());
 				
@@ -4172,6 +4184,10 @@ public class AapServiceImpl implements AapService, Serializable {
 				updateUserName(mainUser, oneDonation);
 				
 				updateUserDob(mainUser, oneDonation, donationDate);
+				
+				mainUser.setDateModified(new Date());
+				
+				mainUser = userDao.saveUser(mainUser);
 				
 				
 				
@@ -4188,6 +4204,20 @@ public class AapServiceImpl implements AapService, Serializable {
 					donation.setDonorId(donorId.toString());
 
 					donation.setDonorIp(oneDonation.getDonorIp());
+					donation.setDonorAddress(oneDonation.getDonorAddress());
+					if(oneDonation.getDonorAge() != null){
+						donation.setDonorAge(oneDonation.getDonorAge().toString());	
+					}
+					donation.setDonorCountryId(oneDonation.getDonorCountryId());
+					donation.setDonorDistrictId(oneDonation.getDonorDistrictId());
+					donation.setDonorEmail(oneDonation.getDonorEmail());
+					donation.setDonorGender(oneDonation.getDonorGender());
+					donation.setDonorId(oneDonation.getDonorId());
+					donation.setDonorMobile(oneDonation.getDonorMobile());
+					donation.setDonorName(oneDonation.getDonorName());
+					donation.setDonorStateId(oneDonation.getDonorStateId());
+					
+					
 					donation.setMerchantReferenceNumber(oneDonation.getMerchantReferenceNumber());
 
 					donation.setPaymentGateway(oneDonation.getPaymentGateway());
@@ -4203,6 +4233,8 @@ public class AapServiceImpl implements AapService, Serializable {
 					donation.setUtmTerm(oneDonation.getUtmTerm());
 
 					donation = donationDao.saveDonation(donation);
+				}else{
+					donation.setAmount(oneDonation.getAmount());
 				}
 				//System.out.println(oneDonation[0] + ", " + oneDonation[1] + " , " + oneDonation[oneDonation.length - 2]);
 				donationDao.updateDonationStatus(oneDonation.getDonorId(), "Imported", "");
@@ -4225,17 +4257,22 @@ public class AapServiceImpl implements AapService, Serializable {
 	}
 	private void updateUserDob(User mainUser,DonationDump oneDonation, Date donationDate){
 		try{
-			System.out.println("mainUser.getDateOfBirth() == null ="+mainUser.getDateOfBirth() == null +", donationDate="+donationDate);
+			//System.out.println("mainUser.getDateOfBirth() == null ="+ (mainUser.getDateOfBirth() == null) +", donationDate="+donationDate+",oneDonation.getDonorAge()="+oneDonation.getDonorAge());
 			if(mainUser.getDateOfBirth() == null && donationDate != null){
 				//try to guess date of birth using Donation Record
 				//atleast we will have year right
-				if(oneDonation.getDonorAge() == null){
+				if(oneDonation.getDonorAge() != null){
 					Calendar calendar = Calendar.getInstance();
-					calendar.add(Calendar.YEAR, 0 - oneDonation.getDonorAge());
-					mainUser.setDateOfBirth(calendar.getTime());
+					if(oneDonation.getDonorAge() != null){
+						calendar.add(Calendar.YEAR, 0 - oneDonation.getDonorAge());
+						mainUser.setDateOfBirth(calendar.getTime());
+						//System.out.println("mainUser.setDateOfBirth()="+calendar.getTime());
+					}
 				}
 			}
 		}catch(Exception ex){
+			System.out.println("Exception while updating Date of Birth");
+			ex.printStackTrace();
 			//Ignore exception
 		}
 	}
@@ -4496,6 +4533,33 @@ public class AapServiceImpl implements AapService, Serializable {
 			//ignore exception
 		}
 		
+	}
+
+	@Override
+	@Transactional
+	public List<DonationDto> getUserDonations(Long userId) {
+		List<Donation> donations = donationDao.getDonationsByUserId(userId);
+		return convertDonations(donations);
+	}
+	
+	private DonationDto convertDonation(Donation donation){
+		if(donation == null){
+			return null;
+		}
+		DonationDto donationDto = new DonationDto();
+		BeanUtils.copyProperties(donation, donationDto);
+		return donationDto;
+	}
+	
+	private List<DonationDto> convertDonations(List<Donation> donations){
+		List<DonationDto> donationDtos = new ArrayList<>();
+		if(donations == null){
+			return donationDtos;
+		}
+		for(Donation oneDonation:donations){
+			donationDtos.add(convertDonation(oneDonation));
+		}
+		return donationDtos;
 	}
 
 }

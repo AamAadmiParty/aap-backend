@@ -22,7 +22,7 @@ public class DonationImportUtil {
 				Long startime;
 				Long endTime;
 				Long globalStartime = System.currentTimeMillis();
-				int recordsPerRound = 1000;
+				int recordsPerRound = 500;
 				do{
 					startime = System.currentTimeMillis();
 					totalProcessed = aapService.importDonationRecords(recordsPerRound);

@@ -32,8 +32,6 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 	}
 
 	private void assignMembershipNumber(User user) {
-		System.out.println("user.isMember()=" + user.isMember());
-		System.out.println("StringUtil.isEmpty(user.getMembershipNumber())=" + StringUtil.isEmpty(user.getMembershipNumber()));
 		if (user.isMember()) {
 			if (StringUtil.isEmpty(user.getMembershipNumber())) {
 				String membershipNumber = "AAP" + ensureDigits(user.getId(), 6);

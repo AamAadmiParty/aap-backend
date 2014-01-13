@@ -18,6 +18,7 @@ import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.DonationDto;
 import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
@@ -223,4 +224,6 @@ public interface AapService {
 	List<EmailUserDto> getEmailsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
 	
 	int importDonationRecords(int totalRecords);
+	
+	List<DonationDto> getUserDonations(Long userId);
 }

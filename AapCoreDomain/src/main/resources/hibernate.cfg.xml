@@ -21,7 +21,6 @@
 		<mapping class="com.next.aap.core.persistance.District" />
 		<mapping class="com.next.aap.core.persistance.DistrictRole" />
 		<mapping class="com.next.aap.core.persistance.Donation" />
-		<mapping class="com.next.aap.core.persistance.DonationDump" />
 		<mapping class="com.next.aap.core.persistance.Email" />
 		<mapping class="com.next.aap.core.persistance.FacebookAccount" />
 		<mapping class="com.next.aap.core.persistance.FacebookApp" />

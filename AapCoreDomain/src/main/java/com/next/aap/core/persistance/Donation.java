@@ -91,7 +91,7 @@ public class Donation {
 	private String donorStateId;
 	@Column(name = "donor_district_id")
 	private String donorDistrictId;
-	@Column(name = "donor_address")
+	@Column(name = "donor_address", length=512)
 	private String donorAddress;
 
 	

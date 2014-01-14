@@ -30,8 +30,9 @@
 				</div>
 			</div>
 			<div class="social-area">
-				<p:messages autoUpdate="true" />
 				<h:form id="userVolunteerForm">
+				<h:panelGrid>
+				<p:messages autoUpdate="true" />
 				<ui:include src="../common/volunteer.xhtml" >
 					<ui:param name="param_VolunteerBean" value="#{userVolunteerBean.volunteerBean}" />
 				</ui:include>
@@ -40,7 +41,7 @@
 					<p:commandButton id="saveProfile" value="Save Volunteer Profile" actionListener="#{userVolunteerBean.saveProfile}" />
 					<p:tooltip for="saveProfile">Save Profile</p:tooltip>
 
-
+				</h:panelGrid>
 				</h:form>
 			</div>
 		</div>

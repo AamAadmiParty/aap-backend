@@ -1,9 +1,10 @@
 package com.next.aap.web.jsf.beans;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.PostLocationType;
@@ -12,17 +13,15 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-@Component
-@Scope("session")
+@ManagedBean
+//@Scope("session")
+@ViewScoped
 @URLMapping(id = "adminPanelBean", beanName="adminPanelBean", pattern = "/admin/home", viewId = "/WEB-INF/jsf/admin_panel.xhtml")
 @URLBeanName("adminPanelBean")
-public class AdminPanelBean extends BaseJsfBean {
+public class AdminPanelBean extends BaseUserJsfBean {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Autowired
-	private MenuBean menuBean;
-
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
 	public void init() throws Exception {

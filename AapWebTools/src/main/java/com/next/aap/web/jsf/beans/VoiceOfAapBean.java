@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.social.RevokedAuthorizationException;
@@ -31,23 +34,21 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 @URLMappings(mappings = { @URLMapping(id = "voiceOfAapBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
 @URLBeanName("voiceOfAapBean")
 */
-@Component
-@Scope("session")
+@ManagedBean
+//@Scope("session")
+@ViewScoped
 @URLMappings(mappings={
 		@URLMapping(id = "voiceOfAapBean1", beanName="voiceOfAapBean", pattern = "/orig/voiceofaap", viewId = "/WEB-INF/jsf/voiceofaap.xhtml"),
 		@URLMapping(id = "voiceOfAapBean2", beanName="voiceOfAapBean", pattern = "/voiceofaap", viewId = "/WEB-INF/jsf/aapstyle/voiceofaap.xhtml")
 		})
 //@URLMapping(id = "voiceOfAapBean", beanName="voiceOfAapBean", pattern = "/voiceofaap", viewId = "/WEB-INF/jsf/voiceofaap.xhtml")
 @URLBeanName("voiceOfAapBean")
-public class VoiceOfAapBean extends BaseJsfBean {
+public class VoiceOfAapBean extends BaseUserJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
 	private UserDto loggedInUser;
 	
-	
-	@Autowired
-	private AapService aapService;
 	
 	private boolean beVoiceOfAap;
 	private boolean postOnGroup;

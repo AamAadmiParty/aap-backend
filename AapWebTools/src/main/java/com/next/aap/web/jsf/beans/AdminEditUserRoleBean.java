@@ -98,11 +98,6 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	PostLocationType selectedPostLocationType;
 	Long selectedPostLocationId;
 
-	@Autowired
-	private AapService aapService;
-	@Autowired
-	private MenuBean menuBean;
-
 	public AdminEditUserRoleBean() {
 		super("/admin/roles", AppPermission.EDIT_USER_ROLES);
 	}

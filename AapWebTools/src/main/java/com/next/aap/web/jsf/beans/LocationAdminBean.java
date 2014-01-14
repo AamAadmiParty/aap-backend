@@ -1,5 +1,8 @@
 package com.next.aap.web.jsf.beans;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -12,17 +15,15 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-@Component
-@Scope("session")
+//@Scope("session")
+@ViewScoped
+@ManagedBean
 @URLMapping(id = "locationAdminBean", beanName="locationAdminBean", pattern = "/admin/location", viewId = "/WEB-INF/jsf/location_admin.xhtml")
 @URLBeanName("locationAdminBean")
-public class LocationAdminBean extends BaseJsfBean {
+public class LocationAdminBean extends BaseUserJsfBean {
 
 	private static final long serialVersionUID = 1L;
 	
-	@Autowired
-	MenuBean menuBean;
-
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
 	public void init() throws Exception {

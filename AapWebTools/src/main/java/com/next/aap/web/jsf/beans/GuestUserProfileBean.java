@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIInput;
 import javax.faces.component.UISelectOne;
 import javax.faces.component.UIViewRoot;
@@ -34,11 +36,12 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
  @URLMappings(mappings = { @URLMapping(id = "guestUserProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
  @URLBeanName("guestUserProfileBean")
  */
-@Component
-@Scope("session")
+//@Scope("session")
+@ViewScoped
+@ManagedBean
 @URLMapping(id = "guestUserProfileBean", beanName = "guestUserProfileBean", pattern = "/guest/register", viewId = "/WEB-INF/jsf/guestuserprofile.xhtml")
 @URLBeanName("guestUserProfileBean")
-public class GuestUserProfileBean extends BaseJsfBean {
+public class GuestUserProfileBean extends BaseUserJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
@@ -65,9 +68,6 @@ public class GuestUserProfileBean extends BaseJsfBean {
 	private boolean showBanner;
 
 	private List<CountryDto> countries;
-
-	@Autowired
-	private AapService aapService;
 
 	@URLAction(onPostback = false)
 	public void init() throws Exception {

@@ -1,5 +1,8 @@
 package com.next.aap.web.jsf.beans;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -10,8 +13,9 @@ import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
-@Component
-@Scope("session")
+//@Scope("session")
+@ViewScoped
+@ManagedBean
 //@URLMapping(id = "homeBean", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/home.xhtml")
 @URLMappings(mappings={
 		@URLMapping(id = "homeBean1", beanName="homeBean", pattern = "/orig/home", viewId = "/WEB-INF/jsf/home.xhtml"),

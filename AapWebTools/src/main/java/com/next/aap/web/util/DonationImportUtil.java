@@ -33,6 +33,6 @@ public class DonationImportUtil {
 				System.out.println("overAllProcessed="+overAllProcessed);
 			}
 		};
-		new Thread(runnable).run();
+		//new Thread(runnable).run();
 	}
 }

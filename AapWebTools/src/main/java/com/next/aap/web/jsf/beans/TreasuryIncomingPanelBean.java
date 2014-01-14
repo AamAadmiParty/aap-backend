@@ -2,6 +2,9 @@ package com.next.aap.web.jsf.beans;
 
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -15,16 +18,14 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-@Component
-@Scope("session")
+@ManagedBean
+//@Scope("session")
+@ViewScoped
 @URLMapping(id = "treasuryIncomingPanelBean", beanName="treasuryIncomingPanelBean", pattern = "/admin/treasury", viewId = "/WEB-INF/jsf/treasury_incoming.xhtml")
 @URLBeanName("treasuryIncomingPanelBean")
 public class TreasuryIncomingPanelBean extends BaseMultiPermissionAdminJsfBean {
 
 	private static final long serialVersionUID = 1L;
-	
-	@Autowired
-	private MenuBean menuBean;
 	
 	private AdminAccountDto selectedAccount;
 	

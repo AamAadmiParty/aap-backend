@@ -573,6 +573,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		// always use facebook Image Url
 		user.setProfilePic(fbConnectionData.getImageUrl());
 		System.out.println("user=" + user);
+		user.setCreationType(CreationType.SelfServiceUser);
 		user = userDao.saveUser(user);
 
 		dbFacebookAccount.setDateModified(new Date());
@@ -813,8 +814,8 @@ public class AapServiceImpl implements AapService, Serializable {
 			user.setDateCreated(new Date());
 			user.setProfilePic(twitterConnectionData.getImageUrl());
 		}
+		user.setCreationType(CreationType.SelfServiceUser);
 		user = userDao.saveUser(user);
-
 		dbTwitterAccount.setDateModified(new Date());
 		dbTwitterAccount.setToken(twitterConnectionData.getAccessToken());
 		dbTwitterAccount.setTokenSecret(twitterConnectionData.getSecret());

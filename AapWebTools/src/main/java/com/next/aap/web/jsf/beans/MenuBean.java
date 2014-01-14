@@ -3,15 +3,18 @@ package com.next.aap.web.jsf.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.next.aap.core.service.AapService;
+import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
@@ -26,8 +29,8 @@ import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.util.ClientPermissionUtil;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 
-@Component
-@Scope("session")
+@ManagedBean
+@SessionScoped
 @URLBeanName("menuBean")
 public class MenuBean extends BaseJsfBean {
 
@@ -55,6 +58,29 @@ public class MenuBean extends BaseJsfBean {
 	@Autowired
 	private AppDataBean appDataBean;
 
+	public static HttpServletRequest getHttpServletRequest() {
+		return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	}
+	public UserRolePermissionDto getUserRolePermissionInSesion(){
+		HttpServletRequest httpServletRequest = getHttpServletRequest();
+		return (UserRolePermissionDto)httpServletRequest.getSession(true).getAttribute(BaseController.SESSION_USER_PERMISSIONS_PARAM);
+	}
+	protected UserDto getLoggedInUser() {
+		return getLoggedInUser(false, "");
+	}
+
+	protected UserDto getLoggedInUser(boolean redirect, String url) {
+		HttpServletRequest httpServletRequest = getHttpServletRequest();
+		UserDto user = getLoggedInUserFromSesion(httpServletRequest);
+		if (user == null) {
+			if (redirect) {
+				redirect(url);
+			}
+		}
+		return user;
+	}
+
+	
 	public boolean isAdmin() {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		if (userRolePermissionDto == null) {

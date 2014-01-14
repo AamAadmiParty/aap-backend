@@ -7,6 +7,7 @@ import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.service.AapService;
 import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -16,6 +17,9 @@ public abstract class BaseSocialLoginController<T> extends BaseController {
 
 	@Autowired 
 	protected ConnectionFactoryLocator connectionFactoryLocator;
+	
+	@Autowired
+	protected AapService aapService;
 	
 	protected abstract UserDto saveSocialUser(Connection<T> socialConnection, UserDto loggedInUser) throws Exception;
 

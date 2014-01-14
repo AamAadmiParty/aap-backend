@@ -3,6 +3,9 @@ package com.next.aap.web.jsf.beans;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -18,8 +21,9 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-@Component
-@Scope("session")
+//@Scope("session")
+@ViewScoped
+@ManagedBean
 @URLMapping(id = "adminSmsBean", beanName = "adminSmsBean", pattern = "/admin/sms", viewId = "/WEB-INF/jsf/admin_sms.xhtml")
 @URLBeanName("adminSmsBean")
 public class AdminSmsBean extends BaseAdminJsfBean {
@@ -28,17 +32,11 @@ public class AdminSmsBean extends BaseAdminJsfBean {
 
 	private PlannedSmsDto selectedPlannedSms;
 
-	@Autowired
-	private MenuBean menuBean;
-
 	private int pageNumber = 1;
 	private int pageSize = 20;
 	private boolean showList = true;
 
 	private List<PlannedSmsDto> plannedSmss;
-
-	@Autowired(required=true)
-	private AapService aapService;
 
 	public AdminSmsBean() {
 		super(AppPermission.ADMIN_SMS, "/admin/sms");

@@ -30,9 +30,6 @@ public class AdminEditOfficeDetailBean extends BaseMultiPermissionAdminJsfBean {
 
 	private OfficeDto selectedOffice;
 
-	@Autowired
-	private MenuBean menuBean;
-
 	private boolean showList = true;
 	
 	private static double defaultLattitude = 23.2411685061471;

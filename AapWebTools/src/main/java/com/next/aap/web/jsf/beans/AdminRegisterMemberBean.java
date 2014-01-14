@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -38,8 +40,9 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
  @URLMappings(mappings = { @URLMapping(id = "adminRegisterMemberBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
  @URLBeanName("adminRegisterMemberBean")
  */
-@Component
-@Scope("session")
+//@Scope("session")
+@ManagedBean
+@ViewScoped
 @URLMapping(id = "adminRegisterMemberBean", beanName = "adminRegisterMemberBean", pattern = "/admin/register", viewId = "/WEB-INF/jsf/admin_registermember.xhtml")
 @URLBeanName("adminRegisterMemberBean")
 public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
@@ -83,11 +86,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	private VolunteerBean volunteerBean;
 	
 	
-	@Autowired
-	private AapService aapService;
-	@Autowired
-	private MenuBean menuBean;
-
 	public AdminRegisterMemberBean(){
 		super("/admin/register" , AppPermission.ADD_MEMBER, AppPermission.VIEW_MEMBER, AppPermission.UPDATE_GLOBAL_MEMBER, AppPermission.UPDATE_MEMBER);
 	}

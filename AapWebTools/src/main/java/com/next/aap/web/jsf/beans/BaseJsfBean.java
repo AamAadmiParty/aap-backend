@@ -5,10 +5,12 @@ import java.io.Serializable;
 import java.nio.file.AccessDeniedException;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.service.AapService;
 import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.PostLocationType;

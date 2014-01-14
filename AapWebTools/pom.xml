@@ -42,12 +42,17 @@
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
-			<artifactId>black-tie</artifactId>
+			<artifactId>south-street</artifactId>
 			<version>1.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
 			<artifactId>glass-x</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.primefaces.themes</groupId>
+			<artifactId>humanity</artifactId>
 			<version>1.0.4</version>
 		</dependency>
 

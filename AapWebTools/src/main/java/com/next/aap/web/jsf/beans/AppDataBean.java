@@ -40,7 +40,6 @@ public class AppDataBean extends BaseJsfBean {
 	@Autowired
 	protected AapService aapService;
 
-	@PostConstruct
 	public void init(){
 		districtMaps = new HashMap<Long, List<DistrictDto>>();
 		acMaps = new HashMap<>();

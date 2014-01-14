@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -46,10 +47,11 @@ public class NriLocationBean extends BaseJsfBean {
 	private Long selectedNriCountryRegionAreaId;
 	
 	private boolean nri;
-
-	@Autowired
-	private AapService aapService;
 	
+	@Autowired
+	protected AapService aapService;
+
+
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	public void init(boolean nri, Long selectedNriCountryId, Long selectedNriCountryRegionId, Long selectedNriCountryRegionAreaId) throws Exception {
 		this.nri = nri;

@@ -3,6 +3,8 @@ package com.next.aap.web.jsf.beans;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -28,7 +30,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
  @URLMappings(mappings = { @URLMapping(id = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
  @URLBeanName("userProfileBean")
  */
-@Component
+@ManagedBean
 //@Scope("session")
 @ViewScoped
 //@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
@@ -37,28 +39,25 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 		@URLMapping(id = "userProfileBean2", beanName="userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/aapstyle/userprofile.xhtml")
 		})
 @URLBeanName("userProfileBean")
-public class UserProfileBean extends BaseJsfBean {
+public class UserProfileBean extends BaseUserJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
 	private UserDto selectedUserForEditing;
 
-	@Autowired
+	@ManagedProperty("#{locationBean}")
 	private LocationBean votingLocation;
 	
-	@Autowired
+	@ManagedProperty("#{locationBean}")
 	private LocationBean livingLocation;
 	
-	@Autowired
+	@ManagedProperty("#{nriLocationBean}")
 	private NriLocationBean nriLocationBean;
 
 	private boolean sameAsLiving;
 
 	private List<CountryDto> countries;
 	
-	@Autowired
-	private AapService aapService;
-
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
@@ -78,6 +77,9 @@ public class UserProfileBean extends BaseJsfBean {
 		refreshLocationData();
 	}
 	private void refreshLocationData() throws Exception{
+		System.out.println("livingLocation="+livingLocation);
+		System.out.println("votingLocation="+votingLocation);
+		System.out.println("nriLocationBean="+nriLocationBean);
 		livingLocation.init(selectedUserForEditing.getStateLivingId(), selectedUserForEditing.getDistrictLivingId(), selectedUserForEditing.getParliamentConstituencyLivingId(), selectedUserForEditing.getAssemblyConstituencyLivingId());
 		votingLocation.init(selectedUserForEditing.getStateVotingId(), selectedUserForEditing.getDistrictVotingId(), selectedUserForEditing.getParliamentConstituencyVotingId(), selectedUserForEditing.getAssemblyConstituencyVotingId());
 		nriLocationBean.init(selectedUserForEditing.isNri(), selectedUserForEditing.getNriCountryId(), selectedUserForEditing.getNriCountryRegionId(), selectedUserForEditing.getNriCountryRegionAreaId());

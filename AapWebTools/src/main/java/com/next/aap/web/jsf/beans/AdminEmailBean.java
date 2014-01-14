@@ -26,9 +26,6 @@ public class AdminEmailBean extends BaseAdminJsfBean {
 
 	private PlannedEmailDto selectedEmail;
 
-	@Autowired
-	private MenuBean menuBean;
-
 	private int pageNumber = 1;
 	private int pageSize = 20;
 	private boolean showList = true;

@@ -77,7 +77,7 @@
  
  //]]>
  </script>
- 	<title>#{homeBean.user.name} - AAP Profile</title>
+ 	<title>#{menuBean.user.name} - AAP Profile</title>
 </head>
 <body>
 <!--wrapper starts-->
@@ -88,16 +88,16 @@
         	<div id="ltcontent">
             	<!--hdlogo starts-->
                 <div id="hdlogo" align="center">
-                	<img src="#{homeBean.user.profilePic}?type=large" alt=""/>
+                	<img src="#{menuBean.user.profilePic}?type=large" alt=""/>
                 </div>
                 <!--hdlogo ends-->
                 <!--about starts-->
                 <div id="about">
-                	<div class="lthead" align="center"><span class="tphead">#{homeBean.user.name}</span></div>
+                	<div class="lthead" align="center"><span class="tphead">#{menuBean.user.name}</span></div>
                     <div class="ltdetail">
-                    Gender : <h:outputText value="#{homeBean.user.gender}" />		
+                    Gender : <h:outputText value="#{menuBean.user.gender}" />		
 						<br></br>
-						<h:outputText value="Date of Birth" /> : <h:outputText value="#{homeBean.user.dateOfBirth}" >
+						<h:outputText value="Date of Birth" /> : <h:outputText value="#{menuBean.user.dateOfBirth}" >
 				              <f:convertDateTime pattern="dd-MMM-yyyy" />
 						 </h:outputText>
                     </div>

@@ -1,7 +1,10 @@
 package com.next.aap.web.jsf.beans;
 
+import javax.faces.bean.ManagedProperty;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
@@ -9,9 +12,12 @@ import com.next.aap.web.util.ClientPermissionUtil;
 
 public class BaseAdminJsfBean extends BaseJsfBean{
 
-	@Autowired
-	private MenuBean menuBean;
+	@ManagedProperty("#{aapService}")
+	protected AapService aapService;
 	
+	@ManagedProperty("#{menuBean}")
+	protected MenuBean menuBean;
+
 	AppPermission appPermission;
 	String url;
 	public BaseAdminJsfBean(AppPermission appPermission, String url){
@@ -34,5 +40,17 @@ public class BaseAdminJsfBean extends BaseJsfBean{
 			return false;
 		}
 		return true;
+	}
+	public MenuBean getMenuBean() {
+		return menuBean;
+	}
+	public void setMenuBean(MenuBean menuBean) {
+		this.menuBean = menuBean;
+	}
+	public AapService getAapService() {
+		return aapService;
+	}
+	public void setAapService(AapService aapService) {
+		this.aapService = aapService;
 	}
 }

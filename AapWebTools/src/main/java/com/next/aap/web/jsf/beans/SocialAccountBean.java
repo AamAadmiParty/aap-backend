@@ -3,6 +3,8 @@ package com.next.aap.web.jsf.beans;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,8 +18,9 @@ import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
-@Component
-@Scope("session")
+@ManagedBean
+//@Scope("session")
+@ViewScoped
 //@URLMapping(id = "socialAccountBean", beanName="socialAccountBean", pattern = "/socialaccounts", viewId = "/WEB-INF/jsf/socialaccounts.xhtml")
 @URLMappings(mappings={
 		@URLMapping(id = "socialAccountBean1", beanName="socialAccountBean", pattern = "/orig/socialaccounts", viewId = "/WEB-INF/jsf/socialaccounts.xhtml"),

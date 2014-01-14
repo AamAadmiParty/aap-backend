@@ -1,41 +1,32 @@
 package com.next.aap.web.jsf.beans;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.exception.AppException;
-import com.next.aap.core.service.AapService;
-import com.next.aap.web.dto.InterestGroupDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.VolunteerDto;
-import com.next.aap.web.jsf.beans.model.InterestGroupDtoModel;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 
-@Component
-//@Scope("session")
+@ManagedBean
 @ViewScoped
 @URLMapping(id = "userVolunteerBean", beanName = "userVolunteerBean", pattern = "/volunteer", viewId = "/WEB-INF/jsf/aapstyle/uservolunteerprofile.xhtml")
 @URLBeanName("userVolunteerBean")
-public class UserVolunteerBean extends BaseJsfBean {
+public class UserVolunteerBean extends BaseUserJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
-	@Autowired
-	private AapService aapService;
-	@Autowired
+	@ManagedProperty("#{volunteerBean}")
 	private VolunteerBean volunteerBean;
 
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })

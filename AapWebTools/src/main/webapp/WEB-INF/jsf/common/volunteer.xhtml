@@ -1,7 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
-	<p:outputPanel>
-	<p:panelGrid columns="2"  >
+	<h:panelGrid columns="1">
+	<p:panelGrid columns="4"  >
 		<f:facet name="header">  Volunteer Details</f:facet>
 		<h:outputLabel for="education" value="Education" />
 		<p:inputText id="education" value="#{param_VolunteerBean.selectedVolunteer.education}" label="education"></p:inputText>
@@ -36,5 +36,5 @@
 			<p:column>#{oneInterest.description}</p:column>
 		</p:dataTable>
 	</ui:repeat>
-	</p:outputPanel>
+	</h:panelGrid>
 </ui:composition>

@@ -2,6 +2,7 @@ package com.next.aap.web.controller.login;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.service.AapService;
 import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -18,6 +20,9 @@ import com.next.aap.web.util.CookieUtil;
 @Controller
 public class LoginController extends BaseController {
 
+	@Autowired
+	protected AapService aapService;
+	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {

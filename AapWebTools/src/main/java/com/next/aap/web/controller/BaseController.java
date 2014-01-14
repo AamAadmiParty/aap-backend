@@ -4,12 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gdata.util.common.base.StringUtil;
-import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
@@ -29,9 +27,6 @@ public class BaseController {
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@Autowired
-	protected AapService aapService;
-
 	protected void passRedirectUrl(HttpServletRequest httpServletRequest, ModelAndView mv){
 		String redirectUrl = httpServletRequest.getParameter(REDIRECT_URL_PARAM_ID);
 		mv.getModel().put("redirectUrl", redirectUrl);
@@ -116,5 +111,4 @@ public class BaseController {
 	public UserRolePermissionDto getUserRolePermissionInSesion(HttpServletRequest httpServletRequest){
 		return (UserRolePermissionDto)httpServletRequest.getSession(true).getAttribute(SESSION_USER_PERMISSIONS_PARAM);
 	}
-
 }

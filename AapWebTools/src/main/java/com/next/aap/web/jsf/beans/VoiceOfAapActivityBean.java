@@ -2,6 +2,9 @@ package com.next.aap.web.jsf.beans;
 
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -16,23 +19,21 @@ import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
-@Component
-@Scope("session")
+@ManagedBean
+//@Scope("session")
+@ViewScoped
 //@URLMapping(id = "voiceOfAapActivityBean", beanName="voiceOfAapActivityBean", pattern = "/voafactivity", viewId = "/WEB-INF/jsf/voafactivity.xhtml")
 @URLMappings(mappings={
 		@URLMapping(id = "voiceOfAapActivityBean1", beanName="voiceOfAapActivityBean", pattern = "/orig/voafactivity", viewId = "/WEB-INF/jsf/voafactivity.xhtml"),
 		@URLMapping(id = "voiceOfAapActivityBean2", beanName="voiceOfAapActivityBean", pattern = "/voafactivity", viewId = "/WEB-INF/jsf/aapstyle/voafactivity.xhtml")
 		})
 @URLBeanName("voiceOfAapActivityBean")
-public class VoiceOfAapActivityBean extends BaseJsfBean {
+public class VoiceOfAapActivityBean extends BaseUserJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
 	private UserDto loggedInUser;
 	
-	
-	@Autowired
-	private AapService aapService;
 	
 	private boolean beVoiceOfAap;
 	private boolean postOnGroup;

@@ -30,7 +30,7 @@ import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 @ViewScoped
 //@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
 @URLBeanName("locationBean")
-public class LocationBean extends BaseJsfBean {
+public class LocationBean extends BaseUserJsfBean {
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,9 +47,10 @@ public class LocationBean extends BaseJsfBean {
 	private Long selectedDistrictId;
 	private Long selectedAcId;
 	private Long selectedPcId;
-
+	
 	@Autowired
-	private AapService aapService;
+	protected AapService aapService;
+
 	
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	public void init(Long stateId, Long districtId, Long pcId, Long acId) throws Exception {

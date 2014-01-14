@@ -3,6 +3,9 @@ package com.next.aap.web.jsf.beans;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.social.twitter.api.Twitter;
@@ -22,8 +25,9 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-@Component
-@Scope("session")
+@ManagedBean
+//@Scope("session")
+@ViewScoped
 @URLMapping(id = "voiceOfAapTwitterAdminBean", beanName = "voiceOfAapTwitterAdminBean", pattern = "/admin/voiceofaaptwitter", viewId = "/WEB-INF/jsf/admin_voiceofaaptwitter.xhtml")
 @URLBeanName("voiceOfAapTwitterAdminBean")
 public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
@@ -32,18 +36,12 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 
 	private PlannedTweetDto selectedPlannedTweet;
 
-	@Autowired
-	private MenuBean menuBean;
-
 	private int pageNumber = 1;
 	private int pageSize = 20;
 	private boolean showList = true;
 
 	private List<PlannedTweetDto> plannedTweets;
 	private String tweetPreview;
-
-	@Autowired(required=true)
-	private AapService aapService;
 
 	public VoiceOfAapTwitterAdminBean() {
 		super(AppPermission.ADMIN_VOICE_OF_AAP_TWITTER, "/admin/voiceofaaptwitter");

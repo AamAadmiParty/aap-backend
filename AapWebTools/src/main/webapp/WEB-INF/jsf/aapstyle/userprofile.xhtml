@@ -4,7 +4,7 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
 	<ui:include src="htmlhead.xhtml" />
-	<title>Social Accounts</title>
+	<title>Eid Profile</title>
 </h:head>
 <h:body>
 
@@ -31,7 +31,6 @@
 			</div>
 			<div class="social-area">
 				<!-- header starts -->
-				<h5>Edit your Profile</h5>
 				<!-- http://www.ajaxload.info/ -->
 				<p:blockUI block="userProfileForm" trigger=":userProfileForm:saveProfile">
 			Saving Profile<br />
@@ -42,9 +41,13 @@
 					<p:graphicImage value="/images/ajax-loader.gif" />
 				</p:blockUI>
 				<h:form id="userProfileForm">
+					
+					<h:panelGrid width="650">
 					<p:messages id="messages" autoUpdate="true" closable="true" />
-
-					<h:panelGrid columns="4" cellpadding="5">
+					<p:panelGrid columns="4" cellpadding="5">
+						<f:facet name="header">  
+					        Edit Profile  
+					    </f:facet>
 						<h:outputLabel for="name" value="Name*" />
 						<p:inputText id="name" value="#{userProfileBean.selectedUserForEditing.name}" label="Name">
 						</p:inputText>
@@ -71,12 +74,16 @@
 
 						<h:outputText value="Date of Birth*" />
 						<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
+						<h:outputText value="Membership Number" rendered="#{!userProfileBean.showMemberPanel}"/>
+						<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipNumber}" rendered="#{!userProfileBean.showMemberPanel}"/>
+						<h:outputText value="Membership Status" rendered="#{!userProfileBean.showMemberPanel}"/>
+						<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipStatus}" rendered="#{!userProfileBean.showMemberPanel}"/>
 						<!-- 
 					<p:inputMask id="dob" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" mask="99/99/9999" />
 					 -->
-					</h:panelGrid>
+					</p:panelGrid>
 
-					<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
+					<h:panelGrid columns="1" styleClass="topAlignPanelColumns">
 						<h:column>
 							<ui:include src="../common/location.xhtml">
 								<ui:param name="param_Form" value=":userProfileForm" />
@@ -87,7 +94,7 @@
 						</h:column>
 						<h:column>
 							<h:panelGrid columns="1" id="votingLocation">
-								<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
+								<p:panelGrid columns="2" cellpadding="5">
 									<p:selectBooleanCheckbox value="#{userProfileBean.sameAsLiving}">
 										<p:ajax update=":userProfileForm:votingLocation" listener="#{userProfileBean.onClickSameAsLiving}" />
 									</p:selectBooleanCheckbox>
@@ -111,11 +118,6 @@
 
 					<br></br>
 					<br></br>
-					<p:outputPanel id="memberId" rendered="#{!userProfileBean.showMemberPanel}">
-				Membership Number : #{userProfileBean.selectedUserForEditing.membershipNumber}
-				<br></br>
-				Membership Status :  #{userProfileBean.selectedUserForEditing.membershipStatus}
-				</p:outputPanel>
 					<br></br>
 					<p:outputPanel id="memberMessage" rendered="#{userProfileBean.showMemberPanel}">
 						<p:fieldset>
@@ -168,7 +170,7 @@
 					<p:commandButton id="saveProfile" update=":userProfileForm 
 				" value="Save Profile" actionListener="#{userProfileBean.saveProfile}" />
 					<p:tooltip for="saveProfile">Save Profile</p:tooltip>
-
+	</h:panelGrid>
 
 				</h:form>
 			</div>

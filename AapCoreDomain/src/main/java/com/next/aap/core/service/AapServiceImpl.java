@@ -3,6 +3,7 @@ package com.next.aap.core.service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Serializable;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +19,9 @@ import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -52,6 +56,7 @@ import com.next.aap.core.persistance.CountryRole;
 import com.next.aap.core.persistance.District;
 import com.next.aap.core.persistance.DistrictRole;
 import com.next.aap.core.persistance.Donation;
+import com.next.aap.core.persistance.DonationCampaign;
 import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
@@ -97,6 +102,7 @@ import com.next.aap.core.persistance.dao.CountryRegionRoleDao;
 import com.next.aap.core.persistance.dao.CountryRoleDao;
 import com.next.aap.core.persistance.dao.DistrictDao;
 import com.next.aap.core.persistance.dao.DistrictRoleDao;
+import com.next.aap.core.persistance.dao.DonationCampaignDao;
 import com.next.aap.core.persistance.dao.DonationDao;
 import com.next.aap.core.persistance.dao.DonationDumpDao;
 import com.next.aap.core.persistance.dao.EmailDao;
@@ -144,6 +150,8 @@ import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.CreationType;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.DonationCampaignDto;
+import com.next.aap.web.dto.DonationCampaignDto.CampaignType;
 import com.next.aap.web.dto.DonationDto;
 import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
@@ -177,6 +185,9 @@ import com.next.aap.web.dto.VolunteerDto;
 public class AapServiceImpl implements AapService, Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private final String donationUrl = "https://donate.aamaadmiparty.org/?utm_source=donate4india&utm_medium=web&utm_term=donate-purl&utm_content=donation&utm_campaign=affliation&cid=";
+	private final String urlShortnerUrl="http://myaap.in/yourls-api.php?format=json&username=arvind&password=4delhi&action=shorturl&url=";
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private UserDao userDao;
@@ -266,6 +277,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	private DonationDao donationDao;
 	@Autowired
 	private DonationDumpDao donationDumpDao;
+	@Autowired
+	private DonationCampaignDao donationCampaignDao;
+	@Autowired
+	private HttpUtil httpUtil;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -659,8 +674,13 @@ public class AapServiceImpl implements AapService, Serializable {
 	}
 
 	private void mergeUser(User targetUser, User sourceUser) throws AppException {
+		System.out.println("targetUser == "+targetUser.getId()+",SourceUser="+sourceUser.getId());
 		if(targetUser == null || sourceUser == null){
 			//Nothing to merge
+			return;
+		}
+		if(targetUser.getId().equals(sourceUser.getId())){
+			//Nothing to merge, both are same user
 			return;
 		}
 		if(targetUser.equals(sourceUser)){
@@ -4563,4 +4583,131 @@ public class AapServiceImpl implements AapService, Serializable {
 		return donationDtos;
 	}
 
+	private DonationCampaign getRippleDonationCampaign(Long userId){
+		DonationCampaign donationCampaign = donationCampaignDao.getDonationCampaignByTypeAndUserId(CampaignType.RIPPLE, userId);
+		if(donationCampaign != null){
+			return donationCampaign;
+		}
+		FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountByUserId(userId);
+		if(facebookAccount == null){
+			return null;
+		}
+		
+		//try to see if existinsg ripple Campaign exists
+		Object[] rippleCampaign = donationCampaignDao.getOldDonationCampaignInfo(facebookAccount.getFacebookUserId());
+		if(rippleCampaign == null){
+			return null;
+		}
+		donationCampaign = new DonationCampaign();
+		//SELECT fb_user_id, email, cid, long_url, myaap_short_url from ripple_dump where fb_user_id = :facebookUserId
+		donationCampaign.setCampaignId((String)rippleCampaign[2]);
+		donationCampaign.setCampaignType(CampaignType.RIPPLE);
+		donationCampaign.setDateCreated(new Date());
+		donationCampaign.setDescription((String)rippleCampaign[5]);
+		donationCampaign.setLongUrl((String)rippleCampaign[3]);
+		donationCampaign.setMyAapShortUrl((String)rippleCampaign[4]);
+		
+		User user = userDao.getUserById(userId);
+		donationCampaign.setUser(user);
+		
+		donationCampaign = donationCampaignDao.saveDonationCampaign(donationCampaign);
+		return donationCampaign;
+	}
+	@Override
+	@Transactional
+	public List<DonationDto> getUserRippleDonations(Long userId) {
+		DonationCampaign rippleCampaign = getRippleDonationCampaign(userId);
+		if(rippleCampaign == null){
+			return new ArrayList<DonationDto>();
+		}
+		List<Donation> allDonations = donationDao.getDonationsByCampaignId(rippleCampaign.getCampaignId());
+		return convertDonations(allDonations);
+	}
+
+	@Override
+	@Transactional
+	public List<DonationDto> getUserFacebookDonations(Long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public List<DonationCampaignDto> getUserCampaigns(Long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public DonationCampaignDto getRippleDonationCamapign(Long userId) {
+		DonationCampaign donationCampaign = getRippleDonationCampaign(userId);
+		return convertDonationCampaign(donationCampaign);
+	}
+	
+	private DonationCampaignDto convertDonationCampaign(DonationCampaign donationCampaign){
+		if(donationCampaign == null){
+			return null;
+		}
+		DonationCampaignDto donationCampaignDto = new DonationCampaignDto();
+		BeanUtils.copyProperties(donationCampaign, donationCampaignDto);
+		return donationCampaignDto;
+		
+	}
+
+	@Override
+	@Transactional
+	public DonationCampaignDto saveRippleDonationCamapign(String campaignId, String description, Long userId) throws AppException {
+		DonationCampaign donationCampaign = getRippleDonationCampaign(userId);
+		if(donationCampaign == null){
+			donationCampaign = new DonationCampaign();
+			donationCampaign.setCampaignId(campaignId);
+			donationCampaign.setCampaignType(CampaignType.RIPPLE);
+			donationCampaign.setDescription(description);
+			String longUrl = donationUrl + campaignId;
+			donationCampaign.setLongUrl(longUrl);
+			String shortUrl = getShortUrl(longUrl, campaignId);
+			donationCampaign.setMyAapShortUrl(shortUrl);
+			User user = userDao.getUserById(userId);
+			donationCampaign.setUser(user);
+			
+			donationCampaign = donationCampaignDao.saveDonationCampaign(donationCampaign);
+			
+		}else{
+			donationCampaign.setDescription(description);
+		}
+		return convertDonationCampaign(donationCampaign);
+	}
+
+	private String getShortUrl(String longUrl,String cid) throws AppException{
+		HttpClient httpClient = new DefaultHttpClient();
+		try{
+			logger.info("Long url = "+longUrl);
+			String encodedUrl = URLEncoder.encode(longUrl,"UTF-8");
+			logger.info("encodedUrl url = "+encodedUrl);
+			logger.info("final url = "+urlShortnerUrl+encodedUrl);
+			String dayDonationString = httpUtil.getResponse(httpClient, urlShortnerUrl+encodedUrl+"&keyword="+cid);
+			logger.info("dayDonationString = "+dayDonationString);
+			JSONObject jsonObject = new JSONObject(dayDonationString);
+			String status = jsonObject.getString("status");
+			if("fail".equals(status)){
+				String errorCode = jsonObject.getString("code");
+				if("error:keyword".equals(errorCode)){
+					throw new AppException("Idenitifier "+ cid +" already used, please try something else");	
+				}else{
+					throw new AppException(jsonObject.getString("message"));
+				}
+			}else{
+				String shortUrl = jsonObject.getString("shorturl");
+				return shortUrl;
+			}
+			
+		}catch(AppException aex){
+			aex.printStackTrace();
+			throw aex;
+		}catch(Exception ex){
+			ex.printStackTrace();
+			throw new AppException(ex.getMessage());
+		}
+	}
 }

@@ -4,31 +4,42 @@
 	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
 	<ui:include src="htmlhead.xhtml" />
-	<title>Social Accounts</title>
+	<title>My Ripple Donations</title>
+	
 </h:head>
 <h:body>
+	<div id='invtrflfloatbtn'></div>
+	
 
 	<div class="body">
 		<ui:include src="header.xhtml" />
 
 		<div class="bottom-row">
 			<ui:include src="leftwidget.xhtml" />
+				
 			<div class="social-area" style="float: right;">
-				<p:commandButton value="Invite Friends to Donate" onclick="invitereferrals_donate4aap()" />
-				<p:tabView id="tabView">
+				<p:commandButton value="Share Ripple Url" onclick="invitereferrals_826()" rendered="#{myRippleDonationBean.rippleCampaignExists}" ></p:commandButton>
+			
+				<p:tabView id="tabView" rendered="#{myRippleDonationBean.rippleCampaignExists}">
 
 					<p:tab id="success" title="Success">
-						<p:dataTable id="listOfDonations" var="oneDonation" value="#{myDonationBean.successDonations}" paginator="true" rows="25" paginatorPosition="bottom"
+						<p:dataTable id="listOfDonations" var="oneDonation" value="#{myRippleDonationBean.successDonations}" paginator="true" rows="25" paginatorPosition="bottom"
 							paginatorAlwaysVisible="false" emptyMessage="No Donations Found" style="width:650px"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">My Sucessfull Donations</f:facet>
-							<p:column>
+							<p:column width="10%">
 								<f:facet name="header">
 									<h:outputText value="TransactionId" />
 								</f:facet>
 								<h:outputText value="#{oneDonation.transactionId}" />
 							</p:column>
-							<p:column>
+							<p:column width="20%">
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneDonation.donorName}" />
+							</p:column>
+							<p:column width="10%">
 								<f:facet name="header">
 									<h:outputText value="Date" />
 								</f:facet>
@@ -42,7 +53,7 @@
 								</f:facet>
 								<h:outputText value="#{oneDonation.amount}" />
 								<f:facet name="footer">  
-						Rs. <h:outputText value="#{myDonationBean.total}">
+						Rs. <h:outputText value="#{myRippleDonationBean.total}">
 										<f:convertNumber maxFractionDigits="2" groupingUsed="false" />
 									</h:outputText>
 								</f:facet>
@@ -56,18 +67,24 @@
 						</p:dataTable>
 					</p:tab>
 
-					<p:tab id="tab2" title="Failed">
-						<p:dataTable id="listOfFailedDonations" var="oneDonation" value="#{myDonationBean.failedDonations}" paginator="true" rows="100" paginatorPosition="bottom"
+					<p:tab id="tab2" title="Failed" rendered="#{myRippleDonationBean.rippleCampaignExists}">
+						<p:dataTable id="listOfFailedDonations" var="oneDonation" value="#{myRippleDonationBean.failedDonations}" paginator="true" rows="100" paginatorPosition="bottom"
 							paginatorAlwaysVisible="false" emptyMessage="No Donations Found" style="width:650px"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">My Failed Donations</f:facet>
-							<p:column width="20%">
+							<p:column width="10%">
 								<f:facet name="header">
 									<h:outputText value="TransactionId" />
 								</f:facet>
 								<h:outputText value="#{oneDonation.transactionId}" />
 							</p:column>
 							<p:column width="20%">
+								<f:facet name="header">
+									<h:outputText value="Name" />
+								</f:facet>
+								<h:outputText value="#{oneDonation.donorName}" />
+							</p:column>
+							<p:column width="10%">
 								<f:facet name="header">
 									<h:outputText value="Date" />
 								</f:facet>
@@ -89,8 +106,27 @@
 							</p:column>
 						</p:dataTable>
 					</p:tab>
+					<p:tab id="rippleSetup" title="Ripple Setup">
+						<p:panelGrid columns="2" style="width:650px">
+							<p:outputLabel value="Campaign Identifier" />
+							<p:outputLabel value="#{myRippleDonationBean.rippleCampaign.campaignId}" rendered="#{myRippleDonationBean.rippleCampaignExists}" />
+							<p:inputText value="#{myRippleDonationBean.rippleCampaign.campaignId}" rendered="#{!myRippleDonationBean.rippleCampaignExists}" />
+
+							<p:outputLabel value="Profile Welcome Message" />
+							<p:inputTextarea value="#{myRippleDonationBean.rippleCampaign.description}" rows="10" cols="80" />
+
+							<p:outputLabel value="Url to Share" rendered="#{myRippleDonationBean.rippleCampaignExists}"/>
+							<p:outputLabel rendered="#{myRippleDonationBean.rippleCampaignExists}">
+							<p:outputLabel value="#{myRippleDonationBean.rippleCampaign.myAapShortUrl}"  />
+							<p:commandButton value="Share Ripple Url" onclick="invitereferrals_826()" ></p:commandButton>
+							</p:outputLabel>
+							
+
+						</p:panelGrid>
+						
+						<p:commandButton value="Save" actionListener="#{myRippleDonationBean.saveRippleCampaign}"></p:commandButton>
+					</p:tab>
 				</p:tabView>
-				<p:commandButton value="Invite Friends to Donate" onclick="invitereferrals_donate4aap()" />
 
 			</div>
 			<div style="clear: both;" />

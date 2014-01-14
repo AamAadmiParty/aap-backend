@@ -18,6 +18,7 @@ import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.DonationCampaignDto;
 import com.next.aap.web.dto.DonationDto;
 import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
@@ -226,4 +227,14 @@ public interface AapService {
 	int importDonationRecords(int totalRecords);
 	
 	List<DonationDto> getUserDonations(Long userId);
+	
+	List<DonationDto> getUserRippleDonations(Long userId);
+	
+	List<DonationDto> getUserFacebookDonations(Long userId);
+	
+	List<DonationCampaignDto> getUserCampaigns(Long userId);
+	
+	DonationCampaignDto getRippleDonationCamapign(Long userId);
+	
+	DonationCampaignDto saveRippleDonationCamapign(String campaignId, String description, Long userId) throws AppException ;
 }

@@ -37,6 +37,8 @@ public interface DonationDao {
 	
 	public abstract void updateDonationStatus(String donorId, String Status, String statusMessage);
 	
+	public abstract List<Donation> getDonationsByCampaignId(String cid);
+	
 	
 	
 	

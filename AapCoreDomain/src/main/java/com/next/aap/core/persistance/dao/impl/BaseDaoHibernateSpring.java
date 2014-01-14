@@ -147,7 +147,6 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 		}
 		return sqlQuery.list();
 	}
-	
 	public void executeSqlQueryUpdate(String query,Map<String, Object> params){
 		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
 		if(params != null){

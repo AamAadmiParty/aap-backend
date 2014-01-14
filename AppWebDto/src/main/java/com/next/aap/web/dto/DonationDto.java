@@ -1,9 +1,11 @@
 package com.next.aap.web.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class DonationDto {
+public class DonationDto implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String donorId;
 	private String merchantReferenceNumber;

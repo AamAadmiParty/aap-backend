@@ -3532,6 +3532,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		office.setLongitude(officeDto.getLongitude());
 		office.setMobileNumber1(officeDto.getMobileNumber1());
 		office.setMobileNumber2(officeDto.getMobileNumber2());
+		office.setEmail(officeDto.getEmail());
 		office.setNational(officeDto.isNational());
 		office.setOtherInformation(officeDto.getOtherInformation());
 		office.setTwitterHandle(officeDto.getTwitterHandle());
@@ -4709,5 +4710,22 @@ public class AapServiceImpl implements AapService, Serializable {
 			ex.printStackTrace();
 			throw new AppException(ex.getMessage());
 		}
+	}
+
+	@Override
+	@Transactional
+	@Cacheable("location")
+	public List<CountryDto> getNriCountries() {
+		List<CountryDto> allCountries = getAllCountries();
+		Iterator<CountryDto> iterator = allCountries.iterator();
+		CountryDto countryDto;
+		while(iterator.hasNext()){
+			countryDto = iterator.next();
+			if(countryDto.getName().equalsIgnoreCase("India")){
+				iterator.remove();
+				break;
+			}
+		}
+		return allCountries;
 	}
 }

@@ -18,7 +18,7 @@
 		<f:facet name="header">
 			<h:outputLabel for="nri" value="I am NRI" />
 			<p:selectBooleanCheckbox id="nri" value="#{param_NriLocationBean.nri}">
-				<p:ajax update="#{param_PanelId}nriCountry" listener="#{param_NriLocationBean.onClickNri}" />
+				<p:ajax update="#{param_PanelId}nriCountry,#{param_PanelId}nriCountryRegion,#{param_PanelId}nriCountryRegionArea" listener="#{param_NriLocationBean.onClickNri}" />
 			</p:selectBooleanCheckbox>
 		</f:facet>
 		<h:outputLabel value="Country" />
@@ -27,7 +27,7 @@
 			<f:selectItem itemLabel="Select Country" itemValue="0" />
 			<f:selectItems value="#{param_NriLocationBean.nriCountries}" var="oneCountry" itemLabel="#{oneCountry.name}" itemValue="#{oneCountry.id}" />
 
-			<p:ajax event="change" update="#{param_PanelId}nriCountryRegion" listener="#{param_NriLocationBean.handleNriCountryChange}" />
+			<p:ajax event="change" update="#{param_PanelId}nriCountryRegion,#{param_PanelId}nriCountryRegionArea" listener="#{param_NriLocationBean.handleNriCountryChange}" />
 		</p:selectOneMenu>
 
 		<h:outputLabel value="Region/State" />

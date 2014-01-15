@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
@@ -76,18 +75,25 @@ public class NriLocationBean extends BaseJsfBean {
 		if(selectedNriCountryRegionId != null){
 			disableNriCountryRegionAreaCombo = false;
 			nriCountryRegionAreas = aapService.getAllCountryRegionAreasOfCountryRegion(selectedNriCountryRegionId);
+			
 		}
 	}
 
 	
 	public void handleNriCountryChange(AjaxBehaviorEvent event) {
+		selectedNriCountryRegionId = null;
+		selectedNriCountryRegionAreaId = null;
 		try {
 			if (selectedNriCountryId == null || selectedNriCountryId <= 0) {
 				disableNriCountryRegionCombo = true;
+				disableNriCountryRegionAreaCombo = true;
 				nriCountryRegions = new ArrayList<>();
+				nriCountryRegionAreas = new ArrayList<>();
 			} else {
 				disableNriCountryRegionCombo = false;
+				disableNriCountryRegionAreaCombo = true;
 				nriCountryRegions = aapService.getAllCountryRegionsOfCountry(selectedNriCountryId);
+				nriCountryRegionAreas = new ArrayList<>();
 			}
 
 		} catch (Exception e) {
@@ -96,6 +102,7 @@ public class NriLocationBean extends BaseJsfBean {
 	}
 	
 	public void handleNriCountryRegionChange(AjaxBehaviorEvent event) {
+		selectedNriCountryRegionAreaId = null;
 		try {
 			if (selectedNriCountryRegionId == null || selectedNriCountryRegionId <= 0) {
 				disableNriCountryRegionAreaCombo = true;

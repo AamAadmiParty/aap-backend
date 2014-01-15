@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.model.map.MapModel;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.service.AapService;
@@ -39,8 +38,8 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
  @URLMappings(mappings = { @URLMapping(id = "adminEditUserRoleBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
  @URLBeanName("adminEditUserRoleBean")
  */
-@Component
-@Scope("session")
+@ManagedBean
+@ViewScoped
 @URLMapping(id = "adminEditUserRoleBean", beanName = "adminEditUserRoleBean", pattern = "/admin/roles", viewId = "/WEB-INF/jsf/admin_edituserrole.xhtml")
 @URLBeanName("adminEditUserRoleBean")
 public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {

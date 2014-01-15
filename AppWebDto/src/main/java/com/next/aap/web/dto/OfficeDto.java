@@ -24,6 +24,7 @@ public class OfficeDto {
 	private Long countryId;
 	private Long countryRegionId;
 	private Long countryRegionAreaId;
+	private String email;
 	public Long getId() {
 		return id;
 	}
@@ -149,6 +150,12 @@ public class OfficeDto {
 	}
 	public void setCountryRegionAreaId(Long countryRegionAreaId) {
 		this.countryRegionAreaId = countryRegionAreaId;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	

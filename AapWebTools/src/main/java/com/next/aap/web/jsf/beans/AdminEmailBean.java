@@ -3,9 +3,8 @@ package com.next.aap.web.jsf.beans;
 import java.util.Calendar;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.web.dto.AppPermission;
@@ -16,8 +15,8 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-@Component
-@Scope("session")
+@ManagedBean
+@ViewScoped
 @URLMapping(id = "adminEmailBean", beanName = "adminEmailBean", pattern = "/admin/email", viewId = "/WEB-INF/jsf/admin_email.xhtml")
 @URLBeanName("adminEmailBean")
 public class AdminEmailBean extends BaseAdminJsfBean {

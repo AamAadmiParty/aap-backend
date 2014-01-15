@@ -77,6 +77,12 @@
 							</p:column>
 							<p:column>
 								<f:facet name="header">
+									<h:outputText value="Email" />
+								</f:facet>
+								<h:outputText value="#{oneOffice.email}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
 									<h:outputText value="Fb Page Id" />
 								</f:facet>
 								<a href="http://www.facebook.com/#{oneOffice.fbPageId}"><h:outputText value="#{oneOffice.fbPageId}" /></a>
@@ -122,6 +128,9 @@
 
 							<p:outputLabel value="Mobile Number 2"></p:outputLabel>
 							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.mobileNumber2}"></p:inputText>
+
+							<p:outputLabel value="Email"></p:outputLabel>
+							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.email}"></p:inputText>
 
 							<p:outputLabel value="Facebook Page ID"></p:outputLabel>
 							<p:inputText value="#{adminEditOfficeDetailBean.selectedOffice.fbPageId}"></p:inputText>

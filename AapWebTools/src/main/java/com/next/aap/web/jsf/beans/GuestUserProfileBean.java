@@ -13,10 +13,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
@@ -29,14 +25,6 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-/*
- @Component
- //@Scope("session")
- @SessionScoped
- @URLMappings(mappings = { @URLMapping(id = "guestUserProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml") })
- @URLBeanName("guestUserProfileBean")
- */
-//@Scope("session")
 @ViewScoped
 @ManagedBean
 @URLMapping(id = "guestUserProfileBean", beanName = "guestUserProfileBean", pattern = "/guest/register", viewId = "/WEB-INF/jsf/guestuserprofile.xhtml")

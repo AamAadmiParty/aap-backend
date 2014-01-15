@@ -26,9 +26,9 @@
 				</p:blockUI>
 				<h:form id="userProfileForm">
 					
-					<h:panelGrid width="650">
+					<h:panelGrid style="width:600px; max-width:600px;" columns="1">
 					<p:messages id="messages" autoUpdate="true" closable="true" />
-					<p:panelGrid columns="4" cellpadding="5">
+					<p:panelGrid columns="2" cellpadding="5">
 						<f:facet name="header">  
 					        Edit Profile  
 					    </f:facet>
@@ -48,13 +48,14 @@
 						<p:inputText id="passportNumber" value="#{userProfileBean.selectedUserForEditing.passportNumber}" label="Passport Number">
 						</p:inputText>
 						<h:outputLabel for="mobile" value="Mobile" />
+						<p:outputPanel>
 						<p:selectOneMenu value="#{userProfileBean.selectedUserForEditing.countryCode}">
 							<f:selectItem itemLabel="India - 91" itemValue="91" />
 							<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
 						</p:selectOneMenu>
 						<p:inputText id="mobile" value="#{userProfileBean.selectedUserForEditing.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
 						</p:inputText>
-						<p:outputPanel></p:outputPanel>
+						</p:outputPanel>
 
 						<h:outputText value="Date of Birth*" />
 						<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
@@ -62,9 +63,6 @@
 						<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipNumber}" rendered="#{!userProfileBean.showMemberPanel}"/>
 						<h:outputText value="Membership Status" rendered="#{!userProfileBean.showMemberPanel}"/>
 						<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipStatus}" rendered="#{!userProfileBean.showMemberPanel}"/>
-						<!-- 
-					<p:inputMask id="dob" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" mask="99/99/9999" />
-					 -->
 					</p:panelGrid>
 
 					<h:panelGrid columns="1" styleClass="topAlignPanelColumns">

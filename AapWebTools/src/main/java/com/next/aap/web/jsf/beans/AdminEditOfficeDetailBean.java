@@ -2,15 +2,15 @@ package com.next.aap.web.jsf.beans;
 
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.primefaces.event.map.MarkerDragEvent;
 import org.primefaces.event.map.StateChangeEvent;
 import org.primefaces.model.map.DefaultMapModel;
 import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.LoginAccountDto;
@@ -20,8 +20,8 @@ import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
-@Component
-@Scope("session")
+@ManagedBean
+@ViewScoped
 @URLMapping(id = "adminEditOfficeDetailBean", beanName = "adminEditOfficeDetailBean", pattern = "/admin/office", viewId = "/WEB-INF/jsf/admin_office.xhtml")
 @URLBeanName("adminEditOfficeDetailBean")
 public class AdminEditOfficeDetailBean extends BaseMultiPermissionAdminJsfBean {

@@ -10,8 +10,6 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.exception.AppException;
@@ -56,8 +54,6 @@ public class UserProfileBean extends BaseUserJsfBean {
 
 	private boolean sameAsLiving;
 
-	private List<CountryDto> countries;
-	
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
@@ -171,7 +167,10 @@ public class UserProfileBean extends BaseUserJsfBean {
 	public void emptyCallToMakeItWork(AjaxBehaviorEvent event) {
 		// This fucntion doesnt do anything but
 	}
-
+	
+	public List<CountryDto> getCountries(){
+		return aapService.getAllCountries();
+	}
 	
 
 	public boolean isShowMemberPanel(){
@@ -212,14 +211,6 @@ public class UserProfileBean extends BaseUserJsfBean {
 
 	public void setAapService(AapService aapService) {
 		this.aapService = aapService;
-	}
-
-	public List<CountryDto> getCountries() {
-		return countries;
-	}
-
-	public void setCountries(List<CountryDto> countries) {
-		this.countries = countries;
 	}
 
 	public UserDto getSelectedUserForEditing() {

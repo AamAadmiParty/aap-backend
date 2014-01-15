@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -52,11 +53,9 @@ public class MenuBean extends BaseJsfBean {
 	private Long selectedCountryId;
 	private Long selectedCountryRegiontId;
 
-	@Autowired
+	@ManagedProperty("#{aapService}")
 	protected AapService aapService;
 
-	@Autowired
-	private AppDataBean appDataBean;
 
 	public static HttpServletRequest getHttpServletRequest() {
 		return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -532,46 +531,46 @@ public class MenuBean extends BaseJsfBean {
 	}
 
 	public List<CountryDto> getNriCountries() {
-		return appDataBean.getNriCountries();
+		return aapService.getNriCountries();
 	}
 
 	public List<StateDto> getStates() {
-		return appDataBean.getStates();
+		return aapService.getAllStates();
 	}
 
 	public List<DistrictDto> getDistrictOfState() {
 		if (selectedStateId == null) {
 			return new ArrayList<>();
 		}
-		return appDataBean.getDistrictOfState(selectedStateId);
+		return aapService.getAllDistrictOfState(selectedStateId);
 	}
 
 	public List<AssemblyConstituencyDto> getAssemblyConstituencyOfDistrict() {
 		if (selectedDistrictId == null) {
 			return new ArrayList<>();
 		}
-		return appDataBean.getAssemblyConstituencyOfDistrict(selectedDistrictId);
+		return aapService.getAllAssemblyConstituenciesOfDistrict(selectedDistrictId);
 	}
 
 	public List<ParliamentConstituencyDto> getParliamentConstituencyOfState() {
 		if (selectedStateId == null) {
 			return new ArrayList<>();
 		}
-		return appDataBean.getParliamentConstituencyOfState(selectedStateId);
+		return aapService.getAllParliamentConstituenciesOfState(selectedStateId);
 	}
 
 	public List<CountryRegionDto> getCountryRegionOfCountry() {
 		if (selectedCountryId == null) {
 			return new ArrayList<>();
 		}
-		return appDataBean.getCountryRegionOfCountry(selectedCountryId);
+		return aapService.getAllCountryRegionsOfCountry(selectedCountryId);
 	}
 
 	public List<CountryRegionAreaDto> getCountryRegionAreaOfCountryRegion() {
 		if (selectedCountryRegiontId == null) {
 			return new ArrayList<>();
 		}
-		return appDataBean.getCountryRegionAreaOfCountryRegion(selectedCountryRegiontId);
+		return aapService.getAllCountryRegionAreasOfCountryRegion(selectedCountryRegiontId);
 	}
 
 	public void handleStateChange(AjaxBehaviorEvent event) {
@@ -688,5 +687,11 @@ public class MenuBean extends BaseJsfBean {
 
 	public void setSelectedCountryId(Long selectedCountryId) {
 		this.selectedCountryId = selectedCountryId;
+	}
+	public AapService getAapService() {
+		return aapService;
+	}
+	public void setAapService(AapService aapService) {
+		this.aapService = aapService;
 	}
 }

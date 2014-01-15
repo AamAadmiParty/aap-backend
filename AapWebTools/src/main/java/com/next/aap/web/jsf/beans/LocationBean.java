@@ -77,16 +77,23 @@ public class LocationBean extends BaseUserJsfBean {
 	public void handleStateChange(AjaxBehaviorEvent event) {
 		System.out.println("handleStateChange "+ selectedStateId);
 		try {
+			selectedDistrictId = null;
+			selectedAcId = null;
+			selectedPcId = null;
 			if ( selectedStateId == null || selectedStateId <= 0) {
 				enableDistrictCombo = false;
 				enableParliamentConstituencyCombo = false;
+				enableAssemblyConstituencyCombo = false;
 				districtList = new ArrayList<>();
 				parliamentConstituencyList = new ArrayList<>();
+				assemblyConstituencyList = new ArrayList<>();
 			} else {
 				districtList = aapService.getAllDistrictOfState(selectedStateId);
 				parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(selectedStateId);
 				enableDistrictCombo = true;
 				enableParliamentConstituencyCombo = true;
+				enableAssemblyConstituencyCombo = false;
+				assemblyConstituencyList = new ArrayList<>();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,7 +101,7 @@ public class LocationBean extends BaseUserJsfBean {
 	}
 
 	public void handleDistrictChange(AjaxBehaviorEvent event) {
-		
+		selectedAcId = null;
 		try {
 			if (selectedDistrictId == null || selectedDistrictId <= 0) {
 				enableAssemblyConstituencyCombo = false;

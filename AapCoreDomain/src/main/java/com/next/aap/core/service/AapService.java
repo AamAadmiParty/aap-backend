@@ -62,6 +62,8 @@ public interface AapService {
 	
 	List<CountryDto> getAllCountries() ;
 	
+	List<CountryDto> getNriCountries() ;
+	
 	List<CountryRegionDto> getAllCountryRegionsOfCountry(Long countryId);
 	
 	List<CountryRegionAreaDto> getAllCountryRegionAreasOfCountryRegion(Long countryRegionId);

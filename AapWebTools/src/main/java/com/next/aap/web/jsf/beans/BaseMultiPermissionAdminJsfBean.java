@@ -27,7 +27,9 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 		if(loggedInUser == null){
 			return false;
 		}
+		System.out.println("menuBean="+menuBean);
 		if(isLocationNotSelected(menuBean)){
+			
 			buildAndRedirect("/admin/home");
 			return false;
 		}

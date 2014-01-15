@@ -27,7 +27,7 @@
 		<p:selectOneMenu id="#{param_PanelId}state" disabled="#{!param_LocationBean.enableStateCombo}" value="#{param_LocationBean.selectedStateId}" effect="fold" editable="false">
 			<f:selectItem itemLabel="Select State" itemValue="0" />
 			<f:selectItems value="#{param_LocationBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
-			<p:ajax event="change" update="#{param_PanelId}district,#{param_PanelId}parliamentConstituency" listener="#{param_LocationBean.handleStateChange}" />
+			<p:ajax event="change" update="#{param_PanelId}district,#{param_PanelId}parliamentConstituency,#{param_PanelId}assemblyConstituency" listener="#{param_LocationBean.handleStateChange}" />
 		</p:selectOneMenu>
 		<h:outputLabel for="#{param_PanelId}district" value="District*" />
 		<p:selectOneMenu id="#{param_PanelId}district" disabled="#{!param_LocationBean.enableDistrictCombo}"

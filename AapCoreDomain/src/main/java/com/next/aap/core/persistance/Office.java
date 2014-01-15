@@ -57,6 +57,9 @@ public class Office {
 	@Column(name = "mobile_number2", length=16)
 	private String mobileNumber2;
 
+	@Column(name = "email", length=64)
+	private String email;
+
 	@Column(name = "fb_page_id")
 	private String fbPageId;
 
@@ -312,6 +315,12 @@ public class Office {
 	}
 	public void setCountryRegionAreaId(Long countryRegionAreaId) {
 		this.countryRegionAreaId = countryRegionAreaId;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 	

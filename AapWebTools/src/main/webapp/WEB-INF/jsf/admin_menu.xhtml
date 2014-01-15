@@ -118,7 +118,9 @@ body {
 			<p:outputPanel rendered="#{menuBean.superUser}">
 				<p:panelGrid columns="2" cellpadding="5" style="width:395px;">
 					<f:facet name="header"> Select the Location</f:facet>
-
+					<p:outputLabel />
+					<p:commandButton value="Select" actionListener="#{menuBean.selectGlobal}" styleClass="ui-priority-primary">
+						</p:commandButton>
 					<h:outputLabel for="state" value="State" />
 					<p:selectOneMenu id="state" value="#{menuBean.selectedStateId}" effect="fold" editable="false">
 						<f:selectItem itemLabel="Select State" itemValue="0" />

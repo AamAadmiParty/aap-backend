@@ -3497,6 +3497,27 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		OfficeDto officeDto = new OfficeDto();
 		BeanUtils.copyProperties(office, officeDto);
+		if(office.getCountry() != null){
+			officeDto.setCountryName(office.getCountry().getName());
+		}
+		if(office.getCountryRegion() != null){
+			officeDto.setCountryRegionName(office.getCountryRegion().getName());
+		}
+		if(office.getCountryRegionArea() != null){
+			officeDto.setCountryRegionAreaName(office.getCountryRegionArea().getName());
+		}
+		if(office.getState() != null){
+			officeDto.setStateName(office.getState().getName());
+		}
+		if(office.getDistrict() != null){
+			officeDto.setDistrictName(office.getDistrict().getName());
+		}
+		if(office.getAssemblyConstituency() != null){
+			officeDto.setAssemblyConstituencyName(office.getAssemblyConstituency().getName());
+		}
+		if(office.getParliamentConstituency() != null){
+			officeDto.setParliamentConstituencyName(office.getParliamentConstituency().getName());
+		}
 		return officeDto;
 	}
 

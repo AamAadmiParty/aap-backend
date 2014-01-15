@@ -24,7 +24,14 @@ public class OfficeDto {
 	private Long countryId;
 	private Long countryRegionId;
 	private Long countryRegionAreaId;
+	private String stateName;
+	private String districtName;
+	private String assemblyConstituencyName;
+	private String parliamentConstituencyName;
+	private String countryName;
 	private String email;
+	private String countryRegionName;
+	private String countryRegionAreaName;
 	public Long getId() {
 		return id;
 	}
@@ -157,8 +164,88 @@ public class OfficeDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getStateName() {
+		return stateName;
+	}
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+	public String getDistrictName() {
+		return districtName;
+	}
+	public void setDistrictName(String districtName) {
+		this.districtName = districtName;
+	}
+	public String getAssemblyConstituencyName() {
+		return assemblyConstituencyName;
+	}
+	public void setAssemblyConstituencyName(String assemblyConstituencyName) {
+		this.assemblyConstituencyName = assemblyConstituencyName;
+	}
+	public String getParliamentConstituencyName() {
+		return parliamentConstituencyName;
+	}
+	public void setParliamentConstituencyName(String parliamentConstituencyName) {
+		this.parliamentConstituencyName = parliamentConstituencyName;
+	}
+	public String getCountryName() {
+		return countryName;
+	}
+	public void setCountryName(String countryName) {
+		this.countryName = countryName;
+	}
+	public String getCountryRegionName() {
+		return countryRegionName;
+	}
+	public void setCountryRegionName(String countryRegionName) {
+		this.countryRegionName = countryRegionName;
+	}
+	public String getCountryRegionAreaName() {
+		return countryRegionAreaName;
+	}
+	public void setCountryRegionAreaName(String countryRegionAreaName) {
+		this.countryRegionAreaName = countryRegionAreaName;
+	}
 	
-	
+	public String getLocationName(){
+		if(countryName != null){
+			return countryName;
+		}
+		if(stateName != null){
+			return stateName;
+		}
+		if(districtName != null){
+			return districtName;
+		}
+		if(assemblyConstituencyName != null){
+			return assemblyConstituencyName;
+		}
+		if(parliamentConstituencyName != null){
+			return parliamentConstituencyName;
+		}
+		if(countryRegionName != null){
+			return countryRegionName;
+		}
+		if(countryRegionAreaName != null){
+			return countryRegionAreaName;
+		}
+		if(national){
+			return "Head Office";
+		}
+		return "";
+	}
+	@Override
+	public String toString() {
+		return "OfficeDto [id=" + id + ", lattitude=" + lattitude + ", longitude=" + longitude + ", depth=" + depth + ", address=" + address
+				+ ", landlineNumber1=" + landlineNumber1 + ", landlineNumber2=" + landlineNumber2 + ", mobileNumber1=" + mobileNumber1 + ", mobileNumber2="
+				+ mobileNumber2 + ", fbPageId=" + fbPageId + ", fbGroupId=" + fbGroupId + ", twitterHandle=" + twitterHandle + ", national=" + national
+				+ ", otherInformation=" + otherInformation + ", stateId=" + stateId + ", districtId=" + districtId + ", assemblyConstituencyId="
+				+ assemblyConstituencyId + ", parliamentConstituencyId=" + parliamentConstituencyId + ", countryId=" + countryId + ", countryRegionId="
+				+ countryRegionId + ", countryRegionAreaId=" + countryRegionAreaId + ", stateName=" + stateName + ", districtName=" + districtName
+				+ ", assemblyConstituencyName=" + assemblyConstituencyName + ", parliamentConstituencyName=" + parliamentConstituencyName + ", countryName="
+				+ countryName + ", email=" + email + ", countryRegionName=" + countryRegionName + ", countryRegionAreaName=" + countryRegionAreaName 
+				+ ", locationName=" + getLocationName() +"]";
+	}
 	
 
 

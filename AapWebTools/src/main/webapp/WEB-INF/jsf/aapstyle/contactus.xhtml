@@ -19,13 +19,14 @@
 			js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&amp;appId=1383280855238363";
 			fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));
-
+		/*
 		$(document).ajaxComplete(function() {
 			try {
 				FB.XFBML.parse();
 			} catch (ex) {
 			}
 		});
+		*/
 	</script>
 	<div class="body">
 		<ui:include src="header.xhtml" />
@@ -59,14 +60,16 @@
 									</h:column>
 
 								</h:panelGrid>
-								<p:commandButton id="showContactInfo" update=":contactUsForm" value="Show Contact Information" actionListener="#{contactUsBean.showContactInformation}" />
+								<p:commandButton id="showContactInfo" oncomplete="FB.XFBML.parse();" update=":contactUsForm" value="Show Contact Information" actionListener="#{contactUsBean.showContactInformation}" />
 
 								<p:dataTable id="contactInfo" var="oneContact" value="#{contactUsBean.indianOffices}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 									emptyMessage="No Contact Info Found" style="width:650px"
 									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
-									<f:facet name="header">Contact Information</f:facet>
+									
 									<p:column>
-										<h:panelGrid columns="2">
+									
+										<p:panelGrid columns="2">
+										<f:facet name="header">Contact Information for #{oneContact.locationName} </f:facet>
 											<h:outputText value="Address" />
 											<h:outputText value="#{oneContact.address}" />
 											<h:outputText value="Mobile Number 1" />
@@ -79,11 +82,11 @@
 											<h:outputText value="#{oneContact.landlineNumber2}" />
 											<h:outputText value="Facebook Page" />
 											<p:outputPanel>
-											<div class="fb-like-box" data-href="https://www.facebook.com/#{oneContact.fbPageId}" data-width="400" data-height="400" data-colorscheme="light" data-show-faces="true" data-header="false" data-stream="false" data-show-border="true"></div>
+											<div class="fb-like-box" data-href="https://www.facebook.com/#{oneContact.fbPageId}" data-width="450" data-height="200" data-colorscheme="light" data-show-faces="true" data-header="false" data-stream="false" data-show-border="true"></div>
 											</p:outputPanel>
 											<h:outputText value="Facebook Group" />
-											<h:outputText value="http://www.facebook.com/#{oneContact.fbGroupId}" />
-										</h:panelGrid>
+											<a href="https://www.facebook.com/groups/#{oneContact.fbGroupId}">https://www.facebook.com/#{oneContact.fbGroupId}</a>
+										</p:panelGrid>
 
 									</p:column>
 								</p:dataTable>
@@ -114,12 +117,9 @@
 											<h:outputText value="Landline Number 2" />
 											<h:outputText value="#{oneContact.landlineNumber2}" />
 											<h:outputText value="Facebook Page" />
-											<p:outputPanel>
-												<h:outputText value="http://www.facebook.com/#{oneContact.fbPageId}" />
-												<div class="fb-like" data-href="https://www.facebook.com/#{oneContact.fbPageId}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
-											</p:outputPanel>
+											<div class="fb-like-box" data-href="https://www.facebook.com/#{oneContact.fbPageId}" data-width="450" data-height="200" data-colorscheme="light" data-show-faces="true" data-header="false" data-stream="false" data-show-border="true"></div>
 											<h:outputText value="Facebook Group" />
-											<h:outputText value="http://www.facebook.com/#{oneContact.fbGroupId}" />
+											<h:outputText value="http://www.facebook.com/groups/#{oneContact.fbGroupId}" />
 										</h:panelGrid>
 
 									</p:column>

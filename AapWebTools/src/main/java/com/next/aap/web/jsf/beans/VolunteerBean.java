@@ -12,6 +12,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.exception.AppException;
@@ -25,8 +26,7 @@ import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 
 
 @Component
-//@Scope("session")
-@ViewScoped
+@Scope("session")
 //@URLMapping(id = "volunteerBean", beanName = "volunteerBean", pattern = "/profile", viewId = "/WEB-INF/jsf/volunteer.xhtml")
 @URLBeanName("volunteerBean")
 public class VolunteerBean extends BaseJsfBean {

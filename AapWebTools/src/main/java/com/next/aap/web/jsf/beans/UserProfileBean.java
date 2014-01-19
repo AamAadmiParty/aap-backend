@@ -104,6 +104,7 @@ public class UserProfileBean extends BaseUserJsfBean {
 		selectedUserForEditing.setNriCountryId(nriLocationBean.getSelectedNriCountryId());
 		selectedUserForEditing.setNriCountryRegionId(nriLocationBean.getSelectedNriCountryRegionId());
 		selectedUserForEditing.setNriCountryRegionAreaId(nriLocationBean.getSelectedNriCountryRegionAreaId());
+		selectedUserForEditing.setNriMobileNumber(nriLocationBean.getMobile());
 
 		if (selectedUserForEditing.getStateLivingId() == null || selectedUserForEditing.getStateLivingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select State where you are living currently");

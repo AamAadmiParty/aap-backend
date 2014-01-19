@@ -44,6 +44,7 @@ public class NriLocationBean extends BaseJsfBean {
 	private Long selectedNriCountryId;
 	private Long selectedNriCountryRegionId;
 	private Long selectedNriCountryRegionAreaId;
+	private String mobile;
 	
 	private boolean nri;
 	
@@ -217,6 +218,16 @@ public class NriLocationBean extends BaseJsfBean {
 
 	public void setNri(boolean nri) {
 		this.nri = nri;
+	}
+
+
+	public String getMobile() {
+		return mobile;
+	}
+
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 }

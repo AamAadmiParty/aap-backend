@@ -2,6 +2,7 @@ package com.next.aap.core.persistance.dao;
 
 import java.util.List;
 
+import com.next.aap.core.persistance.LegacyMembership;
 import com.next.aap.core.persistance.User;
 
 
@@ -91,5 +92,10 @@ public interface UserDao {
 	List<Long> getAdminUserForAcTreasure(long acId);
 	
 	List<Long> getAdminUserForPcTreasure(long pcId);
+	
+	LegacyMembership getLegacyMembershipByEmail(String email);
+	
+	LegacyMembership getLegacyMembershipByMobile(String mobile);
 
+	LegacyMembership getLegacyMembershipsByMembershipNumbers(Long membershipNumber);
 }

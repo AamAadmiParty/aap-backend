@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.persistance.LegacyMembership;
 import com.next.aap.core.persistance.User;
 import com.next.aap.core.persistance.dao.UserDao;
 import com.next.aap.web.dto.AccountType;
@@ -34,7 +36,7 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 	private void assignMembershipNumber(User user) {
 		if (user.isMember()) {
 			if (StringUtil.isEmpty(user.getMembershipNumber())) {
-				String membershipNumber = "AAP" + ensureDigits(user.getId(), 6);
+				String membershipNumber = "AAP" + ensureDigits(user.getId(), 9);
 				if (user.getName().indexOf(" ") >= 0) {
 					String names[] = user.getName().split(" ");
 					membershipNumber = membershipNumber + names[0].substring(0, 1) + names[names.length - 1].substring(0, 1);
@@ -288,5 +290,73 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 			userIds =  new ArrayList<>();
 		}
 		return userIds;
+	}
+
+	private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	@Override
+	public LegacyMembership getLegacyMembershipByEmail(String email) {
+		String sqlQuery = "select membership_no,name,email,mobile,state,district,loksabha,vidhansabha,date_created,pay_status,id from membership_dump" +
+				" where email_up=:email and membership_no > 0";
+		Map<String, Object> params = new HashMap<>(1);
+		params.put("email",email.toUpperCase());
+		List<Object[]> list = executeSqlQueryGetObjectList(sqlQuery, params);
+		if(list == null || list.size() != 1 ){
+			return null;
+		}
+		return parseLegacyMembership(list.get(0));
+	}
+
+	@Override
+	public LegacyMembership getLegacyMembershipByMobile(String mobile) {
+		String sqlQuery = "select membership_no,name,email,mobile,state,district,loksabha,vidhansabha,date_created,pay_status,id from membership_dump" +
+				" where mobile=:mobile ";
+		Map<String, Object> params = new HashMap<>(1);
+		params.put("mobile",mobile);
+		List<Object[]> list = executeSqlQueryGetObjectList(sqlQuery, params);
+		if(list == null || list.size() != 1 ){
+			return null;
+		}
+		return parseLegacyMembership(list.get(0));
+	}
+	private LegacyMembership parseLegacyMembership(Object[] oneRecord){
+		LegacyMembership legacyMembership = new LegacyMembership();
+		if(StringUtil.isEmpty((String)oneRecord[0])){
+			return null;
+		}
+		try{
+			legacyMembership.setMembershipNo((Long.parseLong((String)oneRecord[0])));	
+		}catch(NumberFormatException ex){
+			return null;
+		}
+		
+		legacyMembership.setName((String)oneRecord[1]);
+		legacyMembership.setEmail((String)oneRecord[2]);
+		legacyMembership.setMobile((String)oneRecord[3]);
+		legacyMembership.setState((String)oneRecord[4]);
+		legacyMembership.setDistrict((String)oneRecord[5]);
+		legacyMembership.setLoksabha((String)oneRecord[6]);
+		legacyMembership.setVidhansabha((String)oneRecord[7]);
+		try{
+			legacyMembership.setDateCreated(simpleDateFormat.parse((String)oneRecord[8]));
+		}catch(Exception ex){
+			
+		}
+		legacyMembership.setPayStatus((String)oneRecord[9]);
+		legacyMembership.setId(((Integer)oneRecord[10]).longValue());
+		
+		return legacyMembership;
+	}
+
+	@Override
+	public LegacyMembership getLegacyMembershipsByMembershipNumbers(Long membershipNumber) {
+		String sqlQuery = "select membership_no,name,email,mobile,state,district,loksabha,vidhansabha,date_created,pay_status,id from membership_dump" +
+				" where membership_no=:membership_no";
+		Map<String, Object> params = new HashMap<>(1);
+		params.put("membership_no",membershipNumber);
+		List<Object[]> list = executeSqlQueryGetObjectList(sqlQuery, params);
+		if(list == null || list.size() != 1 ){
+			return null;
+		}
+		return parseLegacyMembership(list.get(0));
 	}
 }

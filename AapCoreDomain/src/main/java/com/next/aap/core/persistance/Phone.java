@@ -53,7 +53,8 @@ public class Phone {
 	
 	public enum PhoneType{
 		MOBILE,
-		LANDLINE
+		LANDLINE,
+		NRI_MOBILE
 	}
 	
 	public Long getId() {

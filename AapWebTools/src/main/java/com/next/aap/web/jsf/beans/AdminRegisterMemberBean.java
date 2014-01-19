@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -72,7 +73,7 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 	
 	private double fee = DataUtil.MEMBERSHIP_FEE;
 	
-	@Autowired
+	@ManagedProperty("#{volunteerBean}")
 	private VolunteerBean volunteerBean;
 	
 	

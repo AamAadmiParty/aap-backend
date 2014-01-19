@@ -46,6 +46,10 @@
 			<f:selectItem itemLabel="Select Area/City" itemValue="0" />
 			<f:selectItems value="#{param_NriLocationBean.nriCountryRegionAreas}" var="oneCountryRegionArea" itemLabel="#{oneCountryRegionArea.name}" itemValue="#{oneCountryRegionArea.id}" />
 		</p:selectOneMenu>
+		
+		<h:outputLabel for="#{param_PanelId}nriMobile" value="Mobile" />
+		<p:inputText id="#{param_PanelId}nriMobile" value="#{param_NriLocationBean.mobile}" label="Mobile" mask="9999999999" maxlength="10" disabled="#{!param_NriLocationBean.nri}">
+		</p:inputText>
 
 
 	</p:panelGrid>

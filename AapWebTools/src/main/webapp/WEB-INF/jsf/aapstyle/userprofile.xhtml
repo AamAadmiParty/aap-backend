@@ -60,7 +60,12 @@
 						<h:outputText value="Date of Birth*" />
 						<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
 						<h:outputText value="Membership Number" rendered="#{!userProfileBean.showMemberPanel}"/>
+						<p:outputPanel>
 						<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipNumber}" rendered="#{!userProfileBean.showMemberPanel}"/>
+						<h:outputText value="/" rendered="#{!userProfileBean.showMemberPanel}"/>
+						
+						<h:outputText value="#{userProfileBean.selectedUserForEditing.legacyMembershipNumber}" rendered="#{!userProfileBean.showMemberPanel}"/>
+						</p:outputPanel>
 						<h:outputText value="Membership Status" rendered="#{!userProfileBean.showMemberPanel}"/>
 						<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipStatus}" rendered="#{!userProfileBean.showMemberPanel}"/>
 					</p:panelGrid>

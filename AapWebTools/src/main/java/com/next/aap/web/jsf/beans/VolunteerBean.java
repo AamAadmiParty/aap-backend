@@ -6,16 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.next.aap.core.exception.AppException;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.InterestDto;
 import com.next.aap.web.dto.InterestGroupDto;
@@ -26,8 +22,10 @@ import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 
 
 @Component
-@Scope("session")
-//@URLMapping(id = "volunteerBean", beanName = "volunteerBean", pattern = "/profile", viewId = "/WEB-INF/jsf/volunteer.xhtml")
+@Scope("prototype")
+//@Scope("session")
+@ViewScoped
+//@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
 @URLBeanName("volunteerBean")
 public class VolunteerBean extends BaseJsfBean {
 

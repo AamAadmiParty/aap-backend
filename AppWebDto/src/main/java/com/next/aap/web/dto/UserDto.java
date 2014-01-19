@@ -16,6 +16,7 @@ public class UserDto implements Serializable{
 	private String gender;
 	private Date dateOfBirth;
 	private boolean nri;
+	private String nriMobileNumber;
 	private Long nriCountryId;
 	private Long nriCountryRegionId;
 	private Long nriCountryRegionAreaId;	
@@ -39,6 +40,7 @@ public class UserDto implements Serializable{
 	private String passportNumber;
 	private String voterId;
 	private String email;
+	private String legacyMembershipNumber;
 
 
 	public Long getId() {
@@ -305,6 +307,22 @@ public class UserDto implements Serializable{
 
 	public void setVolunteer(boolean volunteer) {
 		this.volunteer = volunteer;
+	}
+
+	public String getNriMobileNumber() {
+		return nriMobileNumber;
+	}
+
+	public void setNriMobileNumber(String nriMobileNumber) {
+		this.nriMobileNumber = nriMobileNumber;
+	}
+
+	public String getLegacyMembershipNumber() {
+		return legacyMembershipNumber;
+	}
+
+	public void setLegacyMembershipNumber(String legacyMembershipNumber) {
+		this.legacyMembershipNumber = legacyMembershipNumber;
 	}
 
 	@Override

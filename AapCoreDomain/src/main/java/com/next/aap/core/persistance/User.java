@@ -49,6 +49,9 @@ public class User {
 	@Column(name = "membership_no")
 	private String membershipNumber;
 
+	@Column(name = "legacy_membership_no")
+	private String legacyMembershipNumber;
+
 	@Column(name = "name", nullable = false, length=256)
 	private String name;
 	
@@ -782,6 +785,14 @@ public class User {
 
 	public void setPhones(Set<Phone> phones) {
 		this.phones = phones;
+	}
+
+	public String getLegacyMembershipNumber() {
+		return legacyMembershipNumber;
+	}
+
+	public void setLegacyMembershipNumber(String legacyMembershipNumber) {
+		this.legacyMembershipNumber = legacyMembershipNumber;
 	}
 
 	@Override

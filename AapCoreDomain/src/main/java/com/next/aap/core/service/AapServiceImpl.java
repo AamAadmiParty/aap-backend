@@ -59,6 +59,7 @@ import com.next.aap.core.persistance.Donation;
 import com.next.aap.core.persistance.DonationCampaign;
 import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.core.persistance.Email;
+import com.next.aap.core.persistance.LegacyMembership;
 import com.next.aap.core.persistance.Email.ConfirmationType;
 import com.next.aap.core.persistance.FacebookAccount;
 import com.next.aap.core.persistance.FacebookApp;
@@ -632,10 +633,51 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 			email = emailDao.saveEmail(email);
 		}
-
+		importMembershipNumber(user, facebookAccountEmail, null);
 		return convertUser(user);
 	}
-
+	private void importMembershipNumber(User user, String email, String mobile){
+		logger.info("Importing Membership");
+		if(!user.isMember() && StringUtil.isEmpty(user.getLegacyMembershipNumber())){
+			logger.info("Membership can be imported");
+			if(!StringUtil.isEmpty(email)){
+				logger.info("Email : "+ email);
+				LegacyMembership legacyMembership = userDao.getLegacyMembershipByEmail(email);
+				logger.info("legacyMembershipBYEmail : "+ legacyMembership);
+				if(legacyMembership != null){
+					logger.info("Membership NO : "+ legacyMembership.getMembershipNo());
+					LegacyMembership legacyMembershipByMemebrshipNumber = userDao.getLegacyMembershipsByMembershipNumbers(legacyMembership.getMembershipNo());
+					logger.info("legacyMembershipByMemebrshipNumber : "+ legacyMembershipByMemebrshipNumber);
+					if(legacyMembershipByMemebrshipNumber != null){
+						logger.info("legacyMembership : "+ legacyMembership.getMembershipNo());
+						user.setLegacyMembershipNumber(legacyMembership.getMembershipNo().toString());
+						user.setMember(true);
+						user.setMembershipStatus("Confirmed");
+						user = userDao.saveUser(user);
+						return;
+					}
+				}
+			}
+			if(!StringUtil.isEmpty(mobile)){
+				logger.info("mobile : "+ mobile);
+				LegacyMembership legacyMembership = userDao.getLegacyMembershipByMobile(mobile);
+				if(legacyMembership != null){
+					LegacyMembership legacyMembershipByMemebrshipNumber = userDao.getLegacyMembershipsByMembershipNumbers(legacyMembership.getMembershipNo());
+					if(legacyMembershipByMemebrshipNumber != null){
+						logger.info("legacyMembership : "+ legacyMembership.getMembershipNo());
+						user.setLegacyMembershipNumber(legacyMembership.getMembershipNo().toString());
+						user.setMember(true);
+						user.setMembershipStatus("Confirmed");
+						user = userDao.saveUser(user);
+						return;
+					}
+				}
+			}
+			logger.info("COULDNT IMPORT LEGACY MEMBERSHIP NUMBER");
+		}
+		
+		
+	}
 	private UserDto convertUser(User user) {
 		UserDto returnUser = new UserDto();
 		BeanUtils.copyProperties(user, returnUser);
@@ -1108,38 +1150,9 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 		}
 		user = userDao.saveUser(user);
-
-		if (!StringUtil.isEmpty(userDto.getMobileNumber())) {
-			// save Mobile number
-			List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
-			Phone onePhone = null;
-			if (userPhones == null || userPhones.isEmpty()) {
-				onePhone = new Phone();
-				onePhone.setCountryCode(userDto.getCountryCode());
-				onePhone.setDateCreated(new Date());
-				onePhone.setPhoneNumber(userDto.getMobileNumber());
-				onePhone.setPhoneType(PhoneType.MOBILE);
-				onePhone.setUser(user);
-				onePhone.setDateModified(new Date());
-				onePhone = phoneDao.savePhone(onePhone);
-			} else {
-				for (Phone phone : userPhones) {
-					if (phone.getPhoneType().equals(PhoneType.MOBILE)) {
-						onePhone = phone;
-						break;
-					}
-				}
-				if (onePhone == null) {
-					onePhone = userPhones.get(0);
-				}
-				onePhone.setCountryCode(userDto.getCountryCode());
-				onePhone.setPhoneNumber(userDto.getMobileNumber());
-				onePhone.setPhoneType(PhoneType.MOBILE);
-				onePhone.setUser(user);
-				onePhone.setDateModified(new Date());
-				onePhone = phoneDao.savePhone(onePhone);
-			}
-		}
+		saveMobileNumber(user, userDto.getMobileNumber(), PhoneType.MOBILE);
+		saveMobileNumber(user, userDto.getNriMobileNumber(), PhoneType.NRI_MOBILE);
+		
 
 		if (!StringUtil.isEmpty(userDto.getEmail())) {
 			// save Mobile number
@@ -1177,8 +1190,43 @@ public class AapServiceImpl implements AapService, Serializable {
 				oneEmail = emailDao.saveEmail(oneEmail);
 			}
 		}
+		importMembershipNumber(user, userDto.getEmail(), userDto.getMobileNumber());
 		user = userDao.getUserById(user.getId());
 		return convertUser(user);
+	}
+	
+	private void saveMobileNumber(User user, String mobileNumber, PhoneType phoneType){
+		if (!StringUtil.isEmpty(mobileNumber)) {
+			// save Mobile number
+			List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
+			Phone onePhone = null;
+			if (userPhones == null || userPhones.isEmpty()) {
+				onePhone = new Phone();
+				onePhone.setCountryCode(user.getNriCountry().getIsdCode());
+				onePhone.setDateCreated(new Date());
+				onePhone.setPhoneNumber(mobileNumber);
+				onePhone.setPhoneType(phoneType);
+				onePhone.setUser(user);
+				onePhone.setDateModified(new Date());
+				onePhone = phoneDao.savePhone(onePhone);
+			} else {
+				for (Phone phone : userPhones) {
+					if (phone.getPhoneType().equals(phoneType)) {
+						onePhone = phone;
+						break;
+					}
+				}
+				if (onePhone == null) {
+					onePhone = userPhones.get(0);
+				}
+				onePhone.setCountryCode(user.getNriCountry().getIsdCode());
+				onePhone.setPhoneNumber(mobileNumber);
+				onePhone.setPhoneType(phoneType);
+				onePhone.setUser(user);
+				onePhone.setDateModified(new Date());
+				onePhone = phoneDao.savePhone(onePhone);
+			}
+		}
 	}
 
 	@Override

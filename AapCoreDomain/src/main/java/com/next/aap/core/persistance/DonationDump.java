@@ -292,6 +292,17 @@ public class DonationDump {
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
+	@Override
+	public String toString() {
+		return "DonationDump [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId
+				+ ", modifierId=" + modifierId + ", donorId=" + donorId + ", merchantReferenceNumber=" + merchantReferenceNumber + ", transactionId="
+				+ transactionId + ", donorName=" + donorName + ", donorGender=" + donorGender + ", donorAge=" + donorAge + ", donorMobile=" + donorMobile
+				+ ", donorEmail=" + donorEmail + ", donorCountryId=" + donorCountryId + ", donorStateId=" + donorStateId + ", donorDistrictId="
+				+ donorDistrictId + ", donorAddress=" + donorAddress + ", paymentGateway=" + paymentGateway + ", transactionType=" + transactionType
+				+ ", donationDate=" + donationDate + ", donorIp=" + donorIp + ", amount=" + amount + ", utmSource=" + utmSource + ", utmMedium=" + utmMedium
+				+ ", utmTerm=" + utmTerm + ", utmContent=" + utmContent + ", utmCampaign=" + utmCampaign + ", pgErrorMessage=" + pgErrorMessage + ", cid="
+				+ cid + ", pgErrorDetail=" + pgErrorDetail + ", remark=" + remark + ", status=" + status + ", statusMessage=" + statusMessage + "]";
+	}
 	
 
 	

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.next.aap.core.persistance.News;
 import com.next.aap.core.persistance.dao.NewsDao;
+import com.next.aap.web.dto.ContentStatus;
 
 @Repository
 public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> implements NewsDao{
@@ -244,6 +245,16 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 		Map<String, Object> queryParams = new HashMap<String, Object>(1);
 		queryParams.put("ids", newsIds);
 		List<News> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<News> getAllPublishedNewss() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("contentStatus", ContentStatus.Published);
+		
+		String query = "from News where contentStatus = :contentStatus order by publishDate desc";
+		List<News> list = executeQueryGetList(query, params);
 		return list;
 	}
 

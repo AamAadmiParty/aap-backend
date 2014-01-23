@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.next.aap.core.persistance.Blog;
 import com.next.aap.core.persistance.dao.BlogDao;
+import com.next.aap.web.dto.ContentStatus;
 
 @Repository
 public class BlogDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Blog> implements BlogDao{
@@ -244,6 +245,16 @@ public class BlogDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Blog> imp
 		Map<String, Object> queryParams = new HashMap<String, Object>(1);
 		queryParams.put("ids", blogIds);
 		List<Blog> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+	
+	@Override
+	public List<Blog> getAllPublishedBlogs() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("contentStatus", ContentStatus.Published);
+		
+		String query = "from Blog where contentStatus = :contentStatus order by publishDate desc";		
+		List<Blog> list = executeQueryGetList(query, params);
 		return list;
 	}
 

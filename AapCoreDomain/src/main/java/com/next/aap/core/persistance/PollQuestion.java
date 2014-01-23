@@ -52,6 +52,8 @@ public class PollQuestion {
 	private String originalUrl;// Web url link for this news, which will be shared by share intent
 	@Column(name = "valid_till_date")
 	private Date validTillDate;//Publish date of this item
+	@Column(name = "publish_date")
+	private Date publishDate;//Publish date of this item
 	@Column(name = "global_allowed")
 	private boolean global;//Whether this News is available global or not
 	@Column(name = "content_status", nullable = false)
@@ -298,6 +300,14 @@ public class PollQuestion {
 
 	public void setCountryRegionAreas(List<CountryRegionArea> countryRegionAreas) {
 		this.countryRegionAreas = countryRegionAreas;
+	}
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
 	}
 	
 	

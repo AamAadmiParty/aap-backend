@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.next.aap.core.persistance.Video;
 import com.next.aap.core.persistance.dao.VideoDao;
+import com.next.aap.web.dto.ContentStatus;
 
 @Repository
 public class VideoDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Video> implements VideoDao{
@@ -107,6 +108,15 @@ public class VideoDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Video> i
 				"union (select video_id as videoId from video_state where state_id= :stateId) " +
 				"union (select id as videoId from videos where global_allowed= true)) videolist order by videolist.videoId desc";
 		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;
+	}
+	@Override
+	public List<Video> getAllPublishedVideos() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("contentStatus", ContentStatus.Published);
+		
+		String query = "from Video where contentStatus = :contentStatus order by publishDate desc";
+		List<Video> list = executeQueryGetList(query, params);
 		return list;
 	}
 

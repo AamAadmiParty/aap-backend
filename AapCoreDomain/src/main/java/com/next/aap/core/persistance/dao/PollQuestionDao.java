@@ -16,6 +16,8 @@ public interface PollQuestionDao {
 	
 	public abstract List<PollQuestion> getAllPollQuestions();
 	
+	public abstract List<PollQuestion> getAllPollPublishedQuestions();
+	
 	public abstract PollQuestion getPollQuestionByWebUrl(String webUrl);
 	
 	public abstract PollQuestion getPollQuestionByOriginalUrl(String originalUrl);

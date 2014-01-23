@@ -59,7 +59,6 @@ import com.next.aap.core.persistance.Donation;
 import com.next.aap.core.persistance.DonationCampaign;
 import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.core.persistance.Email;
-import com.next.aap.core.persistance.LegacyMembership;
 import com.next.aap.core.persistance.Email.ConfirmationType;
 import com.next.aap.core.persistance.FacebookAccount;
 import com.next.aap.core.persistance.FacebookApp;
@@ -70,6 +69,7 @@ import com.next.aap.core.persistance.FacebookPage;
 import com.next.aap.core.persistance.FacebookPost;
 import com.next.aap.core.persistance.Interest;
 import com.next.aap.core.persistance.InterestGroup;
+import com.next.aap.core.persistance.LegacyMembership;
 import com.next.aap.core.persistance.News;
 import com.next.aap.core.persistance.Office;
 import com.next.aap.core.persistance.ParliamentConstituency;
@@ -89,6 +89,7 @@ import com.next.aap.core.persistance.StateRole;
 import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
+import com.next.aap.core.persistance.Video;
 import com.next.aap.core.persistance.Volunteer;
 import com.next.aap.core.persistance.dao.AcRoleDao;
 import com.next.aap.core.persistance.dao.AccountDao;
@@ -134,6 +135,7 @@ import com.next.aap.core.persistance.dao.StateRoleDao;
 import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
+import com.next.aap.core.persistance.dao.VideoDao;
 import com.next.aap.core.persistance.dao.VolunteerDao;
 import com.next.aap.core.util.DataUtil;
 import com.next.aap.web.dto.AccountTransactionDto;
@@ -179,6 +181,7 @@ import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
+import com.next.aap.web.dto.VideoDto;
 import com.next.aap.web.dto.VoiceOfAapData;
 import com.next.aap.web.dto.VolunteerDto;
 
@@ -250,6 +253,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private ContentTweetDao contentTweetDao;
 	@Autowired
 	private BlogDao blogDao;
+	@Autowired
+	private VideoDao videoDao;
 	@Autowired
 	private PollQuestionDao pollQuestionDao;
 	@Autowired
@@ -2320,6 +2325,8 @@ public class AapServiceImpl implements AapService, Serializable {
 		news.setImageUrl(newsDto.getImageUrl());
 		news.setSource(newsDto.getSource());
 		news.setTitle(newsDto.getTitle());
+		news.setWebUrl(newsDto.getWebUrl());
+		news.setOriginalUrl(newsDto.getOriginalUrl());
 
 		switch (locationType) {
 		case Global:
@@ -2997,6 +3004,8 @@ public class AapServiceImpl implements AapService, Serializable {
 		blog.setImageUrl(blogDto.getImageUrl());
 		blog.setSource(blogDto.getSource());
 		blog.setTitle(blogDto.getTitle());
+		blog.setWebUrl(blogDto.getWebUrl());
+		blog.setOriginalUrl(blogDto.getOriginalUrl());
 
 		switch (locationType) {
 		case Global:
@@ -3087,7 +3096,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		return blogDto;
 	}
 
-	private List<BlogDto> convertBlog(List<Blog> blog) {
+	private List<BlogDto> convertBlogs(List<Blog> blog) {
 		if (blog == null) {
 			return null;
 		}
@@ -3128,7 +3137,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			blog = blogDao.getCountryRegionAreaBlog(locationId);
 			break;
 		}
-		return convertBlog(blog);
+		return convertBlogs(blog);
 	}
 
 	@Override
@@ -4184,155 +4193,158 @@ public class AapServiceImpl implements AapService, Serializable {
 	// 07 Jan 2013 17:55:41:917
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:S");
 
+	private void importOneDonation(DonationDump oneDonation){
+		try {
+			String emailId = null;
+			String donorId = null;
+
+			Email email;
+			Phone phone;
+			//System.out.println("Doantion Data " + oneDonation.getId()+"," + oneDonation.getDonorId()+" , "+oneDonation.getTransactionId() +" , "+oneDonation.getStatus());
+			User phoneUser = null;
+			User emailUser = null;
+			User mainUser = null;
+			emailId = oneDonation.getDonorEmail();
+			donorId = oneDonation.getDonorId();
+
+			email = getDbEmail(emailId, oneDonation);
+			
+			if(email != null){
+				emailUser = email.getUser();
+			}
+			phone = null;//getDbPhone(oneDonation, emailUser);
+			if(email == null && phone == null){
+				//System.out.println("email == null && phone == null");
+				donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", "No Email or Phone Number found");
+				return;
+			}
+			
+			//Both email and Phone number are provided
+			if(email != null && phone != null){
+				//Try to merge user or error out this Record
+				emailUser = email.getUser();
+				phoneUser = phone.getUser();
+				if(emailUser.getId().equals(phoneUser.getId())){
+					//nothing to merge they are same user
+					mainUser = emailUser;
+				}else{
+					//Merge these users
+					try{
+						mergeUser(emailUser, phoneUser);
+						mainUser = emailUser;
+					}catch(AppException ex){
+						donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
+						System.out.println("AppException : "+ex.getMessage());
+						ex.printStackTrace();
+						return;
+					}catch(Exception ex){
+						donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
+						ex.printStackTrace();
+						System.out.println("Exception : "+ex.getMessage());
+						return;
+					}
+				}
+			}
+			
+			if(email != null && phone == null){
+				mainUser = email.getUser();
+			}
+			if(email == null && phone != null){
+				mainUser = phone.getUser();
+			}
+			if(mainUser == null){
+				donationDao.updateDonationStatus(oneDonation.getDonorId(), "CodeError", "No Main User found");
+				System.out.println("Exception : No Main User Found");
+				return;
+			}
+			Date donationDate = null;
+			if(!StringUtil.isEmpty(oneDonation.getDonationDate())){
+				try{
+					donationDate = simpleDateFormat.parse(oneDonation.getDonationDate());	
+				}catch(Exception ex){
+					
+				}
+					
+			}
+			
+			//Update User State
+			updateUserLocation(mainUser, oneDonation.getDonorCountryId(), oneDonation.getDonorStateId());
+			
+			updateUserAddress(mainUser, oneDonation);
+			
+			updateUserName(mainUser, oneDonation);
+			
+			updateUserDob(mainUser, oneDonation, donationDate);
+			
+			mainUser.setDateModified(new Date());
+			
+			mainUser = userDao.saveUser(mainUser);
+			
+			
+			
+			
+			Donation donation = donationDao.getDonationByDonorId(donorId.toString());
+			if(donation == null){
+				donation = new Donation();
+				donation.setUser(mainUser);
+				donation.setAmount(oneDonation.getAmount());
+				donation.setCid(oneDonation.getCid());
+				donation.setDonationDate(donationDate);
+				donation.setDateCreated(donationDate);
+				donation.setDateModified(donationDate);
+				donation.setDonorId(donorId.toString());
+
+				donation.setDonorIp(oneDonation.getDonorIp());
+				donation.setDonorAddress(oneDonation.getDonorAddress());
+				if(oneDonation.getDonorAge() != null){
+					donation.setDonorAge(oneDonation.getDonorAge().toString());	
+				}
+				donation.setDonorCountryId(oneDonation.getDonorCountryId());
+				donation.setDonorDistrictId(oneDonation.getDonorDistrictId());
+				donation.setDonorEmail(oneDonation.getDonorEmail());
+				donation.setDonorGender(oneDonation.getDonorGender());
+				donation.setDonorId(oneDonation.getDonorId());
+				donation.setDonorMobile(oneDonation.getDonorMobile());
+				donation.setDonorName(oneDonation.getDonorName());
+				donation.setDonorStateId(oneDonation.getDonorStateId());
+				
+				
+				donation.setMerchantReferenceNumber(oneDonation.getMerchantReferenceNumber());
+
+				donation.setPaymentGateway(oneDonation.getPaymentGateway());
+				donation.setPgErrorDetail(oneDonation.getPgErrorDetail());
+				donation.setPgErrorMessage(oneDonation.getPgErrorMessage());
+				donation.setRemark(oneDonation.getRemark());
+				donation.setTransactionId(oneDonation.getTransactionId());
+				donation.setTransactionType(oneDonation.getTransactionType());
+				donation.setUtmCampaign(oneDonation.getUtmCampaign());
+				donation.setUtmContent(oneDonation.getUtmContent());
+				donation.setUtmMedium(oneDonation.getUtmMedium());
+				donation.setUtmSource(oneDonation.getUtmSource());
+				donation.setUtmTerm(oneDonation.getUtmTerm());
+
+				donation = donationDao.saveDonation(donation);
+			}else{
+				donation.setAmount(oneDonation.getAmount());
+			}
+			//System.out.println(oneDonation[0] + ", " + oneDonation[1] + " , " + oneDonation[oneDonation.length - 2]);
+			donationDao.updateDonationStatus(oneDonation.getDonorId(), "Imported", "");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
+		}
+	}
 	@Override
 	@Transactional
 	public int importDonationRecords(int totalRecords) {
 
 		List<DonationDump> donations = donationDao.getDonationsToImport(totalRecords);
 
-		String emailId = null;
-		String donorId = null;
-
-		Email email;
-		Phone phone;
 		
 		int totalDonations = 0;
 		for (DonationDump oneDonation : donations) {
-			try {
-				//System.out.println("Doantion Data " + oneDonation.getId()+"," + oneDonation.getDonorId()+" , "+oneDonation.getTransactionId() +" , "+oneDonation.getStatus());
-				totalDonations++;
-				User phoneUser = null;
-				User emailUser = null;
-				User mainUser = null;
-				emailId = oneDonation.getDonorEmail();
-				donorId = oneDonation.getDonorId();
-
-				email = getDbEmail(emailId, oneDonation);
-				
-				if(email != null){
-					emailUser = email.getUser();
-				}
-				phone = null;//getDbPhone(oneDonation, emailUser);
-				if(email == null && phone == null){
-					//System.out.println("email == null && phone == null");
-					donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", "No Email or Phone Number found");
-					continue;
-				}
-				
-				//Both email and Phone number are provided
-				if(email != null && phone != null){
-					//Try to merge user or error out this Record
-					emailUser = email.getUser();
-					phoneUser = phone.getUser();
-					if(emailUser.getId().equals(phoneUser.getId())){
-						//nothing to merge they are same user
-						mainUser = emailUser;
-					}else{
-						//Merge these users
-						try{
-							mergeUser(emailUser, phoneUser);
-							mainUser = emailUser;
-						}catch(AppException ex){
-							donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
-							System.out.println("AppException : "+ex.getMessage());
-							ex.printStackTrace();
-							continue;
-						}catch(Exception ex){
-							donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
-							ex.printStackTrace();
-							System.out.println("Exception : "+ex.getMessage());
-							continue;
-						}
-					}
-				}
-				
-				if(email != null && phone == null){
-					mainUser = email.getUser();
-				}
-				if(email == null && phone != null){
-					mainUser = phone.getUser();
-				}
-				if(mainUser == null){
-					donationDao.updateDonationStatus(oneDonation.getDonorId(), "CodeError", "No Main User found");
-					System.out.println("Exception : No Main User Found");
-					continue;
-				}
-				Date donationDate = null;
-				if(!StringUtil.isEmpty(oneDonation.getDonationDate())){
-					try{
-						donationDate = simpleDateFormat.parse(oneDonation.getDonationDate());	
-					}catch(Exception ex){
-						
-					}
-						
-				}
-				
-				//Update User State
-				updateUserLocation(mainUser, oneDonation.getDonorCountryId(), oneDonation.getDonorStateId());
-				
-				updateUserAddress(mainUser, oneDonation);
-				
-				updateUserName(mainUser, oneDonation);
-				
-				updateUserDob(mainUser, oneDonation, donationDate);
-				
-				mainUser.setDateModified(new Date());
-				
-				mainUser = userDao.saveUser(mainUser);
-				
-				
-				
-				
-				Donation donation = donationDao.getDonationByDonorId(donorId.toString());
-				if(donation == null){
-					donation = new Donation();
-					donation.setUser(mainUser);
-					donation.setAmount(oneDonation.getAmount());
-					donation.setCid(oneDonation.getCid());
-					donation.setDonationDate(donationDate);
-					donation.setDateCreated(donationDate);
-					donation.setDateModified(donationDate);
-					donation.setDonorId(donorId.toString());
-
-					donation.setDonorIp(oneDonation.getDonorIp());
-					donation.setDonorAddress(oneDonation.getDonorAddress());
-					if(oneDonation.getDonorAge() != null){
-						donation.setDonorAge(oneDonation.getDonorAge().toString());	
-					}
-					donation.setDonorCountryId(oneDonation.getDonorCountryId());
-					donation.setDonorDistrictId(oneDonation.getDonorDistrictId());
-					donation.setDonorEmail(oneDonation.getDonorEmail());
-					donation.setDonorGender(oneDonation.getDonorGender());
-					donation.setDonorId(oneDonation.getDonorId());
-					donation.setDonorMobile(oneDonation.getDonorMobile());
-					donation.setDonorName(oneDonation.getDonorName());
-					donation.setDonorStateId(oneDonation.getDonorStateId());
-					
-					
-					donation.setMerchantReferenceNumber(oneDonation.getMerchantReferenceNumber());
-
-					donation.setPaymentGateway(oneDonation.getPaymentGateway());
-					donation.setPgErrorDetail(oneDonation.getPgErrorDetail());
-					donation.setPgErrorMessage(oneDonation.getPgErrorMessage());
-					donation.setRemark(oneDonation.getRemark());
-					donation.setTransactionId(oneDonation.getTransactionId());
-					donation.setTransactionType(oneDonation.getTransactionType());
-					donation.setUtmCampaign(oneDonation.getUtmCampaign());
-					donation.setUtmContent(oneDonation.getUtmContent());
-					donation.setUtmMedium(oneDonation.getUtmMedium());
-					donation.setUtmSource(oneDonation.getUtmSource());
-					donation.setUtmTerm(oneDonation.getUtmTerm());
-
-					donation = donationDao.saveDonation(donation);
-				}else{
-					donation.setAmount(oneDonation.getAmount());
-				}
-				//System.out.println(oneDonation[0] + ", " + oneDonation[1] + " , " + oneDonation[oneDonation.length - 2]);
-				donationDao.updateDonationStatus(oneDonation.getDonorId(), "Imported", "");
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
-			}
+			totalDonations++;
+			importOneDonation(oneDonation);
 		}
 		return totalDonations;
 	}
@@ -4796,5 +4808,190 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 		}
 		return allCountries;
+	}
+
+	@Override
+	@Transactional
+	public NewsDto getNewsByOriginalUrl(String originalUrl) {
+		News dbNews = newsDao.getNewsByOriginalUrl(originalUrl);
+		return convertNews(dbNews);
+	}
+
+	@Override
+	@Transactional
+	public BlogDto getBlogByOriginalUrl(String originalUrl) {
+		Blog dbBlog = blogDao.getBlogByOriginalUrl(originalUrl);
+		return convertBlog(dbBlog);
+	}
+
+	@Override
+	@Transactional
+	public List<NewsDto> getAllPublishedNews() {
+		List<News> news = newsDao.getAllPublishedNewss();
+		return convertNews(news);
+	}
+	
+	@Override
+	@Transactional
+	public List<AssemblyConstituencyDto> getAllAssemblyConstituencies() {
+		List<AssemblyConstituency> allAcs = assemblyConstituencyDao.getAllAssemblyConstituencys();
+		return convertAssemblyConstituencies(allAcs);
+	}
+	
+	@Override
+	@Transactional
+	public List<ParliamentConstituencyDto> getAllParliamentConstituencies() {
+		List<ParliamentConstituency> parliamentConstituencies = parliamentConstituencyDao.getAllParliamentConstituencys();
+		return convertParliamentConstituencyList(parliamentConstituencies);
+	}
+
+	@Override
+	@Transactional
+	public List<BlogDto> getAllPublishedBlogs() {
+		List<Blog> news = blogDao.getAllPublishedBlogs();
+		return convertBlogs(news);
+	}
+
+	@Override
+	@Transactional
+	public List<VideoDto> getAllPublishedVideos() {
+		List<Video> videos = videoDao.getAllPublishedVideos();
+		return convertVideos(videos);
+	}
+	private VideoDto convertVideo(Video video){
+		if(video == null){
+			return null;
+		}
+		VideoDto videoDto = new VideoDto();
+		BeanUtils.copyProperties(video, videoDto);
+		return videoDto;
+	}
+	private List<VideoDto> convertVideos(List<Video> videos){
+		List<VideoDto> videoDtos = new ArrayList<>();
+		if(videos == null){
+			return videoDtos;
+		}
+		for(Video oneVideo:videos){
+			videoDtos.add(convertVideo(oneVideo));
+		}
+		return videoDtos;
+	}
+
+	@Override
+	@Transactional
+	public List<PollQuestionDto> getAllPublishedPolls() {
+		List<PollQuestion> pollQuestions = pollQuestionDao.getAllPollPublishedQuestions();
+		return convertPollQuestions(pollQuestions);
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getNewsItemsOfAc(long acId) {
+		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
+		if(assemblyConstituency == null){
+			return new ArrayList<>(1);
+		}
+		List<Long> allNewsIdOfAc = newsDao.getNewsByLocation(acId, assemblyConstituency.getDistrict().getId(), assemblyConstituency.getDistrict().getStateId());
+		return allNewsIdOfAc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getNewsItemsOfParliamentConstituency(long pcId) {
+		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
+		if(parliamentConstituency == null){
+			return new ArrayList<>(1);
+		}
+		List<Long> allNewsIdOfPc = newsDao.getNewsByLocation(pcId, parliamentConstituency.getStateId());
+		return allNewsIdOfPc;
+	}
+	
+	@Override
+	@Transactional
+	public List<Long> getBlogItemsOfAc(long acId) {
+		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
+		if(assemblyConstituency == null){
+			return new ArrayList<>(1);
+		}
+		List<Long> allBlogIdsOfAc = blogDao.getBlogByLocation(acId, assemblyConstituency.getDistrict().getId(), assemblyConstituency.getDistrict().getStateId());
+		return allBlogIdsOfAc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getBlogItemsOfParliamentConstituency(long pcId) {
+		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
+		if(parliamentConstituency == null){
+			return new ArrayList<>(1);
+		}
+		List<Long> allBlogIdsOfPc = blogDao.getBlogByLocation(pcId, parliamentConstituency.getStateId());
+		return allBlogIdsOfPc;
+	}
+	@Override
+	@Transactional
+	public List<Long> getVideoItemsOfAc(long acId) {
+		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
+		if(assemblyConstituency == null){
+			return new ArrayList<>(1);
+		}
+		List<Long> allVideoIdsOfAc = videoDao.getVideoByLocation(acId, assemblyConstituency.getDistrict().getId(), assemblyConstituency.getDistrict().getStateId());
+		return allVideoIdsOfAc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getVideoItemsOfParliamentConstituency(long pcId) {
+		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
+		if(parliamentConstituency == null){
+			return new ArrayList<>(1);
+		}
+		List<Long> allVideoIdsOfPc = videoDao.getVideoByLocation(pcId, parliamentConstituency.getStateId());
+		return allVideoIdsOfPc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getPollItemsOfAc(long acId) {
+		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
+		if(assemblyConstituency == null){
+			return new ArrayList<>(1);
+		}
+		List<Long> allPollsOfAc = pollQuestionDao.getPollQuestionByLocation(acId, assemblyConstituency.getDistrictId(),assemblyConstituency.getDistrict().getStateId());
+		return allPollsOfAc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getPollItemsOfParliamentConstituency(long pcId) {
+		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
+		if(parliamentConstituency == null){
+			return new ArrayList<>(1);
+		}
+		List<Long> allPollsOfPc = pollQuestionDao.getPollQuestionByLocation(pcId, parliamentConstituency.getStateId());
+		return allPollsOfPc;
+	}
+
+	@Override
+	@Transactional
+	public void saveDonationDump(DonationDump donationDump) {
+		System.out.println("saveDonationDump="+donationDump);
+		if(StringUtil.isEmpty(donationDump.getDonorId())){
+			logger.error("Invalid Donation Data, DONOR_ID is empty or null");
+			return;
+		}
+		DonationDump existingDonationDump = donationDao.getDonationDumpByDonorId(donationDump.getDonorId());
+		if(existingDonationDump == null){
+			donationDump = donationDao.saveDonationDump(donationDump);
+			importOneDonation(donationDump);
+		}else{
+			Donation donation = donationDao.getDonationByDonorId(donationDump.getDonorId());
+			donation.setPgErrorDetail(donationDump.getPgErrorDetail());
+			donation.setPgErrorMessage(donationDump.getPgErrorMessage());
+			donation = donationDao.saveDonation(donation);
+			
+			donationDao.updateDonationPgStatus(donationDump.getDonorId(), donationDump.getPgErrorMessage(), donationDump.getPgErrorDetail());
+		}
+		System.out.println("Donation Dup Updated");
+		
 	}
 }

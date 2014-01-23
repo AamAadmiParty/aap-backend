@@ -22,6 +22,8 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 	<context:annotation-config />
 	
 	<context:component-scan base-package="com.next.aap.task.voiceofaap" />
+	<context:component-scan base-package="com.next.aap.task.donation" />
+	
 	
 	
 	<task:annotation-driven executor="scheduleExecutor" scheduler="taskScheduler" />

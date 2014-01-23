@@ -16,6 +16,8 @@ public interface BlogDao {
 	
 	public abstract List<Blog> getAllBlogs();
 	
+	public abstract List<Blog> getAllPublishedBlogs();
+	
 	public abstract Blog getBlogByWebUrl(String webUrl);
 	
 	public abstract Blog getBlogByOriginalUrl(String originalUrl);

@@ -54,7 +54,7 @@ public class News {
 	@Column(name = "author")
 	private String author;// nullable, name of the person who wrote this article
 	@Column(name = "publish_date")
-	private Date date;//Publish date of this item
+	private Date publishDate;//Publish date of this item
 	@Column(name = "global_allowed")
 	private boolean global;//Whether this News is available global or not
 	@Column(name = "content_status", nullable = false)
@@ -213,12 +213,6 @@ public class News {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	public Date getDate() {
-		return date;
-	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
 	public List<ContentTweet> getTweets() {
 		return tweets;
 	}
@@ -286,5 +280,11 @@ public class News {
 	}
 	public void setCountryRegionsAreas(List<CountryRegionArea> countryRegionsAreas) {
 		this.countryRegionsAreas = countryRegionsAreas;
+	}
+	public Date getPublishDate() {
+		return publishDate;
+	}
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
 	}
 }

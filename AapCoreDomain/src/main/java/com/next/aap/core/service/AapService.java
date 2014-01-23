@@ -9,6 +9,7 @@ import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 
 import com.next.aap.core.exception.AppException;
+import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AdminAccountDto;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
@@ -45,6 +46,7 @@ import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
+import com.next.aap.web.dto.VideoDto;
 import com.next.aap.web.dto.VoiceOfAapData;
 import com.next.aap.web.dto.VolunteerDto;
 
@@ -79,6 +81,11 @@ public interface AapService {
 	List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfState(long stateId) ;
 	
 	AssemblyConstituencyDto getAssemblyConstituencyById(long acId) ;
+	
+	List<AssemblyConstituencyDto> getAllAssemblyConstituencies() ;
+	
+	List<ParliamentConstituencyDto> getAllParliamentConstituencies() ;
+	
 
 	List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(long stateId) ;
 	
@@ -145,13 +152,25 @@ public interface AapService {
 	
 	NewsDto publishNews(Long newsId);
 	
+	NewsDto getNewsByOriginalUrl(String originalUrl);
+	
 	List<NewsDto> getNews(PostLocationType locationType, Long locationId);
+	
+	List<NewsDto> getAllPublishedNews();
 	
 	BlogDto saveBlog(BlogDto blogDto, List<ContentTweetDto> contentTweetDtos, PostLocationType locationType, Long locationId);
 	
 	BlogDto publishBlog(Long newsId);
 	
+	BlogDto getBlogByOriginalUrl(String originalUrl);
+	
 	List<BlogDto> getBlog(PostLocationType locationType, Long locationId);
+	
+	List<BlogDto> getAllPublishedBlogs();
+	
+	List<VideoDto> getAllPublishedVideos();
+	
+	List<PollQuestionDto> getAllPublishedPolls();
 	
 	List<ContentTweetDto> getNewsContentTweets(Long newsId);
 	
@@ -239,4 +258,23 @@ public interface AapService {
 	DonationCampaignDto getRippleDonationCamapign(Long userId);
 	
 	DonationCampaignDto saveRippleDonationCamapign(String campaignId, String description, Long userId) throws AppException ;
+	
+	List<Long> getNewsItemsOfAc(long acId);
+	
+	List<Long> getBlogItemsOfAc(long acId);
+	
+	List<Long> getVideoItemsOfAc(long acId);
+	
+	List<Long> getPollItemsOfAc(long acId);
+	
+	List<Long> getNewsItemsOfParliamentConstituency(long pcId);
+	
+	List<Long> getBlogItemsOfParliamentConstituency(long pcId);
+	
+	List<Long> getVideoItemsOfParliamentConstituency(long pcId);
+	
+	List<Long> getPollItemsOfParliamentConstituency(long acId);
+	
+	void saveDonationDump(DonationDump donationDump);
+
 }

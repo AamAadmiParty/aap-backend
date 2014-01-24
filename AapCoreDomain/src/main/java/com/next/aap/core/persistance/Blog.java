@@ -54,7 +54,7 @@ public class Blog {
 	@Column(name = "author")
 	private String author;// nullable, name of the person who wrote this article
 	@Column(name = "publish_date")
-	private Date date;//Publish date of this item
+	private Date publishDate;//Publish date of this item
 	@Column(name = "global_allowed")
 	private boolean global;//Whether this News is available global or not
 	@ManyToMany(cascade=CascadeType.ALL)
@@ -220,12 +220,6 @@ public class Blog {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	public Date getDate() {
-		return date;
-	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
 	public boolean isGlobal() {
 		return global;
 	}
@@ -285,6 +279,12 @@ public class Blog {
 	}
 	public void setCountryRegionAreas(List<CountryRegionArea> countryRegionAreas) {
 		this.countryRegionAreas = countryRegionAreas;
+	}
+	public Date getPublishDate() {
+		return publishDate;
+	}
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
 	}
 
 	

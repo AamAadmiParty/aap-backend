@@ -107,8 +107,12 @@ script.src = (document.location.protocol == 'https:' ? "//d11yp7khhhspcr.cloudfr
 var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBefore(script, entry); })();
 </script>
 <script type="text/javascript">
-	function invitereferrals_826(){ 
-		var params = { bid: 659, cid: 826 };
+	function inviteFriendsToJoin(){ 
+		var params = { bid: 659, cid: 833 };
+		invite_referrals.widget.inlineBtn(params);
+    }
+	function inviteFriendsToDonateUsingMyRipple(){ 
+		var params = { bid: 659, cid: 836 };
 		invite_referrals.widget.inlineBtn(params);
     }
 	function invitereferrals_donate4aap(){ 

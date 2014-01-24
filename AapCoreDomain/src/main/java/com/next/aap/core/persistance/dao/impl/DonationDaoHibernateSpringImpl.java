@@ -127,41 +127,9 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 		}
 		
 		List<DonationDump> returnResult = new ArrayList<>();
-		int index;
 		if(queryResult != null && queryResult.size() > 0){
 			for(Object[] oneRow:queryResult){
-				index = 0;
-				
-				DonationDump donationDump = new DonationDump();
-				donationDump.setDonorId(getStringValue(oneRow[index++]));
-				donationDump.setMerchantReferenceNumber(getStringValue(oneRow[index++]));
-				donationDump.setTransactionId(getStringValue(oneRow[index++]));
-				donationDump.setDonorName(getStringValue(oneRow[index++]));
-				donationDump.setDonorGender(getStringValue(oneRow[index++]));
-				donationDump.setDonorAge(getIntegerValue(oneRow[index++]));
-				donationDump.setDonorMobile(getStringValue(oneRow[index++]));
-				donationDump.setDonorEmail(getStringValue(oneRow[index++]));
-				donationDump.setDonorCountryId(getStringValue(oneRow[index++]));
-				donationDump.setDonorStateId(getStringValue(oneRow[index++]));
-				donationDump.setDonorDistrictId(getStringValue(oneRow[index++]));
-				donationDump.setDonorAddress(getStringValue(oneRow[index++]));
-				donationDump.setPaymentGateway(getStringValue(oneRow[index++]));
-				donationDump.setTransactionType(getStringValue(oneRow[index++]));
-				donationDump.setDonationDate(getStringValue(oneRow[index++]));
-				donationDump.setDonorIp(getStringValue(oneRow[index++]));
-				donationDump.setAmount(getDoubleValue(oneRow[index++]));
-				donationDump.setUtmSource(getStringValue(oneRow[index++]));
-				donationDump.setUtmMedium(getStringValue(oneRow[index++]));
-				donationDump.setUtmTerm(getStringValue(oneRow[index++]));
-				donationDump.setUtmContent(getStringValue(oneRow[index++]));
-				donationDump.setUtmCampaign(getStringValue(oneRow[index++]));
-				donationDump.setPgErrorMessage(getStringValue(oneRow[index++]));
-				donationDump.setCid(getStringValue(oneRow[index++]));
-				donationDump.setPgErrorDetail(getStringValue(oneRow[index++]));
-				donationDump.setRemark(getStringValue(oneRow[index++]));
-				donationDump.setStatus(getStringValue(oneRow[index++]));
-				donationDump.setStatusMessage(getStringValue(oneRow[index++]));
-				returnResult.add(donationDump);
+				returnResult.add(convertDonationDump(oneRow));
 			}
 		}
 		return returnResult; 
@@ -171,6 +139,40 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 			return null;
 		}
 		return object.toString();
+	}
+	private DonationDump convertDonationDump(Object[] oneRow){
+		int index = 0;
+		DonationDump donationDump = new DonationDump();
+		donationDump.setDonorId(getStringValue(oneRow[index++]));
+		donationDump.setMerchantReferenceNumber(getStringValue(oneRow[index++]));
+		donationDump.setTransactionId(getStringValue(oneRow[index++]));
+		donationDump.setDonorName(getStringValue(oneRow[index++]));
+		donationDump.setDonorGender(getStringValue(oneRow[index++]));
+		donationDump.setDonorAge(getIntegerValue(oneRow[index++]));
+		donationDump.setDonorMobile(getStringValue(oneRow[index++]));
+		donationDump.setDonorEmail(getStringValue(oneRow[index++]));
+		donationDump.setDonorCountryId(getStringValue(oneRow[index++]));
+		donationDump.setDonorStateId(getStringValue(oneRow[index++]));
+		donationDump.setDonorDistrictId(getStringValue(oneRow[index++]));
+		donationDump.setDonorAddress(getStringValue(oneRow[index++]));
+		donationDump.setPaymentGateway(getStringValue(oneRow[index++]));
+		donationDump.setTransactionType(getStringValue(oneRow[index++]));
+		donationDump.setDonationDate(getStringValue(oneRow[index++]));
+		donationDump.setDonorIp(getStringValue(oneRow[index++]));
+		donationDump.setAmount(getDoubleValue(oneRow[index++]));
+		donationDump.setUtmSource(getStringValue(oneRow[index++]));
+		donationDump.setUtmMedium(getStringValue(oneRow[index++]));
+		donationDump.setUtmTerm(getStringValue(oneRow[index++]));
+		donationDump.setUtmContent(getStringValue(oneRow[index++]));
+		donationDump.setUtmCampaign(getStringValue(oneRow[index++]));
+		donationDump.setPgErrorMessage(getStringValue(oneRow[index++]));
+		donationDump.setCid(getStringValue(oneRow[index++]));
+		donationDump.setPgErrorDetail(getStringValue(oneRow[index++]));
+		donationDump.setRemark(getStringValue(oneRow[index++]));
+		donationDump.setStatus(getStringValue(oneRow[index++]));
+		donationDump.setStatusMessage(getStringValue(oneRow[index++]));
+		
+		return donationDump;
 	}
 	private String getStringValue(Object object){
 		String returnValue = null;
@@ -219,7 +221,7 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 		Map<String, Object> params = new HashMap<>(1);
 		params.put("status", Status);
 		params.put("status_message", statusMessage);
-		params.put("donorId", Long.parseLong(donorId));
+		params.put("donorId", donorId);
 		executeSqlQueryUpdate("update donation_dump set status=:status, status_message=:status_message where Donor_Id = :donorId", params);
 	}
 
@@ -235,5 +237,72 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("cid", cid);
 		return executeQueryGetList("from Donation where cid = :cid", params);
+	}
+
+	@Override
+	public DonationDump getDonationDumpByDonorId(String donorId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("donorId", donorId);
+		String selectParams = "Donor_Id, Merchant_Reference_No, Transaction_Id, Name, Gender, Age, Mobile,Email, Country_Id, State_Id, " +
+				"District_Id, Address, Payment_Gateway_Used, Payment_Gateway, Donation_Date, Donor_IP, Amount, Utm_Source, Utm_Medium, Utm_Term" +
+				", Utm_Content, Utm_Campaign, PGErrorMsg, cid, PGErrorDetail, Remarks, status, status_message";
+		List<Object[]> queryResult = executeSqlQueryGetObjectList("select "+selectParams+" from donation_dump where donor_id=:donorId", params);
+		if(queryResult == null || queryResult.isEmpty()){
+			return null;
+		}
+		return convertDonationDump(queryResult.get(0));
+	}
+
+	@Override
+	public DonationDump saveDonationDump(DonationDump donationDump) {
+		Map<String, Object> params = new HashMap<>(1);
+		params.put("Donor_Id", donationDump.getDonorId());
+		params.put("Merchant_Reference_No", donationDump.getMerchantReferenceNumber());
+		params.put("Transaction_Id", donationDump.getTransactionId());
+		params.put("Name", donationDump.getDonorName());
+		params.put("Gender", donationDump.getDonorGender());
+		params.put("Age", donationDump.getDonorAge());
+		params.put("Mobile", donationDump.getDonorMobile());
+		params.put("Email", donationDump.getDonorEmail());
+		params.put("Country_Id", donationDump.getDonorCountryId());
+		params.put("State_Id", donationDump.getDonorStateId());
+		params.put("District_Id", donationDump.getDonorDistrictId());
+		params.put("Address", donationDump.getDonorAddress());
+		params.put("Payment_Gateway_Used", donationDump.getPaymentGateway());
+		params.put("Payment_Gateway", donationDump.getTransactionType());
+		params.put("Donation_Date", donationDump.getDonationDate());
+		params.put("Donor_IP", donationDump.getDonorIp());
+		params.put("Amount", donationDump.getAmount());
+		params.put("Utm_Source", donationDump.getUtmSource());
+		params.put("Utm_Medium", donationDump.getUtmMedium());
+		params.put("Utm_Term", donationDump.getUtmTerm());
+		params.put("Utm_Content", donationDump.getUtmContent());
+		params.put("Utm_Campaign", donationDump.getUtmCampaign());
+		params.put("PGErrorMsg", donationDump.getPgErrorMessage());
+		params.put("cid", donationDump.getCid());
+		params.put("PGErrorDetail", donationDump.getPgErrorDetail());
+		params.put("Remarks", donationDump.getRemark());
+		params.put("status", donationDump.getStatus());
+		params.put("status_message", donationDump.getStatusMessage());
+		executeSqlQueryUpdate("INSERT INTO donation_dump" +
+				"(Donor_Id,Merchant_Reference_No,Transaction_Id,Name,Gender,Age,Mobile,Email,Country_Id,State_Id,District_Id,Address," +
+				"Payment_Gateway_Used,Payment_Gateway,Donation_Date,Donor_IP,Amount,Utm_Source,Utm_Medium,Utm_Term,Utm_Content," +
+				"Utm_Campaign,PGErrorMsg,cid,PGErrorDetail,Remarks,status,status_message)" +
+				"VALUES" +
+				"(:Donor_Id,:Merchant_Reference_No,:Transaction_Id,:Name,:Gender,:Age,:Mobile,:Email,:Country_Id,:State_Id,:District_Id,:Address," +
+				":Payment_Gateway_Used,:Payment_Gateway,:Donation_Date,:Donor_IP,:Amount,:Utm_Source,:Utm_Medium,:Utm_Term,:Utm_Content," +
+				":Utm_Campaign,:PGErrorMsg,:cid,:PGErrorDetail,:Remarks,:status,:status_message)", params);
+		
+		return donationDump;
+	}
+
+	@Override
+	public void updateDonationPgStatus(String donorId, String PGErrorMsg, String PGErrorDetail) {
+		Map<String, Object> params = new HashMap<>(1);
+		params.put("PGErrorMsg", PGErrorMsg);
+		params.put("PGErrorDetail", PGErrorDetail);
+		params.put("donorId", donorId);
+		executeSqlQueryUpdate("update donation_dump set PGErrorMsg=:PGErrorMsg, PGErrorDetail=:PGErrorDetail where Donor_Id = :donorId", params);
+
 	}
 }

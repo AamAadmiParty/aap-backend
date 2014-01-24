@@ -27,6 +27,8 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
     <mvc:annotation-driven />
 	<context:annotation-config />
     
-	<context:component-scan base-package="com.next.aap.web.jsf.beans" />	
+	<context:component-scan base-package="com.next.aap.web.jsf.beans" />
+	<context:component-scan base-package="com.next.aap.web.cache" />	
+	
 	
 </beans>

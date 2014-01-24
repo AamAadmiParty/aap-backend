@@ -16,6 +16,8 @@ public interface VideoDao {
 	
 	public abstract List<Video> getAllVideos();
 	
+	public abstract List<Video> getAllPublishedVideos();
+	
 	public abstract Video getVideoByWebUrl(String webUrl);
 	
 	public abstract Video getVideoByVideoId(String videoId);

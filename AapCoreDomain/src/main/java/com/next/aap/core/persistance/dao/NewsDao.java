@@ -16,6 +16,8 @@ public interface NewsDao {
 	
 	public abstract List<News> getAllNewss();
 	
+	public abstract List<News> getAllPublishedNewss();
+	
 	public abstract News getNewsByWebUrl(String webUrl);
 	
 	public abstract News getNewsByOriginalUrl(String originalUrl);

@@ -7,8 +7,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.next.aap.core.persistance.News;
 import com.next.aap.core.persistance.PollQuestion;
 import com.next.aap.core.persistance.dao.PollQuestionDao;
+import com.next.aap.web.dto.ContentStatus;
 
 @Repository
 public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<PollQuestion> implements PollQuestionDao{
@@ -92,7 +94,7 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		String query = "select pollQuestionlist.pollQuestionId from ((select poll_question_id as pollQuestionId from poll_question_ac where ac_id = :acId) " +
 				"union (select poll_question_id as pollQuestionId from poll_question_district where district_id= :districtId) " +
 				"union (select poll_question_id as pollQuestionId from poll_question_state where state_id= :stateId) " +
-				"union (select id as pollQuestionId from pollQuestions where global_allowed= true)) pollQuestionlist order by pollQuestionlist.pollQuestionId desc";
+				"union (select id as pollQuestionId from poll_questions where global_allowed= true)) pollQuestionlist order by pollQuestionlist.pollQuestionId desc";
 		List<Long> list = executeSqlQueryGetListOfLong(query, params);
 		return list;
 	}
@@ -243,6 +245,16 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		Map<String, Object> queryParams = new HashMap<String, Object>(1);
 		queryParams.put("ids", pollQuestionIds);
 		List<PollQuestion> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<PollQuestion> getAllPollPublishedQuestions() {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("contentStatus", ContentStatus.Published);
+		
+		String query = "from PollQuestion where contentStatus = :contentStatus order by publishDate desc";
+		List<PollQuestion> list = executeQueryGetList(query, params);
 		return list;
 	}
 

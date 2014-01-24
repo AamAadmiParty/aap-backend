@@ -37,9 +37,13 @@ public interface DonationDao {
 	
 	public abstract void updateDonationStatus(String donorId, String Status, String statusMessage);
 	
+	public abstract void updateDonationPgStatus(String donorId, String pgError, String pgDetail);
+	
 	public abstract List<Donation> getDonationsByCampaignId(String cid);
 	
+	public abstract DonationDump getDonationDumpByDonorId(String donorId);
 	
+	public abstract DonationDump saveDonationDump(DonationDump donationDump);
 	
 	
 

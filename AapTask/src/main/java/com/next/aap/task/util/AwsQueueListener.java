@@ -27,9 +27,6 @@ public abstract class AwsQueueListener {
 
 	public AwsQueueListener(Regions regions, String queueName, String accessKey, String secretKey) {
 		this.queueName = queueName;
-		System.out.println("queueName = "+queueName);
-		System.out.println("accessKey = "+accessKey);
-		System.out.println("secretKey = "+secretKey);
 		AWSCredentials awsCredentials;
 		awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 		sqs = new AmazonSQSClient(awsCredentials);

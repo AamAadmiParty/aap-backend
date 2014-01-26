@@ -139,11 +139,9 @@ public class AapDataHolder {
 	public List<NewsDto> getNewsDtos(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber, int pageSize){
 		int startItemCount = (pageNumber - 1) * pageSize;
 		int endItemCount = startItemCount + pageSize;
-		System.out.println("Getting news item from "+ startItemCount + " , " + endItemCount);
 		List<NewsDto> newsItems = new ArrayList<>(pageSize);
 		
 		List<Long> locationNewsIds =  getItemsForAllLocations(language, livingAcId, votingAcId, livingPcId, votingPcId, acNewsDtos, pcNewsDtos, allGlobalNewsIds);
-		System.out.println("locationNewsIds = "+ locationNewsIds);
 		Map<Long, NewsDto> newsItemsByLang = newsCacheByLanguage.get(language);
 		
 		
@@ -151,7 +149,6 @@ public class AapDataHolder {
 			if(locationNewsIds.size() <= i){
 				break;
 			}
-			System.out.println("News item "+ i + " = " + newsItemsByLang.get(locationNewsIds.get(i)));
 			newsItems.add(newsItemsByLang.get(locationNewsIds.get(i)));
 		}
 		return newsItems;
@@ -264,11 +261,34 @@ public class AapDataHolder {
 		return blogItems;
 	}
 	
+	public List<PollQuestionDto> getPollQuestionDtos(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber, int pageSize){
+		int startItemCount = (pageNumber - 1) * pageSize;
+		int endItemCount = startItemCount + pageSize;
+		List<PollQuestionDto> pollQuestionItems = new ArrayList<>(pageSize);
+		List<Long> acPollQuestionIds = getItemsForAllLocations(language, livingAcId, votingAcId, livingPcId, votingPcId, acPollDtos, pcPollDtos, allGlobalPollIds);
+		if(acPollQuestionIds == null){
+			acPollQuestionIds = allGlobalPollIds;
+		}
+		Map<Long, PollQuestionDto> pollQuestionItemsByLang = pollCacheByLanguage.get(language);
+		for(int i=startItemCount;i<endItemCount;i++){
+			if(acPollQuestionIds.size() <= i){
+				break;
+			}
+			pollQuestionItems.add(pollQuestionItemsByLang.get(acPollQuestionIds.get(i)));
+		}
+		return pollQuestionItems;
+	}
+	
+	public long getTotalPollQuestionPages(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId,int pageSize){
+		List<Long> locationPollIds =  getItemsForAllLocations(language, livingAcId, votingAcId, livingPcId, votingPcId, acPollDtos, pcPollDtos, allGlobalPollIds);
+		return locationPollIds.size() / pageSize;
+	}
+
 	public void finishLoading(){
 		allGlobalNewsIds = convertToCache(allGlobalNewsIds);
 		allGlobalVideoIds = convertToCache(allGlobalVideoIds);
 		allGlobalBlogIds = convertToCache(allGlobalBlogIds);
-		
+		allGlobalPollIds = convertToCache(allGlobalPollIds);
 	}
 
 }

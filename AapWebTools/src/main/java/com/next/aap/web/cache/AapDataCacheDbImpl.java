@@ -45,8 +45,9 @@ public class AapDataCacheDbImpl{
 	private static final int MAX_NEWS_ITEM = 10;
 	private static final int MAX_VIDEO_ITEM = 10;
 	private static final int MAX_BLOG_ITEM = 10;
+	private static final int MAX_POLL_ITEM = 4;
 	private static final int MAX_EVENT_ITEM = 10;
-	private static final String DEFAULT_LANGUAGE = "en";
+	public static final String DEFAULT_LANGUAGE = "en";
 	
 	private Set<String> allValidLanguages;
 	
@@ -142,16 +143,16 @@ public class AapDataCacheDbImpl{
 		for(PollQuestionDto onePollDto:allPollQuestions){
 			localAapDataHolder.addPollQuestion(DEFAULT_LANGUAGE, onePollDto);
 		}
-		List<Long> blogIds;
+		List<Long> questionIds;
 		for(AssemblyConstituencyDto oneAc:allAssemblyConstituencyDtos){
-			blogIds = aapService.getPollItemsOfAc(oneAc.getId());
-			localAapDataHolder.addAcVideos(oneAc.getId(), blogIds);
+			questionIds = aapService.getPollItemsOfAc(oneAc.getId());
+			localAapDataHolder.addAcPolls(oneAc.getId(), questionIds);
 		}
 		
 		
 		for(ParliamentConstituencyDto onePc:allParliamentConstituencyDtos){
-			blogIds = aapService.getVideoItemsOfParliamentConstituency(onePc.getId());
-			localAapDataHolder.addPcVideos(onePc.getId(), blogIds);
+			questionIds = aapService.getPollItemsOfParliamentConstituency(onePc.getId());
+			localAapDataHolder.addPcPolls(onePc.getId(), questionIds);
 		}
 	}
 	
@@ -204,6 +205,24 @@ public class AapDataCacheDbImpl{
 		blogItemList.setPageSize(pageSize);
 		blogItemList.setTotalPages(aapDataHolder.getTotalBlogPages(lang, livingAcId, votingAcId, livingPcId, votingPcId, pageSize));
 		return blogItemList;
+	}
+
+	
+	public ItemList<PollQuestionDto> getPollQuestionDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId) {
+		return getPollQuestionDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, 1);
+	}
+	public ItemList<PollQuestionDto> getPollQuestionDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber) {
+		return getPollQuestionDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber, MAX_POLL_ITEM);
+	}
+
+
+	private ItemList<PollQuestionDto> getPollQuestionDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber, int pageSize) {
+		List<PollQuestionDto> pollQuestionItems = aapDataHolder.getPollQuestionDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber, pageSize);
+		ItemList<PollQuestionDto> pollQuestionItemList = new ItemList<>(pollQuestionItems);
+		pollQuestionItemList.setPageNumber(pageNumber);
+		pollQuestionItemList.setPageSize(pageSize);
+		pollQuestionItemList.setTotalPages(aapDataHolder.getTotalPollQuestionPages(lang, livingAcId, votingAcId, livingPcId, votingPcId, pageSize));
+		return pollQuestionItemList;
 	}
 
 }

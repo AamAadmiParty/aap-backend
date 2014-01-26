@@ -1,0 +1,177 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<!-- Mobile Specific Metas
+  ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+
+	<!-- 	
+	<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet" type="text/css"/>
+	
+	<link href="#{facesContext.externalContext.requestContextPath}/css/style.css" rel="stylesheet" type="text/css"/>
+	
+	<link href="#{request.contextPath}/css/style.css" rel="stylesheet" type="text/css"/>
+	 -->
+	<!-- CSS
+  ================================================== -->
+	<link rel="stylesheet" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/stylesheets/base.css" />
+	<link rel="stylesheet" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/stylesheets/skeleton.css" />
+	<link rel="stylesheet" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/stylesheets/layout.css" />
+	<!--
+	<link rel="stylesheet" href="http://voteindia.creativebynature.in/aap/stylesheets//style.css" /> 
+	
+	 -->
+	<link rel="stylesheet" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/stylesheets/style.css" />
+	
+	
+    <link href='http://fonts.googleapis.com/css?family=Sanchez' rel='stylesheet' type='text/css' />
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css' />
+	<!-- bxSlider CSS file -->
+	<link rel="stylesheet" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/stylesheets/jquery.bxslider.css" />
+	<link rel="stylesheet" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/stylesheets/slicknav.css" />
+
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<!-- Javascripts
+  ================================================== -->
+  	<!-- jQuery library (served from Google) -->
+<!-- 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+ -->
+	<!-- bxSlider Javascript file -->
+<script src="#{facesContext.externalContext.requestContextPath}/aapnewstyle/js/jquery.bxslider.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+<script src="#{facesContext.externalContext.requestContextPath}/aapnewstyle/js/jquery.slicknav.min.js"></script>
+
+
+
+	<!-- Favicons
+	================================================== -->
+	<link rel="shortcut icon" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/images/favicon.ico" />
+	<link rel="apple-touch-icon" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/images/apple-touch-icon.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/images/apple-touch-icon-72x72.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="#{facesContext.externalContext.requestContextPath}/aapnewstyle/images/apple-touch-icon-114x114.png" />
+	
+	
+	
+<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.topAlignDiv {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+
+.google {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px -200px;
+}
+
+.yahoo {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 50px;
+}
+
+.facebook {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px -100px;
+}
+
+.myspace {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 250px;
+}
+
+.linkedin {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 350px;
+}
+
+.aol {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 0px;
+}
+
+.twitter {
+	display: block;
+	width: 150px;
+	height: 50px;
+	background-image: url(http://www.way2ghar.com/images/google.png);
+	background-position: 0px 150px;
+}
+
+.ui-datagrid {
+	background-color: #3B5998;
+	vertical-align: top;
+}
+
+.facebook-data-row {
+	background-color: #3B5998;
+}
+</style>
+
+<script>	
+var invite_referrals = window.invite_referrals || {}; (function() { 
+	invite_referrals.auth = { bid_e : 'D22655DE90FB47CC49FB29B55B7C6E4A', bid : '659', t : '420', orderID : '' };	
+var script = document.createElement('script');script.async = true;
+script.src = (document.location.protocol == 'https:' ? "//d11yp7khhhspcr.cloudfront.net" : "//cdn.invitereferrals.com") + '/js/invite-referrals-1.0.js';
+var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBefore(script, entry); })();
+</script>
+<script type="text/javascript">
+	function inviteFriendsToJoin(){ 
+		var params = { bid: 659, cid: 833 };
+		invite_referrals.widget.inlineBtn(params);
+    }
+	function inviteFriendsToDonateUsingMyRipple(url){ 
+		var params = { bid: 659, cid: 836, userCustomParams : {'shareLink': url}  };
+		invite_referrals.widget.inlineBtn(params);
+    }
+	function invitereferrals_donate4aap(){ 
+		var params = { bid: 659, cid: 113};
+		invite_referrals.widget.inlineBtn(params);
+    }
+</script>
+	</ui:composition>

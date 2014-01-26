@@ -2414,6 +2414,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		NewsDto newsDto = new NewsDto();
 		BeanUtils.copyProperties(news, newsDto);
+		String contentWithOutHtml = news.getContent().replaceAll("\\<[^>]*>","");
+		newsDto.setContentSummary(contentWithOutHtml);
+		if(StringUtil.isEmpty(newsDto.getImageUrl())){
+			newsDto.setImageUrl("https://lh4.googleusercontent.com/-7MmCqFqneVk/UuN39tQ2qQI/AAAAAAAANyA/rIM9CzbLlLE/s256/aap-text-symbol_512.png");
+		}
 		return newsDto;
 	}
 
@@ -3249,6 +3254,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		PollQuestionDto pollQuestionDto = new PollQuestionDto();
 		BeanUtils.copyProperties(pollQuestion, pollQuestionDto);
+		pollQuestionDto.setAnswers(convertPollAnswers(pollQuestion.getPollAnswers()));
 		return pollQuestionDto;
 	}
 
@@ -3327,8 +3333,12 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public PollQuestionDto publishPollQuestion(Long pollQuestionId) {
 		PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionId);
+		System.out.println("pollQuestion = "+pollQuestion);
+		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		pollQuestion.setContentStatus(ContentStatus.Published);
+		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		pollQuestion = pollQuestionDao.savePollQuestion(pollQuestion);
+		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		return convertPollQuestion(pollQuestion);
 	}
 
@@ -4994,4 +5004,58 @@ public class AapServiceImpl implements AapService, Serializable {
 		System.out.println("Donation Dup Updated");
 		
 	}
+
+	@Override
+	@Transactional
+	public VideoDto saveVideo(VideoDto videoItem) {
+		Video dbVideo;
+		if (videoItem.getId() == null || videoItem.getId() <= 0) {
+			dbVideo = videoDao.getVideoByVideoId(videoItem.getYoutubeVideoId());
+			if (dbVideo == null) {
+				dbVideo = new Video();
+				dbVideo.setDateCreated(new Date());
+			}
+		} else {
+			dbVideo = videoDao.getVideoById(videoItem.getId());
+			if (dbVideo == null) {
+				throw new RuntimeException("No video item exists with id ["
+						+ videoItem.getId() + "]");
+			}
+		}
+		dbVideo.setDateModified(new Date());
+		dbVideo.setImageUrl(videoItem.getImageUrl());
+		dbVideo.setTitle(videoItem.getTitle());
+		dbVideo.setWebUrl(videoItem.getWebUrl());
+		dbVideo.setDescription(videoItem.getDescription());
+		dbVideo.setYoutubeVideoId(videoItem.getYoutubeVideoId());
+		dbVideo.setPublishDate(videoItem.getPublishDate());
+		dbVideo.setGlobal(videoItem.isGlobal());
+		dbVideo.setContentStatus(ContentStatus.Pending);
+		dbVideo = videoDao.saveVideo(dbVideo);
+		return convertVideo(dbVideo);
+	}
+
+	@Override
+	@Transactional
+	public VideoDto getVideoByVideoId(String videoId) {
+		Video dbVideo = videoDao.getVideoByVideoId(videoId);
+		return convertVideo(dbVideo);
+	}
+
+	@Override
+	@Transactional
+	public VideoDto publishVideo(Long videoId) {
+		Video dbVideo = videoDao.getVideoById(videoId);
+		dbVideo.setContentStatus(ContentStatus.Published);
+		dbVideo = videoDao.saveVideo(dbVideo);
+		return convertVideo(dbVideo);
+	}
+
+	@Override
+	@Transactional
+	public NewsDto getNewsById(Long newsId) {
+		News dbNews = newsDao.getNewsById(newsId);
+		return convertNews(dbNews);
+	}
+	
 }

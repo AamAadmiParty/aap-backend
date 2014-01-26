@@ -107,31 +107,20 @@ public class PollAdminBean extends BaseMultiPermissionAdminJsfBean {
 				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_POLL, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()));
 	}
 	public void saveAndPublishPost() {
-		savePost();
-		publishPost();
+		System.out.println("saveAndPublishPost = savePost(true);");
+		savePost(true);
 	}
 	public void publishPost(){
-		try{
-			if(selectedPollQuestion == null){
-				sendErrorMessageToJsfScreen("No pollQuestion selected to publish");
-			}
-			if(selectedPollQuestion.getId() == null || selectedPollQuestion.getId() <= 0){
-				sendErrorMessageToJsfScreen("Please save the PollQuestion first");
-			}
-			if(!isPublish()){
-				sendErrorMessageToJsfScreen("You do not have permission to publish a pollQuestion");
-			}
-			if(isValidInput()){
-				selectedPollQuestion = aapService.publishPollQuestion(selectedPollQuestion.getId());
-				sendInfoMessageToJsfScreen("PollQuestion Published Succesfully");
-				refreshPollQuestionList();
-			}
-			
-		}catch(Exception ex){
-			sendErrorMessageToJsfScreen("Unable to save Post",ex);
-		}
+		System.out.println("publishPost = savePost(true);");
+		savePost(true);
 	}
 	public void savePost(){
+		System.out.println("savePost = savePost(false);");
+		savePost(false);
+		
+	}
+	public void savePost(boolean publish){
+		System.out.println("savePost");
 		try{
 			if(StringUtil.isEmpty(selectedPollQuestion.getContent())){
 				sendErrorMessageToJsfScreen("Please enter Poll Question Content");
@@ -139,7 +128,14 @@ public class PollAdminBean extends BaseMultiPermissionAdminJsfBean {
 
 			if(isValidInput()){
 				selectedPollQuestion = aapService.savePollQuestion(selectedPollQuestion, answerList, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
-				sendInfoMessageToJsfScreen("PollQuestion saved succesfully");
+				System.out.println("publish="+publish);
+				if(publish){
+					aapService.publishPollQuestion(selectedPollQuestion.getId());
+					sendInfoMessageToJsfScreen("PollQuestion saved and published succesfully");
+				}else{
+					sendInfoMessageToJsfScreen("PollQuestion saved succesfully");
+				}
+				
 				refreshPollQuestionList();
 				showList = true;
 			}

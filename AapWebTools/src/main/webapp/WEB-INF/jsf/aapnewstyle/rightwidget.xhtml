@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="five columns">
+		<div class="more-section-header"></div>
+		<div class="more-content-box">
+			<a href="/news"><div class="read-all-news"></div></a> 
+			<a href="/video"><div class="see-all-videos"></div></a> 
+			<a href="/blog"><div class="read-all-blog"></div></a>
+		</div>
+		<!--bx slider javascript-->
+		<script type="text/javascript">
+					$(document).ready(function(){
+  					$('.bxslider').bxSlider({
+  					randomStart: true,
+  					controls: false
+						});
+					});
+				</script>
+		<div class="voting-content">
+
+
+			<h:form id="form" style="background-color:#FFFFFF;padding :0 0 0 0;margin: 0 0 0 0;">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<ul class="bxslider">
+					<ui:repeat id="questions" var="oneQuestion" value="#{votingBean.pollQuestions}">
+						<li><p:panelGrid columns="1" style="width:100%;">
+								<f:facet name="header">
+									<h:outputText value="#{oneQuestion.content}" />
+								</f:facet>
+
+								<p:selectOneRadio id="#{oneQuestion.id}_options" value="#{votingBean.selectedAnswer[oneQuestion.id]}" layout="pageDirection">
+									<f:selectItems var="oneAnswer" value="#{oneQuestion.answers}" itemValue="#{oneAnswer.id}" itemLabel="#{oneAnswer.content}"></f:selectItems>
+								</p:selectOneRadio>
+								<p:commandButton disabled="#{!menuBean.loggedIn}" id="voteNow" value="Vote" actionListener="#{votingBean.saveVote(oneQuestion.id)}" />
+								<p:outputLabel rendered="#{!menuBean.loggedIn}" value="*Please login to vote"></p:outputLabel>
+							</p:panelGrid> <p:blockUI block=":form" trigger="voteNow">
+										Saving Your Vote<br />
+								<p:graphicImage value="/images/ajax-loader.gif" />
+							</p:blockUI></li>
+					</ui:repeat>
+				</ul>
+			</h:form>
+
+		</div>
+
+		<div class="trending-box-header"></div>
+		<div class="trending-content-box">
+			<ui:repeat var="oneItem" value="#{trendingBean.trendingNewsItems}">
+				<div class="trending-content">
+					<div class="trending-content-image">
+						<a href="/news/#{oneItem.id}"><img src="#{oneItem.imageUrl}" /></a>
+					</div>
+					<div class="trending-content-title">
+						<h6>
+							<a href="/news/#{oneItem.id}"><h:outputText value="#{oneItem.title.length() gt 260 ? oneItem.title.substring(0,257).concat('...') : oneItem.title}" escape="false" /></a>
+						</h6>
+					</div>
+				</div>
+
+			</ui:repeat>
+		</div>
+	</div>
+</ui:composition>

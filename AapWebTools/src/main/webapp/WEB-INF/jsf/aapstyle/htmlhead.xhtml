@@ -111,12 +111,12 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 		var params = { bid: 659, cid: 833 };
 		invite_referrals.widget.inlineBtn(params);
     }
-	function inviteFriendsToDonateUsingMyRipple(){ 
-		var params = { bid: 659, cid: 836 };
+	function inviteFriendsToDonateUsingMyRipple(url){ 
+		var params = { bid: 659, cid: 836, userCustomParams : {'shareLink': url}  };
 		invite_referrals.widget.inlineBtn(params);
     }
 	function invitereferrals_donate4aap(){ 
-		var params = { bid: 659, cid: 113 };
+		var params = { bid: 659, cid: 113};
 		invite_referrals.widget.inlineBtn(params);
     }
 </script>

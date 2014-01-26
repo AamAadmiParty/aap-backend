@@ -154,6 +154,8 @@ public interface AapService {
 	
 	NewsDto getNewsByOriginalUrl(String originalUrl);
 	
+	NewsDto getNewsById(Long newsId);
+	
 	List<NewsDto> getNews(PostLocationType locationType, Long locationId);
 	
 	List<NewsDto> getAllPublishedNews();
@@ -276,5 +278,11 @@ public interface AapService {
 	List<Long> getPollItemsOfParliamentConstituency(long acId);
 	
 	void saveDonationDump(DonationDump donationDump);
+
+	VideoDto saveVideo(VideoDto videoItem);
+	
+	VideoDto getVideoByVideoId(String videoId);
+
+	VideoDto publishVideo(Long videoId);
 
 }

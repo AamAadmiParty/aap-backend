@@ -16,11 +16,16 @@ import com.next.aap.web.dto.VolunteerDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
+import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
 
 @ManagedBean
 @ViewScoped
-@URLMapping(id = "userVolunteerBean", beanName = "userVolunteerBean", pattern = "/volunteer", viewId = "/WEB-INF/jsf/aapstyle/uservolunteerprofile.xhtml")
+//@URLMapping(id = "userVolunteerBean", beanName = "userVolunteerBean", pattern = "/volunteer", viewId = "/WEB-INF/jsf/aapstyle/uservolunteerprofile.xhtml")
+@URLMappings(mappings={
+		@URLMapping(id = "userVolunteerBean1", beanName = "userVolunteerBean", pattern = "/aapstyle/volunteer", viewId = "/WEB-INF/jsf/aapstyle/uservolunteerprofile.xhtml"),
+		@URLMapping(id = "userVolunteerBean2", beanName = "userVolunteerBean", pattern = "/volunteer", viewId = "/WEB-INF/jsf/aapnewstyle/uservolunteerprofile.xhtml")
+		})
 @URLBeanName("userVolunteerBean")
 public class UserVolunteerBean extends BaseUserJsfBean {
 

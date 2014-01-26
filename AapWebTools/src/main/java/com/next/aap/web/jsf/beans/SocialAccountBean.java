@@ -24,7 +24,8 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 //@URLMapping(id = "socialAccountBean", beanName="socialAccountBean", pattern = "/socialaccounts", viewId = "/WEB-INF/jsf/socialaccounts.xhtml")
 @URLMappings(mappings={
 		@URLMapping(id = "socialAccountBean1", beanName="socialAccountBean", pattern = "/orig/socialaccounts", viewId = "/WEB-INF/jsf/socialaccounts.xhtml"),
-		@URLMapping(id = "socialAccountBean2", beanName="socialAccountbean", pattern = "/socialaccounts", viewId = "/WEB-INF/jsf/aapstyle/socialaccounts.xhtml")
+		@URLMapping(id = "socialAccountBean2", beanName="socialAccountbean", pattern = "/aapstyle/socialaccounts", viewId = "/WEB-INF/jsf/aapstyle/socialaccounts.xhtml"),
+		@URLMapping(id = "socialAccountBean3", beanName="socialAccountbean", pattern = "/socialaccounts", viewId = "/WEB-INF/jsf/aapnewstyle/socialaccounts.xhtml")
 		})
 @URLBeanName("socialAccountBean")
 public class SocialAccountBean extends BaseJsfBean {

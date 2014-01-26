@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+
+	<ui:include src="htmlhead.xhtml" />
+	<title>#{menuBean.user.name} - Home</title>
+</h:head>
+<h:body>
+	<ui:include src="header.xhtml" />
+	<div class="band mainbody">
+		<div class="container">
+			<!--beginning of left container-->
+			<div class="eleven columns">
+
+				<div class="latest-item-bg"></div>
+				<div class="latest-item-container" style="min-height: 200px;">
+					<div class="latest-content-container" id="news">
+						<div class="title-holder">
+							<span class="title-icon-head-news" id="newsicon"><img src="aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
+									<a href="#">Edit Profile</a>
+								</h5></span>
+						</div>
+
+						<div class="latest-content-text">
+							<h:form id="userVolunteerForm">
+								<h:panelGrid>
+									<p:messages autoUpdate="true" />
+									<ui:include src="../common/volunteer.xhtml">
+										<ui:param name="param_VolunteerBean" value="#{userVolunteerBean.volunteerBean}" />
+									</ui:include>
+
+
+									<p:commandButton id="saveProfile" value="Save Volunteer Profile" actionListener="#{userVolunteerBean.saveProfile}" />
+									<p:tooltip for="saveProfile">Save Profile</p:tooltip>
+
+								</h:panelGrid>
+							</h:form>
+						</div>
+
+					</div>
+					<!--news ends-->
+				</div>
+			</div>
+			<!--end of left container-->
+
+			<!--beginning of right container-->
+			<ui:include src="rightwidget.xhtml" />
+
+
+		</div>
+		<!-- container -->
+	</div>
+	<!--band-->
+
+
+	<ui:include src="footer.xhtml" />
+
+
+</h:body>
+</html>

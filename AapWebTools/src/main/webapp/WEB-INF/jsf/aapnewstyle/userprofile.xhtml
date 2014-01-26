@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+
+	<ui:include src="htmlhead.xhtml" />
+	<title>#{menuBean.user.name} - Home</title>
+</h:head>
+<h:body>
+	<ui:include src="header.xhtml" />
+	<div class="band mainbody">
+		<div class="container">
+			<!--beginning of left container-->
+			<div class="eleven columns">
+
+				<div class="latest-item-bg"></div>
+				<div class="latest-item-container" style="min-height: 200px;">
+					<div class="latest-content-container" id="news">
+						<div class="title-holder">
+							<span class="title-icon-head-news" id="newsicon"><img src="aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
+									<a href="#">Edit Profile</a>
+								</h5></span>
+						</div>
+
+						<div class="latest-content-text">
+							<p:blockUI block="userProfileForm" trigger=":userProfileForm:saveProfile">
+			Saving Profile<br />
+								<p:graphicImage value="/images/ajax-loader.gif" />
+							</p:blockUI>
+							<p:blockUI block="userProfileForm" trigger=":userProfileForm:nri">
+			Please wait<br />
+								<p:graphicImage value="/images/ajax-loader.gif" />
+							</p:blockUI>
+							<h:form id="userProfileForm">
+
+								<h:panelGrid style="width:500px; max-width:500px;" columns="1">
+									<p:messages id="messages" autoUpdate="true" closable="true" />
+									<p:panelGrid columns="2" cellpadding="5">
+										<f:facet name="header">  
+					        Edit Profile  
+					    </f:facet>
+										<h:outputLabel for="name" value="Name*" />
+										<p:inputText id="name" value="#{userProfileBean.selectedUserForEditing.name}" label="Name">
+										</p:inputText>
+										<h:outputLabel for="voterId" value="Voter Id" />
+										<p:inputText id="voterId" value="#{userProfileBean.selectedUserForEditing.voterId}" label="Voter Id">
+										</p:inputText>
+										<h:outputText value="Gender : " />
+										<p:selectOneMenu value="#{userProfileBean.selectedUserForEditing.gender}">
+											<f:selectItem itemLabel="Not Specified" itemValue="NotSpecified" />
+											<f:selectItem itemLabel="Male" itemValue="Male" />
+											<f:selectItem itemLabel="Female" itemValue="Female" />
+										</p:selectOneMenu>
+										<h:outputLabel for="passportNumber" value="Passport Number" />
+										<p:inputText id="passportNumber" value="#{userProfileBean.selectedUserForEditing.passportNumber}" label="Passport Number">
+										</p:inputText>
+										<h:outputLabel for="mobile" value="Mobile" />
+										<p:outputPanel>
+											<p:selectOneMenu value="#{userProfileBean.selectedUserForEditing.countryCode}">
+												<f:selectItem itemLabel="India - 91" itemValue="91" />
+												<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
+											</p:selectOneMenu>
+											<p:inputText id="mobile" value="#{userProfileBean.selectedUserForEditing.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+											</p:inputText>
+										</p:outputPanel>
+
+										<h:outputText value="Date of Birth*" />
+										<p:calendar id="cal" yearRange="1900:2004" pattern="dd-MMM-yyyy" value="#{userProfileBean.selectedUserForEditing.dateOfBirth}" navigator="true" effect="slideDown" />
+										<h:outputText value="Membership Number" rendered="#{!userProfileBean.showMemberPanel}" />
+										<p:outputPanel>
+											<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipNumber}" rendered="#{!userProfileBean.showMemberPanel}" />
+											<h:outputText value="/" rendered="#{!userProfileBean.showMemberPanel}" />
+
+											<h:outputText value="#{userProfileBean.selectedUserForEditing.legacyMembershipNumber}" rendered="#{!userProfileBean.showMemberPanel}" />
+										</p:outputPanel>
+										<h:outputText value="Membership Status" rendered="#{!userProfileBean.showMemberPanel}" />
+										<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipStatus}" rendered="#{!userProfileBean.showMemberPanel}" />
+									</p:panelGrid>
+
+									<h:panelGrid columns="1" styleClass="topAlignPanelColumns">
+										<h:column>
+											<ui:include src="../common/location.xhtml">
+												<ui:param name="param_Form" value=":userProfileForm" />
+												<ui:param name="param_HeaderMessage" value="Select the place where you live" />
+												<ui:param name="param_PanelId" value="livingLocationPanel" />
+												<ui:param name="param_LocationBean" value="#{userProfileBean.livingLocation}" />
+											</ui:include>
+										</h:column>
+										<h:column>
+											<h:panelGrid columns="1" id="votingLocation">
+												<p:panelGrid columns="2" cellpadding="5">
+													<p:selectBooleanCheckbox value="#{userProfileBean.sameAsLiving}">
+														<p:ajax update=":userProfileForm:votingLocation" listener="#{userProfileBean.onClickSameAsLiving}" />
+													</p:selectBooleanCheckbox>
+													<h:outputLabel value="Same as Living Location" />
+												</p:panelGrid>
+												<ui:include src="../common/location.xhtml">
+													<ui:param name="param_Form" value=":userProfileForm" />
+													<ui:param name="param_HeaderMessage" value="Select the place where you registered as voter" />
+													<ui:param name="param_PanelId" value="votingLocationPanel" />
+													<ui:param name="param_LocationBean" value="#{userProfileBean.votingLocation}" />
+												</ui:include>
+											</h:panelGrid>
+										</h:column>
+									</h:panelGrid>
+
+									<ui:include src="../common/nri_location.xhtml">
+										<ui:param name="param_Form" value=":userProfileForm" />
+										<ui:param name="param_PanelId" value="nriLocationPanel" />
+										<ui:param name="param_NriLocationBean" value="#{userProfileBean.nriLocationBean}" />
+									</ui:include>
+
+									<br></br>
+									<br></br>
+									<br></br>
+									<p:outputPanel id="memberMessage" rendered="#{userProfileBean.showMemberPanel}">
+										<p:fieldset>
+											<f:facet name="legend">
+												<p:selectBooleanCheckbox id="partyMember" value="#{userProfileBean.selectedUserForEditing.member}">
+													<p:ajax update=":userProfileForm:memberMessage" listener="#{userProfileBean.onClickMember}" />
+												</p:selectBooleanCheckbox>
+
+												<h:outputLabel value="I want to be Party Member" />
+											</f:facet>
+											<p:outputPanel cellpadding="10" rendered="#{userProfileBean.selectedUserForEditing.member}">
+												<p:tabView id="tabView">
+
+													<p:tab id="hindi" title="Hindi">
+								मेम्बर बनने के लिए कृपया नीचे दी गयी चार चरणों की प्रक्रिया पूर्ण करें -
+								<ul>
+															<li><h:outputText value="चरण - 1 -	नीचे दिए गए फॉर्म में अपना विवरण भरें ।" /></li>
+															<li><h:outputText value="चरण - 2 -	आप दो तरह से 10 रुपये की अपनी सदस्यता शुल्क का भुगतान कर सकते हैं." /></li>
+															<li><h:outputText
+																	value="चरण - 2a -	फॉर्म को भरकर क्रेडिट कार्ड / डेबिट कार्ड या नेट बैंकिंग के माध्यम से भी ऑनलाइन सदस्यता शुल्क (Membership fee) रु . 10/- का भुगतान कर सकते हैं | पुष्टि ईमेल जो आपको प्राप्त होगी वही आपकी सदस्यता की पुष्टि है |" /></li>
+															<li><b><h:outputText value="या" /></b></li>
+															<li><h:outputText
+																	value="चरण - 2a -	अपने स्थानीय पोस्ट ऑफिस से दस रुपये का पोस्टल आर्डर लेकर (अगर दस रुपये का एक पोस्टल आर्डर न मिले तो आप पांच रुपये के दो या कोई अन्य मोल). अदा करें में 'आम आदमी पार्टी' लिखें. 'पोस्ट ऑफिस पर' की जगह खाली छोड़ दें. आधी जमा पर्ची अपने पास पावती के तौर पर रख लें." /></li>
+															<li><h:outputText
+																	value="चरण - 2b -	इस प्रिंटआउट को रु . 10/- के पोस्टल आर्डर के साथ अपने शहर के पार्टी दफ्तर में जमा करें या पार्टी के केंद्रीय कार्यालय को इस पते पर डाक द्वारा भेजें - Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
+														</ul>
+
+													</p:tab>
+													<p:tab id="english" title="English">
+														<ul>
+															<li><h:outputText value="STEP – 1 –	Complete Your Profile above." /></li>
+															<li><h:outputText value="STEP – 2 –	You can pay your membership fees of Rs 10 in two ways." /></li>
+															<li><h:outputText
+																	value="STEP - 2a -	Submit the form and pay Rs. 10. online through Credit/Debit Card Or Internet Banking As Membership Fees and become a member.The email confirmation that you receive on making the payment in option is your confirmation of membership.." /></li>
+															<li><b><h:outputText value="or" /></b></li>
+															<li><h:outputText
+																	value="STEP - 2a -	Purchase a Postal Order (PO) of Rs.10/- from your local Post Office (if a single PO is not available you can purchase two Rs.5/- POs or any other combination). In 'PAY TO' write 'Aam Aadmi Party'. Please leave 'AT THE POST OFFICE AT' column blank. You can keep the counterfoil with yourself as acknowledgement." /></li>
+															<li><h:outputText
+																	value="STEP - 2b -	Submit this printout of the membership form along with a postal order of Rs.10/- at the party office of your city OR send the printout and postal order to our national office at -Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
+														</ul>
+													</p:tab>
+												</p:tabView>
+
+											</p:outputPanel>
+
+										</p:fieldset>
+									</p:outputPanel>
+
+
+									<p:commandButton id="saveProfile" update=":userProfileForm 
+				" value="Save Profile" actionListener="#{userProfileBean.saveProfile}" />
+									<p:tooltip for="saveProfile">Save Profile</p:tooltip>
+								</h:panelGrid>
+
+							</h:form>
+						</div>
+
+					</div>
+					<!--news ends-->
+				</div>
+			</div>
+			<!--end of left container-->
+
+			<!--beginning of right container-->
+			<ui:include src="rightwidget.xhtml" />
+
+
+		</div>
+		<!-- container -->
+	</div>
+	<!--band-->
+
+
+	<ui:include src="footer.xhtml" />
+
+
+</h:body>
+</html>

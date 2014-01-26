@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<div class="band header">
+		<div class="container">
+			<div class="four columns">
+				<div class="head-logo">
+					<a href="http://my.aamaadmiparty.org"><img src="#{facesContext.externalContext.requestContextPath}/aapnewstyle/assets/logo 220px wide.png" /></a>
+				</div>
+			</div>
+
+			<div class="eight columns">
+				<div class="main-navigation">
+					<div id='cssmenu'>
+						<ul>
+							<li class='active' id="home-men"><a href='/home'><span>Home</span></a></li>
+							<li class='has-sub' id="home-men2"><a href='/mydonations'><span>Donations</span></a>
+								<ul>
+									<li><a href='/mydonations'><span>My Donations</span></a></li>
+									<li class='last'><a href='/ripple'><span>Ripple</span></a></li>
+								</ul></li>
+							<li class='has-sub' id="home-men3"><a href='#'><span>Profile</span></a>
+								<ul>
+									<li><a href='/socialaccounts'><span>Social Accounts</span></a></li>
+									<li><a href='/profile'><span>My profile</span></a></li>
+									<li class='last'><a href='/volunteer'><span>Volunteer Profile</span></a></li>
+								</ul></li>
+							<li class='has-sub last' id="home-men4"><a href='/voiceofaap'><span>Voice of AAP</span></a>
+								<ul>
+									<li><a href='/voiceofaap'><span>Settings</span></a></li>
+									<li class='last'><a href='/voafactivity'><span>Activity</span></a></li>
+								</ul></li>
+						</ul>
+					</div>
+				</div>
+				<div class="mobile-menu">
+
+					<ul id="menu">
+						<li><a href="http://my.aamaadmiparty.org">Home</a></li>
+						<li>Donations
+							<ul>
+								<li><a href="/mydonations">My Donation</a></li>
+								<li><a href="/ripple">Ripple</a></li>
+							</ul>
+						</li>
+						<li>Profile
+							<ul>
+								<li><a href="/socialaccounts">Social Accounts</a></li>
+								<li><a href="/profile">My Profile</a></li>
+								<li><a href="/volunteer">Volunteer Profile</a></li>
+							</ul>
+						</li>
+						<li>Voice of AAP
+							<ul>
+								<li><a href="/voiceofaap">Settings</a></li>
+								<li><a href="/voafactivity">Activity</a></li>
+							</ul>
+						</li>
+					</ul>
+					<script type="text/javascript">
+$(document).ready(function(){
+	$('#menu').slicknav();
+});
+</script>
+
+				</div>
+
+			</div>
+
+
+
+			<div class="four columns">
+				<div class="social-profile-pic">
+				<a href="/profile"><img style="max-width: 50px;" src="#{menuBean.user.profilePic}" /></a>
+				</div>
+
+				<div class="social-profile-name social-logout">
+					<p>
+						#{menuBean.user.name}<br />
+						<p:outputPanel rendered="#{menuBean.loggedIn}">
+							<a href="/logout">Sign Out</a>
+							<br />
+							<p:outputLabel value="#{menuBean.user.membershipNumber}"></p:outputLabel>
+						</p:outputPanel>
+						<p:outputPanel rendered="#{!menuBean.loggedIn}">
+							<a href="/socialaccounts">Sign In</a>
+							<br />
+						</p:outputPanel>
+
+					</p>
+				</div>
+
+			</div>
+
+		</div>
+		<!-- container -->
+	</div>
+	<!--band -->
+
+</ui:composition>

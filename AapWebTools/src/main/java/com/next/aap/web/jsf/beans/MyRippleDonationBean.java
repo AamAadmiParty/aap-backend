@@ -15,10 +15,16 @@ import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
+import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
 @ManagedBean
 @ViewScoped
-@URLMapping(id = "myRippleDonationBean", beanName="myRippleDonationBean", pattern = "/ripple", viewId = "/WEB-INF/jsf/aapstyle/myrippledonation.xhtml")
+//@URLMapping(id = "myRippleDonationBean", beanName="myRippleDonationBean", pattern = "/ripple", viewId = "/WEB-INF/jsf/aapstyle/myrippledonation.xhtml")
+@URLMappings(mappings={
+		@URLMapping(id = "myRippleDonationBean1", beanName="myRippleDonationBean", pattern = "/aapstyle/ripple", viewId = "/WEB-INF/jsf/aapstyle/myrippledonation.xhtml"),
+		@URLMapping(id = "myRippleDonationBean2", beanName="myRippleDonationBean", pattern = "/ripple", viewId = "/WEB-INF/jsf/aapnewstyle/myrippledonation.xhtml")
+		})
+
 @URLBeanName("myRippleDonationBean")
 public class MyRippleDonationBean extends BaseUserJsfBean {
 

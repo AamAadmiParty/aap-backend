@@ -19,7 +19,7 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 
 	@Override
 	public PollQuestion savePollQuestion(PollQuestion pollQuestion) {
-		saveObject(pollQuestion);
+		pollQuestion = saveObject(pollQuestion);
 		return pollQuestion;
 	}
 
@@ -91,6 +91,12 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		params.put("districtId", districtId);
 		params.put("stateId", stateId);
 		
+		if(acId == 587L){
+			System.out.println("acId="+acId);
+			System.out.println("districtId="+districtId);
+			System.out.println("stateId="+stateId);
+		}
+
 		String query = "select pollQuestionlist.pollQuestionId from ((select poll_question_id as pollQuestionId from poll_question_ac where ac_id = :acId) " +
 				"union (select poll_question_id as pollQuestionId from poll_question_district where district_id= :districtId) " +
 				"union (select poll_question_id as pollQuestionId from poll_question_state where state_id= :stateId) " +

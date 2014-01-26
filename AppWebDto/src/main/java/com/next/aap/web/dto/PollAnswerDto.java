@@ -24,6 +24,10 @@ public class PollAnswerDto {
 	public void setPollQuestionId(Long pollQuestionId) {
 		this.pollQuestionId = pollQuestionId;
 	}
+	@Override
+	public String toString() {
+		return "PollAnswerDto [id=" + id + ", content=" + content + ", pollQuestionId=" + pollQuestionId + "]";
+	}
 	
 	
 	

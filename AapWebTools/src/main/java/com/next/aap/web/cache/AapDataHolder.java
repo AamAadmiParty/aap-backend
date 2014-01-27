@@ -235,9 +235,8 @@ public class AapDataHolder {
 		}
 		else{
 			returnList.addAll(locationNewsIds);
-			Collections.reverse(returnList);
 		}
-		
+		Collections.reverse(returnList);
 		return returnList;
 	}
 	

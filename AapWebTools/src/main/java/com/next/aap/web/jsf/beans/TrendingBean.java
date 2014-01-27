@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedProperty;
 import com.next.aap.web.ItemList;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.NewsDto;
-import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 
 //@Scope("session")
@@ -30,7 +29,6 @@ public class TrendingBean extends BaseJsfBean {
 	//@URLAction(onPostback=false)
 	@PostConstruct
 	public void init() {
-		System.out.println("Loading TrendingBean");
 		if(!initialized){
 			ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, 0,0,0,0);
 			trendingNewsItems = newsItems.getItems();

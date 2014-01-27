@@ -166,6 +166,8 @@ public interface AapService {
 	
 	BlogDto getBlogByOriginalUrl(String originalUrl);
 	
+	BlogDto getBlogById(Long blogId);
+	
 	List<BlogDto> getBlog(PostLocationType locationType, Long locationId);
 	
 	List<BlogDto> getAllPublishedBlogs();
@@ -284,5 +286,7 @@ public interface AapService {
 	VideoDto getVideoByVideoId(String videoId);
 
 	VideoDto publishVideo(Long videoId);
+	
+	VideoDto getVideoById(Long videoId);
 
 }

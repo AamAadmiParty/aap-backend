@@ -445,7 +445,7 @@ ul#navsub3 li{
 .fb:hover {
 	opacity: 0.7;
 }
-.twitter:hover{
+.twitter2:hover{
 	opacity: 0.7;
 }
 .youtube:hover{
@@ -782,6 +782,9 @@ background-repeat: no-repeat;
 	float: left;
 	box-shadow: 2px 3px 2px #666;
 }
+.title-icon-head-news img{
+	height:38px;
+}
 .title-icon-head-video {
 	background: #59B200;
 	display: block;
@@ -855,7 +858,6 @@ background-repeat: no-repeat;
 	#news-single .content-featured-image {
 		width:100%;	
 		margin-top: 10px;
-		max-height:200px;
 	}
 }
 #news-single .content-featured-image img {

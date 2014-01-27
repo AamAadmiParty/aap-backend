@@ -1,12 +1,15 @@
 package com.next.aap.web.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class BlogDto {
+public class BlogDto implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String title; // Title of the news/post item
 	private String content;//content of news which can be html or plain text
+	private String contentSummary;//content of news without Html tags
 	private String imageUrl;// image preview url for this news item
 	private String webUrl;// Web url link for this news, which will be shared by share intent
 	private String originalUrl;// Web url link for this news, which will be shared by share intent
@@ -33,6 +36,12 @@ public class BlogDto {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getContentSummary() {
+		return contentSummary;
+	}
+	public void setContentSummary(String contentSummary) {
+		this.contentSummary = contentSummary;
 	}
 	public String getImageUrl() {
 		return imageUrl;

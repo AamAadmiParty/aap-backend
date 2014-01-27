@@ -29,23 +29,23 @@
 				<div class="latest-item-container">
 					<div class="latest-content-container" id="news-single">
 						<div class="title-holder">
-							<span class="title-icon-head-news" id="newsicon"><img src="#{facesContext.externalContext.requestContextPath}/aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
-									<a href="#"><h:outputText value="#{newsBean.news.title.length() gt 50 ? newsBean.news.title.substring(0,47).concat('...') : newsBean.news.title}" escape="false" /></a>
+							<span class="title-icon-head-blog" id="newsicon"><img src="#{facesContext.externalContext.requestContextPath}/aapnewstyle/assets/blog.png" /></span> <span class="main-article-title" id="blog-title"><h5>
+									<a href="#"><h:outputText value="#{blogBean.blog.title.length() gt 50 ? blogBean.blog.title.substring(0,47).concat('...') : blogBean.blog.title}" escape="false" /></a>
 								</h5></span>
 						</div>
 						<div class="content-featured-image">
-							<a href="http://my.aamaadmiparty.org"><img src="#{newsBean.news.imageUrl}" /></a>
+							<a href="#"><img src="#{blogBean.blog.imageUrl}" /></a>
 						</div>
 						<div class="latest-content-text">
 
 							<div class="category-title">
 								<h5>
-									<span class="news-category">10 MINUTES AGO BY ARVIND</span>
+									<span class="blog-category">PUBLISHED BY #{blogBean.blog.author}</span>
 								</h5>
 							</div>
 							<div class="item-description">
 								<p>
-									<h:outputText value="#{newsBean.news.content}" escape="false" />
+									<h:outputText value="#{blogBean.blog.content}" escape="false" />
 									<br />
 
 								</p>
@@ -53,9 +53,9 @@
 						</div>
 
 					</div>
-					<!--news ends-->
+					<!--blog ends-->
 					<ui:include src="../common/comments.xhtml" >
-						<ui:param name="param_pageUrl" value="http://my.aamaadmiparty.org/news/#{newsBean.news.id}" />
+						<ui:param name="param_pageUrl" value="http://my.aamaadmiparty.org/blog/#{blogBean.blog.id}" />
 					</ui:include>
 
 

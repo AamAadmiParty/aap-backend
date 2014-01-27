@@ -191,7 +191,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	private static final long serialVersionUID = 1L;
 	private final String donationUrl = "https://donate.aamaadmiparty.org/?utm_source=donate4india&utm_medium=web&utm_term=donate-purl&utm_content=donation&utm_campaign=affliation&cid=";
 	private final String urlShortnerUrl="http://myaap.in/yourls-api.php?format=json&username=arvind&password=4delhi&action=shorturl&url=";
-
+	private final String missingImageUrl = "https://lh4.googleusercontent.com/-7MmCqFqneVk/UuN39tQ2qQI/AAAAAAAANyA/rIM9CzbLlLE/s256/aap-text-symbol_512.png";
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private UserDao userDao;
@@ -2417,7 +2417,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		String contentWithOutHtml = news.getContent().replaceAll("\\<[^>]*>","");
 		newsDto.setContentSummary(contentWithOutHtml);
 		if(StringUtil.isEmpty(newsDto.getImageUrl())){
-			newsDto.setImageUrl("https://lh4.googleusercontent.com/-7MmCqFqneVk/UuN39tQ2qQI/AAAAAAAANyA/rIM9CzbLlLE/s256/aap-text-symbol_512.png");
+			newsDto.setImageUrl(missingImageUrl);
 		}
 		return newsDto;
 	}
@@ -3098,6 +3098,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		BlogDto blogDto = new BlogDto();
 		BeanUtils.copyProperties(blog, blogDto);
+		String contentWithOutHtml = blog.getContent().replaceAll("\\<[^>]*>","");
+		blogDto.setContentSummary(contentWithOutHtml);
+		if(StringUtil.isEmpty(blogDto.getImageUrl())){
+			blogDto.setImageUrl(missingImageUrl);
+		}
 		return blogDto;
 	}
 
@@ -5056,6 +5061,20 @@ public class AapServiceImpl implements AapService, Serializable {
 	public NewsDto getNewsById(Long newsId) {
 		News dbNews = newsDao.getNewsById(newsId);
 		return convertNews(dbNews);
+	}
+
+	@Override
+	@Transactional
+	public BlogDto getBlogById(Long blogId) {
+		Blog blog = blogDao.getBlogById(blogId);
+		return convertBlog(blog);
+	}
+
+	@Override
+	@Transactional
+	public VideoDto getVideoById(Long videoId) {
+		Video video = videoDao.getVideoById(videoId);
+		return convertVideo(video);
 	}
 	
 }

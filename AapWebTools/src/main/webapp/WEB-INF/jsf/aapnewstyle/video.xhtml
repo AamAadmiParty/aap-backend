@@ -29,23 +29,23 @@
 				<div class="latest-item-container">
 					<div class="latest-content-container" id="news-single">
 						<div class="title-holder">
-							<span class="title-icon-head-news" id="newsicon"><img src="#{facesContext.externalContext.requestContextPath}/aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
-									<a href="#"><h:outputText value="#{newsBean.news.title.length() gt 50 ? newsBean.news.title.substring(0,47).concat('...') : newsBean.news.title}" escape="false" /></a>
+							<span class="title-icon-head-video" id="newsicon"><img src="#{facesContext.externalContext.requestContextPath}/aapnewstyle/assets/video2.png" /></span> <span class="main-article-title" id="video-title"><h5>
+									<a href="#"><h:outputText value="#{videoBean.video.title.length() gt 50 ? videoBean.video.title.substring(0,47).concat('...') : videoBean.video.title}" escape="false" /></a>
 								</h5></span>
 						</div>
 						<div class="content-featured-image">
-							<a href="http://my.aamaadmiparty.org"><img src="#{newsBean.news.imageUrl}" /></a>
+							<iframe width="610" height="425" src="http://www.youtube.com/embed/#{videoBean.video.youtubeVideoId}" frameborder="0" ></iframe>
 						</div>
 						<div class="latest-content-text">
 
 							<div class="category-title">
 								<h5>
-									<span class="news-category">10 MINUTES AGO BY ARVIND</span>
+									<span class="video-category">PUBLISHED ON #{videoBean.video.publishDate}</span>
 								</h5>
 							</div>
 							<div class="item-description">
 								<p>
-									<h:outputText value="#{newsBean.news.content}" escape="false" />
+									<h:outputText value="#{videoBean.video.description}" escape="false" />
 									<br />
 
 								</p>
@@ -53,9 +53,9 @@
 						</div>
 
 					</div>
-					<!--news ends-->
+					<!--video ends-->
 					<ui:include src="../common/comments.xhtml" >
-						<ui:param name="param_pageUrl" value="http://my.aamaadmiparty.org/news/#{newsBean.news.id}" />
+						<ui:param name="param_pageUrl" value="http://my.aamaadmiparty.org/video/#{videoBean.video.id}" />
 					</ui:include>
 
 

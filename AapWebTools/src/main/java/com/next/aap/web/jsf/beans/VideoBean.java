@@ -3,7 +3,6 @@ package com.next.aap.web.jsf.beans;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.servlet.http.HttpServletRequest;
 
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.cache.AapDataCacheDbImpl;

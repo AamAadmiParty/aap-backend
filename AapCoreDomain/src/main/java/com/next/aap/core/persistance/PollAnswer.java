@@ -41,6 +41,8 @@ public class PollAnswer {
     private PollQuestion pollQuestion;
 	@Column(name="poll_question_id", insertable=false,updatable=false)
 	private Long pollQuestionId;
+	@Column(name="total_votes")
+	private Long totalVotes;
 	
 	public Long getId() {
 		return id;
@@ -95,6 +97,12 @@ public class PollAnswer {
 	}
 	public void setPollQuestionId(Long pollQuestionId) {
 		this.pollQuestionId = pollQuestionId;
+	}
+	public Long getTotalVotes() {
+		return totalVotes;
+	}
+	public void setTotalVotes(Long totalVotes) {
+		this.totalVotes = totalVotes;
 	}
 
 	

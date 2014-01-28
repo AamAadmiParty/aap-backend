@@ -52,6 +52,7 @@
 		<mapping class="com.next.aap.core.persistance.Tweet" />
 		<mapping class="com.next.aap.core.persistance.TwitterAccount" />
 		<mapping class="com.next.aap.core.persistance.User" />
+		<mapping class="com.next.aap.core.persistance.UserPollVote" />
 		<mapping class="com.next.aap.core.persistance.Video" />
 		<mapping class="com.next.aap.core.persistance.Volunteer" />
 	</session-factory>

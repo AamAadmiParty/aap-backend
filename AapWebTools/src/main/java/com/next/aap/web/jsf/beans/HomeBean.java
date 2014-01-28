@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import com.next.aap.web.ItemList;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.NewsDto;
+import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
@@ -50,13 +51,28 @@ public class HomeBean extends BaseJsfBean {
 		votingBean.init();
 		UserDto loggedInUser = getLoggedInUser();//true,buildLoginUrl("/home"));
 		System.out.println("loggedInUser = "+loggedInUser);
-		if(loggedInUser == null){
-			ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, 0,0,0,0);
-			homeNewsItems = newsItems.getItems();
-		}else{
-			ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, loggedInUser.getAssemblyConstituencyLivingId(), loggedInUser.getAssemblyConstituencyVotingId(), loggedInUser.getParliamentConstituencyLivingId(), loggedInUser.getParliamentConstituencyVotingId());
-			homeNewsItems = newsItems.getItems();
+		
+		long livingAcId = 0;
+		long votingAcId = 0;
+		long livingPcId = 0;
+		long votingPcId = 0;
+		if(loggedInUser != null){
+			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
+				livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
+			}
+			if(loggedInUser.getAssemblyConstituencyVotingId() != null){
+				votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
+			}
+			if(loggedInUser.getParliamentConstituencyLivingId() != null){
+				livingPcId = loggedInUser.getParliamentConstituencyLivingId();
+			}
+			if(loggedInUser.getParliamentConstituencyVotingId() != null){
+				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
+			}
 		}
+		ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId);
+		homeNewsItems = newsItems.getItems();
+		
 	}
 	
 	public List<NewsDto> getHomeNewsItems() {

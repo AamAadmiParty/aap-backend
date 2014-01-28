@@ -89,6 +89,7 @@ import com.next.aap.core.persistance.StateRole;
 import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
+import com.next.aap.core.persistance.UserPollVote;
 import com.next.aap.core.persistance.Video;
 import com.next.aap.core.persistance.Volunteer;
 import com.next.aap.core.persistance.dao.AcRoleDao;
@@ -135,9 +136,11 @@ import com.next.aap.core.persistance.dao.StateRoleDao;
 import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
+import com.next.aap.core.persistance.dao.UserPollVoteDao;
 import com.next.aap.core.persistance.dao.VideoDao;
 import com.next.aap.core.persistance.dao.VolunteerDao;
 import com.next.aap.core.util.DataUtil;
+import com.next.aap.core.util.PollQuestionAnswerUpdater;
 import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AccountTransactionMode;
 import com.next.aap.web.dto.AccountTransactionType;
@@ -287,14 +290,20 @@ public class AapServiceImpl implements AapService, Serializable {
 	private DonationCampaignDao donationCampaignDao;
 	@Autowired
 	private HttpUtil httpUtil;
+	@Autowired
+	private UserPollVoteDao userPollVoteDao;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
+	
+	@Autowired
+	private PollQuestionAnswerUpdater pollQuestionAnswerUpdater;
 
 	Map<String, String> countryCodeMap = new HashMap<>();
 	
 	@PostConstruct
 	public void init(){
+		
 		countryCodeMap.put("AF", "Afghanistan");
 		countryCodeMap.put("AL", "Albania");
 		countryCodeMap.put("DZ", "Algeria");
@@ -5075,6 +5084,50 @@ public class AapServiceImpl implements AapService, Serializable {
 	public VideoDto getVideoById(Long videoId) {
 		Video video = videoDao.getVideoById(videoId);
 		return convertVideo(video);
+	}
+
+	@Override
+	@Transactional
+	public String savePollVote(Long userId, Long questionId, Long answerId) {
+		UserPollVote userPollVote = userPollVoteDao.getUserPollVote(userId, questionId);
+		PollAnswer pollAnswer = pollAnswerDao.getPollAnswerById(answerId);
+		if(userPollVote == null){
+			userPollVote = new UserPollVote();
+			User user = userDao.getUserById(userId);
+			PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(questionId);
+			userPollVote.setUser(user);
+			userPollVote.setPollQuestion(pollQuestion);
+			userPollVote.setPollAnswer(pollAnswer);
+			userPollVote = userPollVoteDao.saveUserPollVote(userPollVote);
+			pollQuestionAnswerUpdater.updatePollAnswerStatsAsync(userId, questionId, answerId, null);
+			return "Your Vote saved succesfully";
+		}else{
+			Long existingPollAnswerId = userPollVote.getPollAnswerId(); 
+			userPollVote.setPollAnswer(pollAnswer);
+			userPollVote = userPollVoteDao.saveUserPollVote(userPollVote);
+			pollQuestionAnswerUpdater.updatePollAnswerStatsAsync(userId, questionId, answerId, existingPollAnswerId);
+			return "Your Vote updated succesfully";
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public void updatePollVoteAnswerTotalCount(Long answerId, Long existingAnswerId) {
+		if(existingAnswerId != null){
+			updatePollAnswerCount(existingAnswerId, -1);
+		}
+		updatePollAnswerCount(answerId, 1);
+	}
+	private void updatePollAnswerCount(Long pollAnswerId, int countIncrement){{
+		PollAnswer pollAnswer = pollAnswerDao.getPollAnswerById(pollAnswerId);
+		if(pollAnswer.getTotalVotes() == null){
+			pollAnswer.setTotalVotes(0L);
+		}
+		pollAnswer.setTotalVotes(pollAnswer.getTotalVotes() + countIncrement);
+		pollAnswer = pollAnswerDao.savePollAnswer(pollAnswer);
+	}
+		
 	}
 	
 }

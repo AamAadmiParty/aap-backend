@@ -288,5 +288,9 @@ public interface AapService {
 	VideoDto publishVideo(Long videoId);
 	
 	VideoDto getVideoById(Long videoId);
+	
+	String savePollVote(Long userId, Long questionId, Long answerId);
+	
+	void updatePollVoteAnswerTotalCount(Long answerId, Long existingAnswerId);
 
 }

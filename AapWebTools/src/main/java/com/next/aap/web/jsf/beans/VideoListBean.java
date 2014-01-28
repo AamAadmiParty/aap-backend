@@ -47,13 +47,28 @@ public class VideoListBean extends BaseJsfBean {
 		votingBean.init();
 		UserDto loggedInUser = getLoggedInUser();//true,buildLoginUrl("/home"));
 		System.out.println("loggedInUser = "+loggedInUser);
-		if(loggedInUser == null){
-			ItemList<VideoDto> videoItemList = aapDataCacheDbImpl.getVideoDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, 0,0,0,0);
-			videoItems = videoItemList.getItems();
-		}else{
-			ItemList<VideoDto> videoItemList = aapDataCacheDbImpl.getVideoDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, loggedInUser.getAssemblyConstituencyLivingId(), loggedInUser.getAssemblyConstituencyVotingId(), loggedInUser.getParliamentConstituencyLivingId(), loggedInUser.getParliamentConstituencyVotingId());
-			videoItems = videoItemList.getItems();
+		
+		long livingAcId = 0;
+		long votingAcId = 0;
+		long livingPcId = 0;
+		long votingPcId = 0;
+		if(loggedInUser != null){
+			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
+				livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
+			}
+			if(loggedInUser.getAssemblyConstituencyVotingId() != null){
+				votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
+			}
+			if(loggedInUser.getParliamentConstituencyLivingId() != null){
+				livingPcId = loggedInUser.getParliamentConstituencyLivingId();
+			}
+			if(loggedInUser.getParliamentConstituencyVotingId() != null){
+				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
+			}
 		}
+		
+		ItemList<VideoDto> videoItemList = aapDataCacheDbImpl.getVideoDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId);
+		videoItems = videoItemList.getItems();
 	}
 	
 	public AapDataCacheDbImpl getAapDataCacheDbImpl() {

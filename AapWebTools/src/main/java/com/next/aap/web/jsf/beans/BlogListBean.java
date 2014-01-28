@@ -10,6 +10,7 @@ import com.next.aap.web.ItemList;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.VideoDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -47,13 +48,29 @@ public class BlogListBean extends BaseJsfBean {
 		votingBean.init();
 		UserDto loggedInUser = getLoggedInUser();//true,buildLoginUrl("/home"));
 		System.out.println("loggedInUser = "+loggedInUser);
-		if(loggedInUser == null){
-			ItemList<BlogDto> blogItemList = aapDataCacheDbImpl.getBlogDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, 0,0,0,0);
-			blogItems = blogItemList.getItems();
-		}else{
-			ItemList<BlogDto> blogItemList = aapDataCacheDbImpl.getBlogDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, loggedInUser.getAssemblyConstituencyLivingId(), loggedInUser.getAssemblyConstituencyVotingId(), loggedInUser.getParliamentConstituencyLivingId(), loggedInUser.getParliamentConstituencyVotingId());
-			blogItems = blogItemList.getItems();
+		
+		long livingAcId = 0;
+		long votingAcId = 0;
+		long livingPcId = 0;
+		long votingPcId = 0;
+		if(loggedInUser != null){
+			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
+				livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
+			}
+			if(loggedInUser.getAssemblyConstituencyVotingId() != null){
+				votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
+			}
+			if(loggedInUser.getParliamentConstituencyLivingId() != null){
+				livingPcId = loggedInUser.getParliamentConstituencyLivingId();
+			}
+			if(loggedInUser.getParliamentConstituencyVotingId() != null){
+				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
+			}
 		}
+		
+		ItemList<BlogDto> blogItemList = aapDataCacheDbImpl.getBlogDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId);
+		blogItems = blogItemList.getItems();
+		
 	}
 	
 	public AapDataCacheDbImpl getAapDataCacheDbImpl() {

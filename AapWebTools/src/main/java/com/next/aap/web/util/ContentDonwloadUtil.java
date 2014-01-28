@@ -3,6 +3,7 @@ package com.next.aap.web.util;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.util.AapBlogDownloader;
@@ -37,6 +38,11 @@ public class ContentDonwloadUtil {
 		new Thread(runnable).run();
 		System.out.println("Thread Started to download News");
 		//aapService.saveAllCountries();
+	}
+	
+	@Scheduled(cron = "01 01 * * * *")
+	public void refreshVideoList() {
+		videoDownloader.refreshVideoList();
 	}
 
 }

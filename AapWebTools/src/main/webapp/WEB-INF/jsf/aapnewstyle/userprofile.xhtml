@@ -14,21 +14,16 @@
 </h:head>
 <h:body>
 	<ui:include src="header.xhtml" />
-	<div class="band mainbody">
+	
+	<div class="band mainbody" id="my-donations">
 		<div class="container">
-			<!--beginning of left container-->
-			<div class="eleven columns">
-
-				<div class="latest-item-bg"></div>
-				<div class="latest-item-container" style="min-height: 200px;">
-					<div class="latest-content-container" id="news">
-						<div class="title-holder">
-							<span class="title-icon-head-news" id="newsicon"><img src="aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
-									<a href="#">Edit Profile</a>
-								</h5></span>
-						</div>
-
-						<div class="latest-content-text">
+		<!--beginning of left container-->
+			<div class="sixteen columns">
+					<div class="donations-title">
+						<h3>Be a part of the change. Volunteer for the Aam Aadmi Party.</h3>
+					</div>
+			</div>
+			<div class="latest-content-text">
 							<p:blockUI block="userProfileForm" trigger=":userProfileForm:saveProfile">
 			Saving Profile<br />
 								<p:graphicImage value="/images/ajax-loader.gif" />
@@ -39,9 +34,9 @@
 							</p:blockUI>
 							<h:form id="userProfileForm">
 
-								<h:panelGrid style="width:500px; max-width:500px;" columns="1">
+								<h:panelGrid style="width:700px; max-width:500px;" columns="1">
 									<p:messages id="messages" autoUpdate="true" closable="true" />
-									<p:panelGrid columns="2" cellpadding="5">
+									<p:panelGrid columns="4" cellpadding="5">
 										<f:facet name="header">  
 					        Edit Profile  
 					    </f:facet>
@@ -83,7 +78,7 @@
 										<h:outputText value="#{userProfileBean.selectedUserForEditing.membershipStatus}" rendered="#{!userProfileBean.showMemberPanel}" />
 									</p:panelGrid>
 
-									<h:panelGrid columns="1" styleClass="topAlignPanelColumns">
+									<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
 										<h:column>
 											<ui:include src="../common/location.xhtml">
 												<ui:param name="param_Form" value=":userProfileForm" />
@@ -174,22 +169,10 @@
 
 							</h:form>
 						</div>
-
-					</div>
-					<!--news ends-->
-				</div>
-			</div>
-			<!--end of left container-->
-
-			<!--beginning of right container-->
-			<ui:include src="rightwidget.xhtml" />
-
-
-		</div>
-		<!-- container -->
-	</div>
-	<!--band-->
-
+		</div><!-- container -->
+	</div> <!--band-->
+	
+	
 
 	<ui:include src="footer.xhtml" />
 

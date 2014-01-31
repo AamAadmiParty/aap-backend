@@ -65,8 +65,7 @@ public abstract class AwsQueueListener {
 									// sure that persist this message
 									// in case of failure/exception
 									try {
-										// sqs.deleteMessage(new
-										// DeleteMessageRequest(queueName,message.getReceiptHandle()));
+										 sqs.deleteMessage(new DeleteMessageRequest(queueName,message.getReceiptHandle()));
 									} catch (Exception ex) {
 										// In case some error occurs
 									}
@@ -82,12 +81,13 @@ public abstract class AwsQueueListener {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-
+					/*
 					try {
 						Thread.sleep(10000);
 					} catch (Exception ex) {
-
+					
 					}
+					*/
 				}
 
 			}

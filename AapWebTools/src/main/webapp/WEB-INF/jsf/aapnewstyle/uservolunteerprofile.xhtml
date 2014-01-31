@@ -14,54 +14,39 @@
 </h:head>
 <h:body>
 	<ui:include src="header.xhtml" />
-	<div class="band mainbody">
+
+	<div class="band mainbody" id="my-donations">
 		<div class="container">
 			<!--beginning of left container-->
-			<div class="eleven columns">
-
-				<div class="latest-item-bg"></div>
-				<div class="latest-item-container" style="min-height: 200px;">
-					<div class="latest-content-container" id="news">
-						<div class="title-holder">
-							<span class="title-icon-head-news" id="newsicon"><img src="aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
-									<a href="#">Edit Profile</a>
-								</h5></span>
-						</div>
-
-						<div class="latest-content-text">
-							<h:form id="userVolunteerForm">
-								<h:panelGrid>
-									<p:messages autoUpdate="true" />
-									<ui:include src="../common/volunteer.xhtml">
-										<ui:param name="param_VolunteerBean" value="#{userVolunteerBean.volunteerBean}" />
-									</ui:include>
-
-
-									<p:commandButton id="saveProfile" value="Save Volunteer Profile" actionListener="#{userVolunteerBean.saveProfile}" />
-									<p:tooltip for="saveProfile">Save Profile</p:tooltip>
-
-								</h:panelGrid>
-							</h:form>
-						</div>
-
-					</div>
-					<!--news ends-->
+			<div class="sixteen columns">
+				<div class="donations-title">
+					<h3>Be a part of the change. Volunteer for the Aam Aadmi Party.</h3>
 				</div>
 			</div>
-			<!--end of left container-->
 
-			<!--beginning of right container-->
-			<ui:include src="rightwidget.xhtml" />
+			<div class="eight columns" id="volunteer-profile-right">
+				<h:form id="userVolunteerForm">
+					<h:panelGrid>
+						<p:messages autoUpdate="true" />
+						<ui:include src="../common/volunteer.xhtml">
+							<ui:param name="param_VolunteerBean" value="#{userVolunteerBean.volunteerBean}" />
+						</ui:include>
 
+						<p:messages autoUpdate="true" />
+						<p:commandButton id="saveProfile" styleClass="invite-frns-link" value="Save Volunteer Profile" actionListener="#{userVolunteerBean.saveProfile}" />
 
+					</h:panelGrid>
+				</h:form>
+
+				</div>
+
+			</div>
+			<!-- container -->
 		</div>
-		<!-- container -->
-	</div>
-	<!--band-->
+		<!--band-->
 
 
-	<ui:include src="footer.xhtml" />
 
-
+		<ui:include src="footer.xhtml" />
 </h:body>
 </html>

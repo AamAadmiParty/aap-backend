@@ -4,7 +4,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.PostLocationType;

@@ -210,6 +210,7 @@ body {
 }
 .trending-content-image img{
 	width:100%;
+	min-height: 90px;
 }
 .trending-content-box {
 	box-shadow: 0px 0px 1px;
@@ -445,7 +446,7 @@ ul#navsub3 li{
 .fb:hover {
 	opacity: 0.7;
 }
-.twitter2:hover{
+.twitter:hover{
 	opacity: 0.7;
 }
 .youtube:hover{
@@ -869,4 +870,175 @@ height: auto;
 }
 #single-news-page {
 	background: none;
+}
+/***donations page styling**/
+.donations-title {
+	text-align: center;
+	margin-bottom: 30px;
+
+}
+.donations-title h3 {
+	color: #D83500;
+}
+.donations-status {
+	max-width: 583px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+.invite-friends-button{
+	width: 583px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 20px;
+}
+.invite-frns-link h4{
+	background: #459E00;
+	padding: 20px 20px 20px 20px;
+	text-align: center;
+	color: #FFF;
+	border-radius: 5px;
+}
+.invite-frns-link h4:hover {
+	background: #3A8400;
+}
+.invite-frns-link {
+	text-decoration: none;
+}
+
+/**login page styling**/
+.fb-login{
+	padding: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 230px;
+}
+.twitter-login{
+	padding: 30px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 230px;
+}
+#social-login-container1{
+	background: rgba(255, 255, 255, 0.29);
+}
+#social-login-container2{
+	background: rgba(255, 255, 255, 0.29);
+	margin-bottom: 20px;
+}
+.volunteer-details {
+	margin-bottom: 10px;
+}
+.can-volunteer-for {
+	margin-bottom: 10px;
+}
+.volunteer-work-options {
+	margin-bottom: 10px;
+}
+.save-volunteer-profile-button {
+	width: 439px;
+	margin-top: 15px;
+}
+.save-volunteer-profile-button h4{
+	background: #459E00;
+	padding: 20px 20px 20px 20px;
+	border-radius: 5px;
+	text-align: center;
+	color: #FFF;
+}
+/**login 2 page styling**/
+.fb-header-bg {
+	height: 45px;
+	background-image: url(../assets/fb-icon-bg.png); 
+	background-color: #4A6EA9;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+.fb-connections {
+	padding: 20px;
+	min-height: 140px;
+	background: rgba(255, 255, 255, 0.63);
+	margin-bottom: 20px;
+}
+
+.twitter-header-bg {
+	height: 45px;
+	background-image: url(../assets/tw-icon-bg.jpg); 
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: #21B8FD;
+}
+.twitter-connections {
+	padding: 20px;
+	min-height: 140px;
+	background: rgba(255, 255, 255, 0.63);
+	margin-bottom: 20px;
+}
+.connection-dp {
+	height: 100px;
+	width: 100px;
+	float: left;
+	margin-right: 30px;
+}
+.connection-dp img{
+	max-height: 100%;
+}
+.add-account h5 {
+	background: #61A220;
+	padding: 15px;
+	text-align: center;
+	color: #FFF;
+	border-radius: 5px;
+	margin-bottom: 20px;
+}
+.add-account h5:hover{
+	background: #548D1C;
+}
+.add-account a {
+	text-decoration: none;
+}
+.connection-info h5{
+	color:#D83500;
+}
+.connection-info a{
+	text-decoration: none;
+}
+.connection-info a:hover{
+	color:#D83500;
+}
+
+/**location identifier label styling**/
+.location-identifier{
+	margin-left: 8px;
+}
+.location-identifier a{
+	color: #fff;
+	font-size: 11px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	background: #1b1b1b;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+.location-identifier a:hover{
+	text-decoration: underline;
+}
+#trending-location-label{
+	margin-left: 0px;
+}
+#trending-location-label a:hover{
+	color:#fff;
+}
+#poll-location-label {
+	margin-left: 0px;
+}
+#poll-location-label a{
+	text-decoration: none;
+}
+#poll-location-label a:hover{
+	text-decoration: underline;
 }

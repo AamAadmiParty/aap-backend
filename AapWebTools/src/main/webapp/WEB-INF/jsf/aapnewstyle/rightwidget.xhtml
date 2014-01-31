@@ -26,7 +26,7 @@
 					<ui:repeat id="questions" var="oneQuestion" value="#{votingBean.pollQuestions}">
 						<li><p:panelGrid columns="1" style="width:100%;">
 								<f:facet name="header">
-									<h:outputText value="#{oneQuestion.content}" />
+									<h:outputText value="#{oneQuestion.content}" escape="false" />
 								</f:facet>
 
 								<p:selectOneRadio id="#{oneQuestion.id}_options" value="#{votingBean.selectedAnswer[oneQuestion.id]}" layout="pageDirection">

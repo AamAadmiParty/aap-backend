@@ -312,6 +312,14 @@ public class MenuBean extends BaseJsfBean {
 		}
 	}
 
+	public void goToGlobalDonationcampaignAdminPage() {
+		if (isGlobalDonationCampaignAllowed()) {
+			buildAndRedirect("/admin/globalcampaign");
+		} else {
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+
 	public void goToManageNewsPage() {
 		if (isManageNewsAllowed()) {
 			buildAndRedirect("/admin/news");
@@ -402,6 +410,10 @@ public class MenuBean extends BaseJsfBean {
 	public boolean isSmsAllowed() {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isSmsAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isGlobalDonationCampaignAllowed() {
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isGlobalDonationCampaignAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
 	}
 	
 	public boolean isEmailAllowed() {

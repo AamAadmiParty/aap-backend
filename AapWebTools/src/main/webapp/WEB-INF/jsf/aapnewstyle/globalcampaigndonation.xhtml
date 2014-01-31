@@ -9,7 +9,7 @@
 	<meta name="author" content="" />
 
 	<ui:include src="htmlhead.xhtml" />
-	<title>#{menuBean.user.name} - Home</title>
+	<title>Campaign</title>
 </h:head>
 <h:body>
 	<ui:include src="header.xhtml" />
@@ -23,11 +23,11 @@
 					</div>
 					<div class="donations-status">
 						<p:commandButton value="Invite Friends to Donate" onclick="invitereferrals_donate4aap()" />
-							<p:tabView id="tabView" style="width:570px">
+							<p:tabView id="tabView" style="width:770px">
 
 								<p:tab id="success" title="Success">
-									<p:dataTable id="listOfDonations" var="oneDonation" value="#{myDonationBean.successDonations}" paginator="true" rows="25" paginatorPosition="bottom"
-										paginatorAlwaysVisible="false" emptyMessage="No Donations Found" style="width:550px"
+									<p:dataTable id="listOfDonations" var="oneDonation" value="#{globalCampaignBean.successDonations}" paginator="true" rows="50" paginatorPosition="bottom"
+										paginatorAlwaysVisible="false" emptyMessage="No Donations Found" style="width:750px"
 										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 										<f:facet name="header">My Sucessfull Donations</f:facet>
 										<p:column>
@@ -50,7 +50,7 @@
 											</f:facet>
 											<h:outputText value="#{oneDonation.amount}" />
 											<f:facet name="footer">  
-						Rs. <h:outputText value="#{myDonationBean.total}">
+						Rs. <h:outputText value="#{globalCampaignBean.total}">
 													<f:convertNumber maxFractionDigits="2" groupingUsed="false" />
 												</h:outputText>
 											</f:facet>
@@ -65,7 +65,7 @@
 								</p:tab>
 
 								<p:tab id="tab2" title="Failed">
-									<p:dataTable id="listOfFailedDonations" var="oneDonation" value="#{myDonationBean.failedDonations}" paginator="true" rows="100" paginatorPosition="bottom"
+									<p:dataTable id="listOfFailedDonations" var="oneDonation" value="#{globalCampaignBean.failedDonations}" paginator="true" rows="100" paginatorPosition="bottom"
 										paginatorAlwaysVisible="false" emptyMessage="No Donations Found" style="width:550px"
 										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 										<f:facet name="header">My Failed Donations</f:facet>

@@ -1,40 +1,49 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
-	<h:panelGrid columns="1">
-	<p:panelGrid columns="2"   >
-		<f:facet name="header">  Volunteer Details</f:facet>
-		<h:outputLabel for="education" value="Education" />
-		<p:inputText id="education" value="#{param_VolunteerBean.selectedVolunteer.education}" label="education"></p:inputText>
+	<div class="eight columns" id="volunteer-profile-left">
+		<div class="volunteer-details">
+			<p:panelGrid columns="2">
+				<f:facet name="header">  Volunteer Details</f:facet>
+				<h:outputLabel for="education" value="Education" />
+				<p:inputText id="education" value="#{param_VolunteerBean.selectedVolunteer.education}" label="education"></p:inputText>
 
-		<h:outputLabel for="professionalBackground" value="Professional Background" />
-		<p:inputText id="professionalBackground" value="#{param_VolunteerBean.selectedVolunteer.professionalBackground}" label="professionalBackground"></p:inputText>
+				<h:outputLabel for="professionalBackground" value="Professional Background" />
+				<p:inputText id="professionalBackground" value="#{param_VolunteerBean.selectedVolunteer.professionalBackground}" label="professionalBackground"></p:inputText>
 
-		<h:outputLabel for="domainExpertise" value="Domain Expertise" />
-		<p:inputText id="domainExpertise" value="#{param_VolunteerBean.selectedVolunteer.domainExpertise}" label="domainExpertise"></p:inputText>
+				<h:outputLabel for="domainExpertise" value="Domain Expertise" />
+				<p:inputText id="domainExpertise" value="#{param_VolunteerBean.selectedVolunteer.domainExpertise}" label="domainExpertise"></p:inputText>
 
-		<h:outputLabel for="offences" value="Offences" />
-		<p:inputText id="offences" value="#{param_VolunteerBean.selectedVolunteer.offences}" label="offences"></p:inputText>
+				<h:outputLabel for="offences" value="Offences" />
+				<p:inputText id="offences" value="#{param_VolunteerBean.selectedVolunteer.offences}" label="offences"></p:inputText>
 
-		<h:outputLabel for="emergencyContactName" value="Emergency Contact Name" />
-		<p:inputText id="emergencyContactName" value="#{param_VolunteerBean.selectedVolunteer.emergencyContactName}" label="emergencyContactName"></p:inputText>
+				<h:outputLabel for="emergencyContactName" value="Emergency Contact Name" />
+				<p:inputText id="emergencyContactName" value="#{param_VolunteerBean.selectedVolunteer.emergencyContactName}" label="emergencyContactName"></p:inputText>
 
-		<h:outputLabel for="emergencyContactRelation" value="Emergency Contact Relation" />
-		<p:inputText id="emergencyContactRelation" value="#{param_VolunteerBean.selectedVolunteer.emergencyContactRelation}" label="emergencyContactRelation"></p:inputText>
+				<h:outputLabel for="emergencyContactRelation" value="Emergency Contact Relation" />
+				<p:inputText id="emergencyContactRelation" value="#{param_VolunteerBean.selectedVolunteer.emergencyContactRelation}" label="emergencyContactRelation"></p:inputText>
 
-		<h:outputLabel for="emergencyContactNo" value="Emergency Contact Number" />
-		<p:inputText id="emergencyContactNo" value="#{param_VolunteerBean.selectedVolunteer.emergencyContactNo}" label="emergencyContactNo"></p:inputText>
+				<h:outputLabel for="emergencyContactNo" value="Emergency Contact Number" />
+				<p:inputText id="emergencyContactNo" value="#{param_VolunteerBean.selectedVolunteer.emergencyContactNo}" label="emergencyContactNo"></p:inputText>
 
-	</p:panelGrid>
-	<p:outputPanel style="height:200px;"></p:outputPanel>
-	<ui:repeat value="#{param_VolunteerBean.interestGroupDtoModels}" var="oneInterestGroup">
-		<p:dataTable var="oneInterest" value="#{oneInterestGroup.interestDtoModels}" style="width:550px;">
-			<f:facet name="header">#{oneInterestGroup.description}</f:facet>
-			<p:column width="4%">
-				<p:selectBooleanCheckbox value="#{param_VolunteerBean.selectedInterestMap[oneInterest.id]}">
-				</p:selectBooleanCheckbox>
-			</p:column>
-			<p:column>#{oneInterest.description}</p:column>
-		</p:dataTable>
-	</ui:repeat>
-	</h:panelGrid>
+			</p:panelGrid>
+		</div>
+		<ui:repeat value="#{param_VolunteerBean.interestGroupDtoModels}" var="oneInterestGroup">
+		<div class="can-volunteer-for">
+			<p:dataTable var="oneInterest" value="#{oneInterestGroup.interestDtoModels}" style="width:550px;">
+				<f:facet name="header">#{oneInterestGroup.description}</f:facet>
+				<p:column width="4%">
+					<p:selectBooleanCheckbox value="#{param_VolunteerBean.selectedInterestMap[oneInterest.id]}">
+					</p:selectBooleanCheckbox>
+				</p:column>
+				<p:column>#{oneInterest.description}</p:column>
+			</p:dataTable>
+		</div>
+		</ui:repeat>
+		<!-- 
+		<div class="volunteer-work-options">
+			<img src="assets/l3.gif">
+		</div>
+		 -->
+	</div>
+
 </ui:composition>

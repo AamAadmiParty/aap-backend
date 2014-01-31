@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Global Campaign - Admin Panel</title>
+	<style>
+.topAlignPanelColumns td {
+	vertical-align: top;
+}
+
+.pf-dock-container-top {
+	background-image: none;
+	background-color: white;
+}
+
+.ui-dock-item-top {
+	color: black;
+}
+
+.ui-dock-container-top {
+	color: black;
+}
+
+.ui-selectonemenu {
+	width: 100px;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 90% !important;
+}
+</style>
+
+</h:head>
+<h:body>
+	<ui:include src="admin_menu.xhtml" />
+	<!-- menu ends -->
+	<div style="width: 1000px; margin: 0 auto;">
+		<div style="width: 1000px; margin: 0;">
+			<p:blockUI block="adminGlobalCampaign" trigger=":adminGlobalCampaign:saveGlobalCampaign">
+			Saving Profile<br />
+				<p:graphicImage value="/images/ajax-loader.gif" />
+			</p:blockUI>
+			<h:form id="adminGlobalCampaign">
+				<p:messages id="messages" autoUpdate="true" closable="true" />
+				<p:outputPanel id="mainPanel">
+					<p:outputPanel id="listView" rendered="#{adminGlobalDonationBean.showList}">
+
+						<p:commandButton value="Create New Global Donation Campaign" actionListener="#{adminGlobalDonationBean.createGlobalCampaign}" update=":adminGlobalCampaign:mainPanel">
+						</p:commandButton>
+						<p:dataTable id="listOfNews" var="oneGlobalCampaign" value="#{adminGlobalDonationBean.globalCmpaigns}" paginator="true" rows="25" paginatorPosition="bottom"
+							paginatorAlwaysVisible="false" emptyMessage="No News"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+							<f:facet name="header">Global Donation Campaign</f:facet>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="CampaignId" />
+								</f:facet>
+								<h:outputText value="#{oneGlobalCampaign.campaignId}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Url" />
+								</f:facet>
+								<h:outputText value="#{oneGlobalCampaign.myAapShortUrl}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="Title" />
+								</f:facet>
+								<h:outputText value="#{oneGlobalCampaign.title}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="TotalDonation" />
+								</f:facet>
+								<h:outputText value="#{oneGlobalCampaign.totalDonation}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="TargetDonation" />
+								</f:facet>
+								<h:outputText value="#{oneGlobalCampaign.targetDonation}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="TargetDonation" />
+								</f:facet>
+								<h:outputText value="#{oneGlobalCampaign.startDate}" >
+								 	<f:convertDateTime pattern="dd-MMM-yyyy" />
+								</h:outputText>
+								to
+								<h:outputText value="#{oneGlobalCampaign.endDate}" >
+									<f:convertDateTime pattern="dd-MMM-yyyy" />
+								</h:outputText>
+							</p:column>
+							<p:column style="width:100px;">
+								<f:facet name="header">
+									<h:outputText value="Update" />
+								</f:facet>
+								<p:commandLink update=":adminGlobalCampaign:mainPanel" title="Update Post" >
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+									<f:setPropertyActionListener value="#{oneGlobalCampaign}" target="#{adminGlobalDonationBean.selectedGlobalCampaign}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataTable>
+					</p:outputPanel>
+					<p:outputPanel id="formView" rendered="#{!adminGlobalDonationBean.showList}">
+						<p:panelGrid columns="2">
+							<p:outputLabel value="Campaign Id"></p:outputLabel>
+							<p:outputPanel>
+							<p:inputText value="#{adminGlobalDonationBean.selectedGlobalCampaign.campaignId}" style="width:200px" disabled="#{!adminGlobalDonationBean.editAllowed}">
+							</p:inputText><br/>
+							<p:outputLabel value="*You can enter campaignId only once and WILL NOT be able to edit later"></p:outputLabel>
+							
+							</p:outputPanel>
+							<p:outputLabel value="Public Page URL" rendered="#{!adminGlobalDonationBean.editAllowed}"></p:outputLabel>
+							<p:outputLabel value="http://my.aamaadmiparty.org/campaign/global/#{adminGlobalDonationBean.selectedGlobalCampaign.campaignId}" rendered="#{!adminGlobalDonationBean.editAllowed}"></p:outputLabel>
+							
+							<p:outputLabel value="Title"></p:outputLabel>
+							<p:inputText value="#{adminGlobalDonationBean.selectedGlobalCampaign.title}" style="width:600px">
+							</p:inputText>
+							<p:outputLabel value="Description"></p:outputLabel>
+							<p:editor id="editor" value="#{adminGlobalDonationBean.selectedGlobalCampaign.description}" width="600" height="500">
+							</p:editor>
+							<p:outputLabel value="Target Donation"></p:outputLabel>
+							<p:inputText value="#{adminGlobalDonationBean.selectedGlobalCampaign.targetDonation}" />
+							<p:outputLabel value="Start Date"></p:outputLabel>
+							<p:calendar pattern="EEE, dd MMM, yyyy" showButtonPanel="true" navigator="true" value="#{adminGlobalDonationBean.selectedGlobalCampaign.startDate}" id="startDateCal" />
+							<p:outputLabel value="End Date"></p:outputLabel>
+							<p:calendar pattern="EEE, dd MMM, yyyy" showButtonPanel="true" navigator="true" value="#{adminGlobalDonationBean.selectedGlobalCampaign.endDate}" id="endDateCal" />
+
+						</p:panelGrid>
+						<br></br>
+						<p:commandButton value="Cancel" update=":adminGlobalCampaign:mainPanel" actionListener="#{adminGlobalDonationBean.cancel}" styleClass="ui-priority-primary">
+						</p:commandButton>
+						<p:commandButton id="saveGlobalCampaign" value="Save Campaign" update=":adminGlobalCampaign:mainPanel" actionListener="#{adminGlobalDonationBean.saveGlobalCampaign}"
+							styleClass="ui-priority-primary" >
+						</p:commandButton>
+
+
+					</p:outputPanel>
+				</p:outputPanel>
+			</h:form>
+
+
+			<!-- footer starts -->
+			<div class="footerWrapper">
+				<div class="container_24">
+					<div class="grid_24 panel footer">
+						Copyright &copy; 2014 <a href="#">www.aamaadmiparty.org</a>. All Rights Reserved.
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<!-- footer ends -->
+		</div>
+	</div>
+
+</h:body>
+</html>

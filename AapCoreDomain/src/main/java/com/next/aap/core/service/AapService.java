@@ -25,8 +25,10 @@ import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
+import com.next.aap.web.dto.GlobalCampaignDto;
 import com.next.aap.web.dto.InterestDto;
 import com.next.aap.web.dto.InterestGroupDto;
+import com.next.aap.web.dto.LocationCampaignDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.OfficeDto;
@@ -292,5 +294,14 @@ public interface AapService {
 	String savePollVote(Long userId, Long questionId, Long answerId);
 	
 	void updatePollVoteAnswerTotalCount(Long answerId, Long existingAnswerId);
+	
+	LocationCampaignDto saveLocationCampaign(LocationCampaignDto locationCampaignDto) throws AppException;
+	
+	GlobalCampaignDto saveGlobalCampaign(GlobalCampaignDto globalCampaignDto) throws AppException;
+	
+	GlobalCampaignDto getGlobalCampaignByCid(String cid) throws AppException;
+	
+	List<GlobalCampaignDto> getGlobalCampaigns() throws AppException;
 
+	List<DonationDto> getDonationsByCampaignId(String campaignId);
 }

@@ -67,9 +67,11 @@ import com.next.aap.core.persistance.FacebookGroup;
 import com.next.aap.core.persistance.FacebookGroupMembership;
 import com.next.aap.core.persistance.FacebookPage;
 import com.next.aap.core.persistance.FacebookPost;
+import com.next.aap.core.persistance.GlobalCampaign;
 import com.next.aap.core.persistance.Interest;
 import com.next.aap.core.persistance.InterestGroup;
 import com.next.aap.core.persistance.LegacyMembership;
+import com.next.aap.core.persistance.LocationCampaign;
 import com.next.aap.core.persistance.News;
 import com.next.aap.core.persistance.Office;
 import com.next.aap.core.persistance.ParliamentConstituency;
@@ -89,6 +91,7 @@ import com.next.aap.core.persistance.StateRole;
 import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
+import com.next.aap.core.persistance.UserPollVote;
 import com.next.aap.core.persistance.Video;
 import com.next.aap.core.persistance.Volunteer;
 import com.next.aap.core.persistance.dao.AcRoleDao;
@@ -115,8 +118,10 @@ import com.next.aap.core.persistance.dao.FacebookGroupDao;
 import com.next.aap.core.persistance.dao.FacebookGroupMembershipDao;
 import com.next.aap.core.persistance.dao.FacebookPageDao;
 import com.next.aap.core.persistance.dao.FacebookPostDao;
+import com.next.aap.core.persistance.dao.GlobalCampaignDao;
 import com.next.aap.core.persistance.dao.InterestDao;
 import com.next.aap.core.persistance.dao.InterestGroupDao;
+import com.next.aap.core.persistance.dao.LocationCampaignDao;
 import com.next.aap.core.persistance.dao.NewsDao;
 import com.next.aap.core.persistance.dao.OfficeDao;
 import com.next.aap.core.persistance.dao.ParliamentConstituencyDao;
@@ -135,9 +140,11 @@ import com.next.aap.core.persistance.dao.StateRoleDao;
 import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
+import com.next.aap.core.persistance.dao.UserPollVoteDao;
 import com.next.aap.core.persistance.dao.VideoDao;
 import com.next.aap.core.persistance.dao.VolunteerDao;
 import com.next.aap.core.util.DataUtil;
+import com.next.aap.core.util.PollQuestionAnswerUpdater;
 import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AccountTransactionMode;
 import com.next.aap.web.dto.AccountTransactionType;
@@ -160,8 +167,10 @@ import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
+import com.next.aap.web.dto.GlobalCampaignDto;
 import com.next.aap.web.dto.InterestDto;
 import com.next.aap.web.dto.InterestGroupDto;
+import com.next.aap.web.dto.LocationCampaignDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.OfficeDto;
@@ -191,7 +200,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	private static final long serialVersionUID = 1L;
 	private final String donationUrl = "https://donate.aamaadmiparty.org/?utm_source=donate4india&utm_medium=web&utm_term=donate-purl&utm_content=donation&utm_campaign=affliation&cid=";
 	private final String urlShortnerUrl="http://myaap.in/yourls-api.php?format=json&username=arvind&password=4delhi&action=shorturl&url=";
-
+	private final String missingImageUrl = "https://lh4.googleusercontent.com/-7MmCqFqneVk/UuN39tQ2qQI/AAAAAAAANyA/rIM9CzbLlLE/s256/aap-text-symbol_512.png";
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private UserDao userDao;
@@ -287,14 +296,24 @@ public class AapServiceImpl implements AapService, Serializable {
 	private DonationCampaignDao donationCampaignDao;
 	@Autowired
 	private HttpUtil httpUtil;
+	@Autowired
+	private UserPollVoteDao userPollVoteDao;
+	@Autowired
+	private LocationCampaignDao locationCampaignDao;
+	@Autowired
+	private GlobalCampaignDao globalCampaignDao;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
+	
+	@Autowired
+	private PollQuestionAnswerUpdater pollQuestionAnswerUpdater;
 
 	Map<String, String> countryCodeMap = new HashMap<>();
 	
 	@PostConstruct
 	public void init(){
+		
 		countryCodeMap.put("AF", "Afghanistan");
 		countryCodeMap.put("AL", "Albania");
 		countryCodeMap.put("DZ", "Algeria");
@@ -1482,12 +1501,14 @@ public class AapServiceImpl implements AapService, Serializable {
 		 * "User of this role will be able to do all Office related operation of a location, i.e. editing Office address,contact information etc"
 		 * , true, true, true, true, true,
 		 * true,false,AppPermission.EDIT_OFFICE_ADDRESS);
-		 */
+		 
 		createRoleWithPermissions("SmsSender", "User of this role will be able to send SMS to all people in his/her location", true, true, true, true, true,
 				true, false, AppPermission.ADMIN_SMS);
 		createRoleWithPermissions("EmailSender", "User of this role will be able to send EMAIL to all people in his/her location", true, true, true, true,
 				true, true, false, AppPermission.ADMIN_EMAIL);
-
+*/
+		createRoleWithPermissions("GlobalDonationCampaigner", "User of this role will be able to create global donation campaign", false, false, false, false,
+				false, false, false, AppPermission.ADMIN_GLOBAL_CAMPAIGN);
 		logger.info("All Roles and permissions are created");
 	}
 
@@ -2414,6 +2435,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		NewsDto newsDto = new NewsDto();
 		BeanUtils.copyProperties(news, newsDto);
+		String contentWithOutHtml = news.getContent().replaceAll("\\<[^>]*>","");
+		newsDto.setContentSummary(contentWithOutHtml);
+		if(StringUtil.isEmpty(newsDto.getImageUrl())){
+			newsDto.setImageUrl(missingImageUrl);
+		}
 		return newsDto;
 	}
 
@@ -3093,6 +3119,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		BlogDto blogDto = new BlogDto();
 		BeanUtils.copyProperties(blog, blogDto);
+		String contentWithOutHtml = blog.getContent().replaceAll("\\<[^>]*>","");
+		blogDto.setContentSummary(contentWithOutHtml);
+		if(StringUtil.isEmpty(blogDto.getImageUrl())){
+			blogDto.setImageUrl(missingImageUrl);
+		}
 		return blogDto;
 	}
 
@@ -3249,6 +3280,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		PollQuestionDto pollQuestionDto = new PollQuestionDto();
 		BeanUtils.copyProperties(pollQuestion, pollQuestionDto);
+		pollQuestionDto.setAnswers(convertPollAnswers(pollQuestion.getPollAnswers()));
 		return pollQuestionDto;
 	}
 
@@ -3327,8 +3359,12 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public PollQuestionDto publishPollQuestion(Long pollQuestionId) {
 		PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionId);
+		System.out.println("pollQuestion = "+pollQuestion);
+		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		pollQuestion.setContentStatus(ContentStatus.Published);
+		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		pollQuestion = pollQuestionDao.savePollQuestion(pollQuestion);
+		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		return convertPollQuestion(pollQuestion);
 	}
 
@@ -4190,6 +4226,33 @@ public class AapServiceImpl implements AapService, Serializable {
 		return emailUserDtos;
 	}
 
+	private void updateDonationCampaigns(Donation donation){
+		 updateGlobalCampaigns(donation);
+	}
+	private void updateGlobalCampaigns(Donation donation){
+		
+		if(StringUtil.isEmpty(donation.getCid())){
+			//If campaign Id is provided then directly add this donation to given campaign
+			GlobalCampaign globalCampaign = globalCampaignDao.getGlobalCampaignByGlobalCampaign(donation.getCid());
+			if(globalCampaign != null){
+				globalCampaign.setTotalDonation(globalCampaign.getTotalDonation() + donation.getAmount());
+				globalCampaign.setTotalNumberOfDonations(globalCampaign.getTotalNumberOfDonations() + 1);
+				globalCampaign = globalCampaignDao.saveGlobalCampaign(globalCampaign);
+			}
+		}else{
+			List<GlobalCampaign> globalCampaigns = globalCampaignDao.getGlobalCampaigns();
+			Date today = new Date();
+			if(globalCampaigns != null){
+				for(GlobalCampaign oneGlobalCampaign : globalCampaigns){
+					if(today.after(oneGlobalCampaign.getStartDate()) && today.before(oneGlobalCampaign.getEndDate())){
+						oneGlobalCampaign.setTotalDonationInTime(oneGlobalCampaign.getTotalDonationInTime() + donation.getAmount());
+						oneGlobalCampaign.setTotalNumberOfDonationsInTime(oneGlobalCampaign.getTotalNumberOfDonationsInTime() + 1);
+						oneGlobalCampaign = globalCampaignDao.saveGlobalCampaign(oneGlobalCampaign);
+					}
+				}
+			}
+		}
+	}
 	// 07 Jan 2013 17:55:41:917
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:S");
 
@@ -4327,6 +4390,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			}else{
 				donation.setAmount(oneDonation.getAmount());
 			}
+			updateDonationCampaigns(donation);
 			//System.out.println(oneDonation[0] + ", " + oneDonation[1] + " , " + oneDonation[oneDonation.length - 2]);
 			donationDao.updateDonationStatus(oneDonation.getDonorId(), "Imported", "");
 		} catch (Exception ex) {
@@ -4994,4 +5058,239 @@ public class AapServiceImpl implements AapService, Serializable {
 		System.out.println("Donation Dup Updated");
 		
 	}
+
+	@Override
+	@Transactional
+	public VideoDto saveVideo(VideoDto videoItem) {
+		Video dbVideo;
+		if (videoItem.getId() == null || videoItem.getId() <= 0) {
+			dbVideo = videoDao.getVideoByVideoId(videoItem.getYoutubeVideoId());
+			if (dbVideo == null) {
+				dbVideo = new Video();
+				dbVideo.setDateCreated(new Date());
+			}
+		} else {
+			dbVideo = videoDao.getVideoById(videoItem.getId());
+			if (dbVideo == null) {
+				throw new RuntimeException("No video item exists with id ["
+						+ videoItem.getId() + "]");
+			}
+		}
+		dbVideo.setDateModified(new Date());
+		dbVideo.setImageUrl(videoItem.getImageUrl());
+		dbVideo.setTitle(videoItem.getTitle());
+		dbVideo.setWebUrl(videoItem.getWebUrl());
+		dbVideo.setDescription(videoItem.getDescription());
+		dbVideo.setYoutubeVideoId(videoItem.getYoutubeVideoId());
+		dbVideo.setPublishDate(videoItem.getPublishDate());
+		dbVideo.setGlobal(videoItem.isGlobal());
+		dbVideo.setContentStatus(ContentStatus.Pending);
+		dbVideo = videoDao.saveVideo(dbVideo);
+		return convertVideo(dbVideo);
+	}
+
+	@Override
+	@Transactional
+	public VideoDto getVideoByVideoId(String videoId) {
+		Video dbVideo = videoDao.getVideoByVideoId(videoId);
+		return convertVideo(dbVideo);
+	}
+
+	@Override
+	@Transactional
+	public VideoDto publishVideo(Long videoId) {
+		Video dbVideo = videoDao.getVideoById(videoId);
+		dbVideo.setContentStatus(ContentStatus.Published);
+		dbVideo = videoDao.saveVideo(dbVideo);
+		return convertVideo(dbVideo);
+	}
+
+	@Override
+	@Transactional
+	public NewsDto getNewsById(Long newsId) {
+		News dbNews = newsDao.getNewsById(newsId);
+		return convertNews(dbNews);
+	}
+
+	@Override
+	@Transactional
+	public BlogDto getBlogById(Long blogId) {
+		Blog blog = blogDao.getBlogById(blogId);
+		return convertBlog(blog);
+	}
+
+	@Override
+	@Transactional
+	public VideoDto getVideoById(Long videoId) {
+		Video video = videoDao.getVideoById(videoId);
+		return convertVideo(video);
+	}
+
+	@Override
+	@Transactional
+	public String savePollVote(Long userId, Long questionId, Long answerId) {
+		UserPollVote userPollVote = userPollVoteDao.getUserPollVote(userId, questionId);
+		PollAnswer pollAnswer = pollAnswerDao.getPollAnswerById(answerId);
+		if(userPollVote == null){
+			userPollVote = new UserPollVote();
+			User user = userDao.getUserById(userId);
+			PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(questionId);
+			userPollVote.setUser(user);
+			userPollVote.setPollQuestion(pollQuestion);
+			userPollVote.setPollAnswer(pollAnswer);
+			userPollVote = userPollVoteDao.saveUserPollVote(userPollVote);
+			pollQuestionAnswerUpdater.updatePollAnswerStatsAsync(userId, questionId, answerId, null);
+			return "Your Vote saved succesfully";
+		}else{
+			Long existingPollAnswerId = userPollVote.getPollAnswerId(); 
+			userPollVote.setPollAnswer(pollAnswer);
+			userPollVote = userPollVoteDao.saveUserPollVote(userPollVote);
+			pollQuestionAnswerUpdater.updatePollAnswerStatsAsync(userId, questionId, answerId, existingPollAnswerId);
+			return "Your Vote updated succesfully";
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public void updatePollVoteAnswerTotalCount(Long answerId, Long existingAnswerId) {
+		if(existingAnswerId != null){
+			updatePollAnswerCount(existingAnswerId, -1);
+		}
+		updatePollAnswerCount(answerId, 1);
+	}
+	private void updatePollAnswerCount(Long pollAnswerId, int countIncrement){{
+		PollAnswer pollAnswer = pollAnswerDao.getPollAnswerById(pollAnswerId);
+		if(pollAnswer.getTotalVotes() == null){
+			pollAnswer.setTotalVotes(0L);
+		}
+		pollAnswer.setTotalVotes(pollAnswer.getTotalVotes() + countIncrement);
+		pollAnswer = pollAnswerDao.savePollAnswer(pollAnswer);
+	}
+		
+	}
+
+	@Override
+	@Transactional
+	public LocationCampaignDto saveLocationCampaign(LocationCampaignDto locationCampaignDto) throws AppException{
+		LocationCampaign locationCampaign = null;
+		boolean newCampaign = false;
+		if(locationCampaignDto.getId() != null && locationCampaignDto.getId() > 0){
+			locationCampaign = locationCampaignDao.getLocationCampaignById(locationCampaignDto.getId());
+			if(locationCampaign == null){
+				throw new AppException("No Location Campaign found for id="+locationCampaignDto.getId());
+			}
+		}else{
+			locationCampaign = locationCampaignDao.getLocationCampaignByLocationCampaign(locationCampaignDto.getCampaignId());
+			if(locationCampaign != null){
+				throw new AppException("Location Campaign already exists for campaignId="+locationCampaignDto.getCampaignId());
+			}
+			newCampaign = true;
+			locationCampaign = new LocationCampaign();	
+			
+			locationCampaign.setCampaignId(locationCampaignDto.getCampaignId());
+			locationCampaign.setTotalDonation(locationCampaignDto.getTotalDonation());
+			locationCampaign.setTotalNumberOfDonations(locationCampaignDto.getTotalNumberOfDonations());
+			String longUrl = donationUrl + locationCampaignDto.getCampaignId();
+			locationCampaign.setLongUrl(longUrl);
+			String shortUrl = getShortUrl(longUrl, locationCampaignDto.getCampaignId());
+			locationCampaign.setMyAapShortUrl(shortUrl);
+		}
+		locationCampaign.setDescription(locationCampaignDto.getDescription());
+		locationCampaign.setTitle(locationCampaignDto.getTitle());
+		locationCampaign.setEndDate(locationCampaignDto.getEndDate());
+		locationCampaign.setStartDate(locationCampaignDto.getStartDate());
+		locationCampaign.setTargetDonation(locationCampaignDto.getTargetDonation());
+		
+		locationCampaign = locationCampaignDao.saveLocationCampaign(locationCampaign);
+		
+		if(newCampaign){
+			
+		}
+		
+		return convertLocationCampaign(locationCampaign);
+	}
+	private LocationCampaignDto convertLocationCampaign(LocationCampaign locationCampaign){
+		LocationCampaignDto locationCampaignDto = new LocationCampaignDto();
+		BeanUtils.copyProperties(locationCampaign, locationCampaignDto);
+		return locationCampaignDto;
+	}
+	@Override
+	@Transactional
+	public GlobalCampaignDto saveGlobalCampaign(GlobalCampaignDto globalCampaignDto) throws AppException{
+		GlobalCampaign globalCampaign = null;
+		boolean newCampaign = false;
+		if(globalCampaignDto.getId() != null && globalCampaignDto.getId() > 0){
+			globalCampaign = globalCampaignDao.getGlobalCampaignById(globalCampaignDto.getId());
+			if(globalCampaign == null){
+				throw new AppException("No Global Campaign found for id="+globalCampaignDto.getId());
+			}
+		}else{
+			globalCampaign = globalCampaignDao.getGlobalCampaignByGlobalCampaign(globalCampaignDto.getCampaignId());
+			if(globalCampaign != null){
+				throw new AppException("Global Campaign already exists for campaignId="+globalCampaignDto.getCampaignId());
+			}
+			newCampaign = true;
+			globalCampaign = new GlobalCampaign();	
+			
+			globalCampaign.setCampaignId(globalCampaignDto.getCampaignId());
+			globalCampaign.setTotalDonation(globalCampaignDto.getTotalDonation());
+			globalCampaign.setTotalNumberOfDonations(globalCampaignDto.getTotalNumberOfDonations());
+			String longUrl = donationUrl + globalCampaignDto.getCampaignId();
+			globalCampaign.setLongUrl(longUrl);
+			String shortUrl = getShortUrl(longUrl, globalCampaignDto.getCampaignId());
+			globalCampaign.setMyAapShortUrl(shortUrl);
+		}
+		globalCampaign.setDescription(globalCampaignDto.getDescription());
+		globalCampaign.setTitle(globalCampaignDto.getTitle());
+		globalCampaign.setEndDate(globalCampaignDto.getEndDate());
+		globalCampaign.setStartDate(globalCampaignDto.getStartDate());
+		globalCampaign.setTargetDonation(globalCampaignDto.getTargetDonation());
+		
+		globalCampaign = globalCampaignDao.saveGlobalCampaign(globalCampaign);
+		
+		return convertGlobalCampaign(globalCampaign);
+	}
+	
+	private GlobalCampaignDto convertGlobalCampaign(GlobalCampaign globalCampaign){
+		if(globalCampaign == null){
+			return null;
+		}
+		GlobalCampaignDto globalCampaignDto = new GlobalCampaignDto();
+		BeanUtils.copyProperties(globalCampaign, globalCampaignDto);
+		return globalCampaignDto;
+	}
+	
+	private List<GlobalCampaignDto> convertGlobalCampaigns(Collection<GlobalCampaign> globalCampaigns){
+		List<GlobalCampaignDto> globalCampaignDtos = new ArrayList<>();
+		if(globalCampaigns == null || globalCampaigns.isEmpty()){
+			return globalCampaignDtos;
+		}
+		for(GlobalCampaign oneGlobalCampaign:globalCampaigns){
+			globalCampaignDtos.add(convertGlobalCampaign(oneGlobalCampaign));
+		}
+		return globalCampaignDtos;
+	}
+
+	@Override
+	@Transactional
+	public List<GlobalCampaignDto> getGlobalCampaigns() throws AppException {
+		List<GlobalCampaign> globalCampaigns = globalCampaignDao.getGlobalCampaigns();
+		return convertGlobalCampaigns(globalCampaigns);
+	}
+
+	@Override
+	@Transactional
+	public GlobalCampaignDto getGlobalCampaignByCid(String cid) throws AppException {
+		GlobalCampaign globalCampaign = globalCampaignDao.getGlobalCampaignByGlobalCampaign(cid);
+		return convertGlobalCampaign(globalCampaign);
+	}
+
+	@Override
+	@Transactional
+	public List<DonationDto> getDonationsByCampaignId(String campaignId) {
+		List<Donation> allDonations = donationDao.getDonationsByCampaignId(campaignId);
+		return convertDonations(allDonations);
+	}
+	
 }

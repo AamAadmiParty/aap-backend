@@ -27,9 +27,6 @@ public abstract class AwsQueueListener {
 
 	public AwsQueueListener(Regions regions, String queueName, String accessKey, String secretKey) {
 		this.queueName = queueName;
-		System.out.println("queueName = "+queueName);
-		System.out.println("accessKey = "+accessKey);
-		System.out.println("secretKey = "+secretKey);
 		AWSCredentials awsCredentials;
 		awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 		sqs = new AmazonSQSClient(awsCredentials);
@@ -68,8 +65,7 @@ public abstract class AwsQueueListener {
 									// sure that persist this message
 									// in case of failure/exception
 									try {
-										// sqs.deleteMessage(new
-										// DeleteMessageRequest(queueName,message.getReceiptHandle()));
+										 sqs.deleteMessage(new DeleteMessageRequest(queueName,message.getReceiptHandle()));
 									} catch (Exception ex) {
 										// In case some error occurs
 									}
@@ -85,12 +81,13 @@ public abstract class AwsQueueListener {
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
-
+					/*
 					try {
 						Thread.sleep(10000);
 					} catch (Exception ex) {
-
+					
 					}
+					*/
 				}
 
 			}

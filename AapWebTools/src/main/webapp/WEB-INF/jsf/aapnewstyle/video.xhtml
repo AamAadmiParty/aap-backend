@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<ui:include src="htmlhead.xhtml" />
+	<title>#{menuBean.user.name} - Home</title>
+	<style>
+.ui-panelgrid td,.ui-panelgrid tr {
+	border-style: none !important
+}
+</style>
+</h:head>
+<h:body>
+
+	<ui:include src="header.xhtml" />
+	<div class="band mainbody">
+		<div class="container">
+
+			<!--beginning of left container-->
+			<div class="eleven columns">
+
+				<div class="latest-item-bg" id="single-news-page"></div>
+				<div class="latest-item-container">
+					<div class="latest-content-container" id="news-single">
+						<div class="title-holder">
+							<span class="title-icon-head-video" id="newsicon"><img src="#{facesContext.externalContext.requestContextPath}/aapnewstyle/assets/video2.png" /></span> <span class="main-article-title" id="video-title"><h5>
+									<a href="#"><h:outputText value="#{videoBean.video.title.length() gt 50 ? videoBean.video.title.substring(0,47).concat('...') : videoBean.video.title}" escape="false" /></a>
+								</h5></span>
+						</div>
+						<div class="content-featured-image">
+							<iframe width="610" height="425" src="http://www.youtube.com/embed/#{videoBean.video.youtubeVideoId}" frameborder="0" ></iframe>
+						</div>
+						<div class="latest-content-text">
+
+							<div class="category-title">
+								<h5>
+									<span class="video-category">PUBLISHED ON #{videoBean.video.publishDate}</span>
+									<span class="location-identifier"><a href="#">National</a></span>
+								</h5>
+							</div>
+							<div class="item-description">
+								<p>
+									<h:outputText value="#{videoBean.video.description}" escape="false" />
+									<br />
+
+								</p>
+							</div>
+						</div>
+
+					</div>
+					<!--video ends-->
+					<ui:include src="../common/comments.xhtml" >
+						<ui:param name="param_pageUrl" value="http://my.aamaadmiparty.org/video/#{videoBean.video.id}" />
+					</ui:include>
+
+
+
+				</div>
+			</div>
+			<!--end of left container-->
+
+			<!--beginning of right container-->
+			<ui:include src="rightwidget.xhtml" />
+
+
+		</div>
+		<!-- container -->
+	</div>
+	<!--band-->
+
+
+	<ui:include src="footer.xhtml" />
+
+
+</h:body>
+</html>
+

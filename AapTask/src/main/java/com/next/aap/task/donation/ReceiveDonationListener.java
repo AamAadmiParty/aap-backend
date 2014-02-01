@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -30,13 +29,16 @@ public class ReceiveDonationListener extends AwsQueueListener{
 		try{
 			//System.out.println("onQueueMessage "+ jsonMessage);
 			JSONObject jsonObject = new JSONObject(jsonMessage);
-			JSONObject donationJsonObject = jsonObject.getJSONObject("Message");
+			String data = jsonObject.getString("Message");
+			JSONObject donationJsonObject = new JSONObject(data);
 			DonationDump donationDump = new DonationDump();
+			//29 Jan 2014 04:32:26:290
+			
 			donationDump.setAmount(donationJsonObject.getDouble("Amount"));
 			donationDump.setCid(donationJsonObject.getString("cid"));
 			donationDump.setDateCreated(new Date());
 			donationDump.setDateModified(new Date());
-			donationDump.setDonationDate(donationJsonObject.getString("Donation Date"));
+			donationDump.setDonationDate(donationJsonObject.getString("DonationDate"));
 			donationDump.setDonorAddress(donationJsonObject.getString("Address"));
 			donationDump.setDonorAge(donationJsonObject.getInt("Age"));
 			donationDump.setDonorCountryId(donationJsonObject.getString("Country_id"));
@@ -50,13 +52,13 @@ public class ReceiveDonationListener extends AwsQueueListener{
 			donationDump.setDonorStateId(donationJsonObject.getString("State_id"));
 			donationDump.setMerchantReferenceNumber(donationJsonObject.getString("MerchantReferenceNo"));
 			donationDump.setPaymentGateway(donationJsonObject.getString("PaymentGatewayUsed"));
-			//donationDump.setPgErrorDetail(donationJsonObject.getString("PaymentGatewayUsed"));
+			//donationDump.setPgErrorDetail(donationJsonObject.getString("PaymentGateway"));
 			donationDump.setPgErrorMessage(donationJsonObject.getString("PGErrorMsg"));
 			donationDump.setRemark(donationJsonObject.getString("Remark"));
 			donationDump.setStatus("Pending");
 			donationDump.setStatusMessage("");
 			donationDump.setTransactionId(donationJsonObject.getString("TransactionId"));
-			donationDump.setTransactionType(donationJsonObject.getString("Payment Gateway"));
+			donationDump.setTransactionType(donationJsonObject.getString("PaymentGateway"));
 			donationDump.setUtmCampaign(donationJsonObject.getString("utm_campaign"));
 			donationDump.setUtmContent(donationJsonObject.getString("utm_content"));
 			donationDump.setUtmMedium(donationJsonObject.getString("utm_medium"));

@@ -34,7 +34,8 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 //@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
 @URLMappings(mappings={
 		@URLMapping(id = "userProfileBean1", beanName="userProfileBean", pattern = "/orig/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml"),
-		@URLMapping(id = "userProfileBean2", beanName="userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/aapstyle/userprofile.xhtml")
+		@URLMapping(id = "userProfileBean2", beanName="userProfileBean", pattern = "/aapstyle/profile", viewId = "/WEB-INF/jsf/aapstyle/userprofile.xhtml"),
+		@URLMapping(id = "userProfileBean3", beanName="userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/aapnewstyle/userprofile.xhtml")
 		})
 @URLBeanName("userProfileBean")
 public class UserProfileBean extends BaseUserJsfBean {

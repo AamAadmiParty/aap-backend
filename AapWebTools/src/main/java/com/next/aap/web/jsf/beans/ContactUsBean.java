@@ -19,7 +19,11 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 
 @ManagedBean
 @ViewScoped
-@URLMappings(mappings = { @URLMapping(id = "contactUsBean", beanName = "contactUsBean", pattern = "/contactus", viewId = "/WEB-INF/jsf/aapstyle/contactus.xhtml") })
+//@URLMappings(mappings = { @URLMapping(id = "contactUsBean", beanName = "contactUsBean", pattern = "/contactus", viewId = "/WEB-INF/jsf/aapstyle/contactus.xhtml") })
+@URLMappings(mappings={
+		@URLMapping(id = "contactUsBean1", beanName = "contactUsBean", pattern = "/aapstyle/contactus", viewId = "/WEB-INF/jsf/aapstyle/contactus.xhtml"),
+		@URLMapping(id = "contactUsBean2", beanName = "contactUsBean", pattern = "/contactus", viewId = "/WEB-INF/jsf/aapnewstyle/contactus.xhtml")
+		})
 @URLBeanName("contactUsBean")
 public class ContactUsBean extends BaseUserJsfBean {
 

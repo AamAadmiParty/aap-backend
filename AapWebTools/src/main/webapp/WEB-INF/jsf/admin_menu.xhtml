@@ -67,6 +67,7 @@ body {
 				<p:menuitem value="Twitter" actionListener="#{menuBean.goToVoiceOfAapAdminPageTwitter}" rendered="#{menuBean.voiceOfAapTwitterAllowed}"></p:menuitem>
 				<p:menuitem value="Email" actionListener="#{menuBean.goToEmailAdminPageTwitter}" rendered="#{menuBean.emailAllowed}"></p:menuitem>
 				<p:menuitem value="Sms" actionListener="#{menuBean.goToSmsAdminPageTwitter}" rendered="#{menuBean.smsAllowed}"></p:menuitem>
+				<p:menuitem value="Global Donation Campaign" actionListener="#{menuBean.goToGlobalDonationcampaignAdminPage}" rendered="#{menuBean.globalDonationCampaignAllowed}"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Content" rendered="#{menuBean.contentAllowed}">

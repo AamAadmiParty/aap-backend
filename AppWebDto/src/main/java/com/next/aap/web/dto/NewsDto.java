@@ -7,6 +7,7 @@ public class NewsDto {
 	private Long id;
 	private String title; // Title of the news/post item
 	private String content;//content of news which can be html or plain text
+	private String contentSummary;//content of news which can be html or plain text
 	private String imageUrl;// image preview url for this news item
 	private String webUrl;// Web url link for this news, which will be shared by share intent
 	private String originalUrl;// Web url link for this news, which will be shared by share intent
@@ -80,6 +81,12 @@ public class NewsDto {
 	}
 	public void setContentStatus(ContentStatus contentStatus) {
 		this.contentStatus = contentStatus;
+	}
+	public String getContentSummary() {
+		return contentSummary;
+	}
+	public void setContentSummary(String contentSummary) {
+		this.contentSummary = contentSummary;
 	}
 
 

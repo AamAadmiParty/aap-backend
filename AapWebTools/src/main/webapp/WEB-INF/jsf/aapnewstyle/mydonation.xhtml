@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+
+	<ui:include src="htmlhead.xhtml" />
+	<title>#{menuBean.user.name} - Home</title>
+</h:head>
+<h:body>
+	<ui:include src="header.xhtml" />
+	
+	<div class="band mainbody" id="my-donations">
+		<div class="container">
+		<!--beginning of left container-->
+			<div class="sixteen columns">
+					<div class="donations-title">
+						<h3> Help us in making our country a better place for everyone. <br/> Donate to the Aam Aadmi Party</h3>
+					</div>
+					<div class="donations-status">
+						<p:commandButton value="Invite Friends to Donate" onclick="invitereferrals_donate4aap()" />
+							<p:tabView id="tabView" style="width:570px">
+
+								<p:tab id="success" title="Success">
+									<p:dataTable id="listOfDonations" var="oneDonation" value="#{myDonationBean.successDonations}" paginator="true" rows="25" paginatorPosition="bottom"
+										paginatorAlwaysVisible="false" emptyMessage="No Donations Found" style="width:550px"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+										<f:facet name="header">My Sucessfull Donations</f:facet>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="TransactionId" />
+											</f:facet>
+											<h:outputText value="#{oneDonation.transactionId}" />
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Date" />
+											</f:facet>
+											<h:outputText value="#{oneDonation.donationDate}">
+												<f:convertDateTime pattern="dd-MMM-yyyy " />
+											</h:outputText>
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Amount" />
+											</f:facet>
+											<h:outputText value="#{oneDonation.amount}" />
+											<f:facet name="footer">  
+						Rs. <h:outputText value="#{myDonationBean.total}">
+													<f:convertNumber maxFractionDigits="2" groupingUsed="false" />
+												</h:outputText>
+											</f:facet>
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Status" />
+											</f:facet>
+											<h:outputText value="#{oneDonation.pgErrorMessage}" />
+										</p:column>
+									</p:dataTable>
+								</p:tab>
+
+								<p:tab id="tab2" title="Failed">
+									<p:dataTable id="listOfFailedDonations" var="oneDonation" value="#{myDonationBean.failedDonations}" paginator="true" rows="100" paginatorPosition="bottom"
+										paginatorAlwaysVisible="false" emptyMessage="No Donations Found" style="width:550px"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+										<f:facet name="header">My Failed Donations</f:facet>
+										<p:column width="20%">
+											<f:facet name="header">
+												<h:outputText value="TransactionId" />
+											</f:facet>
+											<h:outputText value="#{oneDonation.transactionId}" />
+										</p:column>
+										<p:column width="20%">
+											<f:facet name="header">
+												<h:outputText value="Date" />
+											</f:facet>
+											<h:outputText value="#{oneDonation.donationDate}">
+												<f:convertDateTime pattern="dd-MMM-yyyy " />
+											</h:outputText>
+										</p:column>
+										<p:column width="20%">
+											<f:facet name="header">
+												<h:outputText value="Amount" />
+											</f:facet>
+											<h:outputText value="#{oneDonation.amount}" />
+										</p:column>
+										<p:column width="40%">
+											<f:facet name="header">
+												<h:outputText value="Status" />
+											</f:facet>
+											<h:outputText value="#{oneDonation.pgErrorMessage}" />
+										</p:column>
+									</p:dataTable>
+								</p:tab>
+							</p:tabView>
+					</div>
+					<div class="invite-friends-button">
+						<a class="invite-frns-link" href="#" onclick="invitereferrals_donate4aap()"><h4>Invite friends to donate</h4></a>
+					</div>
+
+			
+							
+							
+			</div>
+
+			
+			
+		</div><!-- container -->
+	</div> <!--band-->
+	
+
+	<ui:include src="footer.xhtml" />
+
+
+</h:body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<ui:include src="htmlhead.xhtml" />
+	<title>#{menuBean.user.name} - Home</title>
+	<style>
+.ui-panelgrid td,.ui-panelgrid tr {
+	border-style: none !important
+}
+</style>
+</h:head>
+<h:body>
+
+	<ui:include src="header.xhtml" />
+	<div class="band mainbody">
+		<div class="container">
+			<!--beginning of left container-->
+			<div class="eleven columns">
+
+				<div class="latest-item-bg"></div>
+				<ui:repeat var="oneItem" value="#{newsListBean.homeNewsItems}">
+					<div class="latest-item-container" style="min-height: 200px;">
+						<div class="latest-content-container" id="news">
+							<div class="title-holder">
+								<span class="title-icon-head-news" id="newsicon"><img src="aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
+										<a href="/news/#{oneItem.id}"><h:outputText value="#{oneItem.title.length() gt 50 ? oneItem.title.substring(0,47).concat('...') : oneItem.title}" escape="false" /></a>
+									</h5></span>
+							</div>
+							<div class="content-featured-image">
+								<a href="/news/#{oneItem.id}"><img src="#{oneItem.imageUrl}" /></a>
+							</div>
+							<div class="latest-content-text">
+
+								<div class="category-title">
+									<h5>
+										<span class="news-category">10 MINUTES AGO BY ARVIND</span>
+										<span class="location-identifier"><a href="#">National</a></span>
+									</h5>
+								</div>
+								<div class="item-description">
+									<p>
+										<h:outputText value="#{oneItem.contentSummary.length() gt 350 ? oneItem.contentSummary.substring(0,347).concat('...') : oneItem.contentSummary}" escape="false" />
+										<span class="news-read-more"><a href="/news/#{oneItem.id}">Read More</a></span>
+									</p>
+								</div>
+							</div>
+
+						</div>
+						<!--news ends-->
+					</div>
+				</ui:repeat>
+			</div>
+			<!--end of left container-->
+
+			<!--beginning of right container-->
+			<ui:include src="rightwidget.xhtml" />
+				
+	
+		</div>
+		<!-- container -->
+	</div>
+	<!--band-->
+
+
+	<ui:include src="footer.xhtml" />
+
+
+</h:body>
+</html>
+

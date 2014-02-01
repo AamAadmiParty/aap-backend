@@ -1,6 +1,7 @@
 package com.next.aap.web.dto;
 
 import java.util.Date;
+import java.util.List;
 
 public class PollQuestionDto {
 
@@ -12,6 +13,7 @@ public class PollQuestionDto {
 	private Date validTillDate;//Publish date of this item
 	private boolean global;//Whether this News is available global or not
 	private ContentStatus contentStatus;
+	private List<PollAnswerDto> answers;
 	public Long getId() {
 		return id;
 	}
@@ -59,6 +61,12 @@ public class PollQuestionDto {
 	}
 	public void setContentStatus(ContentStatus contentStatus) {
 		this.contentStatus = contentStatus;
+	}
+	public List<PollAnswerDto> getAnswers() {
+		return answers;
+	}
+	public void setAnswers(List<PollAnswerDto> answers) {
+		this.answers = answers;
 	}
 
 	

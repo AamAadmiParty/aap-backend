@@ -4230,7 +4230,6 @@ public class AapServiceImpl implements AapService, Serializable {
 		 updateGlobalCampaigns(donation);
 	}
 	private void updateGlobalCampaigns(Donation donation){
-		
 		if(StringUtil.isEmpty(donation.getCid())){
 			//If campaign Id is provided then directly add this donation to given campaign
 			GlobalCampaign globalCampaign = globalCampaignDao.getGlobalCampaignByGlobalCampaign(donation.getCid());
@@ -4390,7 +4389,10 @@ public class AapServiceImpl implements AapService, Serializable {
 			}else{
 				donation.setAmount(oneDonation.getAmount());
 			}
-			updateDonationCampaigns(donation);
+			if(oneDonation.getStatus().equalsIgnoreCase("SUCCESS")){
+				updateDonationCampaigns(donation);	
+			}
+			
 			//System.out.println(oneDonation[0] + ", " + oneDonation[1] + " , " + oneDonation[oneDonation.length - 2]);
 			donationDao.updateDonationStatus(oneDonation.getDonorId(), "Imported", "");
 		} catch (Exception ex) {

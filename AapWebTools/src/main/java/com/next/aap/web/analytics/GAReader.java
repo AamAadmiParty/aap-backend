@@ -22,6 +22,8 @@ public class GAReader {
 	private String gaViewId;
 	private File privateKeyFile;
 	private Credential credential;
+	private Integer maxResults = 100;
+	private String sortConfig = "-ga:uniqueEvents";
 	private static final String APPLICATION_NAME = "AAP-Analytics/v1";
 	/** Global instance of the JSON factory. */
 	private static final JsonFactory JSON_FACTORY = JacksonFactory
@@ -71,10 +73,13 @@ public class GAReader {
 					.data()
 					.ga()
 					.get(gaViewId, "2006-01-01", "2100-12-31",
-							"ga:totalEvents,ga:uniqueEvents");
-			get.setDimensions("ga:eventCategory");
+							"ga:uniqueEvents");
+			get.setDimensions("ga:eventLabel");
 			// get.setMaxResults(3);
 			// get.setFilters(filters)
+			get.setSort(sortConfig);
+			get.setMaxResults(maxResults);
+			get.setFilters("ga:eventCategory==Videos");
 			GaData gaData = get.execute();
 			System.out.println(gaData);
 			System.out.println(gaData.getRows());

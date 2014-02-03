@@ -263,7 +263,7 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 				disableMemberCheckForSelectedUserEditing = selectedUserForEditing.isMember();
 
 			}catch(Exception ex){
-				sendErrorMessageToJsfScreen(ex.getMessage());
+				sendErrorMessageToJsfScreen(ex);
 			}
 		}
 	}

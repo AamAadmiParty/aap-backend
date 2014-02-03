@@ -41,10 +41,10 @@
 					        Edit Profile  
 					    </f:facet>
 										<h:outputLabel for="name" value="Name*" />
-										<p:inputText id="name" value="#{userProfileBean.selectedUserForEditing.name}" label="Name">
+										<p:inputText id="name" maxlength="64" value="#{userProfileBean.selectedUserForEditing.name}" label="Name">
 										</p:inputText>
 										<h:outputLabel for="voterId" value="Voter Id" />
-										<p:inputText id="voterId" value="#{userProfileBean.selectedUserForEditing.voterId}" label="Voter Id">
+										<p:inputText id="voterId" maxlength="12" value="#{userProfileBean.selectedUserForEditing.voterId}" label="Voter Id">
 										</p:inputText>
 										<h:outputText value="Gender : " />
 										<p:selectOneMenu value="#{userProfileBean.selectedUserForEditing.gender}">
@@ -53,7 +53,7 @@
 											<f:selectItem itemLabel="Female" itemValue="Female" />
 										</p:selectOneMenu>
 										<h:outputLabel for="passportNumber" value="Passport Number" />
-										<p:inputText id="passportNumber" value="#{userProfileBean.selectedUserForEditing.passportNumber}" label="Passport Number">
+										<p:inputText id="passportNumber" maxlength="10" value="#{userProfileBean.selectedUserForEditing.passportNumber}" label="Passport Number">
 										</p:inputText>
 										<h:outputLabel for="mobile" value="Mobile" />
 										<p:outputPanel>
@@ -61,7 +61,7 @@
 												<f:selectItem itemLabel="India - 91" itemValue="91" />
 												<f:selectItems value="#{userProfileBean.countries}" var="oneCountry" itemLabel="#{oneCountry.name} - #{oneCountry.isdCode}" itemValue="#{oneCountry.isdCode}" />
 											</p:selectOneMenu>
-											<p:inputText id="mobile" value="#{userProfileBean.selectedUserForEditing.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
+											<p:inputText onkeyup="$(this).val($(this).val().replace(/[^0-9]/g, ''));"  id="mobile" value="#{userProfileBean.selectedUserForEditing.mobileNumber}" label="Mobile" mask="9999999999" maxlength="10">
 											</p:inputText>
 										</p:outputPanel>
 

@@ -21,7 +21,7 @@ import com.next.aap.web.dto.VideoDto;
 
 
 @Service
-public class AapDataCacheDbImpl{
+public class AapDataCacheDbImpl implements AapDataCache{
 	
 	@Autowired 
 	private LocationCacheDbImpl locationCacheDb;
@@ -62,6 +62,10 @@ public class AapDataCacheDbImpl{
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#refreshFullCache()
+	 */
+	@Override
 	public void refreshFullCache(){
 		Long startTime = System.currentTimeMillis();
 		System.out.println("Start Loading Data Cache");
@@ -158,9 +162,17 @@ public class AapDataCacheDbImpl{
 	
 	
 
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#getNewsDtos(java.lang.String, long, long, long, long)
+	 */
+	@Override
 	public ItemList<NewsDto> getNewsDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId) {
 		return getNewsDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, 1);
 	}
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#getNewsDtos(java.lang.String, long, long, long, long, int)
+	 */
+	@Override
 	public ItemList<NewsDto> getNewsDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber) {
 		return getNewsDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber, MAX_NEWS_ITEM);
 	}
@@ -174,9 +186,17 @@ public class AapDataCacheDbImpl{
 		return newsItemList;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#getVideoDtos(java.lang.String, long, long, long, long)
+	 */
+	@Override
 	public ItemList<VideoDto> getVideoDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId) {
 		return getVideoDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, 1);
 	}
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#getVideoDtos(java.lang.String, long, long, long, long, int)
+	 */
+	@Override
 	public ItemList<VideoDto> getVideoDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber) {
 		return getVideoDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber, MAX_VIDEO_ITEM);
 	}
@@ -190,9 +210,17 @@ public class AapDataCacheDbImpl{
 		return newsItemList;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#getBlogDtos(java.lang.String, long, long, long, long)
+	 */
+	@Override
 	public ItemList<BlogDto> getBlogDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId) {
 		return getBlogDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, 1);
 	}
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#getBlogDtos(java.lang.String, long, long, long, long, int)
+	 */
+	@Override
 	public ItemList<BlogDto> getBlogDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber) {
 		return getBlogDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber, MAX_BLOG_ITEM);
 	}
@@ -208,9 +236,17 @@ public class AapDataCacheDbImpl{
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#getPollQuestionDtos(java.lang.String, long, long, long, long)
+	 */
+	@Override
 	public ItemList<PollQuestionDto> getPollQuestionDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId) {
 		return getPollQuestionDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, 1);
 	}
+	/* (non-Javadoc)
+	 * @see com.next.aap.web.cache.AapDataCache#getPollQuestionDtos(java.lang.String, long, long, long, long, int)
+	 */
+	@Override
 	public ItemList<PollQuestionDto> getPollQuestionDtos(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber) {
 		return getPollQuestionDtos(lang, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber, MAX_POLL_ITEM);
 	}

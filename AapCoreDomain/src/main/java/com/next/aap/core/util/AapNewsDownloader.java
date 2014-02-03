@@ -41,8 +41,11 @@ public class AapNewsDownloader {
 	}
 
 	public void downloadData() throws Exception {
+		downloadData(59);
+	}
+	public void downloadData(int pageStart) throws Exception {
 		logger.info("Downloading AAP News");
-		WebDriver webDriver = new FirefoxDriver();
+		WebDriver webDriver = new HtmlUnitDriver(true);//new FirefoxDriver();
 		List<WebElement> readMoreLinks;
 		List<String> allLinks = new ArrayList<String>();
 		String url;
@@ -52,12 +55,12 @@ public class AapNewsDownloader {
 		String content;
 		HttpUtil httpUtil = new HttpUtil();
 
-		WebDriver webDriverForPage = new FirefoxDriver();// new HtmlUnitDriver(true);
+		WebDriver webDriverForPage = new HtmlUnitDriver(true);// new HtmlUnitDriver(true);
 		WebDriverWait _wait = new WebDriverWait(webDriver, 10);
 		WebDriverWait _wait2 = new WebDriverWait(webDriverForPage, 10);
 		NewsDto existingItem = null;
 		String listPageUrl;
-		for (int i = 57; i >= 0; i--) {
+		for (int i = pageStart; i >= 0; i--) {
 			listPageUrl = "http://www.aamaadmiparty.org/news?page=" + i;
 			logger.info("Hitting Url : "+listPageUrl);
 			webDriver.get(listPageUrl);	

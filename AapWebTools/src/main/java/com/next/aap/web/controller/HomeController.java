@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.next.aap.web.cache.AapDataCacheDbImpl;
+import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.jsf.beans.AppDataBean;
 import com.next.aap.web.util.ContentDonwloadUtil;
 
@@ -24,7 +24,7 @@ public class HomeController extends BaseController {
 	private ContentDonwloadUtil contentDonwloadUtil;
 	
 	@Autowired
-	private AapDataCacheDbImpl aapDataCacheDbImpl;
+	private AapDataCache aapDataCacheDbImpl;
 	
 	@RequestMapping(value = "/aaps/index.html", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,

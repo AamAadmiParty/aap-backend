@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import com.next.aap.web.ItemList;
+import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.UserDto;
@@ -30,7 +31,7 @@ public class NewsListBean extends BaseJsfBean {
 	List<NewsDto> homeNewsItems;
 	
 	@ManagedProperty("#{aapDataCacheDbImpl}")
-	protected AapDataCacheDbImpl aapDataCacheDbImpl;
+	protected AapDataCache aapDataCacheDbImpl;
 	
 	@ManagedProperty("#{trendingBean}")
 	protected TrendingBean trendingBean;
@@ -64,11 +65,11 @@ public class NewsListBean extends BaseJsfBean {
 		this.homeNewsItems = homeNewsItems;
 	}
 
-	public AapDataCacheDbImpl getAapDataCacheDbImpl() {
+	public AapDataCache getAapDataCacheDbImpl() {
 		return aapDataCacheDbImpl;
 	}
 
-	public void setAapDataCacheDbImpl(AapDataCacheDbImpl aapDataCacheDbImpl) {
+	public void setAapDataCacheDbImpl(AapDataCache aapDataCacheDbImpl) {
 		this.aapDataCacheDbImpl = aapDataCacheDbImpl;
 	}
 

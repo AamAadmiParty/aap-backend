@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
 import com.next.aap.web.ItemList;
+import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.NewsDto;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
@@ -22,7 +23,7 @@ public class TrendingBean extends BaseJsfBean {
 	
 	List<NewsDto> trendingNewsItems;
 	@ManagedProperty("#{aapDataCacheDbImpl}")
-	protected AapDataCacheDbImpl aapDataCacheDbImpl;
+	protected AapDataCache aapDataCacheDbImpl;
 
 	private boolean initialized = false;
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
@@ -36,11 +37,11 @@ public class TrendingBean extends BaseJsfBean {
 		}
 	}
 
-	public AapDataCacheDbImpl getAapDataCacheDbImpl() {
+	public AapDataCache getAapDataCacheDbImpl() {
 		return aapDataCacheDbImpl;
 	}
 
-	public void setAapDataCacheDbImpl(AapDataCacheDbImpl aapDataCacheDbImpl) {
+	public void setAapDataCacheDbImpl(AapDataCache aapDataCacheDbImpl) {
 		this.aapDataCacheDbImpl = aapDataCacheDbImpl;
 	}
 

@@ -5,7 +5,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import com.next.aap.core.service.AapService;
-import com.next.aap.web.cache.AapDataCacheDbImpl;
+import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.dto.VideoDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
@@ -27,7 +27,7 @@ public class VideoBean extends BaseJsfBean {
 	VideoDto video;
 	
 	@ManagedProperty("#{aapDataCacheDbImpl}")
-	protected AapDataCacheDbImpl aapDataCacheDbImpl;
+	protected AapDataCache aapDataCacheDbImpl;
 	
 	@ManagedProperty("#{aapService}")
 	protected AapService aapService;
@@ -55,11 +55,11 @@ public class VideoBean extends BaseJsfBean {
 		}
 	}
 	
-	public AapDataCacheDbImpl getAapDataCacheDbImpl() {
+	public AapDataCache getAapDataCacheDbImpl() {
 		return aapDataCacheDbImpl;
 	}
 
-	public void setAapDataCacheDbImpl(AapDataCacheDbImpl aapDataCacheDbImpl) {
+	public void setAapDataCacheDbImpl(AapDataCache aapDataCacheDbImpl) {
 		this.aapDataCacheDbImpl = aapDataCacheDbImpl;
 	}
 

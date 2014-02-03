@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.next.aap.core.util.AapBlogDownloader;
 import com.next.aap.core.util.AapNewsDownloader;
 import com.next.aap.core.util.VideoDownloader;
+import com.next.aap.web.cache.AapDataCache;
 
 @Component
 public class ContentDonwloadUtil {
@@ -19,6 +20,8 @@ public class ContentDonwloadUtil {
 	private AapBlogDownloader aapBlogDownloader;
 	@Autowired
 	private VideoDownloader videoDownloader;
+	@Autowired
+	private AapDataCache aapDataCacheDbImpl;
 	
 	@PostConstruct
 	public void init(){
@@ -27,12 +30,22 @@ public class ContentDonwloadUtil {
 			public void run() {
 				try {
 					//Curently it can not run on EC2 server as HtmlUnitDriver fails because of JS error on aap pages
-					//aapNewsDownloader.downloadData();
-					//aapBlogDownloader.downloadAapBlogs();
-					//videoDownloader.refreshVideoList();
+					aapNewsDownloader.downloadData(59);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				try {
+					//Curently it can not run on EC2 server as HtmlUnitDriver fails because of JS error on aap pages
+					aapBlogDownloader.downloadAapBlogs();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				try {
+					videoDownloader.refreshVideoList();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 			}
 		};
 		new Thread(runnable).run();
@@ -42,7 +55,24 @@ public class ContentDonwloadUtil {
 	
 	@Scheduled(cron = "01 01 * * * *")
 	public void refreshVideoList() {
-		videoDownloader.refreshVideoList();
+		try {
+			//Curently it can not run on EC2 server as HtmlUnitDriver fails because of JS error on aap pages
+			aapNewsDownloader.downloadData(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			//Curently it can not run on EC2 server as HtmlUnitDriver fails because of JS error on aap pages
+			aapBlogDownloader.downloadAapBlogs();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			videoDownloader.refreshVideoList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		aapDataCacheDbImpl.refreshFullCache();
 	}
 
 }

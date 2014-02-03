@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.ItemList;
+import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.UserDto;
@@ -27,7 +28,7 @@ public class VotingBean extends BaseJsfBean {
 	Map<Long, String> selectedAnswer = new HashMap<Long, String>();
 	
 	@ManagedProperty("#{aapDataCacheDbImpl}")
-	protected AapDataCacheDbImpl aapDataCacheDbImpl;
+	protected AapDataCache aapDataCacheDbImpl;
 	
 	@ManagedProperty("#{aapService}")
 	protected AapService aapService;
@@ -77,11 +78,11 @@ public class VotingBean extends BaseJsfBean {
 		}
 	}
 	
-	public AapDataCacheDbImpl getAapDataCacheDbImpl() {
+	public AapDataCache getAapDataCacheDbImpl() {
 		return aapDataCacheDbImpl;
 	}
 
-	public void setAapDataCacheDbImpl(AapDataCacheDbImpl aapDataCacheDbImpl) {
+	public void setAapDataCacheDbImpl(AapDataCache aapDataCacheDbImpl) {
 		this.aapDataCacheDbImpl = aapDataCacheDbImpl;
 	}
 

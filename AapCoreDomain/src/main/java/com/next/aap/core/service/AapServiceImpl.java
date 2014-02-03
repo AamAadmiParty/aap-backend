@@ -1082,6 +1082,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		System.out.println("userDto.getId = " + userDto.getId());
 		if (userDto.getId() == null || userDto.getId() <= 0) {
 			user = new User();
+			user.setCreationType(CreationType.Admin_Created);
 		} else {
 			user = userDao.getUserById(userDto.getId());
 			if (user == null) {
@@ -1174,8 +1175,9 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 		}
 		user = userDao.saveUser(user);
-		saveMobileNumber(user, userDto.getMobileNumber(), PhoneType.MOBILE);
-		saveMobileNumber(user, userDto.getNriMobileNumber(), PhoneType.NRI_MOBILE);
+		saveMobileNumber(user, userDto.getCountryCode(), userDto.getMobileNumber(), PhoneType.MOBILE);
+		if(user.getNriCountry() != null)
+		saveMobileNumber(user, user.getNriCountry().getIsdCode(),userDto.getNriMobileNumber(), PhoneType.NRI_MOBILE);
 		
 
 		if (!StringUtil.isEmpty(userDto.getEmail())) {
@@ -1219,14 +1221,14 @@ public class AapServiceImpl implements AapService, Serializable {
 		return convertUser(user);
 	}
 	
-	private void saveMobileNumber(User user, String mobileNumber, PhoneType phoneType){
+	private void saveMobileNumber(User user,String countryCode, String mobileNumber, PhoneType phoneType){
 		if (!StringUtil.isEmpty(mobileNumber)) {
 			// save Mobile number
 			List<Phone> userPhones = phoneDao.getPhonesOfUser(user.getId());
 			Phone onePhone = null;
 			if (userPhones == null || userPhones.isEmpty()) {
 				onePhone = new Phone();
-				onePhone.setCountryCode(user.getNriCountry().getIsdCode());
+				onePhone.setCountryCode(countryCode);
 				onePhone.setDateCreated(new Date());
 				onePhone.setPhoneNumber(mobileNumber);
 				onePhone.setPhoneType(phoneType);

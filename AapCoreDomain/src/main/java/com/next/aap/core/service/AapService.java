@@ -154,6 +154,8 @@ public interface AapService {
 	
 	NewsDto publishNews(Long newsId);
 	
+	NewsDto rejectNews(Long newsId, String reason);
+	
 	NewsDto getNewsByOriginalUrl(String originalUrl);
 	
 	NewsDto getNewsById(Long newsId);
@@ -165,6 +167,8 @@ public interface AapService {
 	BlogDto saveBlog(BlogDto blogDto, List<ContentTweetDto> contentTweetDtos, PostLocationType locationType, Long locationId);
 	
 	BlogDto publishBlog(Long newsId);
+	
+	BlogDto rejectBlog(Long newsId, String reason);
 	
 	BlogDto getBlogByOriginalUrl(String originalUrl);
 	
@@ -207,6 +211,8 @@ public interface AapService {
 	List<PollAnswerDto> getPollAnswers(Long pollQuestionId);
 	
 	PollQuestionDto publishPollQuestion(Long pollQuestionId);
+	
+	PollQuestionDto rejectPollQuestion(Long pollQuestionId, String reason);
 	
 	UserDto receiveMembershipFee(Long userId, double amount, Long adminUserId);
 	

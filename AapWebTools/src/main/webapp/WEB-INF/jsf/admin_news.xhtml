@@ -121,8 +121,8 @@
 
 							</p:outputPanel>
 							<p:outputPanel rendered="#{newsAdminBean.showTweetList}">
-								<p:commandButton value="Create News Tweet" update=":adminNewsForm:tweetPanel" actionListener="#{newsAdminBean.createNewsTweet}" 
-								rendered="#{newsAdminBean.editAllowed}" styleClass="ui-priority-primary">
+								<p:commandButton value="Create News Tweet" update=":adminNewsForm:tweetPanel" actionListener="#{newsAdminBean.createNewsTweet}" rendered="#{newsAdminBean.saveDraft}"
+									styleClass="ui-priority-primary">
 								</p:commandButton>
 								<br></br>
 								<p:dataTable id="listOfTweets" var="oneTweet" value="#{newsAdminBean.tweetList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
@@ -156,8 +156,34 @@
 								<p:commandButton id="publish" value="Publish" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.publishPost}" styleClass="ui-priority-primary"
 									rendered="#{newsAdminBean.publish}">
 								</p:commandButton>
+								<p:commandButton id="reject" value="Reject" oncomplete="rejectionDialogWidget.show()" styleClass="ui-priority-primary" rendered="#{newsAdminBean.reject}">
+								</p:commandButton>
 
 							</p:outputPanel>
+
+							<p:dialog id="rejectionDialog" modal="true" header="Rejection Reason" widgetVar="rejectionDialogWidget" resizable="false">
+
+								<h:panelGrid columns="2" cellpadding="5" id="rejectionDialogPanelGrid">
+									<h:outputLabel value="Rejection Reason" />
+									<p:selectOneMenu value="#{newsAdminBean.selectedNews.rejectionReason}">
+										<f:selectItem itemLabel="Doesnot belong to this location" itemValue="Doesnot belong to this location" />
+										<f:selectItem itemLabel="Against AAP" itemValue="Against AAP" />
+										<f:selectItem itemLabel="UnParliamentary Language" itemValue="UnParliamentary Language" />
+										<f:selectItem itemLabel="False facts or Proof not available" itemValue="False facts or Proof not available" />
+										<f:selectItem itemLabel="Others" itemValue="Others" />
+										<p:ajax update="rejectionDialogPanelGrid" listener="#{newsAdminBean.onRejectionReasonChange}" />
+									</p:selectOneMenu>
+
+									<h:outputLabel value="" />
+									<p:inputText value="#{newsAdminBean.otherReason}" rendered="#{newsAdminBean.showOtherReasonTextBox}" id="otherReason" required="false"/>
+
+									<f:facet name="footer">
+										<p:commandButton id="finalRejectionButton" value="Reject" update=":adminNewsForm:mainPanel" actionListener="#{newsAdminBean.rejectPost}" 
+										oncomplete="rejectionDialogWidget.hide()" />
+									</f:facet>
+								</h:panelGrid>
+
+							</p:dialog>
 						</p:outputPanel>
 
 					</p:outputPanel>

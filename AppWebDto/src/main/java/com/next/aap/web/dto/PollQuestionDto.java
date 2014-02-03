@@ -14,6 +14,8 @@ public class PollQuestionDto {
 	private boolean global;//Whether this News is available global or not
 	private ContentStatus contentStatus;
 	private List<PollAnswerDto> answers;
+	private String rejectionReason;
+	
 	public Long getId() {
 		return id;
 	}
@@ -67,6 +69,12 @@ public class PollQuestionDto {
 	}
 	public void setAnswers(List<PollAnswerDto> answers) {
 		this.answers = answers;
+	}
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+	public void setRejectionReason(String rejectionReason) {
+		this.rejectionReason = rejectionReason;
 	}
 
 	

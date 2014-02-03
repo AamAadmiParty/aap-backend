@@ -60,6 +60,8 @@ public class News {
 	@Column(name = "content_status", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private ContentStatus contentStatus;
+	@Column(name = "rejection_reason")
+	private String rejectionReason;// 
 
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "news_tweets",
@@ -286,5 +288,11 @@ public class News {
 	}
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
+	}
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+	public void setRejectionReason(String rejectionReason) {
+		this.rejectionReason = rejectionReason;
 	}
 }

@@ -288,7 +288,8 @@ public class AdminEditUserRoleBean extends BaseMultiPermissionAdminJsfBean {
 	public void handleLocationClick() {
 		if (location.indexOf("Global-") == 0) {
 			// User choose his/her location
-			loadLocationRoles(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), false);
+			UserDto loggedInUser = getLoggedInUser();
+			loadLocationRoles(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), loggedInUser.isSuperAdmin());
 		} else {
 			selectedPostLocationType = null;
 			selectedPostLocationId = null;

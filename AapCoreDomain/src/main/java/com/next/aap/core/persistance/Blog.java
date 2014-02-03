@@ -57,6 +57,8 @@ public class Blog {
 	private Date publishDate;//Publish date of this item
 	@Column(name = "global_allowed")
 	private boolean global;//Whether this News is available global or not
+	@Column(name = "rejection_reason")
+	private String rejectionReason;
 	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "blog_tweets",
 	joinColumns = {
@@ -285,6 +287,12 @@ public class Blog {
 	}
 	public void setPublishDate(Date publishDate) {
 		this.publishDate = publishDate;
+	}
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+	public void setRejectionReason(String rejectionReason) {
+		this.rejectionReason = rejectionReason;
 	}
 
 	

@@ -2494,6 +2494,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	public NewsDto publishNews(Long newsId) {
 		News news = newsDao.getNewsById(newsId);
 		news.setContentStatus(ContentStatus.Published);
+		news.setPublishDate(new Date());
 		news = newsDao.saveNews(news);
 		return convertNews(news);
 	}
@@ -3361,12 +3362,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public PollQuestionDto publishPollQuestion(Long pollQuestionId) {
 		PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionId);
-		System.out.println("pollQuestion = "+pollQuestion);
-		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		pollQuestion.setContentStatus(ContentStatus.Published);
-		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		pollQuestion = pollQuestionDao.savePollQuestion(pollQuestion);
-		System.out.println("pollQuestion.GetContentStatus = "+pollQuestion.getContentStatus());
 		return convertPollQuestion(pollQuestion);
 	}
 
@@ -5295,6 +5292,36 @@ public class AapServiceImpl implements AapService, Serializable {
 	public List<DonationDto> getDonationsByCampaignId(String campaignId) {
 		List<Donation> allDonations = donationDao.getDonationsByCampaignId(campaignId);
 		return convertDonations(allDonations);
+	}
+
+	@Override
+	@Transactional
+	public NewsDto rejectNews(Long newsId, String rejectionReason) {
+		News news = newsDao.getNewsById(newsId);
+		news.setContentStatus(ContentStatus.Rejected);
+		news.setRejectionReason(rejectionReason);
+		news = newsDao.saveNews(news);
+		return convertNews(news);
+	}
+
+	@Override
+	@Transactional
+	public BlogDto rejectBlog(Long blogId, String rejectionReason) {
+		Blog blog = blogDao.getBlogById(blogId);
+		blog.setContentStatus(ContentStatus.Rejected);
+		blog.setRejectionReason(rejectionReason);
+		blog = blogDao.saveBlog(blog);
+		return convertBlog(blog);
+	}
+
+	@Override
+	@Transactional
+	public PollQuestionDto rejectPollQuestion(Long pollQuestionId, String rejectionReason) {
+		PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionId);
+		pollQuestion.setContentStatus(ContentStatus.Rejected);
+		pollQuestion.setRejectionReason(rejectionReason);
+		pollQuestion = pollQuestionDao.savePollQuestion(pollQuestion);
+		return convertPollQuestion(pollQuestion);
 	}
 	
 }

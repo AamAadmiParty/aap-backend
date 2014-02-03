@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.web.dto.AppPermission;
+import com.next.aap.web.dto.ContentStatus;
 import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
@@ -38,6 +39,8 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	private ContentTweetDto selectedTweet;
 	private boolean newTweet = false;
 	private boolean showTweetList = true;
+	private String otherReason;
+	private boolean showOtherReasonTextBox;
 	
 	private List<NewsDto> newsList;
 	public NewsAdminBean(){
@@ -87,17 +90,33 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		tweetList = aapService.getNewsContentTweets(selectedNews.getId());
 	}
 	public boolean isSaveDraft(){
+		if(selectedNews.getContentStatus() == ContentStatus.Rejected){
+			return false;
+		}
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
 				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	public boolean isSaveAndPublish(){
+		if(selectedNews.getContentStatus() == ContentStatus.Rejected){
+			return false;
+		}
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return (ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
 				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType())) &&
 				ClientPermissionUtil.isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
 	public boolean isPublish(){
+		if(selectedNews.getContentStatus() == ContentStatus.Rejected){
+			return false;
+		}
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
+	}
+	public boolean isReject(){
+		if(selectedNews == null || selectedNews.getId() == null || selectedNews.getId() <= 0 || selectedNews.getContentStatus() == ContentStatus.Rejected){
+			return false;
+		}
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isAllowed(AppPermission.APPROVE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType());
 	}
@@ -109,6 +128,17 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public void saveAndPublishPost() {
 		savePost();
 		publishPost();
+	}
+	public void onRejectionReasonChange(){
+		if(selectedNews == null){
+			showOtherReasonTextBox = false;
+		}else{
+			if(selectedNews.getRejectionReason() != null && "Others".equalsIgnoreCase(selectedNews.getRejectionReason())){
+				showOtherReasonTextBox = true;
+			}else{
+				showOtherReasonTextBox = false;
+			}
+		}
 	}
 	public void publishPost(){
 		try{
@@ -124,6 +154,31 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 			if(isValidInput()){
 				selectedNews = aapService.publishNews(selectedNews.getId());
 				sendInfoMessageToJsfScreen("News Published Succesfully");
+				refreshNewsList();
+			}
+			
+		}catch(Exception ex){
+			sendErrorMessageToJsfScreen("Unable to save Post",ex);
+		}
+	}
+	public void rejectPost(){
+		try{
+			if(selectedNews == null){
+				sendErrorMessageToJsfScreen("No news selected to Reject");
+			}
+			if(selectedNews.getId() == null || selectedNews.getId() <= 0){
+				sendErrorMessageToJsfScreen("Please save the News first");
+			}
+			if(!isPublish()){
+				sendErrorMessageToJsfScreen("You do not have permission to reject a news");
+			}
+			if(isValidInput()){
+				String rejectionReason = selectedNews.getRejectionReason();
+				if("others".equalsIgnoreCase(rejectionReason)){
+					rejectionReason = rejectionReason +" - " + otherReason;
+				}
+				selectedNews = aapService.rejectNews(selectedNews.getId(), rejectionReason);
+				sendInfoMessageToJsfScreen("News Rejected Succesfully");
 				refreshNewsList();
 			}
 			
@@ -203,6 +258,18 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void setShowTweetList(boolean showTweetList) {
 		this.showTweetList = showTweetList;
+	}
+	public String getOtherReason() {
+		return otherReason;
+	}
+	public void setOtherReason(String otherReason) {
+		this.otherReason = otherReason;
+	}
+	public boolean isShowOtherReasonTextBox() {
+		return showOtherReasonTextBox;
+	}
+	public void setShowOtherReasonTextBox(boolean showOtherReasonTextBox) {
+		this.showOtherReasonTextBox = showOtherReasonTextBox;
 	}
 
 

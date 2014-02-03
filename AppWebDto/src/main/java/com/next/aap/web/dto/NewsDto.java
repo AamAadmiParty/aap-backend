@@ -16,6 +16,8 @@ public class NewsDto {
 	private Date date;//Publish date of this item
 	private boolean global;//Whether this News is available global or not
 	private ContentStatus contentStatus;
+	private String rejectionReason;
+	
 	public Long getId() {
 		return id;
 	}
@@ -87,6 +89,12 @@ public class NewsDto {
 	}
 	public void setContentSummary(String contentSummary) {
 		this.contentSummary = contentSummary;
+	}
+	public String getRejectionReason() {
+		return rejectionReason;
+	}
+	public void setRejectionReason(String rejectionReason) {
+		this.rejectionReason = rejectionReason;
 	}
 
 

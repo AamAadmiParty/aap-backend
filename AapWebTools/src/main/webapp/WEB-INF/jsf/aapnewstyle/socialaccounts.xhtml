@@ -13,72 +13,64 @@
 </h:head>
 <h:body>
 	<ui:include src="header.xhtml" />
-	
-	<div class="band mainbody">
+
+	<div class="band mainbody" id="my-donations">
 		<div class="container">
 			<!--beginning of left container-->
-			<div class="eleven columns">
-
-				<div class="latest-item-bg"></div>
-				<div class="latest-item-container" style="min-height: 200px;">
-					<div class="latest-content-container" id="news">
-						<div class="title-holder">
-							<span class="title-icon-head-news" id="newsicon"><img src="aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
-									<a href="#">Social Connections</a>
-								</h5></span>
+			<div class="eight columns">
+				<div class="fb-header-bg"></div>
+				<ui:repeat var="oneFacebookAccount" value="#{socialAccountBean.loginAccounts.facebookAccounts}">
+					<div class="fb-connections">
+						<div class="connection-dp">
+							<img src="#{oneFacebookAccount.imageUrl}" />
 						</div>
-
-						<div class="latest-content-text">
-							<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
-								<p:fieldset style="width:200px;">
-									<f:facet name="legend">
-										<div class="topAlignDiv">
-											<p:graphicImage value="https://cdn4.iconfinder.com/data/icons/circle-network/52/twitter_social_circle-20.png" />
-											Twitter Connections
-										</div>
-									</f:facet>
-
-									<p:dataGrid styleClass="topAlignPanelColumns" var="oneTwitterAccount" value="#{socialAccountBean.loginAccounts.twitterAccounts}" columns="2" paginator="false"
-										emptyMessage="No Twitter Account connected">
-										<p:graphicImage value="#{oneTwitterAccount.imageUrl}" styleClass="facebook-data-row" />
-										<h:outputText value="#{oneTwitterAccount.screenName}" style="font-size:18px;font-style:bold;" />
-									</p:dataGrid>
-									<br></br>
-				Add Twitter Account<br></br>
-
-									<a href="./login/twitter" class="twitter"></a>
-									<em style="font-size: 10px;">you can add multiple twitter accounts to your AAP account</em>
-								</p:fieldset>
-								<p:fieldset style="width:200px;">
-									<f:facet name="legend">
-										<div class="topAlignDiv">
-											<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/free-social-icons/67/facebook_circle_color-20.png" />
-											Facebook Connections
-										</div>
-									</f:facet>
-
-									<p:dataGrid styleClass="topAlignPanelColumns" var="oneFacebookAccount" value="#{socialAccountBean.loginAccounts.facebookAccounts}" columns="2" paginator="false"
-										emptyMessage="No Facebook Account connected">
-										<p:graphicImage value="#{oneFacebookAccount.imageUrl}" />
-										<h:outputText value="#{oneFacebookAccount.userName}" />
-									</p:dataGrid>
-									<br></br>
-									<p:outputPanel rendered="#{socialAccountBean.renderFacebookConnectionButton}">
-					Add Facebook Account
-					<a href="./login/facebook" class="facebook"></a>
-									</p:outputPanel>
-									<p:outputPanel rendered="#{!socialAccountBean.renderFacebookConnectionButton}">
-										<em style="font-size: 10px;">you can add only one facebook account to your AAP account</em>
-									</p:outputPanel>
-								</p:fieldset>
-							</h:panelGrid>
+						<div class="connection-info">
+							<h5>#{oneFacebookAccount.userName}</h5>
 						</div>
-
 					</div>
-					<!--news ends-->
-				</div>
+
+
+				</ui:repeat>
+				<p:outputPanel rendered="#{socialAccountBean.renderFacebookConnectionButton and menuBean.loggedIn}">
+					<div class="add-account">
+						<a href="./login/facebook"><h5>Add Facebook account</h5></a>
+					</div>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{socialAccountBean.renderFacebookConnectionButton and !menuBean.loggedIn}">
+					<div class="add-account">
+						<a href="./login/facebook"><h5>Login via Facebook account</h5></a>
+					</div>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{!socialAccountBean.renderFacebookConnectionButton}">
+					<em style="font-size: 10px;">you can add only one facebook account to your AAP account</em>
+				</p:outputPanel>
 			</div>
-			<!--end of left container-->
+			<div class="eight columns">
+				<div class="twitter-header-bg"></div>
+				<ui:repeat var="oneTwitterAccount" value="#{socialAccountBean.loginAccounts.twitterAccounts}">
+					<div class="twitter-connections">
+						<div class="connection-dp">
+							<img src="#{oneTwitterAccount.imageUrl}" />
+						</div>
+						<div class="connection-info">
+							<h5></h5>
+							<a href="#">#{oneTwitterAccount.screenName}</a>
+						</div>
+					</div>
+
+				</ui:repeat>
+				<p:outputPanel rendered="#{!menuBean.loggedIn}">
+					<div class="add-account">
+						<a href="./login/twitter"><h5>Login via twitter account</h5></a>
+					</div>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{menuBean.loggedIn}">
+					<div class="add-account">
+						<a href="./login/twitter"><h5>Add another twitter account</h5></a>
+					</div>
+				</p:outputPanel>
+
+			</div>
 
 
 

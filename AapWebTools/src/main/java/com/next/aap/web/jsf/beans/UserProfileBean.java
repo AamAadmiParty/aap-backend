@@ -73,6 +73,13 @@ public class UserProfileBean extends BaseUserJsfBean {
 		
 		refreshLocationData();
 	}
+	public String getVotingLocationMessage(){
+		if(selectedUserForEditing == null || !selectedUserForEditing.isNri()){
+			return "Select the place where you registered as voter";
+		}else{
+			return "Select the place where you registered as voter in india or your address of india";
+		}
+	}
 	private void refreshLocationData() throws Exception{
 		System.out.println("livingLocation="+livingLocation);
 		System.out.println("votingLocation="+votingLocation);
@@ -88,37 +95,47 @@ public class UserProfileBean extends BaseUserJsfBean {
 		selectedUserForEditing.setDistrictLivingId(livingLocation.getSelectedDistrictId());
 		selectedUserForEditing.setAssemblyConstituencyLivingId(livingLocation.getSelectedAcId());
 		selectedUserForEditing.setParliamentConstituencyLivingId(livingLocation.getSelectedPcId());
-		System.out.println("livingLocation.getSelectedAcId()="+livingLocation.getSelectedAcId());
-		System.out.println("votingLocation.getSelectedAcId()="+votingLocation.getSelectedAcId());
-		if (sameAsLiving) {
-			selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
-			selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());
-			selectedUserForEditing.setAssemblyConstituencyVotingId(selectedUserForEditing.getAssemblyConstituencyLivingId());
-			selectedUserForEditing.setParliamentConstituencyVotingId(selectedUserForEditing.getParliamentConstituencyLivingId());
+		if(selectedUserForEditing.isNri()){
+			selectedUserForEditing.setStateLivingId(selectedUserForEditing.getStateVotingId());
+			selectedUserForEditing.setDistrictLivingId(selectedUserForEditing.getDistrictVotingId());
+			selectedUserForEditing.setAssemblyConstituencyLivingId(selectedUserForEditing.getAssemblyConstituencyVotingId());
+			selectedUserForEditing.setParliamentConstituencyLivingId(selectedUserForEditing.getParliamentConstituencyVotingId());
+			
 		}else{
-			selectedUserForEditing.setStateVotingId(votingLocation.getSelectedStateId());
-			selectedUserForEditing.setDistrictVotingId(votingLocation.getSelectedDistrictId());
-			selectedUserForEditing.setAssemblyConstituencyVotingId(votingLocation.getSelectedAcId());
-			selectedUserForEditing.setParliamentConstituencyVotingId(votingLocation.getSelectedPcId());
+			if (sameAsLiving) {
+				selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
+				selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());
+				selectedUserForEditing.setAssemblyConstituencyVotingId(selectedUserForEditing.getAssemblyConstituencyLivingId());
+				selectedUserForEditing.setParliamentConstituencyVotingId(selectedUserForEditing.getParliamentConstituencyLivingId());
+			}else{
+				selectedUserForEditing.setStateVotingId(votingLocation.getSelectedStateId());
+				selectedUserForEditing.setDistrictVotingId(votingLocation.getSelectedDistrictId());
+				selectedUserForEditing.setAssemblyConstituencyVotingId(votingLocation.getSelectedAcId());
+				selectedUserForEditing.setParliamentConstituencyVotingId(votingLocation.getSelectedPcId());
+			}
 		}
+		
 		selectedUserForEditing.setNri(nriLocationBean.isNri());
 		selectedUserForEditing.setNriCountryId(nriLocationBean.getSelectedNriCountryId());
 		selectedUserForEditing.setNriCountryRegionId(nriLocationBean.getSelectedNriCountryRegionId());
 		selectedUserForEditing.setNriCountryRegionAreaId(nriLocationBean.getSelectedNriCountryRegionAreaId());
 		selectedUserForEditing.setNriMobileNumber(nriLocationBean.getMobile());
 
-		if (selectedUserForEditing.getStateLivingId() == null || selectedUserForEditing.getStateLivingId() == 0) {
-			sendErrorMessageToJsfScreen("Please select State where you are living currently");
+		if(!selectedUserForEditing.isNri()){
+			if (selectedUserForEditing.getStateLivingId() == null || selectedUserForEditing.getStateLivingId() == 0) {
+				sendErrorMessageToJsfScreen("Please select State where you are living currently");
+			}
+			if (selectedUserForEditing.getDistrictLivingId() == null || selectedUserForEditing.getDistrictLivingId() == 0) {
+				sendErrorMessageToJsfScreen("Please select District where you are living currently");
+			}
+			if (selectedUserForEditing.getAssemblyConstituencyLivingId() == null || selectedUserForEditing.getAssemblyConstituencyLivingId() == 0) {
+				sendErrorMessageToJsfScreen("Please select Assembly Constituency where you are living currently");
+			}
+			if (selectedUserForEditing.getParliamentConstituencyLivingId() == null || selectedUserForEditing.getParliamentConstituencyLivingId() == 0) {
+				sendErrorMessageToJsfScreen("Please select Parliament Constituency where you are living currently");
+			}
 		}
-		if (selectedUserForEditing.getDistrictLivingId() == null || selectedUserForEditing.getDistrictLivingId() == 0) {
-			sendErrorMessageToJsfScreen("Please select District where you are living currently");
-		}
-		if (selectedUserForEditing.getAssemblyConstituencyLivingId() == null || selectedUserForEditing.getAssemblyConstituencyLivingId() == 0) {
-			sendErrorMessageToJsfScreen("Please select Assembly Constituency where you are living currently");
-		}
-		if (selectedUserForEditing.getParliamentConstituencyLivingId() == null || selectedUserForEditing.getParliamentConstituencyLivingId() == 0) {
-			sendErrorMessageToJsfScreen("Please select Parliament Constituency where you are living currently");
-		}
+		
 		if (selectedUserForEditing.getStateVotingId() == null || selectedUserForEditing.getStateVotingId() == 0) {
 			sendErrorMessageToJsfScreen("Please select State where you are registered as Voter");
 		}

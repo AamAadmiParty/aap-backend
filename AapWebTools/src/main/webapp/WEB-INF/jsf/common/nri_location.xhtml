@@ -6,7 +6,7 @@
 		 param_NriLocationBean is server side backing bean for this component
 	 -->
 	<p:blockUI block="#{param_Form}" trigger="#{param_PanelId}nriCountry">
-			Getting Regions of Countryt<br />
+			Getting Regions of Country<br />
 		<p:graphicImage value="/images/ajax-loader.gif" />
 	</p:blockUI>
 	<p:blockUI block="#{param_Form}" trigger="#{param_PanelId}nriCountryRegion">
@@ -16,10 +16,7 @@
 
 	<p:panelGrid columns="2" cellpadding="5" id="#{param_PanelId}">
 		<f:facet name="header">
-			<h:outputLabel for="nri" value="I am NRI" />
-			<p:selectBooleanCheckbox id="nri" value="#{param_NriLocationBean.nri}">
-				<p:ajax update="#{param_PanelId}nriCountry,#{param_PanelId}nriCountryRegion,#{param_PanelId}nriCountryRegionArea" listener="#{param_NriLocationBean.onClickNri}" />
-			</p:selectBooleanCheckbox>
+			NRI Living Location
 		</f:facet>
 		<h:outputLabel value="Country" />
 

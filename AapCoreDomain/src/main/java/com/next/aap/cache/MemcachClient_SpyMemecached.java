@@ -3,20 +3,17 @@ package com.next.aap.cache;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
-import org.springframework.beans.factory.annotation.Value;
 
 import net.spy.memcached.ConnectionFactory;
 import net.spy.memcached.ConnectionFactoryBuilder;
 import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.internal.OperationFuture;
+
+import org.springframework.beans.factory.annotation.Value;
 
 
 public class MemcachClient_SpyMemecached implements CacheService{
@@ -46,14 +43,11 @@ public class MemcachClient_SpyMemecached implements CacheService{
 
 	@Override
 	public void saveData(String key, Object value) {
-		// System.out.println("Writing "+key+", value="+value);
 		OperationFuture<Boolean> future = memcachedClient.set(key, defaultTimeToLive, value);
 	}
 
 	@Override
 	public Object getData(String key) {
-		// System.out.println("Reading "+key);
-		// return memcachedClient.get(key);
 		Future<Object> f = memcachedClient.asyncGet(key);
 		Object returnObject = null;
 		try {
@@ -67,8 +61,6 @@ public class MemcachClient_SpyMemecached implements CacheService{
 	}
 	@Override
 	public <T> T getData(String key, Class<T> classType) {
-		// System.out.println("Reading "+key);
-		// return memcachedClient.get(key);
 		Future<Object> f = memcachedClient.asyncGet(key);
 		Object returnObject = null;
 		try {
@@ -83,7 +75,6 @@ public class MemcachClient_SpyMemecached implements CacheService{
 
 	@Override
 	public void deleteData(String key) {
-		// System.out.println("Deleting "+key);
 		memcachedClient.delete(key);
 	}
 

@@ -51,7 +51,6 @@ public class HomeBean extends BaseJsfBean {
 		trendingBean.init();
 		votingBean.init();
 		UserDto loggedInUser = getLoggedInUser();//true,buildLoginUrl("/home"));
-		System.out.println("loggedInUser = "+loggedInUser);
 		
 		long livingAcId = 0;
 		long votingAcId = 0;

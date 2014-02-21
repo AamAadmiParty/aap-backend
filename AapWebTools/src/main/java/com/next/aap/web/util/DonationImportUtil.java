@@ -2,6 +2,8 @@ package com.next.aap.web.util;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +12,7 @@ import com.next.aap.core.service.AapService;
 @Component
 public class DonationImportUtil {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private AapService aapService;
 	@PostConstruct
@@ -28,9 +31,9 @@ public class DonationImportUtil {
 					totalProcessed = aapService.importDonationRecords(recordsPerRound);
 					overAllProcessed = overAllProcessed +totalProcessed;
 					endTime = System.currentTimeMillis();
-					System.out.println("Total Done="+overAllProcessed+", Speed = "+ ((recordsPerRound * 1000)/(endTime - startime)) +", overallSpeed="+ ((overAllProcessed * 1000)/(endTime - globalStartime)));
+					logger.info("Total Done="+overAllProcessed+", Speed = "+ ((recordsPerRound * 1000)/(endTime - startime)) +", overallSpeed="+ ((overAllProcessed * 1000)/(endTime - globalStartime)));
 				}while(totalProcessed > 0);
-				System.out.println("overAllProcessed="+overAllProcessed);
+				logger.info("overAllProcessed="+overAllProcessed);
 			}
 		};
 		//new Thread(runnable).run();

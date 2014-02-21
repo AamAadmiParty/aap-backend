@@ -22,9 +22,11 @@ import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.DonationCampaignDto;
 import com.next.aap.web.dto.DonationDto;
 import com.next.aap.web.dto.EmailUserDto;
+import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
+import com.next.aap.web.dto.FinancialPlanningDto;
 import com.next.aap.web.dto.GlobalCampaignDto;
 import com.next.aap.web.dto.InterestDto;
 import com.next.aap.web.dto.InterestGroupDto;
@@ -310,4 +312,10 @@ public interface AapService {
 	List<GlobalCampaignDto> getGlobalCampaigns() throws AppException;
 
 	List<DonationDto> getDonationsByCampaignId(String campaignId);
+	
+	EventDto saveEvent(EventDto eventDto) throws AppException;
+	
+	List<EventDto> getEventsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
+	
+	FinancialPlanningDto saveFinancialPlanning(FinancialPlanningDto financialPlanningDto) throws AppException;
 }

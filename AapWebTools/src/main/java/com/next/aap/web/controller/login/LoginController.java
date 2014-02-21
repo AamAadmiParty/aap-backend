@@ -3,6 +3,7 @@ package com.next.aap.web.controller.login;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,10 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.controller.BaseController;
-import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.util.CookieUtil;
 
@@ -22,26 +21,43 @@ public class LoginController extends BaseController {
 
 	@Autowired
 	protected AapService aapService;
-	
+	@Value("${design:stylenew}")
+	protected String design;
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
-		//httpServletRequest.getSession().invalidate();
 		String redirectUrlAfterLogin = getRedirectUrlForRedirectionAfterLogin(httpServletRequest);
 		RedirectView rv = null;
 		if(CookieUtil.isLastLoggedInViaFacebook(httpServletRequest)){
 			rv = new RedirectView(createLoginUrl(httpServletRequest, "facebook", redirectUrlAfterLogin));
-			System.out.println("will redirect to facebook");
+			logger.info("will redirect to facebook and then "+redirectUrlAfterLogin);
 		}
 		if(CookieUtil.isLastLoggedInViaTwitter(httpServletRequest)){
 			rv = new RedirectView(createLoginUrl(httpServletRequest, "twitter", redirectUrlAfterLogin));
-			System.out.println("will redirect to twitter");
+			logger.info("will redirect to twitter and then "+redirectUrlAfterLogin);
 		}
 		if(rv == null){
-			rv = new RedirectView(httpServletRequest.getContextPath()+"/socialaccounts");
-			System.out.println("will redirect to default social login");
+			rv = new RedirectView(httpServletRequest.getContextPath()+"/signin");
+			logger.info("will redirect to default signin");
 		}
 		mv.setView(rv);
+		return mv;
+	}
+	protected void addGenericValuesInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
+		mv.getModel().put("design", design);
+		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
+		mv.getModel().put("loggedInUser", loggedInUser);
+		mv.getModel().put("staticDirectory", "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign");
+		
+	}
+
+	
+	@RequestMapping(value = "/signin", method = RequestMethod.GET)
+	public ModelAndView signin(ModelAndView mv,
+			HttpServletRequest httpServletRequest) {
+		addGenericValuesInModel(httpServletRequest, mv);
+		mv.setViewName(design+"/login");
 		return mv;
 	}
 	
@@ -53,7 +69,7 @@ public class LoginController extends BaseController {
 	public ModelAndView logout(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		httpServletRequest.getSession().invalidate();
-		String redirectUrl = httpServletRequest.getContextPath()+"/socialaccounts";
+		String redirectUrl = httpServletRequest.getContextPath()+"/signin";
 		RedirectView rv = new RedirectView(redirectUrl);
 		rv.setExposeModelAttributes(false);
 		mv.setView(rv);

@@ -107,20 +107,16 @@ public class PollAdminBean extends BaseMultiPermissionAdminJsfBean {
 				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_POLL, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()));
 	}
 	public void saveAndPublishPost() {
-		System.out.println("saveAndPublishPost = savePost(true);");
 		savePost(true);
 	}
 	public void publishPost(){
-		System.out.println("publishPost = savePost(true);");
 		savePost(true);
 	}
 	public void savePost(){
-		System.out.println("savePost = savePost(false);");
 		savePost(false);
 		
 	}
 	public void savePost(boolean publish){
-		System.out.println("savePost");
 		try{
 			if(StringUtil.isEmpty(selectedPollQuestion.getContent())){
 				sendErrorMessageToJsfScreen("Please enter Poll Question Content");
@@ -128,7 +124,6 @@ public class PollAdminBean extends BaseMultiPermissionAdminJsfBean {
 
 			if(isValidInput()){
 				selectedPollQuestion = aapService.savePollQuestion(selectedPollQuestion, answerList, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
-				System.out.println("publish="+publish);
 				if(publish){
 					aapService.publishPollQuestion(selectedPollQuestion.getId());
 					sendInfoMessageToJsfScreen("PollQuestion saved and published succesfully");

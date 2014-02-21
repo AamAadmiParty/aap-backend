@@ -281,7 +281,6 @@ public class AdminRegisterMemberBean extends BaseMultiPermissionAdminJsfBean {
 			try{
 				UserDto loggedInAdmin = getLoggedInUser();
 				selectedUserForEditing = aapService.receiveMembershipFee(selectedUserForEditing.getId(), fee, loggedInAdmin.getId());
-				System.out.println("membership confirmed");
 				if(fee > DataUtil.MEMBERSHIP_FEE){
 					sendInfoMessageToJsfScreen("Membership is confirmed and donation of Rs " + (fee - DataUtil.MEMBERSHIP_FEE)+" has been received");	
 				}else{

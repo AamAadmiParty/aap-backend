@@ -59,7 +59,6 @@ public class GuestUserProfileBean extends BaseUserJsfBean {
 
 	@URLAction(onPostback = false)
 	public void init() throws Exception {
-		System.out.println("init");
 		showBanner = true;
 		if (countries == null || countries.isEmpty()) {
 			countries = aapService.getAllCountries();
@@ -98,7 +97,6 @@ public class GuestUserProfileBean extends BaseUserJsfBean {
 
 	public void saveProfile(ActionEvent event) {
 		showBanner = false;
-		System.out.println("showBanner = "+showBanner);
 		if (sameAsLiving) {
 			selectedUserForEditing.setStateVotingId(selectedUserForEditing.getStateLivingId());
 			selectedUserForEditing.setDistrictVotingId(selectedUserForEditing.getDistrictLivingId());

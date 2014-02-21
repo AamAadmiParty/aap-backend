@@ -81,9 +81,6 @@ public class UserProfileBean extends BaseUserJsfBean {
 		}
 	}
 	private void refreshLocationData() throws Exception{
-		System.out.println("livingLocation="+livingLocation);
-		System.out.println("votingLocation="+votingLocation);
-		System.out.println("nriLocationBean="+nriLocationBean);
 		livingLocation.init(selectedUserForEditing.getStateLivingId(), selectedUserForEditing.getDistrictLivingId(), selectedUserForEditing.getParliamentConstituencyLivingId(), selectedUserForEditing.getAssemblyConstituencyLivingId());
 		votingLocation.init(selectedUserForEditing.getStateVotingId(), selectedUserForEditing.getDistrictVotingId(), selectedUserForEditing.getParliamentConstituencyVotingId(), selectedUserForEditing.getAssemblyConstituencyVotingId());
 		nriLocationBean.init(selectedUserForEditing.isNri(), selectedUserForEditing.getNriCountryId(), selectedUserForEditing.getNriCountryRegionId(), selectedUserForEditing.getNriCountryRegionAreaId());

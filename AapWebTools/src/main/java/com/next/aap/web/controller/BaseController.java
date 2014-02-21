@@ -4,11 +4,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.web.ItemList;
+import com.next.aap.web.cache.AapDataCache;
+import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 
@@ -24,7 +29,6 @@ public class BaseController {
 	public static final String SESSION_LOGIN_ACCOUNT_PARAM = "SESSION_LOGIN_ACCOUNT_PARAM";
 	public static final String SESSION_USER_PERMISSIONS_PARAM = "SESSION_USER_PERMISSIONS_PARAM";
 
-	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	protected void passRedirectUrl(HttpServletRequest httpServletRequest, ModelAndView mv){
@@ -45,10 +49,10 @@ public class BaseController {
 	}
 	protected String getRedirectUrlForRedirectionAfterLogin(HttpServletRequest httpServletRequest){
 		String redirectUrlAfterLogin = getRedirectUrl(httpServletRequest);
-		System.out.println("redirectUrlAfterLogin from param = "+redirectUrlAfterLogin);
+		logger.info("redirectUrlAfterLogin from param = "+redirectUrlAfterLogin);
 		if(StringUtil.isEmpty(redirectUrlAfterLogin)){
-			redirectUrlAfterLogin = httpServletRequest.getContextPath()+"/socialaccounts";
-			System.out.println("redirectUrlAfterLogin default = "+redirectUrlAfterLogin);
+			redirectUrlAfterLogin = httpServletRequest.getContextPath()+"/signin";
+			logger.info("redirectUrlAfterLogin default = "+redirectUrlAfterLogin);
 		}
 		return redirectUrlAfterLogin;
 	}
@@ -111,4 +115,5 @@ public class BaseController {
 	public UserRolePermissionDto getUserRolePermissionInSesion(HttpServletRequest httpServletRequest){
 		return (UserRolePermissionDto)httpServletRequest.getSession(true).getAttribute(SESSION_USER_PERMISSIONS_PARAM);
 	}
+	
 }

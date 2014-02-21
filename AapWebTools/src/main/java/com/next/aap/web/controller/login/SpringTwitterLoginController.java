@@ -77,7 +77,7 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 			
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
 			if(StringUtil.isEmpty(redirectUrl)){
-				redirectUrl = httpServletRequest.getContextPath()+"/socialaccounts";
+				redirectUrl = httpServletRequest.getContextPath()+"/signin";
 			}
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);

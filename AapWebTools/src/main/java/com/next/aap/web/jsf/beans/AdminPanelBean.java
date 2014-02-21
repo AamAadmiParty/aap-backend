@@ -50,7 +50,6 @@ public class AdminPanelBean extends BaseUserJsfBean {
 		if(menuBean.getAdminCountryRegions() != null && menuBean.getAdminCountryRegions().size() > 0){
 			totalLocation = totalLocation + menuBean.getAdminCountryRegions().size();
 		}
-		System.out.println("Total Locations are "+totalLocation);
 		
 		if(totalLocation == 1){
 			if(menuBean.isGlobalAdmin()){
@@ -77,7 +76,6 @@ public class AdminPanelBean extends BaseUserJsfBean {
 			return;
 		}
 		if(menuBean.getLocationType() == null || menuBean.getLocationType() == PostLocationType.NA){
-			System.out.println("Showing chooseLocation");
 			RequestContext.getCurrentInstance().execute("chooseLocation.show()");
 			
 		}

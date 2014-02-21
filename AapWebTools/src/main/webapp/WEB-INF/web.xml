@@ -88,6 +88,10 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>aap</servlet-name>
+		<url-pattern>/signin</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>aap</servlet-name>
 		<url-pattern>/logout</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>

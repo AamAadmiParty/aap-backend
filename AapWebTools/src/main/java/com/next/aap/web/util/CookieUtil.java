@@ -4,11 +4,16 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CookieUtil {
 
 	private static final String LAST_ACCOUNT = "LA";
 	private static final String FACEBOOK = "FB";
 	private static final String TWITTER = "TW";
+	
+	private static Logger logger = LoggerFactory.getLogger(CookieUtil.class);
 
 	public static boolean isLastLoggedInViaFacebook(HttpServletRequest httpServletRequest){
 		return isLastLoggedInViaAccount(httpServletRequest, FACEBOOK);
@@ -37,7 +42,7 @@ public class CookieUtil {
 		setLastLoggedInAccountCookie(httpServletResponse, TWITTER);
 	}
 	private static void setLastLoggedInAccountCookie(HttpServletResponse httpServletResponse, String account){
-		System.out.println("Creating Cookie "+ LAST_ACCOUNT+" = "+account);
+		logger.info("Creating Cookie "+ LAST_ACCOUNT+" = "+account);
 		Cookie lastAccountCookie = new Cookie(LAST_ACCOUNT, account);
 		lastAccountCookie.setPath("/");
 		lastAccountCookie.setMaxAge(3 * 30 * 24 * 60 * 60);

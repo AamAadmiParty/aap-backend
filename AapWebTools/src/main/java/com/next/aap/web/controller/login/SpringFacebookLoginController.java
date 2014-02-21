@@ -79,7 +79,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
 			logger.info("redirectUrl= {}", redirectUrl);
 			if(StringUtil.isEmpty(redirectUrl)){
-				redirectUrl = httpServletRequest.getContextPath()+"/socialaccounts";
+				redirectUrl = httpServletRequest.getContextPath()+"/signin";
 			}
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);

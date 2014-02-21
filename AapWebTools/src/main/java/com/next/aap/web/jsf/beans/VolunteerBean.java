@@ -92,10 +92,8 @@ public class VolunteerBean extends BaseJsfBean {
 	}
 	
 	public List<Long> getSelectedInterestIds(){
-		System.out.println("Total Selected : " + selectedInterestMap.size());
 		List<Long> selectedInterests = new ArrayList<>();
 		for(Entry<Long, Boolean> oneInterest:selectedInterestMap.entrySet()){
-			System.out.println("OneInterest : " + oneInterest.getKey() +" , "+oneInterest.getValue());
 			if(oneInterest.getValue()){
 				selectedInterests.add(oneInterest.getKey());
 			}

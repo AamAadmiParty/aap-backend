@@ -103,6 +103,13 @@ public class DonationCampaignDto implements Serializable{
 	}
 
 
+	@Override
+	public String toString() {
+		return "DonationCampaignDto [id=" + id + ", campaignId=" + campaignId + ", longUrl=" + longUrl + ", myAapShortUrl=" + myAapShortUrl + ", description="
+				+ description + ", totalDonation=" + totalDonation + ", userId=" + userId + ", campaignType=" + campaignType + "]";
+	}
+
+
 	
 
 

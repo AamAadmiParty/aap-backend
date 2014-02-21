@@ -47,7 +47,6 @@ public class NewsListBean extends BaseJsfBean {
 		trendingBean.init();
 		votingBean.init();
 		UserDto loggedInUser = getLoggedInUser();//true,buildLoginUrl("/home"));
-		System.out.println("loggedInUser = "+loggedInUser);
 		if(loggedInUser == null){
 			ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, 0,0,0,0);
 			homeNewsItems = newsItems.getItems();

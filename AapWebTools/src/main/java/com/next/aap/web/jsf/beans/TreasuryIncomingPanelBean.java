@@ -82,16 +82,13 @@ public class TreasuryIncomingPanelBean extends BaseMultiPermissionAdminJsfBean {
 		this.accountList = accountList;
 	}
 	public AdminAccountDto getSelectedAccount() {
-		System.out.println("getSelectedAccount = "+selectedAccount);
 		return selectedAccount;
 	}
 	public void setSelectedAccount(AdminAccountDto selectedAccount) {
-		System.out.println("selected Account = "+selectedAccount);
 		this.selectedAccount = selectedAccount;
 		amountToReceive = selectedAccount.getBalance();
 	}
 	public void setSelectedAccountForDetail(AdminAccountDto selectedAccount) {
-		System.out.println("selected Account = "+selectedAccount);
 		this.selectedAccount = selectedAccount;
 		accountTransactions = aapService.getAccountTransactions(selectedAccount.getId());
 	}

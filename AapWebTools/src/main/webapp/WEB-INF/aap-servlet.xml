@@ -37,7 +37,7 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 		<property name="searchSystemEnvironment" value="true" />
 		<property name="properties">
         <util:properties>
-            <prop key="design">aapstyle</prop>
+            <prop key="design">stylenew</prop>
         </util:properties>
     </property>
 	</bean>

@@ -75,7 +75,6 @@ public class LocationBean extends BaseUserJsfBean {
 
 	
 	public void handleStateChange(AjaxBehaviorEvent event) {
-		System.out.println("handleStateChange "+ selectedStateId);
 		try {
 			selectedDistrictId = null;
 			selectedAcId = null;

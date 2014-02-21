@@ -60,6 +60,7 @@ import com.next.aap.core.persistance.DonationCampaign;
 import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
+import com.next.aap.core.persistance.Event;
 import com.next.aap.core.persistance.FacebookAccount;
 import com.next.aap.core.persistance.FacebookApp;
 import com.next.aap.core.persistance.FacebookAppPermission;
@@ -111,6 +112,7 @@ import com.next.aap.core.persistance.dao.DonationCampaignDao;
 import com.next.aap.core.persistance.dao.DonationDao;
 import com.next.aap.core.persistance.dao.DonationDumpDao;
 import com.next.aap.core.persistance.dao.EmailDao;
+import com.next.aap.core.persistance.dao.EventDao;
 import com.next.aap.core.persistance.dao.FacebookAccountDao;
 import com.next.aap.core.persistance.dao.FacebookAppDao;
 import com.next.aap.core.persistance.dao.FacebookAppPermissionDao;
@@ -164,9 +166,11 @@ import com.next.aap.web.dto.DonationCampaignDto;
 import com.next.aap.web.dto.DonationCampaignDto.CampaignType;
 import com.next.aap.web.dto.DonationDto;
 import com.next.aap.web.dto.EmailUserDto;
+import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
 import com.next.aap.web.dto.FacebookPostDto;
+import com.next.aap.web.dto.FinancialPlanningDto;
 import com.next.aap.web.dto.GlobalCampaignDto;
 import com.next.aap.web.dto.InterestDto;
 import com.next.aap.web.dto.InterestGroupDto;
@@ -302,6 +306,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private LocationCampaignDao locationCampaignDao;
 	@Autowired
 	private GlobalCampaignDao globalCampaignDao;
+	@Autowired
+	private EventDao eventDao;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -1511,6 +1517,8 @@ public class AapServiceImpl implements AapService, Serializable {
 */
 		createRoleWithPermissions("GlobalDonationCampaigner", "User of this role will be able to create global donation campaign", false, false, false, false,
 				false, false, false, AppPermission.ADMIN_GLOBAL_CAMPAIGN);
+		createRoleWithPermissions("EventManager", "User of this role will be able to create events at various level", true, true, true, true,
+				true, true, false, AppPermission.ADMIN_EVENT);
 		logger.info("All Roles and permissions are created");
 	}
 
@@ -5323,5 +5331,98 @@ public class AapServiceImpl implements AapService, Serializable {
 		pollQuestion = pollQuestionDao.savePollQuestion(pollQuestion);
 		return convertPollQuestion(pollQuestion);
 	}
+
+	@Override
+	@Transactional
+	public EventDto saveEvent(EventDto eventDto) throws AppException {
+		Event dbEvent = null;
+		if(eventDto.getId() != null && eventDto.getId() > 0){
+			dbEvent = eventDao.getEventById(eventDto.getId());
+			if(dbEvent == null){
+				throw new AppException("No such event found[id="+eventDto.getId()+"]");
+			}
+		}else{
+			dbEvent = new Event();
+			dbEvent.setDateCreated(new Date());
+		}
+		dbEvent.setDateModified(new Date());
+		dbEvent.setAddress(eventDto.getAddress());
+		dbEvent.setContactNumber1(eventDto.getContactNumber1());
+		dbEvent.setContactNumber2(eventDto.getContactNumber2());
+		dbEvent.setContactNumber3(eventDto.getContactNumber3());
+		dbEvent.setContactNumber4(eventDto.getContactNumber4());
+		dbEvent.setDepth(eventDto.getDepth());
+		dbEvent.setDescription(eventDto.getDescription());
+		dbEvent.setEndDate(eventDto.getEndDate());
+		dbEvent.setFbEventId(eventDto.getFbEventId());
+		dbEvent.setLattitude(eventDto.getLattitude());
+		dbEvent.setLongitude(eventDto.getLongitude());
+		dbEvent.setNational(eventDto.isNational());
+		dbEvent.setStartDate(eventDto.getStartDate());
+		dbEvent.setTitle(eventDto.getTitle());
+		
+		dbEvent = eventDao.saveEvent(dbEvent);
+		
+		return convertEvent(dbEvent);
+	}
+	private EventDto convertEvent(Event dbEvent){
+		if(dbEvent == null){
+			return null;
+		}
+		EventDto eventDto = new EventDto();
+		BeanUtils.copyProperties(dbEvent, eventDto);
+		return eventDto;
+	}
+	private List<EventDto> convertEvents(Collection<Event> dbEvents){
+		List<EventDto> eventDtos = new ArrayList<>();
+		if(dbEvents == null){
+			return eventDtos;
+		}
+		for(Event oneEvent:dbEvents){
+			eventDtos.add(convertEvent(oneEvent));
+		}
+		return eventDtos;
+	}
+
+	@Override
+	@Transactional
+	public List<EventDto> getEventsOfLocation(PostLocationType locationType, Long locationId) throws AppException {
+		List<Event> events = null;
+		switch (locationType) {
+		case Global:
+			events = eventDao.getAllNationalEvents();
+			break;
+		case STATE:
+			events = eventDao.getStateEvents(locationId);
+			break;
+		case DISTRICT:
+			events = eventDao.getDistrictEvents(locationId);
+			break;
+		case AC:
+			events = eventDao.getAcEvents(locationId);
+			break;
+		case PC:
+			events = eventDao.getPcEvents(locationId);
+			break;
+		case COUNTRY:
+			events = eventDao.getCountryEvents(locationId);
+			break;
+		case REGION:
+			events = eventDao.getCountryRegionEvents(locationId);
+			break;
+		case AREA:
+			events = eventDao.getCountryRegionAreaEvents(locationId);
+			break;
+		}
+		return convertEvents(events);
+	}
+
+	@Override
+	@Transactional
+	public FinancialPlanningDto saveFinancialPlanning(FinancialPlanningDto financialPlanningDto) throws AppException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }

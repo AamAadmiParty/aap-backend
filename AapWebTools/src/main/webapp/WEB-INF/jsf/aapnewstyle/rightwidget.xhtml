@@ -20,7 +20,7 @@
 		<div class="voting-content">
 
 
-			<h:form id="form" style="background-color:#FFFFFF;padding :0 0 0 0;margin: 0 0 0 0;">
+			<h:form id="form" style="background-color:#FFFFFF;padding :0 0 0 0;margin: 0 0 0 0;" prependId="false">
 				<p:messages id="messages" autoUpdate="true" closable="true" />
 				<ul class="bxslider">
 					<ui:repeat id="questions" var="oneQuestion" value="#{votingBean.pollQuestions}">
@@ -32,7 +32,7 @@
 								<p:selectOneRadio id="#{oneQuestion.id}_options" value="#{votingBean.selectedAnswer[oneQuestion.id]}" layout="pageDirection">
 									<f:selectItems var="oneAnswer" value="#{oneQuestion.answers}" itemValue="#{oneAnswer.id}" itemLabel="#{oneAnswer.content}"></f:selectItems>
 								</p:selectOneRadio>
-								<p:commandButton disabled="#{!menuBean.loggedIn}" id="voteNow" value="Vote" actionListener="#{votingBean.saveVote(oneQuestion.id)}" />
+								<p:commandButton disabled="#{!menuBean.loggedIn}" id="voteNow" value="Vote" actionListener="#{votingBean.saveVote(oneQuestion.id)}" update=":form:messages" />
 								<p:outputLabel rendered="#{!menuBean.loggedIn}" value="*Please login to vote"></p:outputLabel>
 							</p:panelGrid> <p:blockUI block=":form" trigger="voteNow">
 										Saving Your Vote<br />

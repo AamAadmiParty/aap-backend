@@ -47,6 +47,7 @@ public class MyRippleDonationBean extends BaseUserJsfBean {
 		if(rippleCampaign == null){
 			rippleCampaignExists = false;
 			rippleCampaign = new DonationCampaignDto();
+			rippleCampaign.setCampaignId("Test");
 		}else{
 			rippleCampaignExists = true;
 			successDonations = new ArrayList<>();
@@ -74,14 +75,6 @@ public class MyRippleDonationBean extends BaseUserJsfBean {
 				if(!myPattern.matcher(campaignId).find()){
 					sendErrorMessageToJsfScreen("campaign Identifier must contain only number and alphabets");
 				}
-				/*
-				if(campaignId.indexOf(" ") >= 0 || campaignId.indexOf("!") >= 0 || campaignId.indexOf("@") >= 0 ||
-						campaignId.indexOf("#") >= 0 || campaignId.indexOf("$") >= 0 || campaignId.indexOf("%") >= 0 || 
-						campaignId.indexOf("^") >= 0 || campaignId.indexOf("&") >= 0 || campaignId.indexOf("*") >= 0 ||
-						campaignId.indexOf("(") >= 0 || campaignId.indexOf(")") >= 0){
-					
-				}
-				*/
 			}
 			if(isValidInput()){
 				rippleCampaign = aapService.saveRippleDonationCamapign(rippleCampaign.getCampaignId().toLowerCase(), rippleCampaign.getDescription(), getLoggedInUser().getId());	

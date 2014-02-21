@@ -2,6 +2,8 @@ package com.next.aap.web.util;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,7 @@ import com.next.aap.web.cache.AapDataCache;
 @Component
 public class ContentDonwloadUtil {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private AapNewsDownloader aapNewsDownloader;
 	@Autowired
@@ -49,7 +52,7 @@ public class ContentDonwloadUtil {
 			}
 		};
 		//new Thread(runnable).run();
-		System.out.println("Thread Started to download News");
+		logger.info("Thread Started to download News");
 		//aapService.saveAllCountries();
 	}
 	

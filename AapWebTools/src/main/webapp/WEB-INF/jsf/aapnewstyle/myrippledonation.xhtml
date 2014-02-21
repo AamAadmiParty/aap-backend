@@ -31,9 +31,9 @@
 							<p:commandButton value="Share Ripple Url" onclick="inviteFriendsToDonateUsingMyRipple('#{myRippleDonationBean.rippleCampaign.myAapShortUrl}')"
 								rendered="#{myRippleDonationBean.rippleCampaignExists}"></p:commandButton>
 
-							<p:tabView id="tabView" rendered="#{myRippleDonationBean.rippleCampaignExists}" style="width:570px">
+							<p:tabView id="tabView"  style="width:570px">
 
-								<p:tab id="success" title="Success">
+								<p:tab id="success" title="Success" rendered="#{myRippleDonationBean.rippleCampaignExists}">
 									<p:dataTable id="listOfDonations" var="oneDonation" value="#{myRippleDonationBean.successDonations}" paginator="true" rows="25" paginatorPosition="bottom"
 										paginatorAlwaysVisible="false" emptyMessage="No Donations Found" style="width:550px"
 										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
@@ -118,6 +118,8 @@
 									</p:dataTable>
 								</p:tab>
 								<p:tab id="rippleSetup" title="Ripple Setup">
+								<h:form>
+								<p:messages autoUpdate="true"></p:messages>
 									<p:panelGrid columns="2" style="width:550px">
 										<p:outputLabel value="Campaign Identifier" />
 										<p:outputLabel value="#{myRippleDonationBean.rippleCampaign.campaignId}" rendered="#{myRippleDonationBean.rippleCampaignExists}" />
@@ -136,6 +138,7 @@
 									</p:panelGrid>
 
 									<p:commandButton value="Save" actionListener="#{myRippleDonationBean.saveRippleCampaign}"></p:commandButton>
+									</h:form>
 								</p:tab>
 							</p:tabView>
 						</div>

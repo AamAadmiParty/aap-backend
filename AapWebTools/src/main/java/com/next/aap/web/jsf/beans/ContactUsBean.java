@@ -66,7 +66,6 @@ public class ContactUsBean extends BaseUserJsfBean {
 	}
 
 	public void showNriContactInformation(ActionEvent event) {
-		System.out.println("nriLocationBean.getSelectedNriCountryId()=" + nriLocationBean.getSelectedNriCountryId());
 		if (nriLocationBean.getSelectedNriCountryId() == null || nriLocationBean.getSelectedNriCountryId() <= 0) {
 			sendErrorMessageToJsfScreen("Please select your Country");
 		}
@@ -94,12 +93,10 @@ public class ContactUsBean extends BaseUserJsfBean {
 			if (globalOffices != null) {
 				nriOffices.addAll(globalOffices);
 			}
-			System.out.println("nriOffices=" + nriOffices);
 		}
 	}
 
 	public void showContactInformation(ActionEvent event) {
-		System.out.println("locationBean.getSelectedAcId()=" + locationBean.getSelectedAcId());
 		if (locationBean.getSelectedAcId() == null || locationBean.getSelectedAcId() <= 0) {
 			sendErrorMessageToJsfScreen("Please select your Assembly Constituency");
 		}
@@ -128,7 +125,6 @@ public class ContactUsBean extends BaseUserJsfBean {
 			if (globalOffices != null) {
 				indianOffices.addAll(globalOffices);
 			}
-			System.out.println("indianOffices=" + indianOffices);
 		}
 	}
 

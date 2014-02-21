@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -33,7 +32,6 @@ import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.VideoDto;
 
-@Component
 public class PopularContentCacheImpl implements PopularContentCache {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired

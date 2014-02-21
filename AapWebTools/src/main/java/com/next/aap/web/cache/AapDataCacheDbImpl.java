@@ -56,7 +56,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 
 	@PostConstruct
 	public void init(){
-		System.out.println("loadCacheOnStartup="+loadCacheOnStartup);
+		logger.info("loadCacheOnStartup="+loadCacheOnStartup);
 		if(loadCacheOnStartup){
 			refreshFullCache();
 		}
@@ -68,7 +68,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 	@Override
 	public void refreshFullCache(){
 		Long startTime = System.currentTimeMillis();
-		System.out.println("Start Loading Data Cache");
+		logger.info("Start Loading Data Cache");
 		
 		AapDataHolder localAapDataHolder = new AapDataHolder();
 
@@ -83,7 +83,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		this.aapDataHolder = localAapDataHolder;
 		cacheLoaded = true;
 		Long endTime = System.currentTimeMillis();
-		System.out.println("Cache Loading finished, total time taken is "+(endTime - startTime) +" ms");
+		logger.info("Cache Loading finished, total time taken is "+(endTime - startTime) +" ms");
 	}
 	
 	private void loadAllNews(AapDataHolder localAapDataHolder,List<AssemblyConstituencyDto> allAssemblyConstituencyDtos, List<ParliamentConstituencyDto> allParliamentConstituencyDtos){

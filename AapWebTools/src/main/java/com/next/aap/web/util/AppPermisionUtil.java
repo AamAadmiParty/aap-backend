@@ -21,7 +21,7 @@ public class AppPermisionUtil {
 				aapService.updateAllPermissionsAndRole();
 			}
 		};
-		new Thread(runnable).run();
+		//new Thread(runnable).run();
 		
 		//aapService.saveAllCountries();
 	}

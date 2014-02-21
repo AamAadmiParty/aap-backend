@@ -92,9 +92,6 @@ public class AdminEditOfficeDetailBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
 	public void saveOfficeDetail() {
-		System.out.println(  "getLat = "+ marker.getLatlng().getLat());
-		System.out.println("getLng = " + marker.getLatlng().getLng());
-		System.out.println("getData = " + marker.getData());
 		selectedOffice.setLattitude(marker.getLatlng().getLat());
 		selectedOffice.setLongitude(marker.getLatlng().getLng());
 		try {

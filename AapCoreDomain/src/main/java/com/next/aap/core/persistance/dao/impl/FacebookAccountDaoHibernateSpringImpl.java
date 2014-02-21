@@ -60,7 +60,7 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("lastId", lastId);
 		params.put("pageSize", pageSize);
-		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where id > :lastId order by id asc limit :pageSize");
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where id > :lastId order by id asc limit :pageSize", params);
 		return list;
 	}
 
@@ -97,7 +97,7 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 		params.put("voiceOfAap", true);
 		params.put("allowTimeLine", true);
 		params.put("districtId", districtId);
-		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.districtLivingId = :districtId or user.districtVotingId = :districtId)");
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.districtLivingId = :districtId or user.districtVotingId = :districtId)", params);
 		return list;
 	}
 
@@ -117,7 +117,7 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 		params.put("voiceOfAap", true);
 		params.put("allowTimeLine", true);
 		params.put("pcId", pcId);
-		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.parliamentConstituencyLivingId = :pcId or user.parliamentConstituencyVotingId = :pcId)");
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine and (user.parliamentConstituencyLivingId = :pcId or user.parliamentConstituencyVotingId = :pcId)", params);
 		return list;
 	}
 
@@ -127,7 +127,7 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 		params.put("voiceOfAap", true);
 		params.put("allowTimeLine", true);
 		params.put("nriCountryId", countryId);
-		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryId = :nriCountryId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine");
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryId = :nriCountryId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine", params);
 		return list;
 	}
 
@@ -137,7 +137,7 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 		params.put("voiceOfAap", true);
 		params.put("allowTimeLine", true);
 		params.put("nriCountryRegionId", countryRegionId);
-		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryRegionId = :nriCountryRegionId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine");
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryRegionId = :nriCountryRegionId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine", params);
 		return list;
 	}
 
@@ -147,7 +147,7 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 		params.put("voiceOfAap", true);
 		params.put("allowTimeLine", true);
 		params.put("nriCountryRegionAreaId", countryRegionAreaId);
-		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryRegionAreaId = :nriCountryRegionAreaId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine");
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where nriCountryRegionAreaId = :nriCountryRegionAreaId and voiceOfAap = :voiceOfAap and allowTimeLine = :allowTimeLine", params);
 		return list;
 	}
 }

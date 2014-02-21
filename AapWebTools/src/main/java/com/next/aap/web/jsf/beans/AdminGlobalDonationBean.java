@@ -46,16 +46,13 @@ public class AdminGlobalDonationBean extends BaseAdminJsfBean {
 	static Pattern myPattern = Pattern.compile("^[a-zA-Z0-9]+$");
 	public void saveGlobalCampaign(){
 		try{
-			System.out.println("Checking if we can save campaign");
 			if(isValidInput()){
-				System.out.println("Saving Global Campaign");
 				selectedGlobalCampaign = aapService.saveGlobalCampaign(selectedGlobalCampaign);
 				globalCmpaigns = aapService.getGlobalCampaigns();
 				showList = true;
-				System.out.println("Campaign Saved");
+				sendInfoMessageToJsfScreen("Campaign Saved Successfully");
 			}
 		}catch(Exception ex){
-			System.out.println("Got exception when Saving Global Campaign");
 			sendErrorMessageToJsfScreen(ex);
 		}
 	}
@@ -90,7 +87,6 @@ public class AdminGlobalDonationBean extends BaseAdminJsfBean {
 		return selectedGlobalCampaign;
 	}
 	public void setSelectedGlobalCampaign(GlobalCampaignDto selectedGlobalCampaign) {
-		System.out.println("selectedGlobalCampaign="+selectedGlobalCampaign);
 		this.selectedGlobalCampaign = selectedGlobalCampaign;
 		editAllowed = false;
 		showList = false;

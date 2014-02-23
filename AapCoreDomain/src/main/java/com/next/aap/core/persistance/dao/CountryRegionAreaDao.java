@@ -14,4 +14,6 @@ public interface CountryRegionAreaDao {
 	
 	public abstract List<CountryRegionArea> getCountryRegionAreasByCountryRegionId(Long countryRegionId);
 	
+	public abstract List<CountryRegionArea> getAllCountryRegionAreas();
+	
 }

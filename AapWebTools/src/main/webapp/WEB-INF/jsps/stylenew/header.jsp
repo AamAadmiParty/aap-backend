@@ -11,11 +11,11 @@
 	<div class="toplinks">
 		<!--toplinks-->
 		<ul>
-			<li class="home"><a href="/index.html">Home</a></li>
-			<li class="about"><a href="#">About Us</a></li>
-			<li class="event"><a href="#">Events</a></li>
-			<li class="livetv"><a href="#">Live TV</a></li>
-			<li class="contact"><a href="#">Contact Us</a></li>
+			<li class="home"><a href="${contextPath}/index.html">Home</a></li>
+			<li class="about"><a href="http://www.aamaadmiparty.org/why-are-we-entering-politics">About Us</a></li>
+			<li class="event"><a href="http://www.aamaadmiparty.org/events" target="_new">Events</a></li>
+			<li class="livetv"><a href="http://www.youtube.com/liveaap" target="_new">Live TV</a></li>
+			<li class="contact"><a href="http://www.aamaadmiparty.org/contact-us" target="_new">Contact Us</a></li>
 		</ul>
 	</div>
 
@@ -26,7 +26,7 @@
 		<div class="toplinks-sign">
 			<!--toplinks-sign-->
 			<ul>
-				<li class="signin"><a href="/login?v4d_redirect_url=/index.html">Sign In</a></li>
+				<li class="signin"><a href="${contextPath}/login?v4d_redirect_url=/index.html">Sign In</a></li>
 				<li class="guest">Guest</li>
 			</ul>
 		</div>
@@ -38,7 +38,7 @@
 		<div class="toplinks-sign">
 			<!--toplinks-sign-->
 			<ul>
-				<li class="signin"><a href="/logout">Sign out</a></li>
+				<li class="signin"><a href="${contextPath}/logout">Sign out</a></li>
 			</ul>
 		</div>
 		<!--toplinks-sign-->

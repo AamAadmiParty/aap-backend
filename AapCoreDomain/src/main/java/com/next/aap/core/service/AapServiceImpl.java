@@ -1718,13 +1718,10 @@ public class AapServiceImpl implements AapService, Serializable {
 		logger.info("stateRoles=" + stateRoles);
 		if (stateRoles != null && !stateRoles.isEmpty()) {
 			for (StateRole oneStateRole : stateRoles) {
-				System.out.println("oneStateRole=" + oneStateRole);
-				System.out.println("!oneStateRole.getRole().getRolePermissions().isEmpty()=" + !oneStateRole.getRole().getPermissions().isEmpty());
 				if (!oneStateRole.getRole().getPermissions().isEmpty()) {
 					userRolePermissionDto.addStatePermissions(convertState(oneStateRole.getState()), convertPermissionToAppPermission(oneStateRole.getRole()
 							.getPermissions()));
 				}
-				System.out.println("userRolePermissionDto.isStateAdmin()=" + userRolePermissionDto.isStateAdmin());
 			}
 		}
 
@@ -5422,6 +5419,20 @@ public class AapServiceImpl implements AapService, Serializable {
 	public FinancialPlanningDto saveFinancialPlanning(FinancialPlanningDto financialPlanningDto) throws AppException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	@Transactional
+	public List<CountryRegionDto> getAllCountryRegions() {
+		List<CountryRegion> allCountryRegions = countryRegionDao.getAllCountryRegions();
+		return convertCountryRegions(allCountryRegions);
+	}
+
+	@Override
+	@Transactional
+	public List<CountryRegionAreaDto> getAllCountryRegionAreas() {
+		List<CountryRegionArea> allCountryRegionAreas = countryRegionAreaDao.getAllCountryRegionAreas();
+		return convertCountryRegionAreas(allCountryRegionAreas);
 	}
 
 	

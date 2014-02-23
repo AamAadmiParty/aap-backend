@@ -47,7 +47,6 @@ public class MyRippleDonationBean extends BaseUserJsfBean {
 		if(rippleCampaign == null){
 			rippleCampaignExists = false;
 			rippleCampaign = new DonationCampaignDto();
-			rippleCampaign.setCampaignId("Test");
 		}else{
 			rippleCampaignExists = true;
 			successDonations = new ArrayList<>();

@@ -51,4 +51,10 @@ public class CountryRegionAreaDaoHibernateSpringImpl extends BaseDaoHibernateSpr
 		return countryRegionArea;
 	}
 
+	@Override
+	public List<CountryRegionArea> getAllCountryRegionAreas() {
+		List<CountryRegionArea> countryRegionArea = executeQueryGetList("from CountryRegionArea");
+		return countryRegionArea;
+	}
+
 }

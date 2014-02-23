@@ -97,7 +97,7 @@ public class BaseController {
 	protected void setLoggedInUserInSesion(HttpServletRequest httpServletRequest,UserDto user){
 		httpServletRequest.getSession(true).setAttribute(SESSION_USER_PARAM, user);
 	}
-	public UserDto getLoggedInUserFromSesion(HttpServletRequest httpServletRequest){
+	public static UserDto getLoggedInUserFromSesion(HttpServletRequest httpServletRequest){
 		return (UserDto)httpServletRequest.getSession(true).getAttribute(SESSION_USER_PARAM);
 	}
 

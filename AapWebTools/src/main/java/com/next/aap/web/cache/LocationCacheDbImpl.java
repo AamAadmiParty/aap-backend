@@ -15,6 +15,9 @@ import org.springframework.stereotype.Component;
 
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.CountryDto;
+import com.next.aap.web.dto.CountryRegionAreaDto;
+import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
@@ -41,6 +44,10 @@ public class LocationCacheDbImpl {
 	private Map<Long, List<AssemblyConstituencyDto>> districtToAcMap;
 	private Map<Long, List<AssemblyConstituencyDto>> stateToAcMap;
 	private Map<Long, List<ParliamentConstituencyDto>> stateToPcMap;
+	
+	private List<CountryDto> allCountries;
+	private Map<Long, List<CountryRegionDto>> allCountryRegions;
+	private Map<Long, List<CountryRegionAreaDto>> allCountryRegionAreas;
 	
 	@PostConstruct
 	public void init(){
@@ -78,6 +85,11 @@ public class LocationCacheDbImpl {
 		Map<Long, List<DistrictDto>> localStateToDistrictMap = new HashMap<>();
 		Map<Long, List<AssemblyConstituencyDto>> localStateToAcMap = new HashMap<>();
 		Map<Long, List<ParliamentConstituencyDto>> localStateToPcMap = new HashMap<>();
+		
+		List<CountryDto> allCountriesLocal;
+		Map<Long, List<CountryRegionDto>> allCountryRegionsLocal = new HashMap<>();
+		Map<Long, List<CountryRegionAreaDto>> allCountryRegionAreasLocal = new HashMap<>();
+
 		try {
 			allDbStates = aapService.getAllStates();
 			
@@ -102,11 +114,38 @@ public class LocationCacheDbImpl {
 				parliamentConstituencyDtos = aapService.getAllParliamentConstituenciesOfState(oneStateDto.getId());
 				localStateToPcMap.put(oneStateDto.getId(), parliamentConstituencyDtos);
 			}
+			allCountriesLocal = aapService.getNriCountries();
+			
+			List<CountryRegionDto> allCountryRegionsList = aapService.getAllCountryRegions();
+			List<CountryRegionDto> countryCountryRegionList;
+			for(CountryRegionDto oneCountryRegionDto : allCountryRegionsList){
+				countryCountryRegionList = allCountryRegionsLocal.get(oneCountryRegionDto.getCountryId());
+				if(countryCountryRegionList == null){
+					countryCountryRegionList = new ArrayList<>();
+					allCountryRegionsLocal.put(oneCountryRegionDto.getCountryId(), countryCountryRegionList);
+				}
+				countryCountryRegionList.add(oneCountryRegionDto);
+			}
+			
+			List<CountryRegionAreaDto> allCountryRegionAreaList = aapService.getAllCountryRegionAreas();
+			List<CountryRegionAreaDto> countryCountryRegionAreaList;
+			for(CountryRegionAreaDto oneCountryRegionArea:allCountryRegionAreaList){
+				countryCountryRegionAreaList = allCountryRegionAreasLocal.get(oneCountryRegionArea.getCountryRegionId());
+				if(countryCountryRegionAreaList == null){
+					countryCountryRegionAreaList = new ArrayList<>();
+					allCountryRegionAreasLocal.put(oneCountryRegionArea.getCountryRegionId(), countryCountryRegionAreaList);
+				}
+				countryCountryRegionAreaList.add(oneCountryRegionArea);
+			}
+			
 			this.allStates = allDbStates;
 			this.stateToDistrictMap = localStateToDistrictMap;
 			this.districtToAcMap = localDistrictToAcMap;
 			this.stateToAcMap = localStateToAcMap;
 			this.stateToPcMap = localStateToPcMap;
+			this.allCountries = allCountriesLocal;
+			this.allCountryRegions = allCountryRegionsLocal;
+			this.allCountryRegionAreas = allCountryRegionAreasLocal;
 		}catch (Exception e) {
 			logger.error("Error occured while refreshing Location cache",e);
 		}finally{
@@ -142,6 +181,17 @@ public class LocationCacheDbImpl {
 	}
 	public List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(Long stateId) {
 		return stateToPcMap.get(stateId);
+	}
+	
+	public List<CountryDto> getAllNriCountries(){
+		return allCountries;
+	}
+
+	public List<CountryRegionDto> getCountryRegionsOfCountry(Long countryId){
+		return allCountryRegions.get(countryId);
+	}
+	public List<CountryRegionAreaDto> getCountryRegionAreasOfCountryRegion(Long countryRegionId){
+		return allCountryRegionAreas.get(countryRegionId);
 	}
 
 }

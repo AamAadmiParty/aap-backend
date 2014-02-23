@@ -6,9 +6,9 @@
 		<div class="donatewrappertab">
 			<!--donatewrappertab-->
 			<ul>
-				<li><a href="#">My Donations</a></li>
-				<li><a href="#">My Profile</a></li>
-				<li><a href="#">My Ripple</a></li>
+				<li><a href="${contextPath}/mydonations.html">My Donations</a></li>
+				<li><a href="${contextPath}/profile.html">My Profile</a></li>
+				<li><a href="${contextPath}/ripple.html">My Ripple</a></li>
 			</ul>
 		</div>
 	</div>
@@ -22,8 +22,8 @@
 		<div class="donatetabe">
 			<!--donatetabe-->
 			<ul>
-				<li><a href="#">Donate</a></li>
-				<li><a href="#">Register</a></li>
+				<li><a href="http://donate.aamaadmiparty.org">Donate</a></li>
+				<!-- <li><a href="#">Register</a></li> -->
 			</ul>
 		</div>
 		<!--donatetabe-->
@@ -37,6 +37,7 @@
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-green.jpg" alt="" border="0"></li>
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-blue-green.jpg" alt="" border="0"></li>
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-pink.jpg" alt="" border="0"></li>
+		<li> <img src="<c:out value='${staticDirectory}'/>/images/slider-red.jpg" alt="" border="0"></li>
 	</ul>
 
 </div>

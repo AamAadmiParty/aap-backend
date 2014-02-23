@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.persistance.Event;
-import com.next.aap.core.persistance.FacebookAccount;
-import com.next.aap.core.persistance.News;
 import com.next.aap.core.persistance.dao.EventDao;
 
 @Component

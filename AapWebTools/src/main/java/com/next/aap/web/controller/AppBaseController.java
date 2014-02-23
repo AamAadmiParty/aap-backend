@@ -22,6 +22,7 @@ import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
+import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.VideoDto;
@@ -62,6 +63,23 @@ public class AppBaseController extends BaseController{
 		}
 		ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId);
 		mv.getModel().put("newsItems", newsItems);
+	}
+	
+	protected void addSingleNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long newsId){
+		NewsDto news = aapDataCacheDbImpl.getNewsById(newsId);
+		mv.getModel().put("news", news);
+	}
+	protected void addSingleBlogInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long blogId){
+		BlogDto blog = aapDataCacheDbImpl.getBlogById(blogId);
+		mv.getModel().put("blog", blog);
+	}
+	protected void addSingleVideoInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long videoId){
+		VideoDto video = aapDataCacheDbImpl.getVideoById(videoId);
+		mv.getModel().put("video", video);
+	}
+	protected void addSinglePollQuestionInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long pollQuestionId){
+		PollQuestionDto pollQuestion = aapDataCacheDbImpl.getPollQuestionDtoById(pollQuestionId);
+		mv.getModel().put("pollQuestion", pollQuestion);
 	}
 	
 	protected void addVideosInModel(HttpServletRequest httpServletRequest, ModelAndView mv){

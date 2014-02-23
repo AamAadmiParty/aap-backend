@@ -10,6 +10,7 @@ import org.springframework.social.twitter.api.Twitter;
 
 import com.next.aap.core.exception.AppException;
 import com.next.aap.core.persistance.DonationDump;
+import com.next.aap.core.persistance.FacebookGroup;
 import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AdminAccountDto;
 import com.next.aap.web.dto.AssemblyConstituencyDto;

@@ -261,4 +261,44 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		return pollQuestionItemList;
 	}
 
+	@Override
+	public NewsDto getNewsById(String lang, long newsId) {
+		return aapDataHolder.getNewsById(lang, newsId);
+	}
+
+	@Override
+	public NewsDto getNewsById(long newsId) {
+		return getNewsById(DEFAULT_LANGUAGE, newsId);
+	}
+
+	@Override
+	public VideoDto getVideoById(String lang, long videoId) {
+		return aapDataHolder.getVideoById(lang, videoId);
+	}
+
+	@Override
+	public VideoDto getVideoById(long videoId) {
+		return getVideoById(DEFAULT_LANGUAGE, videoId);
+	}
+
+	@Override
+	public BlogDto getBlogById(String lang, long blogId) {
+		return aapDataHolder.getBlogById(lang, blogId);
+	}
+
+	@Override
+	public BlogDto getBlogById(long blogId) {
+		return aapDataHolder.getBlogById(DEFAULT_LANGUAGE, blogId);
+	}
+
+	@Override
+	public PollQuestionDto getPollQuestionById(String lang, long pollQuestionId) {
+		return aapDataHolder.getPollQuestionById(lang, pollQuestionId);
+	}
+
+	@Override
+	public PollQuestionDto getPollQuestionDtoById(long pollQuestionId) {
+		return aapDataHolder.getPollQuestionById(DEFAULT_LANGUAGE, pollQuestionId);
+	}
+
 }

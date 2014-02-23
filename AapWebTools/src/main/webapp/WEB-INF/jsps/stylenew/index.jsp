@@ -38,9 +38,9 @@
 		<!--articleCategory-tablist-->
 		<ul>
 			<li><img src="<c:out value='${staticDirectory}'/>/images/news-icon.png" border="0" align="absmiddle" /> News</li>
-			<li><a href="/videos.html"><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
+			<li><a href="${contextPath}/videos.html"><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
 					Videos</a></li>
-			<li><a href="/blogs.html"><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" />
+			<li><a href="${contextPath}/blogs.html"><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" />
 					Blogs</a></li>
 		</ul>
 	</div>
@@ -51,7 +51,7 @@
 		<div class="divarticle">
 			<!--divarticle-->
 			<h1>
-				<a href="#"> <c:if test="${fn:length(oneNews.title) gt 47}">
+				<a href="${contextPath}/content/news/${oneNews.id}"> <c:if test="${fn:length(oneNews.title) gt 47}">
 						<c:out value="${fn:substring(oneNews.title, 0, 47)}" />
 					</c:if> <c:if test="${fn:length(oneNews.title) le 47}">
 						<c:out value="${oneNews.title}" />
@@ -74,13 +74,13 @@
 			<c:if test="${fn:length(oneNews.contentSummary) gt 500}">
 				<p>
 					<c:out value="${fn:substring(oneNews.contentSummary, 0, 500)}" escapeXml="false" />
-					<a href="#">Read More</a>
+					...<a href="${contextPath}/content/news/${oneNews.id}">Read More</a>
 				</p>
 			</c:if>
 			<c:if test="${fn:length(oneNews.contentSummary) le 500}">
 				<p>
 					<c:out value="${oneNews.contentSummary}" escapeXml="false" />
-					... <a href="#">Read More</a>
+					<a href="${contextPath}/content/news/${oneNews.id}">Read More</a>
 				</p>
 			</c:if>
 

@@ -7,7 +7,7 @@
 		<!--rhsarea-->
 		<div class="joincommunity">
 			<!--joincommunity-->
-			<a href="#"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
+			<a href="${contextPath}/login"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
 			<ul>
 				<li>To participate in polls</li>
 				<li>To track your donation network</li>
@@ -16,7 +16,7 @@
 			</ul>
 		</div>
 		<!--joincommunity-->
-
+		<%--
 		<div class="aap-performance">
 			<!--aap-performance-->
 			<img src="<c:out value='${staticDirectory}'/>/images/aap-performance.jpg" border="0" />
@@ -33,6 +33,7 @@
 			</form>
 		</div>
 		<!--aap-performance-->
+		 --%>
 		<div class="facebookWidget">
 			<!--facebookWidget-->
 			<iframe src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FAamAadmiParty&amp;width=728&amp;height=590&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;show_border=true&amp;header=true" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:322px; height:530px;" allowTransparency="true"></iframe>
@@ -48,6 +49,7 @@
 		<!--twitterWidget-->
 
 		<div class="clear"></div>
+		<%--
 		<div class="trending">
 			<!--trending-->
 			<img src="<c:out value='${staticDirectory}'/>/images/trending.jpg" border="0" />
@@ -92,6 +94,7 @@
 			<!--trendingfull-->
 
 		</div>
+		 --%>
 		<!--trending-->
 	</div>
 	<!--rhsarea-->

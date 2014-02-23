@@ -37,8 +37,8 @@
 	<div class="articleCategory-tablist">
 		<!--articleCategory-tablist-->
 		<ul>
-			<li><a href="/index.html"><img src="<c:out value='${staticDirectory}'/>/images/news-icon.png" border="0" align="absmiddle" /> News</a></li>
-			<li><a href="/videos.html"><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
+			<li><a href="${contextPath}/index.html"><img src="<c:out value='${staticDirectory}'/>/images/news-icon.png" border="0" align="absmiddle" /> News</a></li>
+			<li><a href="${contextPath}/videos.html"><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
 					Videos</a></li>
 			<li><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" /> Blogs</li>
 		</ul>
@@ -50,7 +50,7 @@
 		<div class="divblogarticle">
 			<!--divarticle-->
 			<h1>
-				<a href="#"> <c:if test="${fn:length(oneBlog.title) gt 47}">
+				<a href="${contextPath}/content/blog/${oneBlog.id}"> <c:if test="${fn:length(oneBlog.title) gt 47}">
 						<c:out value="${fn:substring(oneBlog.title, 0, 47)}" />
 					</c:if> <c:if test="${fn:length(oneBlog.title) le 47}">
 						<c:out value="${oneBlog.title}" />
@@ -73,13 +73,13 @@
 			<c:if test="${fn:length(oneBlog.contentSummary) gt 500}">
 				<p>
 					<c:out value="${fn:substring(oneBlog.contentSummary, 0, 500)}" escapeXml="false" />
-					<a href="#">Read More</a>
+					...<a href="${contextPath}/content/blog/${oneBlog.id}">Read More</a>
 				</p>
 			</c:if>
 			<c:if test="${fn:length(oneBlog.contentSummary) le 500}">
 				<p>
 					<c:out value="${oneBlog.contentSummary}" escapeXml="false" />
-					... <a href="#">Read More</a>
+					<a href="${contextPath}/content/blog/${oneBlog.id}">Read More</a>
 				</p>
 			</c:if>
 

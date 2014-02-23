@@ -12,93 +12,57 @@
 <title>Aam Aadmi Party, India</title>
 <link rel="stylesheet" type="text/css" href="<c:out value='${staticDirectory}'/>/styles/mainstyles.css" />
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script src="<c:out value='${staticDirectory}'/>/js/responsiveslides.min.js"></script>
-	<script>
-		$(function() {
-			$(".rslides").responsiveSlides();
-		});
-	</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="<c:out value='${staticDirectory}'/>/js/responsiveslides.min.js"></script>
+<script>
+	$(function() {
+		$(".rslides").responsiveSlides();
+	});
+</script>
 </head>
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&amp;appId=1383280855238363";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 	<jsp:include page="header.jsp" />
 
 	<jsp:include page="topscroller.jsp" />
 
 
+	<div class="contentarea">
+		<!--contentarea-->
 
-<div class="contentarea">
-	<!--contentarea-->
-
-	<div class="article-leftarea">
-		<!--article-leftarea-->
-	<div class="articleCategory-tablist">
-		<!--articleCategory-tablist-->
-		<ul>
-			<li><a href="${contextPath}/index.html"><img src="<c:out value='${staticDirectory}'/>/images/news-icon.png" border="0" align="absmiddle" /> News</a></li>
-			<li><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
-					Videos</li>
-			<li><a href="${contextPath}/blogs.html"><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" />
-					Blogs</a></li>
-		</ul>
-	</div>
-	<!--articleCategory-tablist-->
-
-	<c:forEach items="${videoItems.items}" var="oneNews">
-
-		<div class="divvideoarticle">
-			<!--divarticle-->
-			<h1>
-				<a href="${contextPath}/content/video/${oneNews.id}"> <c:if test="${fn:length(oneNews.title) gt 47}">
-						<c:out value="${fn:substring(oneNews.title, 0, 47)}" />
-					</c:if> <c:if test="${fn:length(oneNews.title) le 47}">
-						<c:out value="${oneNews.title}" />
-					</c:if>
-
-				</a>
-			</h1>
-			<div class="img">
-				<!--img-->
-				<img src='<c:out value="${oneNews.imageUrl}" />' width="245" height="145" border="0" />
-				<div class="author">
-					<p>10 Min Ago</p>
-					<p>
-						By <span>Arvind</span>
-					</p>
-					<p class="orange">NATIONAL</p>
-				</div>
+		<div class="form-leftarea">
+			<!--form-leftarea-->
+			<div class="editprofilehead">
+				<c:out value="${news.title}"></c:out>
 			</div>
-			<!--img-->
-			<c:if test="${fn:length(oneNews.description) gt 500}">
-				<p>
-					<c:out value="${fn:substring(oneNews.description, 0, 500)}" escapeXml="false" />
-					... <a href="${contextPath}/content/video/${oneNews.id}">Watch Now</a>
-				</p>
-			</c:if>
-			<c:if test="${fn:length(oneNews.description) le 500}">
-				<p>
-					<c:out value="${oneNews.description}" escapeXml="false" />
-					<a href="${contextPath}/content/video/${oneNews.id}">Watch Now</a>
-				</p>
-			</c:if>
-
-
+			<br />
+			<div class="formwrapper">
+				<!--formwrapper-->
+				<c:out value="${news.content}" escapeXml="false"></c:out>
+				
+				<br></br>
+				<br></br>
+				<div class="fb-comments" data-href="http://my.aamaadmiparty.org/content/news/${news.id}" data-width="640" data-numposts="5" data-colorscheme="light"></div>
+				
+			</div>
+			
 		</div>
-		<!--divarticle-->
-	</c:forEach>
-
+		<jsp:include page="rightside.jsp" />
 
 	</div>
-	<!--article-leftarea-->
 
 
 
 
-	<jsp:include page="rightside.jsp" />
-
-	</div>
 	<!--contentarea-->
 	<div class="footerfullbg">
 		<!--footerfullbg-->

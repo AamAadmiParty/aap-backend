@@ -83,6 +83,7 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 							<table id="failedTable">
 								<thead>
 									<tr>
+										<th style="border: 1px solid;">Donor Name</th>
 										<th style="border: 1px solid;">Transaction Id</th>
 										<th style="border: 1px solid;">Date</th>
 										<th style="border: 1px solid;">Amount</th>
@@ -93,6 +94,7 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 									<c:forEach items="${failedDonations}" var="oneDonation">
 
 										<tr>
+											<td style="border: 1px solid;"><c:out value="${oneDonation.donorName}"></c:out></td>
 											<td style="border: 1px solid;"><c:out value="${oneDonation.transactionId}"></c:out></td>
 											<td style="border: 1px solid;"><fmt:formatDate value="${oneDonation.donationDate}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 											<td style="border: 1px solid;"><c:out value="${oneDonation.amount}"></c:out></td>

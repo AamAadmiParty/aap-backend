@@ -153,6 +153,10 @@ public class AapDataHolder {
 		}
 		return newsItems;
 	}
+	public NewsDto getNewsById(String language, long newsId){
+		Map<Long, NewsDto> newsItemsByLang = newsCacheByLanguage.get(language);
+		return newsItemsByLang.get(newsId);
+	}
 	private List<Long> getNewsDtosForAllLocations(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId){
 		Set<Long> locationNewsIds = new TreeSet<>();
 		addNewsDtoOfOneLocation(locationNewsIds, acNewsDtos.get(livingAcId));
@@ -191,11 +195,24 @@ public class AapDataHolder {
 		List<Long> locationVideoIds =  getItemsForAllLocations(language, livingAcId, votingAcId, livingPcId, votingPcId, acVideoDtos, pcVideoDtos, allGlobalVideoIds);
 		return locationVideoIds.size() / pageSize;
 	}
+	public VideoDto getVideoById(String language, long videoId){
+		Map<Long, VideoDto> videoItemsByLang = videoCacheByLanguage.get(language);
+		return videoItemsByLang.get(videoId);
+	}
+	public BlogDto getBlogById(String language, long blogId){
+		Map<Long, BlogDto> blogItemsByLang = blogCacheByLanguage.get(language);
+		return blogItemsByLang.get(blogId);
+	}
+	public PollQuestionDto getPollQuestionById(String language, long pollQuestionId){
+		Map<Long, PollQuestionDto> pollQuestionsByLang = pollCacheByLanguage.get(language);
+		return pollQuestionsByLang.get(pollQuestionId);
+	}
 
 	public long getTotalBlogPages(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId,int pageSize){
 		List<Long> locationBlogIds =  getItemsForAllLocations(language, livingAcId, votingAcId, livingPcId, votingPcId, acBlogDtos, pcBlogDtos, allGlobalBlogIds);
 		return locationBlogIds.size() / pageSize;
 	}
+	
 
 	public List<VideoDto> getVideoDtos(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId,int pageNumber, int pageSize){
 		int startItemCount = (pageNumber - 1) * pageSize;

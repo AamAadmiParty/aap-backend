@@ -4,9 +4,9 @@
                                    http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.3.3.xsd">
   
   <!--  explicit requests for index.jsf should go to /home so user detection kicks in -->
-  
+  <!-- 
   <rewrite match="^/$" substitute="/home" redirect="301" />
-
+ -->
   <url-mapping id="error">
 	   <pattern value="/error" />
 	   <view-id value="/WEB-INF/jsf/error/error500.jsf" />

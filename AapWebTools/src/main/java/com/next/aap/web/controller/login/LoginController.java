@@ -13,6 +13,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.controller.BaseController;
+import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.util.CookieUtil;
 
@@ -57,6 +58,8 @@ public class LoginController extends BaseController {
 	public ModelAndView signin(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		addGenericValuesInModel(httpServletRequest, mv);
+		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
+		mv.getModel().put("loginAccounts", loginAccountDto);
 		mv.setViewName(design+"/login");
 		return mv;
 	}

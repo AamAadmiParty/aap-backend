@@ -61,6 +61,7 @@
 		<url-pattern>/profile.html</url-pattern>
 		<url-pattern>/mydonations.html</url-pattern>
 		<url-pattern>/ripple.html</url-pattern>
+		<url-pattern>/voa.html</url-pattern>
 	</filter-mapping>
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>

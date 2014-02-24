@@ -39,7 +39,8 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 @ViewScoped
 @URLMappings(mappings={
 		@URLMapping(id = "voiceOfAapBean1", beanName="voiceOfAapBean", pattern = "/orig/voiceofaap", viewId = "/WEB-INF/jsf/voiceofaap.xhtml"),
-		@URLMapping(id = "voiceOfAapBean2", beanName="voiceOfAapBean", pattern = "/voiceofaap", viewId = "/WEB-INF/jsf/aapstyle/voiceofaap.xhtml")
+		@URLMapping(id = "voiceOfAapBean2", beanName="voiceOfAapBean", pattern = "/old/voiceofaap", viewId = "/WEB-INF/jsf/aapstyle/voiceofaap.xhtml"),
+		@URLMapping(id = "voiceOfAapBean3", beanName="voiceOfAapBean", pattern = "/voiceofaap", viewId = "/WEB-INF/jsf/stylenew/voiceofaap.xhtml")
 		})
 //@URLMapping(id = "voiceOfAapBean", beanName="voiceOfAapBean", pattern = "/voiceofaap", viewId = "/WEB-INF/jsf/voiceofaap.xhtml")
 @URLBeanName("voiceOfAapBean")
@@ -122,6 +123,10 @@ public class VoiceOfAapBean extends BaseUserJsfBean {
 				return;
 			}
 		}
+	}
+	
+	public String getStaticDirectory(){
+		return "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign";
 	}
 
 	public void handlePostOnGroupCheckBoxChange(){

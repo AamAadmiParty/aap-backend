@@ -1,5 +1,6 @@
 package com.next.aap.web.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -42,10 +43,11 @@ public class VoiceOfAapController extends AppBaseController {
 
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		LoginAccountDto loginAccounts = getLoggedInAccountsFromSesion(httpServletRequest);
+		String contextPath = httpServletRequest.getContextPath();
 		if (loginAccounts == null || loginAccounts.getFacebookAccounts() == null || loginAccounts.getFacebookAccounts().isEmpty()) {
 			// buildAndRedirect to facebook Login Account
 			logger.info("User is not logegd In to facebook, So redirecting to facebook login");
-			return redirect(mv, "/login/voa/facebook?group=timeline&" + REDIRECT_URL_PARAM_ID + "=voa.html");
+			return redirect(mv, contextPath+"/login/voa/facebook?group=timeline&" + REDIRECT_URL_PARAM_ID + "=voa.html");
 		}
 		FacebookAccountDto oneFacebookAccountDto = loginAccounts.getFacebookAccounts().get(0);
 
@@ -53,7 +55,7 @@ public class VoiceOfAapController extends AppBaseController {
 		if (facebookAppPermission == null) {
 			// buildAndRedirect to facebook Login Account
 			logger.info("User is logegd In to facebook, but have not given permission to voice of aap");
-			return redirect(mv, "/login/voa/facebook?group=timeline&" + REDIRECT_URL_PARAM_ID + "=voa.html");
+			return redirect(mv, contextPath+"/login/voa/facebook?group=timeline&" + REDIRECT_URL_PARAM_ID + "=voa.html");
 		}
 
 		Calendar currectTime = Calendar.getInstance();
@@ -61,7 +63,7 @@ public class VoiceOfAapController extends AppBaseController {
 		if (currectTime.after(facebookAppPermission.getExpireTime())) {
 			// buildAndRedirect to facebook Login Account
 			logger.info("User is logegd In to facebook,and given permission to voice of aap but permission about to expire");
-			return redirect(mv, "/login/voa/facebook?group=timeline&" + REDIRECT_URL_PARAM_ID + "=voa.html");
+			return redirect(mv, contextPath+"/login/voa/facebook?group=timeline&" + REDIRECT_URL_PARAM_ID + "=voa.html");
 		}
 
 		Facebook facebook = new FacebookTemplate(facebookAppPermission.getToken());
@@ -79,12 +81,18 @@ public class VoiceOfAapController extends AppBaseController {
 					|| !facebook.userOperations().getUserPermissions().contains("publish_stream")
 					|| !facebook.userOperations().getUserPermissions().contains("user_groups")) {
 				logger.info("User has not given publish permission");
-				postOnGroup = false;
+				mv.getModel().put("postOnGroup", true);
+				mv.getModel().put("postOnTimeLine", true);
+				mv.getModel().put("postOnTwitter", true);
 			} else {
-				postOnGroup = true;
 				// get all facebook groups of user
-				loadUserGroups(facebook, oneFacebookAccountDto);
-
+				//loadUserGroups(facebook, oneFacebookAccountDto);
+				VoiceOfAapData voiceOfAapData = aapService.getVoiceOfAapSetting(oneFacebookAccountDto.getId());
+				mv.getModel().put("voiceOfAapData", voiceOfAapData);
+				mv.getModel().put("postOnGroup", true);
+				mv.getModel().put("postOnTimeLine", voiceOfAapData.isPostOnTimeLine());
+				mv.getModel().put("postOnTwitter", voiceOfAapData.isTweetFromMyAccount());
+				beVoiceOfAap = voiceOfAapData.isBeVoiceOfAap();
 			}
 		} catch (RevokedAuthorizationException ex) {
 			logger.info("User has revoked permission");
@@ -93,11 +101,50 @@ public class VoiceOfAapController extends AppBaseController {
 		mv.setViewName(design + "/voa");
 		return mv;
 	}
+	@RequestMapping(value = "/voa.html", method = RequestMethod.POST)
+	public ModelAndView saveVoiceOFAAp(ModelAndView mv, HttpServletRequest httpServletRequest) {
+		System.out.println("saveVoiceOFAAp");
+		try{
+			LoginAccountDto loginAccounts = getLoggedInAccountsFromSesion(httpServletRequest);
+			System.out.println("loginAccounts="+loginAccounts);
+			FacebookAccountDto oneFacebookAccountDto = loginAccounts.getFacebookAccounts().get(0);
+			System.out.println("oneFacebookAccountDto="+oneFacebookAccountDto);
+			System.out.println("postOnTimeLine param="+httpServletRequest.getParameter("postOnTimeLine"));
+			System.out.println("postOnGroup param="+httpServletRequest.getParameter("postOnGroup"));
+			System.out.println("postOnTwitter param="+httpServletRequest.getParameter("postOnTwitter"));
+			
+			boolean postOnTimeLine = Boolean.parseBoolean(httpServletRequest.getParameter("postOnTimeLine"));
+			boolean postOnGroups = Boolean.parseBoolean(httpServletRequest.getParameter("postOnGroup"));
+			boolean postOnTwitter = Boolean.parseBoolean(httpServletRequest.getParameter("postOnTwitter"));
+			System.out.println("postOnTimeLine="+postOnTimeLine);
+			System.out.println("postOnGroups="+postOnGroups);
+			System.out.println("postOnTwitter="+postOnTwitter);
+			mv.getModel().put("postOnTimeLine", postOnTimeLine);
+			mv.getModel().put("postOnGroup", postOnGroups);
+			mv.getModel().put("postOnTwitter", postOnTwitter);
+			List<String> selectedGroups = new ArrayList<>();
+			if(postOnGroups){
+				FacebookAppPermissionDto facebookAppPermission = aapService.getVoiceOfAapFacebookPermission(oneFacebookAccountDto.getId());
+				Facebook facebook = new FacebookTemplate(facebookAppPermission.getToken());
+				List<GroupMembership> groups = loadUserGroups(facebook, oneFacebookAccountDto);
+				for(GroupMembership oneGroupMembership:groups){
+					selectedGroups.add(oneGroupMembership.getId());
+				}
+			}
+			aapService.saveVoiceOfAapSettings(oneFacebookAccountDto.getId(), true, postOnTimeLine, selectedGroups, null, postOnTwitter);
+		}catch(Exception ex){
+			ex.printStackTrace();
+			addErrorInModel(mv, "unable to save setting");
+		}
+		addGenericValuesInModel(httpServletRequest, mv);
+		mv.setViewName(design + "/voa");
+		return mv;
+	}
 	private List<GroupMembership> loadUserGroups(Facebook facebook, FacebookAccountDto oneFacebookAccountDto){
 		
 		List<GroupMembership> userGroupMembership = facebook.groupOperations().getMemberships();
 		aapService.saveFacebookAccountGroups(oneFacebookAccountDto.getId(), userGroupMembership);
-		VoiceOfAapData voiceOfAapData = aapService.getVoiceOfAapSetting(oneFacebookAccountDto.getId());
+		
 		return userGroupMembership;
 	}
 

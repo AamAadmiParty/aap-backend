@@ -51,7 +51,7 @@ public class ContentDonwloadUtil {
 				
 			}
 		};
-		//new Thread(runnable).run();
+		new Thread(runnable).run();
 		logger.info("Thread Started to download News");
 		//aapService.saveAllCountries();
 	}

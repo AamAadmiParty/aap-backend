@@ -29,93 +29,122 @@
 
 
 
-			<div class="contentarea">
-				<!--contentarea-->
-				<div class="loginwithholder">
-					<!--loginwithholder-->
-					<div class="loginwithinnerholder">
-						<!--loginwithinnerholder-->
-						<ul>
-							<li><a href="/login/facebook"><img src="<c:out value='${staticDirectory}'/>/images/loginFB.png" border="0" /></a></li>
-							<li><a href="/login/twitter"><img src="<c:out value='${staticDirectory}'/>/images/login-twitter.png" border="0" /> </a></li>
-						</ul>
+	<div class="contentarea">
+		<!--contentarea-->
+		<div class="loginwithholder">
+			<!--loginwithholder-->
+			<div class="loginwithinnerholder">
+				<!--loginwithinnerholder-->
+				<ul>
+					<c:if test="${empty loggedInUser}">
+						<li><a href="${contextPath}/login/facebook"><img src="<c:out value='${staticDirectory}'/>/images/loginFB.png" border="0" /></a></li>
+						<li><a href="${contextPath}/login/twitter"><img src="<c:out value='${staticDirectory}'/>/images/login-twitter.png" border="0" /> </a></li>
+					</c:if>
+					<c:if test="${!empty loggedInUser}">
+						<c:if test="${empty loginAccounts.facebookAccounts}">
+							<li><a href="${contextPath}/login/facebook"><img src="<c:out value='${staticDirectory}'/>/images/loginFB.png" border="0" /></a></li>
+						</c:if>
+						<c:if test="${!empty loginAccounts.facebookAccounts}">
+							<li><c:forEach var="oneFacebookAccount" items="${loginAccounts.facebookAccounts}">
+									<a href="#"> <img src="${oneFacebookAccount.imageUrl}" />
+									</a>
+								</c:forEach></li>
+						</c:if>
+						
+						<c:if test="${empty loginAccounts.twitterAccounts}">
+							<li><a href="${contextPath}/login/twitter"><img src="<c:out value='${staticDirectory}'/>/images/login-twitter.png" border="0" /> </a></li>
+						</c:if>
+						<c:if test="${!empty loginAccounts.twitterAccounts}">
+							<li><c:forEach var="oneTwitterAccount" items="${loginAccounts.twitterAccounts}">
+									<a href="#"> <img src="${oneTwitterAccount.imageUrl}" />
+									</a>
+								</c:forEach></li>
+						</c:if>
+
+						
+					</c:if>
+
+
+				</ul>
+				<!-- 
 						<ul>
 							<li class="noborder"><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/loginyahoo.png" border="0" /></a></li>
 							<li class="noborder"><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/logingoogle.png" border="0" /></a></li>
 						</ul>
-					</div>
-					<!--loginwithinnerholder-->
-				</div>
-				<!--loginwithholder-->
+						 -->
 			</div>
-			<!--contentarea-->
+			<!--loginwithinnerholder-->
+		</div>
+		<!--loginwithholder-->
+	</div>
+	<!--contentarea-->
 
 
 
-			<div class="footerfullbg">
-				<!--footerfullbg-->
-				<div class="footercontent">
-					<!--footercontent-->
-					<div class="footerrow">
-						<!--footerrow-->
-						<h2>Donation Links</h2>
-						<ul>
-							<li><a href="#">Donate Online</a></li>
-							<li><a href="#">Donate - By Cheque/Demand Draft</a></li>
-							<li><a href="#">Donation Policies</a></li>
-							<li><a href="#">List of Donors</a></li>
-							<li><a href="#">Donation FAQs</a></li>
-							<li><a href="#">Income & Expenditure Statements</a></li>
-						</ul>
-					</div>
-					<!--footerrow-->
-
-					<div class="footerrow">
-						<!--footerrow-->
-						<h2>Media</h2>
-						<ul>
-							<li><a href="#">Cicero Opinion Poll</a></li>
-							<li><a href="#">Aap Ki Kranti</a></li>
-						</ul>
-					</div>
-					<!--footerrow-->
-
-					<div class="footerrow">
-						<!--footerrow-->
-						<h2>Contact Us</h2>
-						<ul>
-							<li><a href="#">Party Offices</a></li>
-							<li><a href="#">NRI Site</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-						</ul>
-					</div>
-					<!--footerrow-->
-				</div>
-				<!--footercontent-->
-			</div>
-			<!--footerfullbg-->
-			<div class="footerfull">
-				<!--footerfull-->
-				<div class="footercontent">
-					<!--footercontent-->
-					<div class="conectleft">
-						<!--conectleft-->
-						<ul>
-							<li class="h3">Connect with us on</li>
-							<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/facebooklogo.png" border="0" align="absmiddle" /></a></li>
-							<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/twitterlogo.png" border="0" align="absmiddle" /></a></li>
-							<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/youtubeicon.png" border="0" align="absmiddle" /></a></li>
-						</ul>
-					</div>
-					<!--conectleft-->
-					<div class="copyright">
-						<!--copyright-->
-						© Aam Aadmi Party. All Rights Reserved
-					</div>
-					<!--copyright-->
-				</div>
-				<!--footerfull-->
-			</div>
+	<div class="footerfullbg">
+		<!--footerfullbg-->
+		<div class="footercontent">
 			<!--footercontent-->
+			<div class="footerrow">
+				<!--footerrow-->
+				<h2>Donation Links</h2>
+				<ul>
+					<li><a href="#">Donate Online</a></li>
+					<li><a href="#">Donate - By Cheque/Demand Draft</a></li>
+					<li><a href="#">Donation Policies</a></li>
+					<li><a href="#">List of Donors</a></li>
+					<li><a href="#">Donation FAQs</a></li>
+					<li><a href="#">Income & Expenditure Statements</a></li>
+				</ul>
+			</div>
+			<!--footerrow-->
+
+			<div class="footerrow">
+				<!--footerrow-->
+				<h2>Media</h2>
+				<ul>
+					<li><a href="#">Cicero Opinion Poll</a></li>
+					<li><a href="#">Aap Ki Kranti</a></li>
+				</ul>
+			</div>
+			<!--footerrow-->
+
+			<div class="footerrow">
+				<!--footerrow-->
+				<h2>Contact Us</h2>
+				<ul>
+					<li><a href="#">Party Offices</a></li>
+					<li><a href="#">NRI Site</a></li>
+					<li><a href="#">Privacy Policy</a></li>
+				</ul>
+			</div>
+			<!--footerrow-->
+		</div>
+		<!--footercontent-->
+	</div>
+	<!--footerfullbg-->
+	<div class="footerfull">
+		<!--footerfull-->
+		<div class="footercontent">
+			<!--footercontent-->
+			<div class="conectleft">
+				<!--conectleft-->
+				<ul>
+					<li class="h3">Connect with us on</li>
+					<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/facebooklogo.png" border="0" align="absmiddle" /></a></li>
+					<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/twitterlogo.png" border="0" align="absmiddle" /></a></li>
+					<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/youtubeicon.png" border="0" align="absmiddle" /></a></li>
+				</ul>
+			</div>
+			<!--conectleft-->
+			<div class="copyright">
+				<!--copyright-->
+				© Aam Aadmi Party. All Rights Reserved
+			</div>
+			<!--copyright-->
+		</div>
+		<!--footerfull-->
+	</div>
+	<!--footercontent-->
 </body>
 </html>

@@ -99,7 +99,7 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 			logger.info("url= {}", redirectUrl);
 			//if(redirectUrl == null)
 			{
-				redirectUrl = "./../../voiceofaap";
+				redirectUrl = httpServletRequest.getContextPath()+"/voa.html";
 			}
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);

@@ -1,5 +1,7 @@
 package com.next.aap.web.cache;
 
+import java.util.List;
+
 import com.next.aap.web.ItemList;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.NewsDto;
@@ -42,5 +44,20 @@ public interface AapDataCache {
 	public abstract PollQuestionDto getPollQuestionById(String lang, long pollQuestionId);
 	
 	public abstract PollQuestionDto getPollQuestionDtoById(long pollQuestionId);
+	
+	public void loadAcNews(long acId);
+	public void loadPcNews(long pcId);
+	public void loadStateNews(long stateId);
+	public void loadDistrictNews(long districtId);
 
+	public void loadAcBlogs(long acId);
+	public void loadPcBlogs(long pcId);
+	public void loadStateBlogs(long stateId);
+	public void loadDistrictBlogs(long districtId);
+	
+	public void loadAcVideos(long acId);
+	public void loadPcVideos(long pcId);
+	public void loadStateVideos(long stateId);
+	public void loadDistrictVideos(long districtId);
+	
 }

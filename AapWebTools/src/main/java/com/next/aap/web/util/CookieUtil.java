@@ -7,11 +7,21 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.next.aap.web.dto.UserDto;
+
 public class CookieUtil {
 
 	private static final String LAST_ACCOUNT = "LA";
 	private static final String FACEBOOK = "FB";
 	private static final String TWITTER = "TW";
+	
+	private static final String LIVING_AC_ID_COOKIE = "LAIC";
+	private static final String LIVING_PC_ID_COOKIE = "LPIC";
+	private static final String VOTING_AC_ID_COOKIE = "VAIC";
+	private static final String VOTING_PC_ID_COOKIE = "VPIC";
+	private static final String NRI_COUNTRY_ID_COOKIE = "NCIC";
+	private static final String NRI_COUNTRY_REGION_ID_COOKIE = "NCRIC";
+	private static final String NRI_COUNTRY_REGION_AREA_ID_COOKIE = "NCRAIC";
 	
 	private static Logger logger = LoggerFactory.getLogger(CookieUtil.class);
 
@@ -47,6 +57,62 @@ public class CookieUtil {
 		lastAccountCookie.setPath("/");
 		lastAccountCookie.setMaxAge(3 * 30 * 24 * 60 * 60);
 		httpServletResponse.addCookie(lastAccountCookie);
-		
 	}
+	public static void setUserLocationCookie(HttpServletResponse httpServletResponse, UserDto user){
+		setUserLocationCookie(httpServletResponse, LIVING_AC_ID_COOKIE, user.getAssemblyConstituencyLivingId());
+		setUserLocationCookie(httpServletResponse, LIVING_PC_ID_COOKIE, user.getParliamentConstituencyLivingId());
+		setUserLocationCookie(httpServletResponse, VOTING_AC_ID_COOKIE, user.getAssemblyConstituencyVotingId());
+		setUserLocationCookie(httpServletResponse, VOTING_PC_ID_COOKIE, user.getParliamentConstituencyVotingId());
+		setUserLocationCookie(httpServletResponse, NRI_COUNTRY_ID_COOKIE, user.getNriCountryId());
+		setUserLocationCookie(httpServletResponse, NRI_COUNTRY_REGION_ID_COOKIE, user.getNriCountryRegionId());
+		setUserLocationCookie(httpServletResponse, NRI_COUNTRY_REGION_AREA_ID_COOKIE, user.getNriCountryRegionAreaId());
+	}
+	private static void setUserLocationCookie(HttpServletResponse httpServletResponse, String cookieName, Long id){
+		if(id != null && id > 0){
+			logger.info("Creating Cookie "+ cookieName+" = "+id);
+			Cookie lastAccountCookie = new Cookie(cookieName, id.toString());
+			lastAccountCookie.setPath("/");
+			lastAccountCookie.setMaxAge(3 * 30 * 24 * 60 * 60);
+			httpServletResponse.addCookie(lastAccountCookie);
+		}
+	}
+	public static Long getUserNriCountryIdCookie(HttpServletRequest httpServletRequest){
+		return getUserLocationCookie(httpServletRequest, NRI_COUNTRY_ID_COOKIE);
+	}
+	public static Long getUserNriCountryRegionIdCookie(HttpServletRequest httpServletRequest){
+		return getUserLocationCookie(httpServletRequest, NRI_COUNTRY_REGION_ID_COOKIE);
+	}
+	public static Long getUserNriCountryRegionAreaIdCookie(HttpServletRequest httpServletRequest){
+		return getUserLocationCookie(httpServletRequest, NRI_COUNTRY_REGION_AREA_ID_COOKIE);
+	}
+	public static Long getUserLivingAcIdCookie(HttpServletRequest httpServletRequest){
+		return getUserLocationCookie(httpServletRequest, LIVING_AC_ID_COOKIE);
+	}
+	public static Long getUserLivingPcIdCookie(HttpServletRequest httpServletRequest){
+		return getUserLocationCookie(httpServletRequest, LIVING_PC_ID_COOKIE);
+	}
+	public static Long getUserVotingAcIdCookie(HttpServletRequest httpServletRequest){
+		return getUserLocationCookie(httpServletRequest, VOTING_AC_ID_COOKIE);
+	}
+	public static Long getUserVotingPcIdCookie(HttpServletRequest httpServletRequest){
+		return getUserLocationCookie(httpServletRequest, VOTING_PC_ID_COOKIE);
+	}
+	private static Long getUserLocationCookie(HttpServletRequest httpServletRequest, String cookieName){
+		try{
+			Cookie[] allCookies = httpServletRequest.getCookies();
+			if(allCookies == null || allCookies.length == 0){
+				return 0L;
+			}
+			for(Cookie oneCookie:allCookies){
+				if(oneCookie.getName().equals(cookieName)){
+					return Long.valueOf(oneCookie.getValue());
+				}
+			}
+			
+		}catch(Exception ex){
+			
+		}
+		return 0l;
+	}
+
 }

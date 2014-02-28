@@ -15,6 +15,7 @@ import com.next.aap.core.service.AapService;
 import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.util.CookieUtil;
 
 @Controller
@@ -51,7 +52,11 @@ public class LoginController extends BaseController {
 		mv.getModel().put("loggedInUser", loggedInUser);
 		mv.getModel().put("staticDirectory", "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign");
 		mv.getModel().put("contextPath", httpServletRequest.getContextPath());
-	}
+		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
+		mv.getModel().put("loginAccounts", loginAccountDto);
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion(httpServletRequest);
+		mv.getModel().put("admin", userRolePermissionDto.isAdmin());
+}
 
 	
 	@RequestMapping(value = "/signin", method = RequestMethod.GET)

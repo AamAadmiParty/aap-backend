@@ -62,7 +62,7 @@ public class MenuBean extends BaseJsfBean {
 	}
 	public UserRolePermissionDto getUserRolePermissionInSesion(){
 		HttpServletRequest httpServletRequest = getHttpServletRequest();
-		return (UserRolePermissionDto)httpServletRequest.getSession(true).getAttribute(BaseController.SESSION_USER_PERMISSIONS_PARAM);
+		return getUserRolePermissionInSesion(httpServletRequest);
 	}
 	protected UserDto getLoggedInUser() {
 		return getLoggedInUser(false, "");

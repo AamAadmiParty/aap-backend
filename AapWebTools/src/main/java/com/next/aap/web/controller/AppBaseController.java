@@ -20,13 +20,16 @@ import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.dto.VideoDto;
 import com.next.aap.web.util.ContentDonwloadUtil;
+import com.next.aap.web.util.CookieUtil;
 
 public class AppBaseController extends BaseController{
 
@@ -60,6 +63,12 @@ public class AppBaseController extends BaseController{
 			if(loggedInUser.getParliamentConstituencyVotingId() != null){
 				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
 			}
+		}else{
+			//get it from Cookies
+			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
+			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
+			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
+			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
 		}
 		ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId);
 		mv.getModel().put("newsItems", newsItems);
@@ -136,7 +145,14 @@ public class AppBaseController extends BaseController{
 		mv.getModel().put("loggedInUser", loggedInUser);
 		mv.getModel().put("staticDirectory", "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign");
 		mv.getModel().put("contextPath", httpServletRequest.getContextPath());
-		
+		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
+		mv.getModel().put("loginAccounts", loginAccountDto);
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion(httpServletRequest);
+		if(userRolePermissionDto != null){
+			mv.getModel().put("admin", userRolePermissionDto.isAdmin());	
+		}else{
+			mv.getModel().put("admin", false);
+		}
 		
 	}
 	protected void addErrorInModel(ModelAndView mv, String errorMessage){

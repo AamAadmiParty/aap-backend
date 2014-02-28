@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.facebook.api.Facebook;
@@ -204,7 +203,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	private static final long serialVersionUID = 1L;
 	private final String donationUrl = "https://donate.aamaadmiparty.org/?utm_source=donate4india&utm_medium=web&utm_term=donate-purl&utm_content=donation&utm_campaign=affliation&cid=";
 	private final String urlShortnerUrl="http://myaap.in/yourls-api.php?format=json&username=arvind&password=4delhi&action=shorturl&url=";
-	private final String missingImageUrl = "https://lh4.googleusercontent.com/-7MmCqFqneVk/UuN39tQ2qQI/AAAAAAAANyA/rIM9CzbLlLE/s256/aap-text-symbol_512.png";
+	private final String missingImageUrl = "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign/images/aap-article.jpg";
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private UserDao userDao;
@@ -973,7 +972,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<StateDto> getAllStates() {
 		List<State> allStates = stateDao.getAllStates();
 		List<StateDto> returnList = new ArrayList<StateDto>();
@@ -996,7 +994,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<DistrictDto> getAllDistrictOfState(long stateId) {
 		List<District> allDistricts = districtDao.getDistrictOfState(stateId);
 		List<DistrictDto> returnList = new ArrayList<DistrictDto>();
@@ -1014,7 +1011,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfDistrict(long districtId) {
 		List<AssemblyConstituency> allAssemblyConstituencies = assemblyConstituencyDao.getAssemblyConstituencyOfDistrict(districtId);
 		return convertAssemblyConstituencies(allAssemblyConstituencies);
@@ -1039,7 +1035,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public StateDto getStateById(Long stateId) {
 		State state = stateDao.getStateById(stateId);
 		return convertState(state);
@@ -1047,7 +1042,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfState(long stateId) {
 		List<AssemblyConstituency> allAssemblyConstituencies = assemblyConstituencyDao.getAssemblyConstituencyOfState(stateId);
 		List<AssemblyConstituencyDto> returnList = convertAssemblyConstituencies(allAssemblyConstituencies);
@@ -1075,7 +1069,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(long stateId) {
 		List<ParliamentConstituency> parliamentConstituencies = parliamentConstituencyDao.getParliamentConstituencyOfState(stateId);
 		return convertParliamentConstituencyList(parliamentConstituencies);
@@ -2038,7 +2031,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<CountryDto> getAllCountries() {
 		List<Country> countries = countryDao.getAllCountries();
 		return convertCountries(countries);
@@ -2681,7 +2673,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public DistrictDto getDistrictByNameAndStateId(String name, Long stateId) {
 		District district = districtDao.getDistrictByNameAndStateId(stateId, name);
 		return convertDistrict(district);
@@ -2689,7 +2680,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public DistrictDto getDistrictById(Long districtId) {
 		District district = districtDao.getDistrictById(districtId);
 		return convertDistrict(district);
@@ -2697,7 +2687,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public AssemblyConstituencyDto getAssemblyConstituencyById(long stateId) {
 		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(stateId);
 		return convertAssemblyConstituency(assemblyConstituency);
@@ -2705,7 +2694,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public ParliamentConstituencyDto getParliamentConstituencyById(long pcId) {
 		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
 		return convertParliamentConstituency(parliamentConstituency);
@@ -3865,7 +3853,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<CountryRegionDto> getAllCountryRegionsOfCountry(Long countryId) {
 		List<CountryRegion> countryRegions = countryRegionDao.getCountryRegionsByCountryId(countryId);
 		return convertCountryRegions(countryRegions);
@@ -3893,7 +3880,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<CountryRegionAreaDto> getAllCountryRegionAreasOfCountryRegion(Long countryRegionId) {
 		List<CountryRegionArea> countryRegionAreas = countryRegionAreaDao.getCountryRegionAreasByCountryRegionId(countryRegionId);
 		return convertCountryRegionAreas(countryRegionAreas);
@@ -4865,7 +4851,6 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	@Cacheable("location")
 	public List<CountryDto> getNriCountries() {
 		List<CountryDto> allCountries = getAllCountries();
 		Iterator<CountryDto> iterator = allCountries.iterator();

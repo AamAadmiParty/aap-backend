@@ -115,5 +115,5 @@ public class BaseController {
 	public UserRolePermissionDto getUserRolePermissionInSesion(HttpServletRequest httpServletRequest){
 		return (UserRolePermissionDto)httpServletRequest.getSession(true).getAttribute(SESSION_USER_PERMISSIONS_PARAM);
 	}
-	
+
 }

@@ -92,15 +92,121 @@ public class AapDataCacheDbImpl implements AapDataCache{
 			localAapDataHolder.addNews(DEFAULT_LANGUAGE, oneNewsDto);
 		}
 		
-		List<Long> newsIds;
+		
 		for(AssemblyConstituencyDto oneAc:allAssemblyConstituencyDtos){
-			newsIds = aapService.getNewsItemsOfAc(oneAc.getId());
-			localAapDataHolder.addAcNews(oneAc.getId(), newsIds);
+			loadAcNews(oneAc.getId(), localAapDataHolder);
 		}
 		
 		for(ParliamentConstituencyDto onePc:allParliamentConstituencyDtos){
-			newsIds = aapService.getNewsItemsOfParliamentConstituency(onePc.getId());
-			localAapDataHolder.addPcNews(onePc.getId(), newsIds);
+			loadPcNews(onePc.getId(), localAapDataHolder);
+		}
+	}
+	@Override
+	public void loadAcNews(long acId){
+		loadAcNews(acId, aapDataHolder);
+	}
+	private void loadAcNews(long acId, AapDataHolder localAapDataHolder){
+		List<Long> newsIds = aapService.getNewsItemsOfAc(acId);
+		localAapDataHolder.addAcNews(acId, newsIds);
+	}
+	@Override
+	public void loadPcNews(long pcId){
+		loadPcNews(pcId, aapDataHolder);
+	}
+	private void loadPcNews(long pcId, AapDataHolder localAapDataHolder){
+		List<Long> newsIds = aapService.getNewsItemsOfParliamentConstituency(pcId);
+		localAapDataHolder.addPcNews(pcId, newsIds);
+	}
+	@Override
+	public void loadStateNews(long stateId){
+		List<AssemblyConstituencyDto> allAssemblyConstituencyDtos = aapService.getAllAssemblyConstituenciesOfState(stateId);
+		for(AssemblyConstituencyDto oneAssemblyConstituency:allAssemblyConstituencyDtos){
+			loadAcNews(oneAssemblyConstituency.getId());
+		}
+		
+		List<ParliamentConstituencyDto> allPcs = aapService.getAllParliamentConstituenciesOfState(stateId);
+		for(ParliamentConstituencyDto onePc:allPcs){
+			loadPcNews(onePc.getId());
+		}
+	}
+	@Override
+	public void loadDistrictNews(long districtId){
+		List<AssemblyConstituencyDto> allAssemblyConstituencyDtos = aapService.getAllAssemblyConstituenciesOfDistrict(districtId);
+		for(AssemblyConstituencyDto oneAssemblyConstituency:allAssemblyConstituencyDtos){
+			loadAcNews(oneAssemblyConstituency.getId());
+		}
+	}
+	
+	@Override
+	public void loadAcBlogs(long acId){
+		loadAcBlogs(acId, aapDataHolder);
+	}
+	private void loadAcBlogs(long acId, AapDataHolder localAapDataHolder){
+		List<Long> newsIds = aapService.getBlogItemsOfAc(acId);
+		localAapDataHolder.addAcBlogs(acId, newsIds);
+	}
+	@Override
+	public void loadPcBlogs(long pcId){
+		loadPcBlogs(pcId, aapDataHolder);
+	}
+	private void loadPcBlogs(long pcId, AapDataHolder localAapDataHolder){
+		List<Long> newsIds = aapService.getBlogItemsOfParliamentConstituency(pcId);
+		localAapDataHolder.addPcBlogs(pcId, newsIds);
+	}
+	@Override
+	public void loadStateBlogs(long stateId){
+		List<AssemblyConstituencyDto> allAssemblyConstituencyDtos = aapService.getAllAssemblyConstituenciesOfState(stateId);
+		for(AssemblyConstituencyDto oneAssemblyConstituency:allAssemblyConstituencyDtos){
+			loadAcBlogs(oneAssemblyConstituency.getId());
+		}
+		
+		List<ParliamentConstituencyDto> allPcs = aapService.getAllParliamentConstituenciesOfState(stateId);
+		for(ParliamentConstituencyDto onePc:allPcs){
+			loadPcBlogs(onePc.getId());
+		}
+	}
+	@Override
+	public void loadDistrictBlogs(long districtId){
+		List<AssemblyConstituencyDto> allAssemblyConstituencyDtos = aapService.getAllAssemblyConstituenciesOfDistrict(districtId);
+		for(AssemblyConstituencyDto oneAssemblyConstituency:allAssemblyConstituencyDtos){
+			loadAcBlogs(oneAssemblyConstituency.getId());
+		}
+	}
+	
+	
+	@Override
+	public void loadAcVideos(long acId){
+		loadAcVideos(acId, aapDataHolder);
+	}
+	private void loadAcVideos(long acId, AapDataHolder localAapDataHolder){
+		List<Long> newsIds = aapService.getVideoItemsOfAc(acId);
+		localAapDataHolder.addAcVideos(acId, newsIds);
+	}
+	@Override
+	public void loadPcVideos(long pcId){
+		loadPcVideos(pcId, aapDataHolder);
+	}
+	private void loadPcVideos(long pcId, AapDataHolder localAapDataHolder){
+		List<Long> newsIds = aapService.getVideoItemsOfParliamentConstituency(pcId);
+		localAapDataHolder.addPcVideos(pcId, newsIds);
+	}
+	@Override
+	public void loadStateVideos(long stateId){
+		List<AssemblyConstituencyDto> allAssemblyConstituencyDtos = aapService.getAllAssemblyConstituenciesOfState(stateId);
+		for(AssemblyConstituencyDto oneAssemblyConstituency:allAssemblyConstituencyDtos){
+			loadAcVideos(oneAssemblyConstituency.getId());
+		}
+		
+		List<ParliamentConstituencyDto> allPcs = aapService.getAllParliamentConstituenciesOfState(stateId);
+		for(ParliamentConstituencyDto onePc:allPcs){
+			loadPcVideos(onePc.getId());
+		}
+	}
+	@Override
+	public void loadDistrictVideos(long districtId){
+		List<AssemblyConstituencyDto> allAssemblyConstituencyDtos = aapService.getAllAssemblyConstituenciesOfDistrict(districtId);
+		for(AssemblyConstituencyDto oneAssemblyConstituency:allAssemblyConstituencyDtos){
+			loadAcVideos(oneAssemblyConstituency.getId());
 		}
 	}
 	

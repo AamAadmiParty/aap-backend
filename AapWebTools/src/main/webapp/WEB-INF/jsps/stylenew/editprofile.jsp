@@ -201,7 +201,40 @@ $(function(){
 			}
 		});
 	});
+	$(function() {
+	    $( document ).tooltip({
+	    	 
+	        // place tooltip on the right edge
+	        position: {my: "left top+1", at: "right top"},
+	        //tooltipClass: "tooltip",
+	        // a little tweaking of the position
+	        //offset: [-2, 10],
+	   
+	        // use the built-in fadeIn/fadeOut effect
+	        effect: "fade",
+	   
+	        // custom opacity setting
+	        opacity: 0.7
+	   
+	        });
+	  });
 </script>
+<style type="text/css">
+.tooltip {
+    background-color:#000;
+    border:1px solid #fff;
+    padding:10px 15px;
+    width:200px;
+    display:none;
+    color:#fff;
+    text-align:left;
+    font-size:12px;
+ 
+    /* outline radius for mozilla/firefox only */
+    -moz-box-shadow:0 0 10px #000;
+    -webkit-box-shadow:0 0 10px #000;
+}
+</style>
 </head>
 <body>
 
@@ -221,17 +254,17 @@ $(function(){
 				<form:form method="post" commandName="user" modelAttribute="user">
 					<div class="blockdiv">
 						<label>Name</label>
-						<form:input path="name" class="textbox" />
+						<form:input path="name" class="textbox" title="Please Enter Your name" />
 					</div>
 
 					<div class="blockdiv">
 						<label>Voter ID</label>
-						<form:input path="voterId" class="textbox" />
+						<form:input path="voterId" class="textbox" title="Please Enter Your Voter ID"/>
 					</div>
 
 					<div class="blockdiv">
 						<label>Gender</label>
-						<form:select path="gender">
+						<form:select path="gender" title="Choose Your Gender">
 							<form:option value="select"> Select</form:option>
 							<form:option value="Male">Male</form:option>
 							<form:option value="Female">Female</form:option>
@@ -240,47 +273,48 @@ $(function(){
 
 					<div class="blockdiv">
 						<label>Passport Number</label>
-						<form:input path="passportNumber" class="textbox" />
+						<form:input path="passportNumber" class="textbox" title="Enter your passport number, compulsory for NRIs"/>
 					</div>
 
 					<div class="blockdiv">
 						<label>Mobile</label>
-						<form:input path="mobileNumber" class="textbox" />
+						<form:input path="mobileNumber" class="textbox" title="Enter your indian mobile number, 10 digits only"/>
 					</div>
 
 					<div class="blockdiv">
 						<label>Date of Birth(dd/mm/yyyy)</label>
-						<form:input path="dateOfBirth" class="textbox" />
+						<form:input path="dateOfBirth" class="textbox" title="Your date of Birth, i.e. 18/09/1981 dd/mm/yyyy"/>
 					</div>
 
 					<div class="blockdiv">
 						<label>Father's Name</label>
-						<form:input path="fatherName" class="textbox" />
+						<form:input path="fatherName" class="textbox" title="Enter your father's name"/>
 					</div>
 
 					<div class="blockdiv">
 						<label>Mother's Name</label>
-						<form:input path="motherName" class="textbox" />
+						<form:input path="motherName" class="textbox" title="Enter Your mother's name"/>
 					</div>
 
 
 					<div class="blockdiv">
 						<label>I am NRI</label>
-						<form:checkbox path="nri" class="textbox" />
+						<form:checkbox path="nri" class="textbox" title="Select if you are currently living outside India"/>
 					</div>
 					<div id="nriDiv">
 						<div class="formheading">NRI Living Location</div>
 						<div class="blockdiv">
 							<label>Country </label>
-							<form:select path="nriCountryId">
-								<form:option value="0" label="Select Country Region" />
+							<form:select path="nriCountryId" title="Choose Your Country where you living currently(outside india)">
+								<form:option value="0" label="Select Country" />
 								<form:options items="${nriCountries}" itemValue="id" itemLabel="name" />
 							</form:select>
 						</div>
 
 						<div class="blockdiv">
 							<label>Region/State</label>
-							<form:select path="nriCountryRegionId" disabled="${empty loggedInUser.nriCountryRegionId or loggedInUser.nriCountryRegionId le 0 }">
+							<form:select path="nriCountryRegionId" disabled="${empty loggedInUser.nriCountryRegionId or loggedInUser.nriCountryRegionId le 0 }"
+							title="Select your country region">
 								<form:option value="0" label="Select Region" />
 								<form:options items="${nriCountryRegions}" itemValue="id" itemLabel="name" />
 							</form:select>
@@ -288,7 +322,8 @@ $(function(){
 
 						<div class="blockdiv">
 							<label>Area/City</label>
-							<form:select path="nriCountryRegionAreaId" disabled="${empty loggedInUser.nriCountryRegionAreaId or loggedInUser.nriCountryRegionAreaId le 0 }">
+							<form:select path="nriCountryRegionAreaId" disabled="${empty loggedInUser.nriCountryRegionAreaId or loggedInUser.nriCountryRegionAreaId le 0 }"
+							title="Select your country region area">
 								<form:option value="0" label="Select Area" />
 								<form:options items="${nriCountryRegionAreas}" itemValue="id" itemLabel="name" />
 							</form:select>
@@ -296,35 +331,38 @@ $(function(){
 
 						<div class="blockdiv">
 							<label>Mobile</label>
-							<form:input path="nriMobileNumber" class="textbox" />
+							<form:input path="nriMobileNumber" class="textbox" title="Enter you outside india mobile number"/>
 						</div>
 					</div>
 					<div id="indianLocationDiv">
 						<div class="formheading">Select the place where you currently living in India</div>
 						<div class="blockdiv">
 							<label>State</label>
-							<form:select path="stateLivingId">
+							<form:select path="stateLivingId" title="Choose State where you live currently">
 								<form:option value="0" label="Select State" />
 								<form:options items="${states}" itemValue="id" itemLabel="name" />
 							</form:select>
 						</div>
 						<div class="blockdiv">
 							<label>District</label>
-							<form:select path="districtLivingId" disabled="${empty loggedInUser.districtLivingId or loggedInUser.districtLivingId le 0 }">
+							<form:select path="districtLivingId" disabled="${empty loggedInUser.districtLivingId or loggedInUser.districtLivingId le 0 }"
+							title="Choose District where you live currently">
 								<form:option value="0" label="Select District" />
 								<form:options items="${livingDistricts}" itemValue="id" itemLabel="name" />
 							</form:select>
 						</div>
 						<div class="blockdiv">
 							<label>Parliament Constituency</label>
-							<form:select path="parliamentConstituencyLivingId" disabled="${empty loggedInUser.parliamentConstituencyLivingId or loggedInUser.parliamentConstituencyLivingId le 0 }">
+							<form:select path="parliamentConstituencyLivingId" disabled="${empty loggedInUser.parliamentConstituencyLivingId or loggedInUser.parliamentConstituencyLivingId le 0 }"
+							title="Choose Parliament Constituency where you live currently">
 								<form:option value="0" label="Select Parliament Constituency" />
 								<form:options items="${livingPcs}" itemValue="id" itemLabel="name" />
 							</form:select>
 						</div>
 						<div class="blockdiv">
 							<label>Assembly Constituency</label>
-							<form:select path="assemblyConstituencyLivingId" disabled="${empty loggedInUser.assemblyConstituencyLivingId or loggedInUser.assemblyConstituencyLivingId le 0 }">
+							<form:select path="assemblyConstituencyLivingId" disabled="${empty loggedInUser.assemblyConstituencyLivingId or loggedInUser.assemblyConstituencyLivingId le 0 }"
+							title="Choose Assembly Constituency where you live currently">
 								<form:option value="0" label="Select Assembly Constituency" />
 								<form:options items="${livingAcs}" itemValue="id" itemLabel="name" />
 							</form:select>
@@ -333,28 +371,31 @@ $(function(){
 					<div class="formheading">Select the place where you registered as voter in India</div>
 					<div class="blockdiv">
 						<label>State</label>
-						<form:select path="stateVotingId">
+						<form:select path="stateVotingId" title="Choose State where you registered as Voter or your indian address state">
 							<form:option value="0" label="Select State" />
 							<form:options items="${states}" itemValue="id" itemLabel="name" />
 						</form:select>
 					</div>
 					<div class="blockdiv">
 						<label>District</label>
-						<form:select path="districtVotingId" disabled="${empty loggedInUser.districtVotingId or loggedInUser.districtVotingId le 0 }">
+						<form:select path="districtVotingId" disabled="${empty loggedInUser.districtVotingId or loggedInUser.districtVotingId le 0 }"
+						title="Choose District where you registered as Voter or your indian address District">
 							<form:option value="0" label="Select District" />
 							<form:options items="${votingDistricts}" itemValue="id" itemLabel="name" />
 						</form:select>
 					</div>
 					<div class="blockdiv">
 						<label>Parliament Constituency</label>
-						<form:select path="parliamentConstituencyVotingId" disabled="${empty loggedInUser.parliamentConstituencyVotingId or loggedInUser.parliamentConstituencyVotingId le 0 }">
+						<form:select path="parliamentConstituencyVotingId" disabled="${empty loggedInUser.parliamentConstituencyVotingId or loggedInUser.parliamentConstituencyVotingId le 0 }"
+						title="Choose Parliament Constituency where you registered as Voter or your indian address Parliament Constituency">
 							<form:option value="0" label="Select Parliament Constituency" />
 							<form:options items="${votingPcs}" itemValue="id" itemLabel="name" />
 						</form:select>
 					</div>
 					<div class="blockdiv">
 						<label>Assembly Constituency</label>
-						<form:select path="assemblyConstituencyVotingId" disabled="${empty loggedInUser.assemblyConstituencyVotingId or loggedInUser.assemblyConstituencyVotingId le 0 }">
+						<form:select path="assemblyConstituencyVotingId" disabled="${empty loggedInUser.assemblyConstituencyVotingId or loggedInUser.assemblyConstituencyVotingId le 0 }"
+						title="Choose Assembly Constituency where you registered as Voter or your indian address Assembly Constituency">
 							<form:option value="0" label="Select Assembly Constituency" />
 							<form:options items="${votingAcs}" itemValue="id" itemLabel="name" />
 						</form:select>
@@ -428,70 +469,7 @@ $(function(){
 
 
 
-	<div class="footerfullbg">
-		<!--footerfullbg-->
-		<div class="footercontent">
-			<!--footercontent-->
-			<div class="footerrow">
-				<!--footerrow-->
-				<h2>Donation Links</h2>
-				<ul>
-					<li><a href="#">Donate Online</a></li>
-					<li><a href="#">Donate - By Cheque/Demand Draft</a></li>
-					<li><a href="#">Donation Policies</a></li>
-					<li><a href="#">List of Donors</a></li>
-					<li><a href="#">Donation FAQs</a></li>
-					<li><a href="#">Income & Expenditure Statements</a></li>
-				</ul>
-			</div>
-			<!--footerrow-->
+		<jsp:include page="footer.jsp" />
 
-			<div class="footerrow">
-				<!--footerrow-->
-				<h2>Media</h2>
-				<ul>
-					<li><a href="#">Cicero Opinion Poll</a></li>
-					<li><a href="#">Aap Ki Kranti</a></li>
-				</ul>
-			</div>
-			<!--footerrow-->
-
-			<div class="footerrow">
-				<!--footerrow-->
-				<h2>Contact Us</h2>
-				<ul>
-					<li><a href="#">Party Offices</a></li>
-					<li><a href="#">NRI Site</a></li>
-					<li><a href="#">Privacy Policy</a></li>
-				</ul>
-			</div>
-			<!--footerrow-->
-		</div>
-		<!--footercontent-->
-	</div>
-	<!--footerfullbg-->
-	<div class="footerfull">
-		<!--footerfull-->
-		<div class="footercontent">
-			<!--footercontent-->
-			<div class="conectleft">
-				<!--conectleft-->
-				<ul>
-					<li class="h3">Connect with us on</li>
-					<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/facebooklogo.png" border="0" align="absmiddle" /></a></li>
-					<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/twitterlogo.png" border="0" align="absmiddle" /></a></li>
-					<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/youtubeicon.png" border="0" align="absmiddle" /></a></li>
-				</ul>
-			</div>
-			<!--conectleft-->
-			<div class="copyright">
-				<!--copyright-->
-				© Aam Aadmi Party. All Rights Reserved
-			</div>
-			<!--copyright-->
-		</div>
-		<!--footerfull-->
-	</div>
-	<!--footercontent-->
 </body>
 </html>

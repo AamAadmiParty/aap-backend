@@ -96,6 +96,7 @@ public class ProfileController extends AppBaseController {
 		editingUser.setDateOfBirth(user.getDateOfBirth());
 		editingUser.setDistrictLivingId(user.getDistrictLivingId());
 		editingUser.setDistrictVotingId(user.getDistrictVotingId());
+		editingUser.setCountryCode("91");
 		editingUser.setFatherName(user.getFatherName());
 		editingUser.setGender(user.getGender());
 		if(!editingUser.isMember()){

@@ -140,6 +140,13 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 			}
 		}
 	}
+	
+	private void refreshNewsInCache(){
+		switch(menuBean.getLocationType()){
+		case Global:
+			aapDataCache.refreshFullCache();
+		}
+	}
 	public void publishPost(){
 		try{
 			if(selectedNews == null){
@@ -155,6 +162,7 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 				selectedNews = aapService.publishNews(selectedNews.getId());
 				sendInfoMessageToJsfScreen("News Published Succesfully");
 				refreshNewsList();
+				
 			}
 			
 		}catch(Exception ex){

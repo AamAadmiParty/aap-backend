@@ -44,8 +44,10 @@ public class AapDataHolder {
 		}
 		languageNews.put(newsItem.getId(), newsItem);
 		if(newsItem.isGlobal()){
+			System.out.println("adding ID="+newsItem.getId());
 			allGlobalNewsIds.add(newsItem.getId());	
 		}
+		System.out.println("allGlobalNewsIds="+allGlobalNewsIds);
 		
 	}
 	
@@ -236,6 +238,7 @@ public class AapDataHolder {
 	
 	private List<Long> getItemsForAllLocations(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId
 			, Map<Long, List<Long>> acItemMap, Map<Long, List<Long>> pcItemMap, List<Long> defaultItemList){
+		System.out.println("livingAcId="+livingAcId+",votingAcId="+votingAcId+",livingPcId="+livingPcId+",votingPcId="+votingPcId);
 		Set<Long> locationNewsIds = new TreeSet<>();
 		addNewsDtoOfOneLocation(locationNewsIds, acItemMap.get(livingAcId));
 		if(livingAcId != votingAcId){
@@ -248,12 +251,17 @@ public class AapDataHolder {
 		
 		List<Long> returnList = new ArrayList<>();
 		if(locationNewsIds.isEmpty()){
+			System.out.println("locationNewsIds are empty");
 			returnList.addAll(defaultItemList);
 		}
 		else{
+			System.out.println("locationNewsIds are Not empty");
 			returnList.addAll(locationNewsIds);
 		}
+		System.out.println("returnList = "+returnList);
+		Collections.sort(returnList);
 		Collections.reverse(returnList);
+		System.out.println("sorted returnList = "+returnList);
 		return returnList;
 	}
 	

@@ -39,21 +39,19 @@
 	<div class="contentarea">
 		<!--contentarea-->
 
-		<div class="form-leftarea">
-			<!--form-leftarea-->
-			<div class="editprofilehead">
+		<div class="readmorewrapper">
+			<!--readmorewrapper-->
+			<h1>
 				<c:out value="${news.title}"></c:out>
-			</div>
-			<br />
-			<div class="formwrapper">
+			</h1>
+			<p>
 				<!--formwrapper-->
 				<c:out value="${news.content}" escapeXml="false"></c:out>
-				
+				</p>
 				<br></br>
 				<br></br>
 				<div class="fb-comments" data-href="http://my.aamaadmiparty.org/content/news/${news.id}" data-width="640" data-numposts="5" data-colorscheme="light"></div>
 				
-			</div>
 			
 		</div>
 		<jsp:include page="rightside.jsp" />

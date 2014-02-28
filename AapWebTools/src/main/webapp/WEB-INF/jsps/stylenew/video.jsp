@@ -39,11 +39,10 @@
 	<div class="contentarea">
 		<!--contentarea-->
 
-		<div class="form-leftarea">
-			<!--form-leftarea-->
-			<div class="editprofilehead">
-				<c:out value="${video.title}"></c:out>
-			</div>
+		<div class="readmorewrapper">
+			<!--readmorewrapper-->
+			
+			<h1><c:out value="${video.title}"></c:out></h1>
 			<br />
 			<div class="formwrapper">
 				<!--formwrapper-->

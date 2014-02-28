@@ -28,16 +28,18 @@
 		$(".rslides").responsiveSlides();
 	});
 	$(function() {
-	    $( "#accordion" ).accordion();
-	  });
+		$("#accordion").accordion();
+	});
 </script>
 <c:if test="${empty loginAccounts.twitterAccounts}">
 	<script>
-	$(function(){
-		$( "#postOnTwitter" ).click(function() {
-			alert( "You have NOT given twitter access, now you will be forwarded to twitter login page and you can give access and come back" );
-			window.location.href = "${contextPath}/login/twitter";
-		});
+		$(function() {
+			$("#postOnTwitter")
+					.click(
+							function() {
+								alert("You have NOT given twitter access, now you will be forwarded to twitter login page and you can give access and come back");
+								window.location.href = "${contextPath}/login/twitter";
+							});
 		});
 	</script>
 </c:if>
@@ -56,31 +58,35 @@
 				<!--article-leftarea-->
 				<div class="voiceappdiv">
 					<!-- <input name="" type="checkbox" value="" /> -->
-					I want to be voice of AAP
+					Voice of AAP
 				</div>
 
-				<div class="voiceapp-inner-div">
-					<jsp:include page="errors.jsp" />
-					<!--voiceapp-inner-div-->
-					<div class="fbwrapper">
-						<!--fbwrapper-->
-						<img src="<c:out value='${staticDirectory}'/>/images/facebook.jpg" />
-						<div class="fbgorups">
-							<!--fbgorups-->
-							<ul>
-								<li><c:if test="${postOnTimeLine}">
-										<input name="postOnTimeLine" id="postOnTimeLine" value="true" type="checkbox" checked="checked" />
-									</c:if> <c:if test="${!postOnTimeLine}">
-										<input name="postOnTimeLine" id="postOnTimeLine" value="true" type="checkbox" />
-									</c:if> Post on My Timeline</li>
-
+							<div class="voiceapp-inner-div" style="width: 1000px;">
+				<table style="width: 997px;">
+					<tr valign="top">
+						<td style="width: 350px;">
+								<jsp:include page="errors.jsp" />
+								<!--voiceapp-inner-div-->
+								<div class="fbwrapper">
+									<!--fbwrapper-->
+									<img src="<c:out value='${staticDirectory}'/>/images/facebook.jpg" />
+									<div class="fbgorups">
+										<!--fbgorups-->
+										<ul>
+											<li><c:if test="${postOnTimeLine}">
+													<input name="postOnTimeLine" id="postOnTimeLine" value="true" type="checkbox" checked="checked" title="Yes I would like to spread AAP messages on Facebook to my friends, family and others" />
+												</c:if> <c:if test="${!postOnTimeLine}">
+													<input name="postOnTimeLine" id="postOnTimeLine" value="true" type="checkbox" title="Yes I would like to spread AAP messages on Facebook to my friends, family and others" />
+												</c:if> Post on My Facebook</li>
+											<!-- 
 								<li class="noborder"><c:if test="${postOnGroup}">
 										<input name="postOnGroup" id="postOnGroup" type="checkbox" value="true" checked="checked" />
 									</c:if> <c:if test="${!postOnGroup}">
 										<input name="postOnGroup" id="postOnGroup" type="checkbox" value="true" />
 									</c:if> Post on My Facebook groups</li>
-							</ul>
-							<!-- 
+									 -->
+										</ul>
+										<!-- 
 							<div class="select">
 								<select name="">
 									<option value="select">Select</option>
@@ -88,74 +94,79 @@
 								</select>
 							</div>
 							 -->
-						</div>
-						<!--fbgorups-->
-					</div>
-					<!--fbwrapper-->
-					<br />
-					<div class="fbwrapper">
-						<!--fbwrapper-->
-						<img src="<c:out value='${staticDirectory}'/>/images/twitter.jpg" />
-						<div class="fbgorups">
-							<!--fbgorups-->
-							<ul>
-								<li><c:if test="${postOnTwitter}">
-										<input name="postOnTwitter" id="postOnTwitter" type="checkbox" value="true" checked="checked" />
-									</c:if> <c:if test="${!postOnTwitter}">
-										<input name="postOnTwitter" id="postOnTwitter" type="checkbox" value="true" />
-									</c:if> Tweet/Retweet from my account</li>
-							</ul>
-						</div>
-						<!--fbgorups-->
-					</div>
-					<!--fbwrapper-->
-					<input name="" type="submit" value="Save Settings" class="button" />
-				</div>
-			</form:form>
-			<!--voiceapp-inner-div-->
-			<br />
-			<div class="voiceapp-inner-div">
-				<!--voiceapp-inner-div-->
-				<div class="faqdiv-tab">Frequently Asked Questions</div>
-				<div class="faqwrapper">
-					<div id="accordion">
-						<h3>What is Voice of AAP?</h3>
-						<div>
-							Voice of AAp is a social app of aam aadmi party which will use your social account like facebook and twitter to spread AAP related messages, i.e. Daily Donation Update,
-							important messages, tweets etc
-							<ul>
-								<li><b>Post on My Timeline : </b> if you select this option that means we will post various content like Daily Donation Update(Daily) and various other important
-									updates once in a while(i.e. once per week but may be more then once per week at sometimes) on your timeline, so that your friend and any visitor of your profile can view
-									it.</li>
+									</div>
+									<!--fbgorups-->
+								</div>
+								<!--fbwrapper-->
+								<br />
+								<div class="fbwrapper">
+									<!--fbwrapper-->
+									<img src="<c:out value='${staticDirectory}'/>/images/twitter.jpg" />
+									<div class="fbgorups">
+										<!--fbgorups-->
+										<ul>
+											<li><c:if test="${postOnTwitter}">
+													<input name="postOnTwitter" id="postOnTwitter" type="checkbox" value="true" checked="checked" />
+												</c:if> <c:if test="${!postOnTwitter}">
+													<input name="postOnTwitter" id="postOnTwitter" type="checkbox" value="true" />
+												</c:if> Tweet/Retweet from my account</li>
+										</ul>
+									</div>
+									<!--fbgorups-->
+								</div>
+								<!--fbwrapper-->
+								<input name="" type="submit" value="Save Settings" class="button" />
+						</td>
+						<td style="width: 645px;">
+							<!--voiceapp-inner-div-->
+							<div class="faqdiv-tab">Frequently Asked Questions</div>
+							<div class="faqwrapper">
+								<div id="accordion">
+									<h3>What is Voice of AAP?</h3>
+									<div>
+										Voice of AAp is a social app of aam aadmi party which will use your social account like facebook and twitter to spread AAP related messages, i.e. Daily Donation Update,
+										important messages, tweets etc
+										<ul>
+											<li><b>Post on my Facebook : </b> if you select this option that means we will post various content like Daily Donation Update(Daily) and various other important
+												updates once in a while(i.e. once per week but may be more then once per week at sometimes) on your timeline, so that your friend and any visitor of your profile can
+												view it.</li>
+											<!-- 
 								<li><b>Post on my Facebook groups : </b> if you select this option that means we will post various content like Daily Donation Update(Daily) and various other
 									important updates once in a while(i.e. once per week but may be more then once per week at sometimes) on your various selected groups so that other members of those groups
 									can view the content</li>
-								<li><b>Tweet/Retweet from my account : </b> if you select this option that means we will tweet or retweet important tweets from your all connected twitter account</li>
+									 -->
+											<li><b>Tweet/Retweet from my account : </b> if you select this option that means we will tweet or retweet important tweets from your all connected twitter account</li>
 
-							</ul>
-						</div>
-						<h3>Is my Information secure?</h3>
-						<div>Yes absolutely, we will never share your inforamtion with any one.</div>
-						<h3>Can I track activities of this app on my accounts?</h3>
-						<div>Yes we want to keep it transparent, so we will show what, where and when we posted on your behalf. You can come back here and view all activity.</div>
-						<h3>Can I Cancel this service?</h3>
-						<div>Yes you can cancel it any time. Just come back here and uncheck the 'I want to be voice of AAP' checkbox.</div>
-					</div>
-				</div>
-				<!--faqwrapper-->
-			</div>
-
-
-
+										</ul>
+									</div>
+									<h3>Is my Information secure?</h3>
+									<div>Yes absolutely, we will never share your inforamtion with any one.</div>
+									<!-- 
+									<h3>Can I track activities of this app on my accounts?</h3>
+									<div>Yes we want to keep it transparent, so we will show what, where and when we posted on your behalf. You can come back here and view all activity.</div>
+									 -->
+									<h3>Can I Cancel this service?</h3>
+									<div>Yes you can cancel it any time. Just come back here and uncheck the checkboxes.</div>
+								</div>
+							</div> <!--faqwrapper-->
+						</td>
+					</tr>
+				</table>
 		</div>
-		<!--article-leftarea-->
+		</form:form>
+		
+
+
+
+	</div>
+	<!--article-leftarea-->
 
 	</div>
 	<!--contentarea-->
 
 
 	<jsp:include page="footer.jsp" />
-	
-	
+
+
 </body>
 </html>

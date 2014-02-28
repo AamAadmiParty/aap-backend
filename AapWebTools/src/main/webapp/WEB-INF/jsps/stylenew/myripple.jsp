@@ -51,12 +51,54 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 				<!--loginwithinnerholder-->
 				<div id="tabs">
 					<ul>
+						<li><a href="#setting">Ripple Setup</a></li>
 						<c:if test="${rippleCampaignExists}">
-							<li><a href="#success">Success</a></li>
+							<li><a href="#success">Network Donations</a></li>
 							<li><a href="#failed">failed</a></li>
 						</c:if>
-						<li><a href="#setting">Ripple Setup</a></li>
 					</ul>
+					<div id="setting">
+						<div class="editprofilehead">Start your own personalized donation campaign for AAP</div>
+						<br />
+						<div class="formwrapper">
+							<!--formwrapper-->
+							<div class="editprofile">Edit Ripple Campaign</div>
+							<form method="post">
+								<jsp:include page="errors.jsp" />
+								<div class="blockdiv">
+									<label>My Campaign Name</label>
+									<c:if test="${rippleCampaignExists}">
+									<input disabled=true type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
+										class="textbox" />
+									</c:if> 
+									<c:if test="${!rippleCampaignExists}">
+									<input type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
+										class="textbox" />
+									</c:if> 
+									
+								</div>
+								<div class="blockdiv">
+									<label>Description</label>
+									<textarea rows="" cols="" name="description" id="description" class="textarea"><c:out value='${rippleCampaign.description}'/></textarea>
+								</div>
+								<c:if test="${rippleCampaignExists}">
+								<div class="blockdiv">
+									<label>My Personal URL</label>
+									<input disabled=true type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.myAapShortUrl}'/>"
+										class="textbox" />
+								</div>
+								
+								<div class="blockdiv">
+									<label>Share</label>
+									<input name="save" type="button" class="button" value="Share Personal URL" 
+									onclick="inviteFriendsToDonateUsingMyRipple('${rippleCampaign.myAapShortUrl}')" />
+								</div>
+								</c:if>
+								<input name="save" type="submit" class="button" value="Save Ripple Campaign" />
+								  
+							</form>
+						</div>
+					</div>
 					<c:if test="${rippleCampaignExists}">
 						<div id="success" class="languagetab">
 							<table id="successTable" style="border: 1px solid;">
@@ -110,48 +152,7 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 							</table>
 						</div>
 					</c:if>
-					<div id="setting">
-						<div class="editprofilehead">Spread the word, build your own donation network</div>
-						<br />
-						<div class="formwrapper">
-							<!--formwrapper-->
-							<div class="editprofile">Edit Ripple Campaign</div>
-							<form method="post">
-								<jsp:include page="errors.jsp" />
-								<div class="blockdiv">
-									<label>Campaign Id</label>
-									<c:if test="${rippleCampaignExists}">
-									<input disabled=true type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
-										class="textbox" />
-									</c:if> 
-									<c:if test="${!rippleCampaignExists}">
-									<input type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
-										class="textbox" />
-									</c:if> 
-									
-								</div>
-								<div class="blockdiv">
-									<label>Description</label>
-									<textarea rows="" cols="" name="description" id="description" class="textarea"><c:out value='${rippleCampaign.description}'/></textarea>
-								</div>
-								<c:if test="${rippleCampaignExists}">
-								<div class="blockdiv">
-									<label>Personal URL</label>
-									<input disabled=true type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.myAapShortUrl}'/>"
-										class="textbox" />
-								</div>
-								
-								<div class="blockdiv">
-									<label>Share</label>
-									<input name="save" type="button" class="button" value="Share Personal URL" 
-									onclick="inviteFriendsToDonateUsingMyRipple('${rippleCampaign.myAapShortUrl}')" />
-								</div>
-								</c:if>
-								<input name="save" type="submit" class="button" value="Save Ripple Campaign" />
-								  
-							</form>
-						</div>
-					</div>
+					
 
 				</div>
 				<!--loginwithinnerholder-->

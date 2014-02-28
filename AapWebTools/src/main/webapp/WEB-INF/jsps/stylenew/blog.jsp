@@ -39,11 +39,11 @@
 	<div class="contentarea">
 		<!--contentarea-->
 
-		<div class="form-leftarea">
-			<!--form-leftarea-->
-			<div class="editprofilehead">
+		<div class="readmorewrapper">
+			<!--readmorewrapper-->
+			<h1>
 				<c:out value="${blog.title}"></c:out>
-			</div>
+			</h1>
 			<br />
 			<div class="formwrapper">
 				<!--formwrapper-->

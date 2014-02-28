@@ -6,7 +6,7 @@ import com.next.aap.web.ItemList;
  * For implemntaion wise, 
  * 	it shud be made thread safe
  * 	all refresh function shud be async, that from any where we will call the method and it will return instantaneously
- *  with in implemneation we must make sure that only on call will run at a time and others will stay in queue.
+ *  with in implementation we must make sure that only on call will run at a time and others will stay in queue.
  *  So basically lets create one ThreadPool with 1 thread only, each call will put one runnbae into this threadPool 
  *  and oce thread becomes available it will call it and refresh the cache.
  *  
@@ -19,6 +19,12 @@ import com.next.aap.web.ItemList;
 public interface DataItemCache<T> {
 
 	/**
+	 * This function will refresh all cache and shud be called from postConstruct method of spring bean to intialize it
+	 * @param countryRegionAreaId
+	 */
+	public abstract void refreshFullCache();
+
+	/**
 	 * This function will return a List of T type Items from Cache with page number and pageSize of a particular language
 	 * @param lang
 	 * @param livingAcId
@@ -27,7 +33,7 @@ public interface DataItemCache<T> {
 	 * @param votingPcId
 	 * @return
 	 */
-	public abstract ItemList<T> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId);
+	public abstract ItemList<T> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId, long livingCountryRegionId);
 	
 	/**
 	 * This function will return a List of T type Items from Cache with page number and pageSize of a particular language and pageNumber
@@ -39,34 +45,9 @@ public interface DataItemCache<T> {
 	 * @param pageNumber
 	 * @return
 	 */
-	public abstract ItemList<T> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber);
+	public abstract ItemList<T> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId,long livingCountryId, long livingCountryRegionId, int pageNumber);
 
-	/**
-	 * NRI Location structure is different then Indian structure, so creating special functions for NRI, its similar to getItemsFromCache
-	 * but works for NRI
-	 * @param lang
-	 * @param livingCountryId
-	 * @param livingCountryRegionId
-	 * @param votingAcId
-	 * @param votingPcId
-	 * @return
-	 */
-	public abstract ItemList<T> getNriItemsFromCache(String lang, long livingCountryId, long livingCountryRegionId, long votingAcId, long votingPcId);
 	
-	/**
-	 * NRI Location structure is different then Indian structure, so creating special functions for NRI, its similar to getItemsFromCache
-	 * but works for NRI
-	 * 
-	 * @param lang
-	 * @param livingCountryId
-	 * @param livingCountryRegionId
-	 * @param votingAcId
-	 * @param votingPcId
-	 * @param pageNumber
-	 * @return
-	 */
-	public abstract ItemList<T> getNriItemsFromCache(String lang, long livingCountryId, long livingCountryRegionId, long votingAcId, long votingPcId, int pageNumber);
-
 	/**
 	 * This function will refresh cache for a given assembly Constituency on Demand 
 	 * @param acId
@@ -94,7 +75,7 @@ public interface DataItemCache<T> {
 	/**
 	 * This function will refresh cache for all national Items on Demand
 	 */
-	public abstract void refreshCacheItemsForAcNational();
+	public abstract void refreshCacheItemsForGlobal();
 	
 	/**
 	 * This function will refresh cache for a given country on Demand
@@ -115,11 +96,4 @@ public interface DataItemCache<T> {
 	public abstract void refreshCacheItemsForCountryRegionArea(long countryRegionAreaId);
 	
 	
-	/**
-	 * This function will refresh all cache and shud be called from postConstruct method of spring bean to intialize it
-	 * @param countryRegionAreaId
-	 */
-	public abstract void refreshFullCache(long countryRegionAreaId);
-	
-
 }

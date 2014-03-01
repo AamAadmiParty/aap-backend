@@ -25,20 +25,22 @@ public class ContentDonwloadUtil {
 	private VideoDownloader videoDownloader;
 	@Autowired
 	private AapDataCache aapDataCacheDbImpl;
-	
+
 	@PostConstruct
-	public void init(){
+	public void init() {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
 				try {
-					//Curently it can not run on EC2 server as HtmlUnitDriver fails because of JS error on aap pages
+					// Curently it can not run on EC2 server as HtmlUnitDriver
+					// fails because of JS error on aap pages
 					aapNewsDownloader.downloadData(59);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				try {
-					//Curently it can not run on EC2 server as HtmlUnitDriver fails because of JS error on aap pages
+					// Curently it can not run on EC2 server as HtmlUnitDriver
+					// fails because of JS error on aap pages
 					aapBlogDownloader.downloadAapBlogs();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,24 +50,26 @@ public class ContentDonwloadUtil {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 		};
-		//new Thread(runnable).run();
+		// new Thread(runnable).run();
 		logger.info("Thread Started to download News");
-		//aapService.saveAllCountries();
+		// aapService.saveAllCountries();
 	}
-	
+
 	@Scheduled(cron = "01 01 * * * *")
-	public void refreshVideoList() {
+	public void refreshAllCache() {
 		try {
-			//Curently it can not run on EC2 server as HtmlUnitDriver fails because of JS error on aap pages
+			// Curently it can not run on EC2 server as HtmlUnitDriver fails
+			// because of JS error on aap pages
 			aapNewsDownloader.downloadData(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		try {
-			//Curently it can not run on EC2 server as HtmlUnitDriver fails because of JS error on aap pages
+			// Curently it can not run on EC2 server as HtmlUnitDriver fails
+			// because of JS error on aap pages
 			aapBlogDownloader.downloadAapBlogs();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -78,4 +82,31 @@ public class ContentDonwloadUtil {
 		aapDataCacheDbImpl.refreshFullCache();
 	}
 
+	public void refreshNewsList() {
+		try {
+			// Curently it can not run on EC2 server as HtmlUnitDriver fails
+			// because of JS error on aap pages
+			aapNewsDownloader.downloadData(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void refreshBlogList() {
+		try {
+			// Curently it can not run on EC2 server as HtmlUnitDriver fails
+			// because of JS error on aap pages
+			aapBlogDownloader.downloadAapBlogs();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void refreshVideoList() {
+		try {
+			videoDownloader.refreshVideoList();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

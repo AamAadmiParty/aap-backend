@@ -139,6 +139,9 @@ public class AapDataHolder {
 
 	
 	public List<NewsDto> getNewsDtos(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber, int pageSize){
+		if(pageNumber <= 0){
+			pageNumber = 1;
+		}
 		int startItemCount = (pageNumber - 1) * pageSize;
 		int endItemCount = startItemCount + pageSize;
 		List<NewsDto> newsItems = new ArrayList<>(pageSize);
@@ -217,6 +220,9 @@ public class AapDataHolder {
 	
 
 	public List<VideoDto> getVideoDtos(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId,int pageNumber, int pageSize){
+		if(pageNumber <= 0){
+			pageNumber = 1;
+		}
 		int startItemCount = (pageNumber - 1) * pageSize;
 		int endItemCount = startItemCount + pageSize;
 		List<VideoDto> videoItems = new ArrayList<>(pageSize);
@@ -267,6 +273,9 @@ public class AapDataHolder {
 	
 	
 	public List<BlogDto> getBlogDtos(String language, long livingAcId, long votingAcId, long livingPcId, long votingPcId, int pageNumber, int pageSize){
+		if(pageNumber <= 0){
+			pageNumber = 1;
+		}
 		int startItemCount = (pageNumber - 1) * pageSize;
 		int endItemCount = startItemCount + pageSize;
 		List<BlogDto> blogItems = new ArrayList<>(pageSize);

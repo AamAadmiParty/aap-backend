@@ -410,12 +410,14 @@ $(function(){
 							<label>Membership Status</label> <label><c:out value="${loggedInUser.membershipStatus}" /> </label>
 						</div>
 					</c:if>
+					
 					<c:if test="${!loggedInUser.member}">
 
 						<div class="partymemberdiv">
 							<form:checkbox path="member" />
 							I want to be Party Member
 						</div>
+						<!-- 
 						<div id="language-tabs">
 							<ul>
 								<li><a href="#english">English</a></li>
@@ -454,7 +456,9 @@ $(function(){
 							</div>
 
 						</div>
+						-->
 					</c:if>
+					 
 					<!--partymembertab-->
 					<!--partymembertab-->
 					<input name="" type="submit" class="button" value="Save Profile" />

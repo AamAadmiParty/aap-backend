@@ -49,6 +49,7 @@ public class AppBaseController extends BaseController{
 		long votingAcId = 0;
 		long livingPcId = 0;
 		long votingPcId = 0;
+		
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		if(loggedInUser != null){
 			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
@@ -70,8 +71,10 @@ public class AppBaseController extends BaseController{
 			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
 			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
 		}
-		ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId);
+		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
+		ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber);
 		mv.getModel().put("newsItems", newsItems);
+		mv.getModel().put("pageNumber", pageNumber);
 	}
 	
 	protected void addSingleNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long newsId){
@@ -110,9 +113,18 @@ public class AppBaseController extends BaseController{
 			if(loggedInUser.getParliamentConstituencyVotingId() != null){
 				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
 			}
+		}else{
+			//get it from Cookies
+			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
+			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
+			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
+			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
 		}
-		ItemList<VideoDto> videoItems = aapDataCacheDbImpl.getVideoDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId);
+		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
+		ItemList<VideoDto> videoItems = aapDataCacheDbImpl.getVideoDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber);
 		mv.getModel().put("videoItems", videoItems);
+		mv.getModel().put("pageNumber", pageNumber);
+		
 	}
 	
 	protected void addBlogsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
@@ -134,9 +146,17 @@ public class AppBaseController extends BaseController{
 			if(loggedInUser.getParliamentConstituencyVotingId() != null){
 				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
 			}
+		}else{
+			//get it from Cookies
+			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
+			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
+			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
+			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
 		}
-		ItemList<BlogDto> blogItems = aapDataCacheDbImpl.getBlogDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId);
+		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
+		ItemList<BlogDto> blogItems = aapDataCacheDbImpl.getBlogDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber);
 		mv.getModel().put("blogItems", blogItems);
+		mv.getModel().put("pageNumber", pageNumber);
 	}
 	
 	protected void addGenericValuesInModel(HttpServletRequest httpServletRequest, ModelAndView mv){

@@ -74,7 +74,8 @@ public class AapDataCacheDbImpl implements AapDataCache{
 
 		List<AssemblyConstituencyDto> allAssemblyConstituencyDtos = aapService.getAllAssemblyConstituencies();
 		List<ParliamentConstituencyDto> allParliamentConstituencyDtos = aapService.getAllParliamentConstituencies();
-		
+		logger.info("allAssemblyConstituencyDtos.size="+allAssemblyConstituencyDtos.size());	
+		logger.info("allParliamentConstituencyDtos.size="+allParliamentConstituencyDtos.size());	
 		loadAllNews(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
 		loadAllBlogs(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
 		loadAllVideos(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
@@ -88,6 +89,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 	
 	private void loadAllNews(AapDataHolder localAapDataHolder,List<AssemblyConstituencyDto> allAssemblyConstituencyDtos, List<ParliamentConstituencyDto> allParliamentConstituencyDtos){
 		List<NewsDto> allNewsDtos = aapService.getAllPublishedNews();
+		logger.info("allNewsDtos.size : "+allNewsDtos.size());
 		for(NewsDto oneNewsDto:allNewsDtos){
 			localAapDataHolder.addNews(DEFAULT_LANGUAGE, oneNewsDto);
 		}

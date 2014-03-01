@@ -123,7 +123,7 @@ public class VoiceOfAapController extends AppBaseController {
 			mv.getModel().put("postOnGroup", postOnGroups);
 			mv.getModel().put("postOnTwitter", postOnTwitter);
 			List<String> selectedGroups = new ArrayList<>();
-			if(postOnGroups){
+			if(postOnGroups || postOnTimeLine){
 				FacebookAppPermissionDto facebookAppPermission = aapService.getVoiceOfAapFacebookPermission(oneFacebookAccountDto.getId());
 				Facebook facebook = new FacebookTemplate(facebookAppPermission.getToken());
 				List<GroupMembership> groups = loadUserGroups(facebook, oneFacebookAccountDto);

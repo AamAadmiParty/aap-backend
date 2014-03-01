@@ -28,9 +28,18 @@ public class BaseController {
 	public static final String SESSION_USER_PARAM = "SESSION_USER_PARAM";
 	public static final String SESSION_LOGIN_ACCOUNT_PARAM = "SESSION_LOGIN_ACCOUNT_PARAM";
 	public static final String SESSION_USER_PERMISSIONS_PARAM = "SESSION_USER_PERMISSIONS_PARAM";
+	
+	public static final String PARAM_PAGE_NUMBER = "page";
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+	protected int getIntPramater(HttpServletRequest httpServletRequest,String paramName, int defaultValue){
+		try{
+			return Integer.parseInt(httpServletRequest.getParameter(paramName));
+		}catch(Exception ex){
+			return defaultValue;
+		}
+	}
 	protected void passRedirectUrl(HttpServletRequest httpServletRequest, ModelAndView mv){
 		String redirectUrl = httpServletRequest.getParameter(REDIRECT_URL_PARAM_ID);
 		mv.getModel().put("redirectUrl", redirectUrl);

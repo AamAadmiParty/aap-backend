@@ -7,26 +7,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Aam Aadmi Party, India</title>
-<link rel="stylesheet" type="text/css" href="<c:out value='${staticDirectory}'/>/styles/mainstyles.css" />
+<jsp:include page="includes.jsp" />
 
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
-
-
-<!-- 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
- -->
-<script src="<c:out value='${staticDirectory}'/>/js/responsiveslides.min.js"></script>
 <script>
-	$(function() {
-		$(".rslides").responsiveSlides();
-	});
 	$(function() {
 		$("#accordion").accordion();
 	});
@@ -140,7 +124,7 @@
 										</ul>
 									</div>
 									<h3>Is my Information secure?</h3>
-									<div>Yes absolutely, we will never share your inforamtion with any one.</div>
+									<div>Yes absolutely, we will never share your information with any one outside AAP.</div>
 									<!-- 
 									<h3>Can I track activities of this app on my accounts?</h3>
 									<div>Yes we want to keep it transparent, so we will show what, where and when we posted on your behalf. You can come back here and view all activity.</div>

@@ -55,7 +55,10 @@ public class LoginController extends BaseController {
 		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
 		mv.getModel().put("loginAccounts", loginAccountDto);
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion(httpServletRequest);
-		mv.getModel().put("admin", userRolePermissionDto.isAdmin());
+		if(userRolePermissionDto != null){
+			mv.getModel().put("admin", userRolePermissionDto.isAdmin());	
+		}
+		
 }
 
 	

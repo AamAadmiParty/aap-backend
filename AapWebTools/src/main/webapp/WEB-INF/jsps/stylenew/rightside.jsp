@@ -5,6 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <div class="rhsarea">
 		<!--rhsarea-->
+		<c:if test="${empty loggedInUser}">
 		<div class="joincommunity">
 			<!--joincommunity-->
 			<a href="${contextPath}/login"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
@@ -15,6 +16,7 @@
 				<li>And lots more...</li>
 			</ul>
 		</div>
+		</c:if>
 		<!--joincommunity-->
 		<%--
 		<div class="aap-performance">

@@ -7,26 +7,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Aam Aadmi Party, India</title>
-<link rel="stylesheet" type="text/css" href="<c:out value='${staticDirectory}'/>/styles/mainstyles.css" />
-
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
-
-
-<!-- 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
- -->
-<script src="<c:out value='${staticDirectory}'/>/js/responsiveslides.min.js"></script>
+<jsp:include page="includes.jsp" />
 <script>
-	$(function() {
-		$(".rslides").responsiveSlides();
-	});
 	$(function() {
 		$("#tabs").tabs();
 	});
@@ -45,6 +28,9 @@
 		<div class="loginwithholder">
 			<!--loginwithholder-->
 			<div class="loginwithinnerholder">
+				<c:if test="${!empty loggedInUser.email }">
+					${loggedInUser.name} - All donations made by you using ${loggedInUser.email} are listed here. If you dont find a specific donation made by you in this list, please email the txn # & date of donation to us at donation@aamaadmiparty.org
+				</c:if>
 				<!--loginwithinnerholder-->
 				<div id="tabs">
 					<ul>

@@ -7,19 +7,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Aam Aadmi Party, India</title>
-<link rel="stylesheet" type="text/css" href="<c:out value='${staticDirectory}'/>/styles/mainstyles.css" />
+<jsp:include page="includes.jsp" />
 
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script src="<c:out value='${staticDirectory}'/>/js/responsiveslides.min.js"></script>
-	<script>
-		$(function() {
-			$(".rslides").responsiveSlides();
-		});
-	</script>
 </head>
 <body>
 
@@ -61,6 +51,7 @@
 			<div class="img">
 				<!--img-->
 				<img src='<c:out value="${oneBlog.imageUrl}" />' width="200" border="0" />
+				<!-- 
 				<div class="author">
 					<p>10 Min Ago</p>
 					<p>
@@ -68,6 +59,7 @@
 					</p>
 					<p class="orange">NATIONAL</p>
 				</div>
+				-->
 			</div>
 			<!--img-->
 			<c:if test="${fn:length(oneBlog.contentSummary) gt 500}">

@@ -26,4 +26,30 @@ public class RefreshController extends AppBaseController {
 		contentDonwloadUtil.refreshVideoList();
 		return "Video downloaded";
 	}
+	
+	@RequestMapping(value = "/aaps/news", method = RequestMethod.GET)
+	@ResponseBody
+	public String downloadNews(ModelAndView mv,
+			HttpServletRequest httpServletRequest) {
+		contentDonwloadUtil.refreshNewsList();
+		return "news downloaded";
+	}
+	
+	@RequestMapping(value = "/aaps/blog", method = RequestMethod.GET)
+	@ResponseBody
+	public String downloadBlogs(ModelAndView mv,
+			HttpServletRequest httpServletRequest) {
+		contentDonwloadUtil.refreshBlogList();
+		return "blog downloaded";
+	}
+	
+	@RequestMapping(value = "/aaps/all", method = RequestMethod.GET)
+	@ResponseBody
+	public String downloadAll(ModelAndView mv,
+			HttpServletRequest httpServletRequest) {
+		contentDonwloadUtil.refreshAllCache();
+		return "all downloaded";
+	}
+	
+	
 }

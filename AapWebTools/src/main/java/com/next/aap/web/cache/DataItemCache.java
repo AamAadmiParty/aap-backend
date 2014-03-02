@@ -95,5 +95,14 @@ public interface DataItemCache<T> {
 	 */
 	public abstract void refreshCacheItemsForCountryRegionArea(long countryRegionAreaId);
 	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	T getCacheItemById(Long id);
+	
+	T getCacheItemById(String language, Long itemId);
+	
 	
 }

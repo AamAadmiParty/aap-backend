@@ -13,9 +13,6 @@ import com.next.aap.web.util.ContentDonwloadUtil;
 @Controller
 public class HomeController extends AppBaseController {
 	
-	@Autowired
-	private ContentDonwloadUtil contentDonwloadUtil;
-	
 	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {

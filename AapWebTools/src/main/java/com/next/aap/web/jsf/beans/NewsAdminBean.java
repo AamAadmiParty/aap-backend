@@ -144,7 +144,31 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	private void refreshNewsInCache(){
 		switch(menuBean.getLocationType()){
 		case Global:
-			aapDataCache.refreshFullCache();
+			newsItemCacheImpl.refreshFullCache();
+			break;
+		case STATE:
+			newsItemCacheImpl.refreshCacheItemsForState(menuBean.getSelectedStateId());
+			break;
+		case DISTRICT:
+			newsItemCacheImpl.refreshCacheItemsForDistrict(menuBean.getSelectedDistrictId());
+			break;
+		case AC:
+			newsItemCacheImpl.refreshCacheItemsForAc(menuBean.getSelectedAcId());
+			break;
+		case PC:
+			newsItemCacheImpl.refreshCacheItemsForPc(menuBean.getSelectedPcId());
+			break;
+		case COUNTRY:
+			newsItemCacheImpl.refreshCacheItemsForCountry(menuBean.getSelectedCountryId());
+			break;
+		case REGION :
+			newsItemCacheImpl.refreshCacheItemsForCountryRegion(menuBean.getSelectedCountryRegiontId());
+			break;
+			/*
+		case AREA :
+			newsItemCacheImpl.refreshCacheItemsForCountryRegionArea(menuBean.getSelectedCountryRegiontAreaId());
+			break;
+			*/
 		}
 	}
 	public void publishPost(){

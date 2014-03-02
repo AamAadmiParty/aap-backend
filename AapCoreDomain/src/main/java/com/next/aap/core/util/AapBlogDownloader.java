@@ -11,7 +11,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,7 @@ public class AapBlogDownloader {
 	
 	public void downloadAapBlogs() throws Exception {
 		logger.info("Downloading AAP Blogs");
-		WebDriver webDriver = new FirefoxDriver();
+		WebDriver webDriver = new HtmlUnitDriver(true);
 		List<WebElement> readMoreLinks;
 		List<String> allLinks = new ArrayList<String>();
 		String url;
@@ -44,7 +43,7 @@ public class AapBlogDownloader {
 		String content;
 		HttpUtil httpUtil = new HttpUtil();
 
-		WebDriver webDriverForPage = new FirefoxDriver();
+		WebDriver webDriverForPage = new HtmlUnitDriver(true);
 		BlogDto existingItem;
 		String listPageUrl;
 		for (int i = 2; i >= 0; i--) {

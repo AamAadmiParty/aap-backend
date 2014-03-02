@@ -14,6 +14,7 @@ import com.next.aap.web.ItemList;
 import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.cache.LocationCacheDbImpl;
+import com.next.aap.web.cache.NewsItemCacheImpl;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.CountryDto;
@@ -43,12 +44,17 @@ public class AppBaseController extends BaseController{
 	protected ContentDonwloadUtil contentDonwloadUtil;
 	@Autowired
 	protected LocationCacheDbImpl locationCacheDbImpl;
+	@Autowired
+	protected NewsItemCacheImpl newsItemCacheImpl;
 
 	protected void addNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
 		long livingAcId = 0;
 		long votingAcId = 0;
 		long livingPcId = 0;
 		long votingPcId = 0;
+		long nriCountryId = 0;
+		long nriCountryRegionId = 0;
+		long nriCountryRegionAreaId = 0;
 		
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		if(loggedInUser != null){
@@ -64,21 +70,34 @@ public class AppBaseController extends BaseController{
 			if(loggedInUser.getParliamentConstituencyVotingId() != null){
 				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
 			}
+			if(loggedInUser.getNriCountryId() != null){
+				nriCountryId = loggedInUser.getNriCountryId();
+			}
+			if(loggedInUser.getNriCountryRegionId() != null){
+				nriCountryRegionId = loggedInUser.getNriCountryRegionId();
+			}
+			if(loggedInUser.getNriCountryRegionAreaId() != null){
+				nriCountryRegionAreaId = loggedInUser.getNriCountryRegionAreaId();
+			}
 		}else{
 			//get it from Cookies
 			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
 			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
 			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
 			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
+			nriCountryId = CookieUtil.getUserNriCountryIdCookie(httpServletRequest);
+			nriCountryRegionId = CookieUtil.getUserNriCountryRegionIdCookie(httpServletRequest);
+			nriCountryRegionAreaId = CookieUtil.getUserNriCountryRegionAreaIdCookie(httpServletRequest);
 		}
 		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
-		ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber);
+		ItemList<NewsDto> newsItems = newsItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, 
+				votingPcId, nriCountryId, nriCountryRegionId,  pageNumber);
 		mv.getModel().put("newsItems", newsItems);
 		mv.getModel().put("pageNumber", pageNumber);
 	}
 	
 	protected void addSingleNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long newsId){
-		NewsDto news = aapDataCacheDbImpl.getNewsById(newsId);
+		NewsDto news = newsItemCacheImpl.getCacheItemById(newsId);
 		mv.getModel().put("news", news);
 	}
 	protected void addSingleBlogInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long blogId){

@@ -44,11 +44,8 @@ public class AapDataHolder {
 		}
 		languageNews.put(newsItem.getId(), newsItem);
 		if(newsItem.isGlobal()){
-			System.out.println("adding ID="+newsItem.getId());
 			allGlobalNewsIds.add(newsItem.getId());	
 		}
-		System.out.println("allGlobalNewsIds="+allGlobalNewsIds);
-		
 	}
 	
 	public void addVideo(String language,VideoDto videoItem){

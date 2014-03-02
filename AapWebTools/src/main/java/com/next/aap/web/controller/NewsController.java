@@ -14,9 +14,6 @@ import com.next.aap.web.util.ContentDonwloadUtil;
 @Controller
 public class NewsController extends AppBaseController {
 	
-	@Autowired
-	private ContentDonwloadUtil contentDonwloadUtil;
-	
 	@RequestMapping(value = "/news/{newsId}", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,HttpServletRequest httpServletRequest, @PathVariable Long newsId) {
 		

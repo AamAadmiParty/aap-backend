@@ -16,6 +16,7 @@ public class RefreshController extends AppBaseController {
 	public String refreshCache(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		aapDataCacheDbImpl.refreshFullCache();
+		newsItemCacheImpl.refreshFullCache();
 		return "cache Refreshed";
 	}
 	
@@ -32,6 +33,7 @@ public class RefreshController extends AppBaseController {
 	public String downloadNews(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		contentDonwloadUtil.refreshNewsList();
+		newsItemCacheImpl.refreshFullCache();
 		return "news downloaded";
 	}
 	

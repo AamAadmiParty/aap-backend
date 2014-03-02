@@ -76,7 +76,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		List<ParliamentConstituencyDto> allParliamentConstituencyDtos = aapService.getAllParliamentConstituencies();
 		logger.info("allAssemblyConstituencyDtos.size="+allAssemblyConstituencyDtos.size());	
 		logger.info("allParliamentConstituencyDtos.size="+allParliamentConstituencyDtos.size());	
-		loadAllNews(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
+		//loadAllNews(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
 		loadAllBlogs(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
 		loadAllVideos(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
 		loadAllPolls(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
@@ -108,7 +108,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		loadAcNews(acId, aapDataHolder);
 	}
 	private void loadAcNews(long acId, AapDataHolder localAapDataHolder){
-		List<Long> newsIds = aapService.getNewsItemsOfAc(acId);
+		List<Long> newsIds = aapService.getAllNewsItemsOfAc(acId);
 		localAapDataHolder.addAcNews(acId, newsIds);
 	}
 	@Override
@@ -116,7 +116,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		loadPcNews(pcId, aapDataHolder);
 	}
 	private void loadPcNews(long pcId, AapDataHolder localAapDataHolder){
-		List<Long> newsIds = aapService.getNewsItemsOfParliamentConstituency(pcId);
+		List<Long> newsIds = aapService.getAllNewsItemsOfParliamentConstituency(pcId);
 		localAapDataHolder.addPcNews(pcId, newsIds);
 	}
 	@Override

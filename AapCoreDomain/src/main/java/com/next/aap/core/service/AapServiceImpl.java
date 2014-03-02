@@ -4941,18 +4941,18 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public List<Long> getNewsItemsOfAc(long acId) {
+	public List<Long> getAllNewsItemsOfAc(long acId) {
 		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
 		if(assemblyConstituency == null){
 			return new ArrayList<>(1);
 		}
-		List<Long> allNewsIdOfAc = newsDao.getNewsByLocation(acId, assemblyConstituency.getDistrict().getId(), assemblyConstituency.getDistrict().getStateId());
+		List<Long> allNewsIdOfAc = newsDao.getAllNewsByLocation(acId, assemblyConstituency.getDistrict().getId(), assemblyConstituency.getDistrict().getStateId());
 		return allNewsIdOfAc;
 	}
 
 	@Override
 	@Transactional
-	public List<Long> getNewsItemsOfParliamentConstituency(long pcId) {
+	public List<Long> getAllNewsItemsOfParliamentConstituency(long pcId) {
 		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
 		if(parliamentConstituency == null){
 			return new ArrayList<>(1);
@@ -5418,6 +5418,84 @@ public class AapServiceImpl implements AapService, Serializable {
 	public List<CountryRegionAreaDto> getAllCountryRegionAreas() {
 		List<CountryRegionArea> allCountryRegionAreas = countryRegionAreaDao.getAllCountryRegionAreas();
 		return convertCountryRegionAreas(allCountryRegionAreas);
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getNewsItemsOfAc(long acId) {
+		List<Long> allNewsIdOfAc = newsDao.getAllNewsByAc(acId);
+		return allNewsIdOfAc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getNewsItemsOfPc(long pcId) {
+		List<Long> allNewsIdOfPc = newsDao.getAllNewsByPc(pcId);
+		return allNewsIdOfPc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getNewsItemsOfDistrict(long districtId) {
+		List<Long> allNewsIdOfDistrict = newsDao.getAllNewsByDistrict(districtId);
+		return allNewsIdOfDistrict;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getNewsItemsOfState(long stateId) {
+		List<Long> allNewsIdOfState = newsDao.getAllNewsByState(stateId);
+		return allNewsIdOfState;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getNewsItemsOfCountry(long countryId) {
+		List<Long> allNewsIdOfCountry = newsDao.getAllNewsByCountry(countryId);
+		return allNewsIdOfCountry;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getNewsItemsOfCountryRegion(long countryRegionId) {
+		List<Long> allNewsIdOfCountryRegion = newsDao.getAllNewsByCountryRegion(countryRegionId);
+		return allNewsIdOfCountryRegion;
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getNewsItemsOfAllAc() {
+		return newsDao.getNewsItemsOfAllAc();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getNewsItemsOfAllPc() {
+		return newsDao.getNewsItemsOfAllPc();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getNewsItemsOfAllDistrict() {
+		return newsDao.getNewsItemsOfAllDistrict();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getNewsItemsOfAllState() {
+		return newsDao.getNewsItemsOfAllState();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getNewsItemsOfAllCountry() {
+		return newsDao.getNewsItemsOfAllCountry();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getNewsItemsOfAllCountryRegion() {
+		return newsDao.getNewsItemsOfAllCountryRegion();
 	}
 
 	

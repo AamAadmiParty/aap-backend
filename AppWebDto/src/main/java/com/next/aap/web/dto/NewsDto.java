@@ -17,6 +17,9 @@ public class NewsDto {
 	private boolean global;//Whether this News is available global or not
 	private ContentStatus contentStatus;
 	private String rejectionReason;
+	private Date publishDate;
+	private Date dateCreated;
+	
 	
 	public Long getId() {
 		return id;
@@ -95,6 +98,25 @@ public class NewsDto {
 	}
 	public void setRejectionReason(String rejectionReason) {
 		this.rejectionReason = rejectionReason;
+	}
+	public Date getPublishDate() {
+		return publishDate;
+	}
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	@Override
+	public String toString() {
+		return "NewsDto [id=" + id + ", title=" + title + ", imageUrl=" + imageUrl
+				+ ", webUrl=" + webUrl + ", originalUrl=" + originalUrl + ", source=" + source + ", author=" + author + ", date=" + date + ", global=" + global
+				+ ", contentStatus=" + contentStatus + ", rejectionReason=" + rejectionReason + ", publishDate=" + publishDate + ", dateCreated="
+				+ dateCreated + "]";
 	}
 
 

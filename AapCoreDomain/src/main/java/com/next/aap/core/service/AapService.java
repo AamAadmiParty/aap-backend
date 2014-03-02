@@ -1,6 +1,7 @@
 package com.next.aap.core.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.social.connect.Connection;
 import org.springframework.social.facebook.api.Facebook;
@@ -278,7 +279,7 @@ public interface AapService {
 	
 	DonationCampaignDto saveRippleDonationCamapign(String campaignId, String description, Long userId) throws AppException ;
 	
-	List<Long> getNewsItemsOfAc(long acId);
+	List<Long> getAllNewsItemsOfAc(long acId);
 	
 	List<Long> getBlogItemsOfAc(long acId);
 	
@@ -286,7 +287,7 @@ public interface AapService {
 	
 	List<Long> getPollItemsOfAc(long acId);
 	
-	List<Long> getNewsItemsOfParliamentConstituency(long pcId);
+	List<Long> getAllNewsItemsOfParliamentConstituency(long pcId);
 	
 	List<Long> getBlogItemsOfParliamentConstituency(long pcId);
 	
@@ -323,4 +324,30 @@ public interface AapService {
 	List<EventDto> getEventsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
 	
 	FinancialPlanningDto saveFinancialPlanning(FinancialPlanningDto financialPlanningDto) throws AppException;
+	
+	List<Long> getNewsItemsOfAc(long acId);
+	
+	List<Long> getNewsItemsOfPc(long pcId);
+	
+	List<Long> getNewsItemsOfDistrict(long districtId);
+	
+	List<Long> getNewsItemsOfState(long stateId);
+	
+	List<Long> getNewsItemsOfCountry(long countryId);
+	
+	List<Long> getNewsItemsOfCountryRegion(long countryRegionId);
+	
+	Map<Long, List<Long>> getNewsItemsOfAllAc();
+	
+	Map<Long, List<Long>> getNewsItemsOfAllPc();
+	
+	Map<Long, List<Long>> getNewsItemsOfAllDistrict();
+	
+	Map<Long, List<Long>> getNewsItemsOfAllState();
+	
+	Map<Long, List<Long>> getNewsItemsOfAllCountry();
+	
+	Map<Long, List<Long>> getNewsItemsOfAllCountryRegion();
+	
+	
 }

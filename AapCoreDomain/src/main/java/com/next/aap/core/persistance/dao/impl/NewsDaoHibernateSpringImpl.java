@@ -1,8 +1,10 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -85,7 +87,7 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 	}
 
 	@Override
-	public List<Long> getNewsByLocation(long acId, long districtId, long stateId) {
+	public List<Long> getAllNewsByLocation(long acId, long districtId, long stateId) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("acId", acId);
 		params.put("districtId", districtId);
@@ -256,6 +258,129 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 		String query = "from News where contentStatus = :contentStatus order by publishDate desc";
 		List<News> list = executeQueryGetList(query, params);
 		return list;
+	}
+
+	@Override
+	public List<Long> getAllNewsByAc(long acId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("acId", acId);
+		
+		String query = "select select news_id as newsId from news_ac where ac_id = :acId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllNewsByPc(long pcId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pcId", pcId);
+		
+		String query = "select news_id as newsId from news_pc where pc_id = :pcId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;
+	}
+
+	@Override
+	public List<Long> getAllNewsByDistrict(long districtId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("districtId", districtId);
+		
+		String query = "select news_id as newsId from news_district where district_id = :districtId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;
+	}
+
+	@Override
+	public List<Long> getAllNewsByState(long stateId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("stateId", stateId);
+		
+		String query = "select news_id as newsId from news_state where state_id = :stateId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;
+	}
+
+	@Override
+	public List<Long> getAllNewsByCountry(long countryId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("countryId", countryId);
+		
+		String query = "select news_id as newsId from news_country where country_id = :countryId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;
+	}
+
+	@Override
+	public List<Long> getAllNewsByCountryRegion(long countryRegionId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("countryRegionId", countryRegionId);
+		
+		String query = "select news_id as newsId from news_country_region where country_region_id = :countryRegionId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;
+	}
+	
+	private Map<Long, List<Long>> getNewsByLocationMapFromQuery(String query){
+		List results = executeSqlQueryGetResultList(query);
+		Map<Long, List<Long>> returnMap = new HashMap<>();
+		Long acId;
+		Long newsId;
+		List<Long> newsIdList;
+        for(ListIterator iter = results.listIterator(); iter.hasNext(); ) {
+        	Object[] row = (Object[])iter.next();
+        	if(row[0] instanceof BigInteger){
+        		acId = ((BigInteger)row[0]).longValue();
+            	newsId = ((BigInteger)row[1]).longValue();
+        	}else{
+        		acId = (Long)row[0];
+            	newsId = (Long)row[1];
+        	}
+        	
+
+        	newsIdList = returnMap.get(acId);
+        	if(newsIdList == null){
+        		newsIdList = new ArrayList<>();
+        		returnMap.put(acId, newsIdList);
+        	}
+        	newsIdList.add(newsId);
+        }
+        return returnMap;
+	}
+
+	@Override
+	public Map<Long, List<Long>> getNewsItemsOfAllAc() {
+		String query = "select ac_id, news_id as newsId from news_ac";
+		return getNewsByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getNewsItemsOfAllPc() {
+		String query = "select pc_id, news_id as newsId from news_pc";
+		return getNewsByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getNewsItemsOfAllDistrict() {
+		String query = "select district_id, news_id as newsId from news_district";
+		return getNewsByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getNewsItemsOfAllState() {
+		String query = "select state_id, news_id as newsId from news_state";
+		return getNewsByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getNewsItemsOfAllCountry() {
+		String query = "select country_id, news_id as newsId from news_country";
+		return getNewsByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getNewsItemsOfAllCountryRegion() {
+		String query = "select country_region_id, news_id as newsId from news_country_region";
+		return getNewsByLocationMapFromQuery(query);	
 	}
 
 }

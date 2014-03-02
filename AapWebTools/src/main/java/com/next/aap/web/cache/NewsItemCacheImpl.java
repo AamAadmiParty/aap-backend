@@ -1,14 +1,24 @@
 package com.next.aap.web.cache;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.annotation.PostConstruct;
+
+import org.cyberneko.html.HTMLScanner.ContentScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.ItemList;
+import com.next.aap.web.dto.ContentStatus;
 import com.next.aap.web.dto.NewsDto;
 
 @Component
-public class NewsItemCacheImpl implements DataItemCache<NewsDto> {
+public class NewsItemCacheImpl extends BasItemCacheImpl<NewsDto>  {
 
 	@Autowired
 	private LocationCacheDbImpl locationCacheDbImpl;
@@ -16,72 +26,131 @@ public class NewsItemCacheImpl implements DataItemCache<NewsDto> {
 	@Autowired
 	private AapService aapService;
 	
+	@PostConstruct
+	public void init(){
+		refreshFullCache();
+	}
+	
 	@Override
 	public void refreshFullCache() {
-		// TODO Auto-generated method stub
+		List<NewsDto> allNewsDtos = aapService.getAllPublishedNews();
+		logger.info("Total News : " + allNewsDtos.size());
+		for(NewsDto oneNewsDto:allNewsDtos){
+			addCacheItem(DEFAULT_LANGUAGE, oneNewsDto, oneNewsDto.getId(), oneNewsDto.isGlobal());
+		}
+		Map<Long, List<Long>> newsItemMap = aapService.getNewsItemsOfAllAc();
+		for(Entry<Long, List<Long>> oneEntry:newsItemMap.entrySet()){
+			logger.info("Adding AC Item: {} , {} " , oneEntry.getKey(), oneEntry.getValue());
+			addAcCacheItems(oneEntry.getKey(), oneEntry.getValue());
+		}
 		
+		newsItemMap = aapService.getNewsItemsOfAllPc();
+		for(Entry<Long, List<Long>> oneEntry:newsItemMap.entrySet()){
+			logger.info("Adding PC Item: {} , {} " , oneEntry.getKey(), oneEntry.getValue());
+			addPcCacheItems(oneEntry.getKey(), oneEntry.getValue());
+		}
+
+		newsItemMap = aapService.getNewsItemsOfAllDistrict();
+		for(Entry<Long, List<Long>> oneEntry:newsItemMap.entrySet()){
+			logger.info("Adding District Item: {} , {} " , oneEntry.getKey(), oneEntry.getValue());
+			addDistrictCacheItems(oneEntry.getKey(), oneEntry.getValue());
+		}
+		
+		newsItemMap = aapService.getNewsItemsOfAllState();
+		for(Entry<Long, List<Long>> oneEntry:newsItemMap.entrySet()){
+			logger.info("Adding State Item: {} , {} " , oneEntry.getKey(), oneEntry.getValue());
+			addStateCacheItems(oneEntry.getKey(), oneEntry.getValue());
+		}
+
+		newsItemMap = aapService.getNewsItemsOfAllCountry();
+		for(Entry<Long, List<Long>> oneEntry:newsItemMap.entrySet()){
+			logger.info("Adding Country Item: {} , {} " , oneEntry.getKey(), oneEntry.getValue());
+			addCountryCacheItems(oneEntry.getKey(), oneEntry.getValue());
+		}
+
+		newsItemMap = aapService.getNewsItemsOfAllCountryRegion();
+		for(Entry<Long, List<Long>> oneEntry:newsItemMap.entrySet()){
+			logger.info("Adding Country Region Item: {} , {} " , oneEntry.getKey(), oneEntry.getValue());
+			addCountryRegionCacheItems(oneEntry.getKey(), oneEntry.getValue());
+		}
+
 	}
 
-	@Override
-	public ItemList<NewsDto> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
-			long livingCountryRegionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ItemList<NewsDto> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
-			long livingCountryRegionId, int pageNumber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void refreshCacheItemsForAc(long acId) {
-		// TODO Auto-generated method stub
-		
+		List<Long> newsItemIds = aapService.getNewsItemsOfAc(acId);
+		addAcCacheItems(acId, newsItemIds);
 	}
 
 	@Override
 	public void refreshCacheItemsForPc(long pcId) {
-		// TODO Auto-generated method stub
-		
+		List<Long> newsItemIds = aapService.getNewsItemsOfPc(pcId);
+		addPcCacheItems(pcId, newsItemIds);
 	}
 
 	@Override
 	public void refreshCacheItemsForDistrict(long districtId) {
-		// TODO Auto-generated method stub
-		
+		List<Long> newsItemIds = aapService.getNewsItemsOfDistrict(districtId);
+		addDistrictCacheItems(districtId, newsItemIds);
 	}
 
 	@Override
 	public void refreshCacheItemsForState(long stateId) {
-		// TODO Auto-generated method stub
-		
+		List<Long> newsItemIds = aapService.getNewsItemsOfState(stateId);
+		addStateCacheItems(stateId, newsItemIds);
 	}
 
 	@Override
 	public void refreshCacheItemsForGlobal() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void refreshCacheItemsForCountry(long countryId) {
-		// TODO Auto-generated method stub
-		
+		List<Long> newsItemIds = aapService.getNewsItemsOfCountry(countryId);
+		addStateCacheItems(countryId, newsItemIds);
 	}
 
 	@Override
 	public void refreshCacheItemsForCountryRegion(long countryRegionId) {
-		// TODO Auto-generated method stub
-		
+		List<Long> newsItemIds = aapService.getNewsItemsOfCountryRegion(countryRegionId);
+		addStateCacheItems(countryRegionId, newsItemIds);
 	}
 
 	@Override
 	public void refreshCacheItemsForCountryRegionArea(long countryRegionAreaId) {
-		// TODO Auto-generated method stub
-		
+		/*
+		List<Long> newsItemIds = aapService.getNewsItemsOfCountryRegionArea(countryRegionAreaId);
+		addStateCacheItems(countryRegionAreaId, newsItemIds);
+		*/
+	}
+
+	@Override
+	public List<NewsDto> sortCacheItems(List<NewsDto> cacheItemListForLocation) {
+		Collections.sort(cacheItemListForLocation, new Comparator<NewsDto>() {
+
+			@Override
+			public int compare(NewsDto o2, NewsDto o1) {
+				if(o1.getPublishDate() != null && o2.getPublishDate() != null){
+					return o1.getPublishDate().compareTo(o2.getPublishDate());
+				}
+				if(o1.getDateCreated() != null && o2.getDateCreated() != null){
+					return o1.getDateCreated().compareTo(o2.getDateCreated());
+				}
+				return 0;
+			}
+		});
+		return cacheItemListForLocation;
+	}
+
+
+	@Override
+	public NewsDto getCacheItemFromDbById(Long id) {
+		NewsDto newsDto = aapService.getNewsById(id);
+		if(newsDto.getContentStatus().equals(ContentStatus.Published)){
+			return newsDto;	
+		}
+		return null;
 	}
 
 	

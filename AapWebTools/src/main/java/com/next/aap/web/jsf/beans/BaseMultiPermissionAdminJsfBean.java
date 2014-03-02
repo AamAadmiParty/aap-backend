@@ -4,6 +4,7 @@ import javax.faces.bean.ManagedProperty;
 
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.cache.AapDataCache;
+import com.next.aap.web.cache.NewsItemCacheImpl;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
@@ -16,6 +17,9 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 	
 	@ManagedProperty("#{aapDataCacheDbImpl}")
 	protected AapDataCache aapDataCache;
+
+	@ManagedProperty("#{newsItemCacheImpl}")
+	protected NewsItemCacheImpl newsItemCacheImpl;
 
 	@ManagedProperty("#{menuBean}")
 	protected MenuBean menuBean;
@@ -68,5 +72,11 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 	}
 	public void setAapDataCache(AapDataCache aapDataCache) {
 		this.aapDataCache = aapDataCache;
+	}
+	public NewsItemCacheImpl getNewsItemCacheImpl() {
+		return newsItemCacheImpl;
+	}
+	public void setNewsItemCacheImpl(NewsItemCacheImpl newsItemCacheImpl) {
+		this.newsItemCacheImpl = newsItemCacheImpl;
 	}
 }

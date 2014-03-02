@@ -58,6 +58,11 @@ public class ClientPermissionUtil {
 				|| isAllowed(AppPermission.DELETE_POLL, userRolePermissionDto, locationId, locationType)
 				|| isAllowed(AppPermission.APPROVE_POLL, userRolePermissionDto, locationId, locationType));
 	}
+	public static boolean isManageEventAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return checkLocationType(locationType, locationId) &&
+				(userRolePermissionDto.isSuperUser() || 
+				isAllowed(AppPermission.ADMIN_EVENT, userRolePermissionDto, locationId, locationType));
+	}
 	public static boolean isEditOfficeDetailAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return checkLocationType(locationType, locationId) &&
 				(userRolePermissionDto.isSuperUser() || 

@@ -58,7 +58,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 	public void init(){
 		logger.info("loadCacheOnStartup="+loadCacheOnStartup);
 		if(loadCacheOnStartup){
-			refreshFullCache();
+			//refreshFullCache();
 		}
 	}
 

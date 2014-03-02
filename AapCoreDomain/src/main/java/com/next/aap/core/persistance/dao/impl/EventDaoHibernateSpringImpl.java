@@ -38,7 +38,9 @@ public class EventDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Event> i
 
 	@Override
 	public List<Event> getAllNationalEvents() {
-		List<Event> list = executeQueryGetList("from Event where national");
+		Map<String, Object> params = new HashMap<>();
+		params.put("national", true);
+		List<Event> list = executeQueryGetList("from Event where national = :national", params);
 		return list;
 	}
 

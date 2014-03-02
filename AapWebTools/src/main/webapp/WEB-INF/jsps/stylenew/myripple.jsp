@@ -35,9 +35,33 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 		var params = { bid: 659, cid: 113};
 		invite_referrals.widget.inlineBtn(params);
     }
+	$(function() {
+	    $( document ).tooltip({
+	        // place tooltip on the right edge
+	        position: {my: "left top+1", at: "right top"},
+	        //tooltipClass: "tooltip",
+	        // a little tweaking of the position
+	        //offset: [-2, 10],
+	   
+	        // use the built-in fadeIn/fadeOut effect
+	        effect: "fade",
+	   
+	        // custom opacity setting
+	        opacity: 0.7
+	   
+	        });
+	  });
 </script>
 </head>
 <body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1389845241275842";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 	<jsp:include page="header.jsp" />
 
@@ -58,29 +82,13 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 						</c:if>
 					</ul>
 					<div id="setting">
-						<div class="editprofilehead">Start your own personalized donation campaign for AAP</div>
+						<div class="editprofile">Start your own personalized donation campaign for AAP</div>
 						<br />
 						<div class="formwrapper">
 							<!--formwrapper-->
 							<div class="editprofile">Edit Ripple Campaign</div>
 							<form method="post">
 								<jsp:include page="errors.jsp" />
-								<div class="blockdiv">
-									<label>My Campaign Name</label>
-									<c:if test="${rippleCampaignExists}">
-									<input disabled=true type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
-										class="textbox" />
-									</c:if> 
-									<c:if test="${!rippleCampaignExists}">
-									<input type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
-										class="textbox" />
-									</c:if> 
-									
-								</div>
-								<div class="blockdiv">
-									<label>Description</label>
-									<textarea rows="" cols="" name="description" id="description" class="textarea"><c:out value='${rippleCampaign.description}'/></textarea>
-								</div>
 								<c:if test="${rippleCampaignExists}">
 								<div class="blockdiv">
 									<label>My Personal URL</label>
@@ -89,11 +97,49 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 								</div>
 								
 								<div class="blockdiv">
-									<label>Share</label>
+									<label>Share On Facebook/Twitter</label>
+									<div class="fb-share-button" data-href="${rippleCampaign.myAapShortUrl}" data-width="200" data-type="button_count"></div>
+									<!-- 
 									<input name="save" type="button" class="button" value="Share Personal URL" 
 									onclick="inviteFriendsToDonateUsingMyRipple('${rippleCampaign.myAapShortUrl}')" />
+									 -->
+									 <a href="https://twitter.com/share"
+								class="twitter-share-button" data-lang="en"
+								data-url="<c:out value='${rippleCampaign.myAapShortUrl}' />"
+								data-via="xs2ravi"
+								data-text="#donate4aap using my personalized url "
+								data-lang="en">Tweet</a> <script>
+									!function(d, s, id) {
+										var js, fjs = d.getElementsByTagName(s)[0];
+										if (!d.getElementById(id)) {
+											js = d.createElement(s);
+											js.id = id;
+											js.src = "https://platform.twitter.com/widgets.js";
+											fjs.parentNode
+													.insertBefore(js, fjs);
+										}
+									}(document, "script", "twitter-wjs");
+								</script>
 								</div>
 								</c:if>
+								<div class="blockdiv">
+									<label>My Campaign Name</label>
+									<c:if test="${rippleCampaignExists}">
+									<input disabled=true type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
+										class="textbox" title="Name of your campaign, can contain only letetrs and numbers, NO Space or any special character"/>
+									</c:if> 
+									<c:if test="${!rippleCampaignExists}">
+									<input type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
+										class="textbox" title="Name of your campaign, can contain only letetrs and numbers, NO Space or any special character" />
+									</c:if> 
+									
+								</div>
+								<div class="blockdiv">
+									<label>Description</label>
+									<textarea rows="" cols="" name="description" id="description" class="textarea"
+									title="Message to your friends, why you are supporting AAP and why you want them to donate to AAP"><c:out value='${rippleCampaign.description}'/></textarea>
+								</div>
+								
 								<input name="save" type="submit" class="button" value="Save Ripple Campaign" />
 								  
 							</form>

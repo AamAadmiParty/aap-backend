@@ -56,7 +56,7 @@ public class Event {
 	private double longitude;
 
 	@Column(name = "map_default_depth")
-	private double depth;
+	private int depth;
 
 	@Column(name = "address", length=512)
 	private String address;
@@ -245,11 +245,11 @@ public class Event {
 		this.longitude = longitude;
 	}
 
-	public double getDepth() {
+	public int getDepth() {
 		return depth;
 	}
 
-	public void setDepth(double depth) {
+	public void setDepth(int depth) {
 		this.depth = depth;
 	}
 

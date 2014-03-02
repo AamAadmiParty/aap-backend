@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.primefaces.model.DefaultScheduleEvent;
 
+import com.next.aap.web.dto.EventDto;
+
 public class AapScheduleEvent extends DefaultScheduleEvent {
 
 	private static final long serialVersionUID = 1L;
@@ -18,10 +20,28 @@ public class AapScheduleEvent extends DefaultScheduleEvent {
 	private String contactNumber4;
 	private String fbEventId;
 	private boolean national;
+	private Long dbId;
 	
 	
 	public AapScheduleEvent() {
 		super();
+	}
+	public AapScheduleEvent(EventDto eventDto) {
+		setTitle(eventDto.getTitle());
+		setStartDate(eventDto.getStartDate());
+		setEndDate(eventDto.getEndDate());
+		description = eventDto.getDescription();
+		lattitude = eventDto.getLattitude();
+		longitude = eventDto.getLongitude();
+		depth = eventDto.getDepth();
+		address = eventDto.getAddress();
+		contactNumber1 = eventDto.getContactNumber1();
+		contactNumber2 = eventDto.getContactNumber2();
+		contactNumber3 = eventDto.getContactNumber3();
+		contactNumber4 = eventDto.getContactNumber4();
+		fbEventId = eventDto.getFbEventId();
+		national = eventDto.isNational();
+		dbId = eventDto.getId();
 	}
 	public AapScheduleEvent(String title, Date start, Date end, boolean allDay) {
 		super(title, start, end, allDay);
@@ -100,6 +120,12 @@ public class AapScheduleEvent extends DefaultScheduleEvent {
 	}
 	public void setNational(boolean national) {
 		this.national = national;
+	}
+	public Long getDbId() {
+		return dbId;
+	}
+	public void setDbId(Long dbId) {
+		this.dbId = dbId;
 	}
 	
 

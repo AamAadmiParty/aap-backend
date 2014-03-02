@@ -33,8 +33,8 @@
 			<version>${project.http.version}</version>
 			<exclusions>
 				<exclusion>
-				  <artifactId>httpclient</artifactId>
-				  <groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>

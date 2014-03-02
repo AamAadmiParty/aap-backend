@@ -343,6 +343,13 @@ public class MenuBean extends BaseJsfBean {
 			buildAndRedirect("/admin/notallowed");
 		}
 	}
+	public void goToManageEventPage() {
+		if (isManageEventAllowed()) {
+			buildAndRedirect("/admin/event");
+		} else {
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
 
 	public void goToEditOfficeDetailPage() {
 		if (isEditOfficeDetailAllowed()) {
@@ -430,7 +437,11 @@ public class MenuBean extends BaseJsfBean {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isManagePollAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
 	}
-
+	public boolean isManageEventAllowed() {
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isManageEventAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	
 	public boolean isEditOfficeDetailAllowed() {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isEditOfficeDetailAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);

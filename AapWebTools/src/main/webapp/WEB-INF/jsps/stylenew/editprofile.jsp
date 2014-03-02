@@ -203,7 +203,6 @@ $(function(){
 	});
 	$(function() {
 	    $( document ).tooltip({
-	    	 
 	        // place tooltip on the right edge
 	        position: {my: "left top+1", at: "right top"},
 	        //tooltipClass: "tooltip",
@@ -245,7 +244,7 @@ $(function(){
 	<div class="contentarea">
 		<div class="form-leftarea">
 			<!--form-leftarea-->
-			<div class="editprofilehead">Be a part of the change. Volunteer for the Aam Aadmi Party</div>
+			<div class="divarticle"><h1>Be a part of the change. Volunteer for the Aam Aadmi Party</h1></div>
 			<br />
 			<div class="formwrapper">
 				<!--formwrapper-->
@@ -302,7 +301,7 @@ $(function(){
 						<form:checkbox path="nri" class="textbox" title="Select if you are currently living outside India"/>
 					</div>
 					<div id="nriDiv">
-						<div class="formheading">NRI Living Location</div>
+						<div class="editprofile">NRI Living Location</div>
 						<div class="blockdiv">
 							<label>Country </label>
 							<form:select path="nriCountryId" title="Choose Your Country where you living currently(outside india)">
@@ -335,7 +334,7 @@ $(function(){
 						</div>
 					</div>
 					<div id="indianLocationDiv">
-						<div class="formheading">Select the place where you currently living in India</div>
+						<div class="editprofile">Select the place where you currently living in India</div>
 						<div class="blockdiv">
 							<label>State</label>
 							<form:select path="stateLivingId" title="Choose State where you live currently">
@@ -368,7 +367,7 @@ $(function(){
 							</form:select>
 						</div>
 					</div>
-					<div class="formheading">Select the place where you registered as voter in India</div>
+					<div class="editprofile">Select the place where you registered as voter in India</div>
 					<div class="blockdiv">
 						<label>State</label>
 						<form:select path="stateVotingId" title="Choose State where you registered as Voter or your indian address state">

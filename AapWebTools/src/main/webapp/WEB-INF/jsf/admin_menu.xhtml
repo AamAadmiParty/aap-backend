@@ -74,6 +74,7 @@ body {
 				<p:menuitem value="News" actionListener="#{menuBean.goToManageNewsPage}" rendered="#{menuBean.manageNewsAllowed}"></p:menuitem>
 				<p:menuitem value="Blogs" actionListener="#{menuBean.goToManageBlogPage}" rendered="#{menuBean.manageBlogAllowed}"></p:menuitem>
 				<p:menuitem value="Poll" actionListener="#{menuBean.goToManagePollPage}" rendered="#{menuBean.managePollAllowed}"></p:menuitem>
+				<p:menuitem value="Events" actionListener="#{menuBean.goToManageEventPage}" rendered="#{menuBean.manageEventAllowed}"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Members" rendered="#{menuBean.memberAllowed}">

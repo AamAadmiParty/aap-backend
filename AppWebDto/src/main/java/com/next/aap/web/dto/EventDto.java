@@ -11,7 +11,7 @@ public class EventDto {
 	private Date endDate;
 	private double lattitude;
 	private double longitude;
-	private double depth;
+	private int depth;
 	private String address;
 	private String contactNumber1;
 	private String contactNumber2;
@@ -61,10 +61,10 @@ public class EventDto {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	public double getDepth() {
+	public int getDepth() {
 		return depth;
 	}
-	public void setDepth(double depth) {
+	public void setDepth(int depth) {
 		this.depth = depth;
 	}
 	public String getAddress() {
@@ -108,6 +108,13 @@ public class EventDto {
 	}
 	public void setNational(boolean national) {
 		this.national = national;
+	}
+	@Override
+	public String toString() {
+		return "EventDto [id=" + id + ", title=" + title + ", description=" + description + ", startDate=" + startDate + ", endDate=" + endDate
+				+ ", lattitude=" + lattitude + ", longitude=" + longitude + ", depth=" + depth + ", address=" + address + ", contactNumber1=" + contactNumber1
+				+ ", contactNumber2=" + contactNumber2 + ", contactNumber3=" + contactNumber3 + ", contactNumber4=" + contactNumber4 + ", fbEventId="
+				+ fbEventId + ", national=" + national + "]";
 	}
 
 	

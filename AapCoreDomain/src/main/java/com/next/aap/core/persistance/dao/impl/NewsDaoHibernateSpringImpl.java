@@ -265,7 +265,7 @@ public class NewsDaoHibernateSpringImpl extends BaseDaoHibernateSpring<News> imp
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("acId", acId);
 		
-		String query = "select select news_id as newsId from news_ac where ac_id = :acId";
+		String query = "select news_id as newsId from news_ac where ac_id = :acId";
 		List<Long> list = executeSqlQueryGetListOfLong(query, params);
 		return list;	
 	}

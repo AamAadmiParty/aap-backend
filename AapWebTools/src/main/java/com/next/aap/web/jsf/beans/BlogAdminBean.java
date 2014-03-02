@@ -6,15 +6,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.web.dto.AppPermission;
+import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.LoginAccountDto;
-import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.util.ClientPermissionUtil;
@@ -125,10 +121,43 @@ public class BlogAdminBean extends BaseMultiPermissionAdminJsfBean {
 				selectedBlog = aapService.publishBlog(selectedBlog.getId());
 				sendInfoMessageToJsfScreen("Blog Published Succesfully");
 				refreshBlogList();
+				refreshBlogsInCache();
 			}
 			
 		}catch(Exception ex){
+			ex.printStackTrace();
 			sendErrorMessageToJsfScreen("Unable to save Post",ex);
+		}
+	}
+	private void refreshBlogsInCache(){
+		System.out.println("Refreshing Cache for Location "+ menuBean.getLocationType());
+		switch(menuBean.getLocationType()){
+		case Global:
+			blogItemCacheImpl.refreshFullCache();
+			break;
+		case STATE:
+			blogItemCacheImpl.refreshCacheItemsForState(menuBean.getSelectedStateId());
+			break;
+		case DISTRICT:
+			blogItemCacheImpl.refreshCacheItemsForDistrict(menuBean.getSelectedDistrictId());
+			break;
+		case AC:
+			blogItemCacheImpl.refreshCacheItemsForAc(menuBean.getSelectedAcId());
+			break;
+		case PC:
+			blogItemCacheImpl.refreshCacheItemsForPc(menuBean.getSelectedPcId());
+			break;
+		case COUNTRY:
+			newsItemCacheImpl.refreshCacheItemsForCountry(menuBean.getSelectedCountryId());
+			break;
+		case REGION :
+			blogItemCacheImpl.refreshCacheItemsForCountryRegion(menuBean.getSelectedCountryRegiontId());
+			break;
+			/*
+		case AREA :
+			newsItemCacheImpl.refreshCacheItemsForCountryRegionArea(menuBean.getSelectedCountryRegiontAreaId());
+			break;
+			*/
 		}
 	}
 	public void savePost(){

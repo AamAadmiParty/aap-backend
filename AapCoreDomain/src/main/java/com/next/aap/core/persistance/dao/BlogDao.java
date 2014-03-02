@@ -1,6 +1,7 @@
 package com.next.aap.core.persistance.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.next.aap.core.persistance.Blog;
 
@@ -47,4 +48,29 @@ public interface BlogDao {
 	
 	public abstract List<Blog> getCountryRegionAreaBlog(Long countryRegionAreaId);
 
+	
+	public abstract List<Long> getAllBlogByAc(long acId);
+	
+	public abstract List<Long> getAllBlogByPc(long pcId);
+	
+	public abstract List<Long> getAllBlogByDistrict(long districtId);
+	
+	public abstract List<Long> getAllBlogByState(long stateId);
+	
+	public abstract List<Long> getAllBlogByCountry(long countryId);
+	
+	public abstract List<Long> getAllBlogByCountryRegion(long countryRegionId);
+	
+	
+	public abstract Map<Long, List<Long>> getBlogItemsOfAllAc();
+	
+	public abstract Map<Long, List<Long>> getBlogItemsOfAllPc();
+	
+	public abstract Map<Long, List<Long>> getBlogItemsOfAllDistrict();
+	
+	public abstract Map<Long, List<Long>> getBlogItemsOfAllState();
+	
+	public abstract Map<Long, List<Long>> getBlogItemsOfAllCountry();
+	
+	public abstract Map<Long, List<Long>> getBlogItemsOfAllCountryRegion();
 }

@@ -4963,7 +4963,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	
 	@Override
 	@Transactional
-	public List<Long> getBlogItemsOfAc(long acId) {
+	public List<Long> getAllBlogItemsOfAc(long acId) {
 		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
 		if(assemblyConstituency == null){
 			return new ArrayList<>(1);
@@ -5496,6 +5496,84 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public Map<Long, List<Long>> getNewsItemsOfAllCountryRegion() {
 		return newsDao.getNewsItemsOfAllCountryRegion();
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getBlogItemsOfAc(long acId) {
+		List<Long> allBlogIdOfAc = blogDao.getAllBlogByAc(acId);
+		return allBlogIdOfAc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getBlogItemsOfPc(long pcId) {
+		List<Long> allBlogIdOfPc = blogDao.getAllBlogByPc(pcId);
+		return allBlogIdOfPc;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getBlogItemsOfDistrict(long districtId) {
+		List<Long> allBlogIdOfDistrict = blogDao.getAllBlogByDistrict(districtId);
+		return allBlogIdOfDistrict;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getBlogItemsOfState(long stateId) {
+		List<Long> allBlogIdOfState = blogDao.getAllBlogByState(stateId);
+		return allBlogIdOfState;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getBlogItemsOfCountry(long countryId) {
+		List<Long> allBlogIdOfCountry = blogDao.getAllBlogByCountry(countryId);
+		return allBlogIdOfCountry;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getBlogItemsOfCountryRegion(long countryRegionId) {
+		List<Long> allBlogIdOfCountryRegion = blogDao.getAllBlogByCountryRegion(countryRegionId);
+		return allBlogIdOfCountryRegion;
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getBlogItemsOfAllAc() {
+		return blogDao.getBlogItemsOfAllAc();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getBlogItemsOfAllPc() {
+		return blogDao.getBlogItemsOfAllPc();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getBlogItemsOfAllDistrict() {
+		return blogDao.getBlogItemsOfAllDistrict();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getBlogItemsOfAllState() {
+		return blogDao.getBlogItemsOfAllState();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getBlogItemsOfAllCountry() {
+		return blogDao.getBlogItemsOfAllCountry();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getBlogItemsOfAllCountryRegion() {
+		return blogDao.getBlogItemsOfAllCountryRegion();
 	}
 
 	

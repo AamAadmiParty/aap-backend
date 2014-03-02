@@ -186,6 +186,7 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 				selectedNews = aapService.publishNews(selectedNews.getId());
 				sendInfoMessageToJsfScreen("News Published Succesfully");
 				refreshNewsList();
+				refreshNewsInCache();
 				
 			}
 			
@@ -212,6 +213,7 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 				selectedNews = aapService.rejectNews(selectedNews.getId(), rejectionReason);
 				sendInfoMessageToJsfScreen("News Rejected Succesfully");
 				refreshNewsList();
+				refreshNewsInCache();
 			}
 			
 		}catch(Exception ex){

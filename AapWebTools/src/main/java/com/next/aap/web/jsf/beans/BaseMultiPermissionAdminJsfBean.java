@@ -4,6 +4,7 @@ import javax.faces.bean.ManagedProperty;
 
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.cache.AapDataCache;
+import com.next.aap.web.cache.BlogItemCacheImpl;
 import com.next.aap.web.cache.NewsItemCacheImpl;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.UserDto;
@@ -20,6 +21,9 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 
 	@ManagedProperty("#{newsItemCacheImpl}")
 	protected NewsItemCacheImpl newsItemCacheImpl;
+
+	@ManagedProperty("#{blogItemCacheImpl}")
+	protected BlogItemCacheImpl blogItemCacheImpl;
 
 	@ManagedProperty("#{menuBean}")
 	protected MenuBean menuBean;
@@ -78,5 +82,11 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 	}
 	public void setNewsItemCacheImpl(NewsItemCacheImpl newsItemCacheImpl) {
 		this.newsItemCacheImpl = newsItemCacheImpl;
+	}
+	public BlogItemCacheImpl getBlogItemCacheImpl() {
+		return blogItemCacheImpl;
+	}
+	public void setBlogItemCacheImpl(BlogItemCacheImpl blogItemCacheImpl) {
+		this.blogItemCacheImpl = blogItemCacheImpl;
 	}
 }

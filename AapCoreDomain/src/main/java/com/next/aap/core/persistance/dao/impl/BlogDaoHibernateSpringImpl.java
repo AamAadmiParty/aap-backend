@@ -1,8 +1,10 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -256,6 +258,122 @@ public class BlogDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Blog> imp
 		String query = "from Blog where contentStatus = :contentStatus order by publishDate desc";		
 		List<Blog> list = executeQueryGetList(query, params);
 		return list;
+	}
+
+	@Override
+	public List<Long> getAllBlogByAc(long acId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("acId", acId);
+		String query = "select blog_id from blog_ac where ac_id = :acId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllBlogByPc(long pcId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pcId", pcId);
+		String query = "select blog_id from blog_pc where pc_id = :pcId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllBlogByDistrict(long districtId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("districtId", districtId);
+		String query = "select blog_id from blog_district where district_id = :districtId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllBlogByState(long stateId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("stateId", stateId);
+		String query = "select blog_id from blog_state where state_id = :stateId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllBlogByCountry(long countryId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("countryId", countryId);
+		String query = "select blog_id from blog_country where country_id = :countryId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllBlogByCountryRegion(long countryRegionId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("countryRegionId", countryRegionId);
+		String query = "select blog_id from blog_country_region where country_region_id = :countryRegionId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	private Map<Long, List<Long>> getBlogByLocationMapFromQuery(String query){
+		List results = executeSqlQueryGetResultList(query);
+		Map<Long, List<Long>> returnMap = new HashMap<>();
+		Long acId;
+		Long blogId;
+		List<Long> blogIdList;
+        for(ListIterator iter = results.listIterator(); iter.hasNext(); ) {
+        	Object[] row = (Object[])iter.next();
+        	if(row[0] instanceof BigInteger){
+        		acId = ((BigInteger)row[0]).longValue();
+            	blogId = ((BigInteger)row[1]).longValue();
+        	}else{
+        		acId = (Long)row[0];
+            	blogId = (Long)row[1];
+        	}
+        	
+
+        	blogIdList = returnMap.get(acId);
+        	if(blogIdList == null){
+        		blogIdList = new ArrayList<>();
+        		returnMap.put(acId, blogIdList);
+        	}
+        	blogIdList.add(blogId);
+        }
+        return returnMap;
+	}
+	@Override
+	public Map<Long, List<Long>> getBlogItemsOfAllAc() {
+		String query = "select ac_id, blog_id from blog_ac";
+		return getBlogByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getBlogItemsOfAllPc() {
+		String query = "select pc_id, blog_id from blog_pc";
+		return getBlogByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getBlogItemsOfAllDistrict() {
+		String query = "select district_id, blog_id from blog_district";
+		return getBlogByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getBlogItemsOfAllState() {
+		String query = "select state_id, blog_id from blog_state";
+		return getBlogByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getBlogItemsOfAllCountry() {
+		String query = "select country_id, blog_id from blog_country";
+		return getBlogByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getBlogItemsOfAllCountryRegion() {
+		String query = "select country_region_id, blog_id from blog_country_region";
+		return getBlogByLocationMapFromQuery(query);	
 	}
 
 }

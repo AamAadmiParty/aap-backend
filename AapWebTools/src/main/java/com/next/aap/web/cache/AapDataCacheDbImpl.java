@@ -78,7 +78,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		logger.info("allParliamentConstituencyDtos.size="+allParliamentConstituencyDtos.size());	
 		//loadAllNews(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
 		//loadAllBlogs(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
-		loadAllVideos(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
+		//loadAllVideos(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
 		loadAllPolls(localAapDataHolder, allAssemblyConstituencyDtos, allParliamentConstituencyDtos);
 		
 		this.aapDataHolder = localAapDataHolder;
@@ -181,7 +181,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		loadAcVideos(acId, aapDataHolder);
 	}
 	private void loadAcVideos(long acId, AapDataHolder localAapDataHolder){
-		List<Long> newsIds = aapService.getVideoItemsOfAc(acId);
+		List<Long> newsIds = aapService.getAllVideoItemsOfAc(acId);
 		localAapDataHolder.addAcVideos(acId, newsIds);
 	}
 	@Override
@@ -239,7 +239,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		
 		List<Long> blogIds;
 		for(AssemblyConstituencyDto oneAc:allAssemblyConstituencyDtos){
-			blogIds = aapService.getVideoItemsOfAc(oneAc.getId());
+			blogIds = aapService.getAllVideoItemsOfAc(oneAc.getId());
 			localAapDataHolder.addAcVideos(oneAc.getId(), blogIds);
 		}
 		
@@ -257,7 +257,7 @@ public class AapDataCacheDbImpl implements AapDataCache{
 		}
 		List<Long> questionIds;
 		for(AssemblyConstituencyDto oneAc:allAssemblyConstituencyDtos){
-			questionIds = aapService.getPollItemsOfAc(oneAc.getId());
+			questionIds = aapService.getAllPollItemsOfAc(oneAc.getId());
 			localAapDataHolder.addAcPolls(oneAc.getId(), questionIds);
 		}
 		

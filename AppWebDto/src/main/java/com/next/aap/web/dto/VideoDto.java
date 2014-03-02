@@ -13,6 +13,8 @@ public class VideoDto {
 	private String youtubeVideoId;
 	private boolean global;//Whether this News is available global or not
 	private ContentStatus contentStatus;
+	private Date dateCreated;
+
 	public Long getId() {
 		return id;
 	}
@@ -66,6 +68,18 @@ public class VideoDto {
 	}
 	public void setContentStatus(ContentStatus contentStatus) {
 		this.contentStatus = contentStatus;
+	}
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+	@Override
+	public String toString() {
+		return "VideoDto [id=" + id + ", title=" + title + ", imageUrl=" + imageUrl + ", webUrl=" + webUrl + ", publishDate=" + publishDate + ", description="
+				+ description + ", youtubeVideoId=" + youtubeVideoId + ", global=" + global + ", contentStatus=" + contentStatus + ", dateCreated="
+				+ dateCreated + "]";
 	}
 	
 	

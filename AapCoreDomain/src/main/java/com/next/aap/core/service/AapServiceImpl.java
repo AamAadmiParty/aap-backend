@@ -4984,7 +4984,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	}
 	@Override
 	@Transactional
-	public List<Long> getVideoItemsOfAc(long acId) {
+	public List<Long> getAllVideoItemsOfAc(long acId) {
 		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
 		if(assemblyConstituency == null){
 			return new ArrayList<>(1);
@@ -5006,7 +5006,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public List<Long> getPollItemsOfAc(long acId) {
+	public List<Long> getAllPollItemsOfAc(long acId) {
 		AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
 		if(assemblyConstituency == null){
 			return new ArrayList<>(1);
@@ -5574,6 +5574,84 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public Map<Long, List<Long>> getBlogItemsOfAllCountryRegion() {
 		return blogDao.getBlogItemsOfAllCountryRegion();
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getVideoItemsOfAc(long acId) {
+		List<Long> allVideoIds = videoDao.getAllVideoByAc(acId);
+		return allVideoIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getVideoItemsOfPc(long pcId) {
+		List<Long> allVideoIds = videoDao.getAllVideoByPc(pcId);
+		return allVideoIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getVideoItemsOfDistrict(long districtId) {
+		List<Long> allVideoIds = videoDao.getAllVideoByDistrict(districtId);
+		return allVideoIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getVideoItemsOfState(long stateId) {
+		List<Long> allVideoIds = videoDao.getAllVideoByState(stateId);
+		return allVideoIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getVideoItemsOfCountry(long countryId) {
+		List<Long> allVideoIds = videoDao.getAllVideoByCountry(countryId);
+		return allVideoIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getVideoItemsOfCountryRegion(long countryRegionId) {
+		List<Long> allVideoIds = videoDao.getAllVideoByCountryRegion(countryRegionId);
+		return allVideoIds;
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getVideoItemsOfAllAc() {
+		return videoDao.getVideoItemsOfAllAc();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getVideoItemsOfAllPc() {
+		return videoDao.getVideoItemsOfAllPc();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getVideoItemsOfAllDistrict() {
+		return videoDao.getVideoItemsOfAllDistrict();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getVideoItemsOfAllState() {
+		return videoDao.getVideoItemsOfAllState();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getVideoItemsOfAllCountry() {
+		return videoDao.getVideoItemsOfAllCountry();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getVideoItemsOfAllCountryRegion() {
+		return videoDao.getVideoItemsOfAllCountryRegion();
 	}
 
 	

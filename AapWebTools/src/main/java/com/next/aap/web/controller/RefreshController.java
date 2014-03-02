@@ -17,6 +17,8 @@ public class RefreshController extends AppBaseController {
 			HttpServletRequest httpServletRequest) {
 		aapDataCacheDbImpl.refreshFullCache();
 		newsItemCacheImpl.refreshFullCache();
+		videoItemCacheImpl.refreshFullCache();
+		blogItemCacheImpl.refreshFullCache();
 		return "cache Refreshed";
 	}
 	
@@ -25,6 +27,7 @@ public class RefreshController extends AppBaseController {
 	public String downloadVideos(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		contentDonwloadUtil.refreshVideoList();
+		videoItemCacheImpl.refreshFullCache();
 		return "Video downloaded";
 	}
 	
@@ -42,6 +45,7 @@ public class RefreshController extends AppBaseController {
 	public String downloadBlogs(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		contentDonwloadUtil.refreshBlogList();
+		blogItemCacheImpl.refreshFullCache();
 		return "blog downloaded";
 	}
 	

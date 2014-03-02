@@ -1,6 +1,7 @@
 package com.next.aap.core.persistance.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.next.aap.core.persistance.Video;
 
@@ -30,4 +31,29 @@ public interface VideoDao {
 	
 	public abstract List<Long> getVideoByLocation(long pcId, long stateId);
 
+	
+	public abstract List<Long> getAllVideoByAc(long acId);
+	
+	public abstract List<Long> getAllVideoByPc(long pcId);
+	
+	public abstract List<Long> getAllVideoByDistrict(long districtId);
+	
+	public abstract List<Long> getAllVideoByState(long stateId);
+	
+	public abstract List<Long> getAllVideoByCountry(long countryId);
+	
+	public abstract List<Long> getAllVideoByCountryRegion(long countryRegionId);
+	
+	
+	public abstract Map<Long, List<Long>> getVideoItemsOfAllAc();
+	
+	public abstract Map<Long, List<Long>> getVideoItemsOfAllPc();
+	
+	public abstract Map<Long, List<Long>> getVideoItemsOfAllDistrict();
+	
+	public abstract Map<Long, List<Long>> getVideoItemsOfAllState();
+	
+	public abstract Map<Long, List<Long>> getVideoItemsOfAllCountry();
+	
+	public abstract Map<Long, List<Long>> getVideoItemsOfAllCountryRegion();
 }

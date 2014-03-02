@@ -16,6 +16,7 @@ import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.cache.BlogItemCacheImpl;
 import com.next.aap.web.cache.LocationCacheDbImpl;
 import com.next.aap.web.cache.NewsItemCacheImpl;
+import com.next.aap.web.cache.VideoItemCacheImpl;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.CountryDto;
@@ -49,6 +50,8 @@ public class AppBaseController extends BaseController{
 	protected NewsItemCacheImpl newsItemCacheImpl;
 	@Autowired
 	protected BlogItemCacheImpl blogItemCacheImpl;
+	@Autowired
+	protected VideoItemCacheImpl videoItemCacheImpl;
 
 	protected void addNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
 		long livingAcId = 0;
@@ -108,7 +111,7 @@ public class AppBaseController extends BaseController{
 		mv.getModel().put("blog", blog);
 	}
 	protected void addSingleVideoInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long videoId){
-		VideoDto video = aapDataCacheDbImpl.getVideoById(videoId);
+		VideoDto video = videoItemCacheImpl.getCacheItemById(videoId);
 		mv.getModel().put("video", video);
 	}
 	protected void addSinglePollQuestionInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long pollQuestionId){
@@ -121,6 +124,10 @@ public class AppBaseController extends BaseController{
 		long votingAcId = 0;
 		long livingPcId = 0;
 		long votingPcId = 0;
+		long nriCountryId = 0;
+		long nriCountryRegionId = 0;
+		long nriCountryRegionAreaId = 0;
+		
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		if(loggedInUser != null){
 			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
@@ -135,15 +142,28 @@ public class AppBaseController extends BaseController{
 			if(loggedInUser.getParliamentConstituencyVotingId() != null){
 				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
 			}
+			if(loggedInUser.getNriCountryId() != null){
+				nriCountryId = loggedInUser.getNriCountryId();
+			}
+			if(loggedInUser.getNriCountryRegionId() != null){
+				nriCountryRegionId = loggedInUser.getNriCountryRegionId();
+			}
+			if(loggedInUser.getNriCountryRegionAreaId() != null){
+				nriCountryRegionAreaId = loggedInUser.getNriCountryRegionAreaId();
+			}
 		}else{
 			//get it from Cookies
 			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
 			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
 			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
 			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
+			nriCountryId = CookieUtil.getUserNriCountryIdCookie(httpServletRequest);
+			nriCountryRegionId = CookieUtil.getUserNriCountryRegionIdCookie(httpServletRequest);
+			nriCountryRegionAreaId = CookieUtil.getUserNriCountryRegionAreaIdCookie(httpServletRequest);
 		}
 		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
-		ItemList<VideoDto> videoItems = aapDataCacheDbImpl.getVideoDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, pageNumber);
+		ItemList<VideoDto> videoItems = videoItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, 
+				nriCountryId, nriCountryRegionId, pageNumber);
 		mv.getModel().put("videoItems", videoItems);
 		mv.getModel().put("pageNumber", pageNumber);
 		

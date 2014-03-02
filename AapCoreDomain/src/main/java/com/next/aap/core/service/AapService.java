@@ -283,9 +283,9 @@ public interface AapService {
 	
 	List<Long> getAllBlogItemsOfAc(long acId);
 	
-	List<Long> getVideoItemsOfAc(long acId);
+	List<Long> getAllVideoItemsOfAc(long acId);
 	
-	List<Long> getPollItemsOfAc(long acId);
+	List<Long> getAllPollItemsOfAc(long acId);
 	
 	List<Long> getAllNewsItemsOfParliamentConstituency(long pcId);
 	
@@ -373,4 +373,29 @@ public interface AapService {
 	Map<Long, List<Long>> getBlogItemsOfAllCountry();
 	
 	Map<Long, List<Long>> getBlogItemsOfAllCountryRegion();
+	
+	
+	List<Long> getVideoItemsOfAc(long acId);
+	
+	List<Long> getVideoItemsOfPc(long pcId);
+	
+	List<Long> getVideoItemsOfDistrict(long districtId);
+	
+	List<Long> getVideoItemsOfState(long stateId);
+	
+	List<Long> getVideoItemsOfCountry(long countryId);
+	
+	List<Long> getVideoItemsOfCountryRegion(long countryRegionId);
+	
+	Map<Long, List<Long>> getVideoItemsOfAllAc();
+	
+	Map<Long, List<Long>> getVideoItemsOfAllPc();
+	
+	Map<Long, List<Long>> getVideoItemsOfAllDistrict();
+	
+	Map<Long, List<Long>> getVideoItemsOfAllState();
+	
+	Map<Long, List<Long>> getVideoItemsOfAllCountry();
+	
+	Map<Long, List<Long>> getVideoItemsOfAllCountryRegion();
 }

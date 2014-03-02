@@ -136,6 +136,10 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>aap</servlet-name>
+		<url-pattern>/aaps/poll</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>aap</servlet-name>
 		<url-pattern>/aaps/all</url-pattern>
 	</servlet-mapping>
 						

@@ -15,7 +15,9 @@ public class PollQuestionDto {
 	private ContentStatus contentStatus;
 	private List<PollAnswerDto> answers;
 	private String rejectionReason;
-	
+	private Date publishDate;
+	private Date dateCreated;
+
 	public Long getId() {
 		return id;
 	}
@@ -75,6 +77,18 @@ public class PollQuestionDto {
 	}
 	public void setRejectionReason(String rejectionReason) {
 		this.rejectionReason = rejectionReason;
+	}
+	public Date getPublishDate() {
+		return publishDate;
+	}
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
 	}
 
 	

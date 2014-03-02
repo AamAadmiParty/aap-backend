@@ -1,8 +1,10 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -262,6 +264,122 @@ public class PollQuestionDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		String query = "from PollQuestion where contentStatus = :contentStatus order by publishDate desc";
 		List<PollQuestion> list = executeQueryGetList(query, params);
 		return list;
+	}
+	
+	@Override
+	public List<Long> getAllPollQuestionByAc(long acId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("acId", acId);
+		String query = "select poll_question_id from poll_question_ac where ac_id = :acId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllPollQuestionByPc(long pcId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pcId", pcId);
+		String query = "select poll_question_id from poll_question_pc where pc_id = :pcId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllPollQuestionByDistrict(long districtId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("districtId", districtId);
+		String query = "select poll_question_id from poll_question_district where district_id = :districtId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllPollQuestionByState(long stateId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("stateId", stateId);
+		String query = "select poll_question_id from poll_question_state where state_id = :stateId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllPollQuestionByCountry(long countryId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("countryId", countryId);
+		String query = "select poll_question_id from poll_question_country where country_id = :countryId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	@Override
+	public List<Long> getAllPollQuestionByCountryRegion(long countryRegionId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("countryRegionId", countryRegionId);
+		String query = "select poll_question_id from poll_question_country_region where country_region_id = :countryRegionId";
+		List<Long> list = executeSqlQueryGetListOfLong(query, params);
+		return list;	
+	}
+
+	private Map<Long, List<Long>> getPollQuestionByLocationMapFromQuery(String query){
+		List results = executeSqlQueryGetResultList(query);
+		Map<Long, List<Long>> returnMap = new HashMap<>();
+		Long acId;
+		Long videoId;
+		List<Long> videoIdList;
+        for(ListIterator iter = results.listIterator(); iter.hasNext(); ) {
+        	Object[] row = (Object[])iter.next();
+        	if(row[0] instanceof BigInteger){
+        		acId = ((BigInteger)row[0]).longValue();
+            	videoId = ((BigInteger)row[1]).longValue();
+        	}else{
+        		acId = (Long)row[0];
+            	videoId = (Long)row[1];
+        	}
+        	
+
+        	videoIdList = returnMap.get(acId);
+        	if(videoIdList == null){
+        		videoIdList = new ArrayList<>();
+        		returnMap.put(acId, videoIdList);
+        	}
+        	videoIdList.add(videoId);
+        }
+        return returnMap;
+	}
+	@Override
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllAc() {
+		String query = "select ac_id, poll_question_id from poll_question_ac";
+		return getPollQuestionByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllPc() {
+		String query = "select pc_id, poll_question_id from poll_question_pc";
+		return getPollQuestionByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllDistrict() {
+		String query = "select district_id, poll_question_id from poll_question_district";
+		return getPollQuestionByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllState() {
+		String query = "select state_id, poll_question_id from poll_question_state";
+		return getPollQuestionByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllCountry() {
+		String query = "select country_id, poll_question_id from poll_question_country";
+		return getPollQuestionByLocationMapFromQuery(query);	
+	}
+
+	@Override
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllCountryRegion() {
+		String query = "select country_region_id, poll_question_id from poll_question_country_region";
+		return getPollQuestionByLocationMapFromQuery(query);	
 	}
 
 }

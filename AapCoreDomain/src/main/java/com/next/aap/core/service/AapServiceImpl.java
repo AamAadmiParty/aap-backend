@@ -5654,5 +5654,90 @@ public class AapServiceImpl implements AapService, Serializable {
 		return videoDao.getVideoItemsOfAllCountryRegion();
 	}
 
+	@Override
+	@Transactional
+	public PollQuestionDto getPollQuestionById(Long pollQuestionId) {
+		PollQuestion pollQuestion = pollQuestionDao.getPollQuestionById(pollQuestionId);
+		return convertPollQuestion(pollQuestion);
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getPollQuestionItemsOfAc(long acId) {
+		List<Long> allPollQuestionIds = pollQuestionDao.getAllPollQuestionByAc(acId);
+		return allPollQuestionIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getPollQuestionItemsOfPc(long pcId) {
+		List<Long> allPollQuestionIds = pollQuestionDao.getAllPollQuestionByPc(pcId);
+		return allPollQuestionIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getPollQuestionItemsOfDistrict(long districtId) {
+		List<Long> allPollQuestionIds = pollQuestionDao.getAllPollQuestionByDistrict(districtId);
+		return allPollQuestionIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getPollQuestionItemsOfState(long stateId) {
+		List<Long> allPollQuestionIds = pollQuestionDao.getAllPollQuestionByState(stateId);
+		return allPollQuestionIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getPollQuestionItemsOfCountry(long countryId) {
+		List<Long> allPollQuestionIds = pollQuestionDao.getAllPollQuestionByCountry(countryId);
+		return allPollQuestionIds;
+	}
+
+	@Override
+	@Transactional
+	public List<Long> getPollQuestionItemsOfCountryRegion(long countryRegionId) {
+		List<Long> allPollQuestionIds = pollQuestionDao.getAllPollQuestionByCountryRegion(countryRegionId);
+		return allPollQuestionIds;
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllAc() {
+		return pollQuestionDao.getPollQuestionItemsOfAllAc();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllPc() {
+		return pollQuestionDao.getPollQuestionItemsOfAllPc();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllDistrict() {
+		return pollQuestionDao.getPollQuestionItemsOfAllDistrict();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllState() {
+		return pollQuestionDao.getPollQuestionItemsOfAllState();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllCountry() {
+		return pollQuestionDao.getPollQuestionItemsOfAllCountry();
+	}
+
+	@Override
+	@Transactional
+	public Map<Long, List<Long>> getPollQuestionItemsOfAllCountryRegion() {
+		return pollQuestionDao.getPollQuestionItemsOfAllCountryRegion();
+	}
+
 	
 }

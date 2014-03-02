@@ -222,6 +222,8 @@ public interface AapService {
 	
 	PollQuestionDto rejectPollQuestion(Long pollQuestionId, String reason);
 	
+	PollQuestionDto getPollQuestionById(Long pollQuestionId);
+	
 	UserDto receiveMembershipFee(Long userId, double amount, Long adminUserId);
 	
 	List<AdminAccountDto> getAdminAccountDetails(PostLocationType locationType, Long locationId);
@@ -398,4 +400,29 @@ public interface AapService {
 	Map<Long, List<Long>> getVideoItemsOfAllCountry();
 	
 	Map<Long, List<Long>> getVideoItemsOfAllCountryRegion();
+	
+	
+	List<Long> getPollQuestionItemsOfAc(long acId);
+	
+	List<Long> getPollQuestionItemsOfPc(long pcId);
+	
+	List<Long> getPollQuestionItemsOfDistrict(long districtId);
+	
+	List<Long> getPollQuestionItemsOfState(long stateId);
+	
+	List<Long> getPollQuestionItemsOfCountry(long countryId);
+	
+	List<Long> getPollQuestionItemsOfCountryRegion(long countryRegionId);
+	
+	Map<Long, List<Long>> getPollQuestionItemsOfAllAc();
+	
+	Map<Long, List<Long>> getPollQuestionItemsOfAllPc();
+	
+	Map<Long, List<Long>> getPollQuestionItemsOfAllDistrict();
+	
+	Map<Long, List<Long>> getPollQuestionItemsOfAllState();
+	
+	Map<Long, List<Long>> getPollQuestionItemsOfAllCountry();
+	
+	Map<Long, List<Long>> getPollQuestionItemsOfAllCountryRegion();
 }

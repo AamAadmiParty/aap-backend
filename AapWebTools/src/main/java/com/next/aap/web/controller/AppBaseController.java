@@ -16,6 +16,7 @@ import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.cache.BlogItemCacheImpl;
 import com.next.aap.web.cache.LocationCacheDbImpl;
 import com.next.aap.web.cache.NewsItemCacheImpl;
+import com.next.aap.web.cache.PollItemCacheImpl;
 import com.next.aap.web.cache.VideoItemCacheImpl;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
@@ -52,6 +53,8 @@ public class AppBaseController extends BaseController{
 	protected BlogItemCacheImpl blogItemCacheImpl;
 	@Autowired
 	protected VideoItemCacheImpl videoItemCacheImpl;
+	@Autowired
+	protected PollItemCacheImpl pollItemCacheImpl;
 
 	protected void addNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
 		long livingAcId = 0;

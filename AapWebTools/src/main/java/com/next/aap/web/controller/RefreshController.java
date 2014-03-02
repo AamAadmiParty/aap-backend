@@ -19,6 +19,7 @@ public class RefreshController extends AppBaseController {
 		newsItemCacheImpl.refreshFullCache();
 		videoItemCacheImpl.refreshFullCache();
 		blogItemCacheImpl.refreshFullCache();
+		pollItemCacheImpl.refreshFullCache();
 		return "cache Refreshed";
 	}
 	
@@ -45,6 +46,14 @@ public class RefreshController extends AppBaseController {
 	public String downloadBlogs(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
 		contentDonwloadUtil.refreshBlogList();
+		blogItemCacheImpl.refreshFullCache();
+		return "blog downloaded";
+	}
+	
+	@RequestMapping(value = "/aaps/poll", method = RequestMethod.GET)
+	@ResponseBody
+	public String refreshPolls(ModelAndView mv,
+			HttpServletRequest httpServletRequest) {
 		blogItemCacheImpl.refreshFullCache();
 		return "blog downloaded";
 	}

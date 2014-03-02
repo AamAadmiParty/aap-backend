@@ -1,6 +1,7 @@
 package com.next.aap.core.persistance.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.next.aap.core.persistance.PollQuestion;
 
@@ -46,5 +47,31 @@ public interface PollQuestionDao {
 	public abstract List<PollQuestion> getCountryRegionPollQuestion(Long pcId);
 	
 	public abstract List<PollQuestion> getCountryRegionAreaPollQuestion(Long pcId);
+	
+	
+	public abstract List<Long> getAllPollQuestionByAc(long acId);
+	
+	public abstract List<Long> getAllPollQuestionByPc(long pcId);
+	
+	public abstract List<Long> getAllPollQuestionByDistrict(long districtId);
+	
+	public abstract List<Long> getAllPollQuestionByState(long stateId);
+	
+	public abstract List<Long> getAllPollQuestionByCountry(long countryId);
+	
+	public abstract List<Long> getAllPollQuestionByCountryRegion(long countryRegionId);
+	
+	
+	public abstract Map<Long, List<Long>> getPollQuestionItemsOfAllAc();
+	
+	public abstract Map<Long, List<Long>> getPollQuestionItemsOfAllPc();
+	
+	public abstract Map<Long, List<Long>> getPollQuestionItemsOfAllDistrict();
+	
+	public abstract Map<Long, List<Long>> getPollQuestionItemsOfAllState();
+	
+	public abstract Map<Long, List<Long>> getPollQuestionItemsOfAllCountry();
+	
+	public abstract Map<Long, List<Long>> getPollQuestionItemsOfAllCountryRegion();
 
 }

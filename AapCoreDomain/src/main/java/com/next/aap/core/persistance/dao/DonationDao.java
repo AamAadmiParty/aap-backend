@@ -41,6 +41,12 @@ public interface DonationDao {
 	
 	public abstract List<Donation> getDonationsByCampaignId(String cid);
 	
+	public abstract List<Donation> getDonationsByLocationCampaignId(String lcid);
+	
+	public abstract List<Donation> getDonationsByCampaignId(String cid, int pageSize);
+	
+	public abstract List<Donation> getDonationsByLocationCampaignId(String lcid, int pageSize);
+
 	public abstract DonationDump getDonationDumpByDonorId(String donorId);
 	
 	public abstract DonationDump saveDonationDump(DonationDump donationDump);

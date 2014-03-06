@@ -26,7 +26,7 @@ public class ContentDonwloadUtil {
 	@Autowired
 	private AapDataCache aapDataCacheDbImpl;
 
-	@PostConstruct
+	//@PostConstruct
 	public void init() {
 		Runnable runnable = new Runnable() {
 			@Override

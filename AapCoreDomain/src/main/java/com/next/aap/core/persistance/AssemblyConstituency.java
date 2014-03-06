@@ -1,6 +1,7 @@
 package com.next.aap.core.persistance;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -44,6 +47,16 @@ public class AssemblyConstituency {
     private District district;
 	@Column(name="district_id", insertable=false,updatable=false)
 	private Long districtId;
+	
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "ac_campaigns",
+	joinColumns = {
+	@JoinColumn(name="ac_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="location_campaign_id")
+	})
+	private Set<LocationCampaign> campaigns;
 	
 	public Long getId() {
 		return id;
@@ -123,6 +136,14 @@ public class AssemblyConstituency {
 
 	public void setDistrictId(Long districtId) {
 		this.districtId = districtId;
+	}
+
+	public Set<LocationCampaign> getCampaigns() {
+		return campaigns;
+	}
+
+	public void setCampaigns(Set<LocationCampaign> campaigns) {
+		this.campaigns = campaigns;
 	}
 
 	@Override

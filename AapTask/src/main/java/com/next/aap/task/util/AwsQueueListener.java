@@ -49,7 +49,7 @@ public abstract class AwsQueueListener {
 				receiveMessageRequest.setMaxNumberOfMessages(1);
 				while (true) {
 					try {
-						System.out.println("Reading Message from Queue");
+						System.out.println("Reading Message from Queue "+ queueName);
 						ReceiveMessageResult rmResult = sqs.receiveMessage(receiveMessageRequest);
 						// System.out.println("Got Result "+ rmResult);
 						if (rmResult.getMessages().size() > 0) {

@@ -84,6 +84,8 @@ public interface AapService {
 	
 	List<DistrictDto> getAllDistrictOfState(long stateId) ;
 	
+	List<DistrictDto> getAllDistricts();
+	
 	DistrictDto getDistrictById(Long districtId) ;
 	
 	List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfDistrict(long districtId) ;
@@ -311,8 +313,22 @@ public interface AapService {
 	
 	void updatePollVoteAnswerTotalCount(Long answerId, Long existingAnswerId);
 	
-	LocationCampaignDto saveLocationCampaign(LocationCampaignDto locationCampaignDto) throws AppException;
+	LocationCampaignDto saveStateLocationCampaign(LocationCampaignDto locationCampaignDto, long stateId) throws AppException;
 	
+	LocationCampaignDto saveDistrictLocationCampaign(LocationCampaignDto locationCampaignDto, long districtId) throws AppException;
+	
+	LocationCampaignDto saveAcLocationCampaign(LocationCampaignDto locationCampaignDto, long acId) throws AppException;
+	
+	LocationCampaignDto savePcLocationCampaign(LocationCampaignDto locationCampaignDto, long pcId) throws AppException;
+	
+	LocationCampaignDto getDefaultStateLocationCampaign(long stateId) throws AppException;
+	
+	LocationCampaignDto getDefaultDistrictLocationCampaign(long districtId) throws AppException;
+	
+	LocationCampaignDto getDefaultAcLocationCampaign(long acId) throws AppException;
+	
+	LocationCampaignDto getDefaultPcLocationCampaign(long pcId) throws AppException;
+
 	GlobalCampaignDto saveGlobalCampaign(GlobalCampaignDto globalCampaignDto) throws AppException;
 	
 	GlobalCampaignDto getGlobalCampaignByCid(String cid) throws AppException;

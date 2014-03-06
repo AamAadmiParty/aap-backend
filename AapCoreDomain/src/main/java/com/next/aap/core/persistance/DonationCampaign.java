@@ -65,7 +65,9 @@ public class DonationCampaign {
 	@Enumerated(EnumType.STRING)
 	private CampaignType campaignType;
 
-	
+	@Column(name = "total_number_of_donation")
+	private int totalNumberOfDonations;
+
 
 	public Long getId() {
 		return id;
@@ -214,6 +216,16 @@ public class DonationCampaign {
 
 	public void setCampaignType(CampaignType campaignType) {
 		this.campaignType = campaignType;
+	}
+
+
+	public int getTotalNumberOfDonations() {
+		return totalNumberOfDonations;
+	}
+
+
+	public void setTotalNumberOfDonations(int totalNumberOfDonations) {
+		this.totalNumberOfDonations = totalNumberOfDonations;
 	}
 
 

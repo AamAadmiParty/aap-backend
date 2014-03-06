@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.next.aap.cache.CacheService;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.ItemList;
 import com.next.aap.web.cache.AapDataCache;
@@ -55,6 +56,8 @@ public class AppBaseController extends BaseController{
 	protected VideoItemCacheImpl videoItemCacheImpl;
 	@Autowired
 	protected PollItemCacheImpl pollItemCacheImpl;
+	@Autowired
+	protected CacheService cacheService;
 
 	protected void addNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
 		long livingAcId = 0;

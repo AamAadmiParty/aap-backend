@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.core.service.AapService;
 import com.next.aap.task.util.AwsQueueListener;
@@ -27,7 +28,7 @@ public class ReceiveDonationListener extends AwsQueueListener{
 	@Override
 	public void onQueueMessage(String jsonMessage) {
 		try{
-			//System.out.println("onQueueMessage "+ jsonMessage);
+			logger.info("onQueueMessage "+ jsonMessage);
 			JSONObject jsonObject = new JSONObject(jsonMessage);
 			String data = jsonObject.getString("Message");
 			JSONObject donationJsonObject = new JSONObject(data);
@@ -35,7 +36,26 @@ public class ReceiveDonationListener extends AwsQueueListener{
 			//29 Jan 2014 04:32:26:290
 			
 			donationDump.setAmount(donationJsonObject.getDouble("Amount"));
-			donationDump.setCid(donationJsonObject.getString("cid"));
+			String cid = donationJsonObject.getString("cid");
+			logger.info("scid "+ cid);
+			if(!StringUtil.isEmpty(cid)){
+				if(cid.contains("=")){
+					String[] ids = cid.split(";");
+					for(String oneToken:ids){
+						String[] values = oneToken.split("=");
+						if(values[0].equalsIgnoreCase("cid")){
+							donationDump.setCid(values[1]);
+						}
+						if(values[0].equalsIgnoreCase("lcid")){
+							donationDump.setLid(values[1]);
+						}
+					}
+				}else{
+					donationDump.setCid(cid);
+				}
+					
+			}
+			
 			donationDump.setDateCreated(new Date());
 			donationDump.setDateModified(new Date());
 			donationDump.setDonationDate(donationJsonObject.getString("DonationDate"));
@@ -65,12 +85,10 @@ public class ReceiveDonationListener extends AwsQueueListener{
 			donationDump.setUtmSource(donationJsonObject.getString("utm_source"));
 			donationDump.setUtmTerm(donationJsonObject.getString("utm_term"));
 			
-			System.out.println("Saving Donation Dump : "+donationDump);
+			logger.info("Saving Donation Dump : "+donationDump);
 			aapService.saveDonationDump(donationDump);
 			
 		}catch(Exception ex){
-			System.out.println("Unable to import Donation"+ jsonMessage);
-			ex.printStackTrace();
 			logger.error("Unable to import Donation"+ jsonMessage,ex);
 		}
 		

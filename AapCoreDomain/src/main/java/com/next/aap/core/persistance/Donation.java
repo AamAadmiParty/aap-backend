@@ -63,6 +63,8 @@ public class Donation {
 	private String pgErrorMessage;
 	@Column(name = "cid")
 	private String cid;
+	@Column(name = "lcid")
+	private String lcid;
 	@Column(name = "pg_error_detail")
 	private String pgErrorDetail;
 	@Column(name = "remark", columnDefinition="LONGTEXT")
@@ -298,6 +300,12 @@ public class Donation {
 	}
 	public void setDonorAddress(String donorAddress) {
 		this.donorAddress = donorAddress;
+	}
+	public String getLcid() {
+		return lcid;
+	}
+	public void setLcid(String lcid) {
+		this.lcid = lcid;
 	}
 
 	

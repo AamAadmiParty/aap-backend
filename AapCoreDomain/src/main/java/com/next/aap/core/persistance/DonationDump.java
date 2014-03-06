@@ -3,11 +3,9 @@ package com.next.aap.core.persistance;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Version;
 
 //@Entity
@@ -79,6 +77,8 @@ public class DonationDump {
 	private String pgErrorMessage;
 	@Column(name = "cid")
 	private String cid;
+	@Column(name = "lid")
+	private String lid;
 	@Column(name = "PGErrorDetail")
 	private String pgErrorDetail;
 	//@Column(name = "Remarks", columnDefinition="LONGTEXT")
@@ -292,6 +292,12 @@ public class DonationDump {
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
+	public String getLid() {
+		return lid;
+	}
+	public void setLid(String lid) {
+		this.lid = lid;
+	}
 	@Override
 	public String toString() {
 		return "DonationDump [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId
@@ -301,7 +307,8 @@ public class DonationDump {
 				+ donorDistrictId + ", donorAddress=" + donorAddress + ", paymentGateway=" + paymentGateway + ", transactionType=" + transactionType
 				+ ", donationDate=" + donationDate + ", donorIp=" + donorIp + ", amount=" + amount + ", utmSource=" + utmSource + ", utmMedium=" + utmMedium
 				+ ", utmTerm=" + utmTerm + ", utmContent=" + utmContent + ", utmCampaign=" + utmCampaign + ", pgErrorMessage=" + pgErrorMessage + ", cid="
-				+ cid + ", pgErrorDetail=" + pgErrorDetail + ", remark=" + remark + ", status=" + status + ", statusMessage=" + statusMessage + "]";
+				+ cid + ", lid=" + lid + ", pgErrorDetail=" + pgErrorDetail + ", remark=" + remark + ", status=" + status + ", statusMessage=" + statusMessage
+				+ "]";
 	}
 	
 

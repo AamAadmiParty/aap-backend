@@ -15,6 +15,11 @@ public class LocationCampaignDto {
 	private Date startDate;
 	private Date endDate;
 	private int totalNumberOfDonations;
+	private LocationCampaignType campaignType;
+	public enum LocationCampaignType{
+		DEFAULT,
+		CUSTOM
+	}
 
 	public Long getId() {
 		return id;
@@ -102,6 +107,14 @@ public class LocationCampaignDto {
 
 	public void setTotalNumberOfDonations(int totalNumberOfDonations) {
 		this.totalNumberOfDonations = totalNumberOfDonations;
+	}
+
+	public LocationCampaignType getCampaignType() {
+		return campaignType;
+	}
+
+	public void setCampaignType(LocationCampaignType campaignType) {
+		this.campaignType = campaignType;
 	}
 
 	

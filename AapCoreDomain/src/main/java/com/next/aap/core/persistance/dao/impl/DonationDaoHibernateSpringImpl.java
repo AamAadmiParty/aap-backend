@@ -233,13 +233,6 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 	}
 
 	@Override
-	public List<Donation> getDonationsByCampaignId(String cid) {
-		Map<String, Object> params = new TreeMap<String, Object>();
-		params.put("cid", cid);
-		return executeQueryGetList("from Donation where cid = :cid", params);
-	}
-
-	@Override
 	public DonationDump getDonationDumpByDonorId(String donorId) {
 		Map<String, Object> params = new HashMap<String, Object>(1);
 		params.put("donorId", donorId);
@@ -304,5 +297,28 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 		params.put("donorId", donorId);
 		executeSqlQueryUpdate("update donation_dump set PGErrorMsg=:PGErrorMsg, PGErrorDetail=:PGErrorDetail where Donor_Id = :donorId", params);
 
+	}
+
+	@Override
+	public List<Donation> getDonationsByCampaignId(String cid, int pageSize) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("cid", cid);
+		return executeQueryGetList("from Donation where cid = :cid order by donationDate desc", params, pageSize);
+	}
+
+	@Override
+	public List<Donation> getDonationsByCampaignId(String cid) {
+		return getDonationsByCampaignId(cid, 0);//0 page size means no limit
+	}
+
+	@Override
+	public List<Donation> getDonationsByLocationCampaignId(String lcid, int pageSize) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("lcid", lcid);
+		return executeQueryGetList("from Donation where lcid = :lcid order by donationDate desc", params, pageSize);
+	}
+	@Override
+	public List<Donation> getDonationsByLocationCampaignId(String lcid) {
+		return getDonationsByLocationCampaignId(lcid, 0);//0 page size means no limit
 	}
 }

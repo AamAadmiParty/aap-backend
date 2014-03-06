@@ -39,6 +39,10 @@ import org.springframework.transaction.annotation.Transactional;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.cache.CacheKeyService;
+import com.next.aap.cache.CacheService;
+import com.next.aap.cache.beans.DonationBean;
+import com.next.aap.cache.beans.DonationCampaignInfo;
 import com.next.aap.core.exception.AppException;
 import com.next.aap.core.persistance.AcRole;
 import com.next.aap.core.persistance.Account;
@@ -205,6 +209,9 @@ public class AapServiceImpl implements AapService, Serializable {
 	private final String urlShortnerUrl="http://myaap.in/yourls-api.php?format=json&username=arvind&password=4delhi&action=shorturl&url=";
 	private final String missingImageUrl = "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign/images/aap-article.jpg";
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	private CacheService cacheService;
 	@Autowired
 	private UserDao userDao;
 	@Autowired
@@ -996,6 +1003,10 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public List<DistrictDto> getAllDistrictOfState(long stateId) {
 		List<District> allDistricts = districtDao.getDistrictOfState(stateId);
+		List<DistrictDto> returnList = convertDistricts(allDistricts);
+		return returnList;
+	}
+	private List<DistrictDto> convertDistricts(List<District> allDistricts) {
 		List<DistrictDto> returnList = new ArrayList<DistrictDto>();
 		for (District oneDistrict : allDistricts) {
 			returnList.add(convertDistrict(oneDistrict));
@@ -4217,10 +4228,20 @@ public class AapServiceImpl implements AapService, Serializable {
 	}
 
 	private void updateDonationCampaigns(Donation donation){
-		 updateGlobalCampaigns(donation);
+		try{
+			logger.info("Updating Global Campaigns");
+			 updateGlobalCampaigns(donation);
+			 logger.info("Updating Location Campaigns");
+			 updateLocationCampaigns(donation);
+			 logger.info("Updating User Campaigns");
+			 updateUserCampaigns(donation);
+			 logger.info("Updated ALL Campaigns");
+		}catch(Exception ex){
+			logger.error("Unable to update Campaigns", ex);
+		}
 	}
 	private void updateGlobalCampaigns(Donation donation){
-		if(StringUtil.isEmpty(donation.getCid())){
+		if(!StringUtil.isEmpty(donation.getCid())){
 			//If campaign Id is provided then directly add this donation to given campaign
 			GlobalCampaign globalCampaign = globalCampaignDao.getGlobalCampaignByGlobalCampaign(donation.getCid());
 			if(globalCampaign != null){
@@ -4240,6 +4261,65 @@ public class AapServiceImpl implements AapService, Serializable {
 					}
 				}
 			}
+		}
+	}
+	private void updateLocationCampaigns(Donation donation){
+		if(!StringUtil.isEmpty(donation.getLcid())){
+			//If campaign Id is provided then directly add this donation to given campaign
+			LocationCampaign locationCampaign = locationCampaignDao.getLocationCampaignByLocationCampaign(donation.getLcid());
+			if(locationCampaign != null){
+				locationCampaign.setTotalDonation(locationCampaign.getTotalDonation() + donation.getAmount());
+				locationCampaign.setTotalNumberOfDonations(locationCampaign.getTotalNumberOfDonations() + 1);
+				locationCampaign = locationCampaignDao.saveLocationCampaign(locationCampaign);
+				
+				//update in Memcache
+				List<Donation> donations = donationDao.getDonationsByLocationCampaignId(donation.getLcid(), 100);
+				String key = CacheKeyService.createLocationCampaignKey(locationCampaign.getCampaignIdUp());
+				logger.info("key = "+key);
+				DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
+				logger.info("donationCampaignInfo from cache = "+donationCampaignInfo);
+				if(donationCampaignInfo == null){
+					donationCampaignInfo = new DonationCampaignInfo();
+				}
+				donationCampaignInfo.setTamt(locationCampaign.getTotalDonation());
+				donationCampaignInfo.setTtxn(locationCampaign.getTotalNumberOfDonations());
+				donationCampaignInfo.getDns().clear();
+				for(Donation oneDonation:donations){
+					donationCampaignInfo.getDns().add(new DonationBean(oneDonation));
+				}
+				cacheService.saveData(key, donationCampaignInfo);
+			}
+			
+		}
+	}
+	
+	private void updateUserCampaigns(Donation donation){
+		if(!StringUtil.isEmpty(donation.getCid())){
+			//If campaign Id is provided then directly add this donation to given campaign
+			DonationCampaign donationCampaign = donationCampaignDao.getDonationCampaignByDonationCampaign(donation.getCid());
+			if(donationCampaign != null){
+				donationCampaign.setTotalDonation(donationCampaign.getTotalDonation() + donation.getAmount());
+				donationCampaign.setTotalNumberOfDonations(donationCampaign.getTotalNumberOfDonations() + 1);
+				donationCampaign = donationCampaignDao.saveDonationCampaign(donationCampaign);
+				
+				//update in Memcache
+				List<Donation> donations = donationDao.getDonationsByCampaignId(donation.getCid(), 100);
+				String key = CacheKeyService.createDonationCampaignKey(donationCampaign.getCampaignIdUp());
+				logger.info("key = "+key);
+				DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
+				logger.info("donationCampaignInfo from cache = "+donationCampaignInfo);
+				if(donationCampaignInfo == null){
+					donationCampaignInfo = new DonationCampaignInfo();
+				}
+				donationCampaignInfo.setTamt(donationCampaign.getTotalDonation());
+				donationCampaignInfo.setTtxn(donationCampaign.getTotalNumberOfDonations());
+				donationCampaignInfo.getDns().clear();
+				for(Donation oneDonation:donations){
+					donationCampaignInfo.getDns().add(new DonationBean(oneDonation));
+				}
+				cacheService.saveData(key, donationCampaignInfo);
+			}
+			
 		}
 	}
 	// 07 Jan 2013 17:55:41:917
@@ -4266,7 +4346,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 			phone = null;//getDbPhone(oneDonation, emailUser);
 			if(email == null && phone == null){
-				//System.out.println("email == null && phone == null");
+				logger.info("email == null && phone == null");
 				donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", "No Email or Phone Number found");
 				return;
 			}
@@ -4286,13 +4366,11 @@ public class AapServiceImpl implements AapService, Serializable {
 						mainUser = emailUser;
 					}catch(AppException ex){
 						donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
-						System.out.println("AppException : "+ex.getMessage());
-						ex.printStackTrace();
+						logger.error("AppException : "+ex.getMessage(), ex);
 						return;
 					}catch(Exception ex){
 						donationDao.updateDonationStatus(oneDonation.getDonorId(), "DataError", ex.getMessage());
-						ex.printStackTrace();
-						System.out.println("Exception : "+ex.getMessage());
+						logger.error("Exception : "+ex.getMessage(), ex);
 						return;
 					}
 				}
@@ -4306,7 +4384,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 			if(mainUser == null){
 				donationDao.updateDonationStatus(oneDonation.getDonorId(), "CodeError", "No Main User found");
-				System.out.println("Exception : No Main User Found");
+				logger.info("Exception : No Main User Found");
 				return;
 			}
 			Date donationDate = null;
@@ -4320,12 +4398,16 @@ public class AapServiceImpl implements AapService, Serializable {
 			}
 			
 			//Update User State
+			logger.info("Updating USer Location");
 			updateUserLocation(mainUser, oneDonation.getDonorCountryId(), oneDonation.getDonorStateId());
 			
+			logger.info("Updating USer Address");
 			updateUserAddress(mainUser, oneDonation);
 			
+			logger.info("Updating USer Name");
 			updateUserName(mainUser, oneDonation);
 			
+			logger.info("Updating USer Date of Birth");
 			updateUserDob(mainUser, oneDonation, donationDate);
 			
 			mainUser.setDateModified(new Date());
@@ -4374,12 +4456,14 @@ public class AapServiceImpl implements AapService, Serializable {
 				donation.setUtmMedium(oneDonation.getUtmMedium());
 				donation.setUtmSource(oneDonation.getUtmSource());
 				donation.setUtmTerm(oneDonation.getUtmTerm());
+				donation.setLcid(oneDonation.getLid());
 
 				donation = donationDao.saveDonation(donation);
 			}else{
 				donation.setAmount(oneDonation.getAmount());
 			}
-			if(oneDonation.getStatus().equalsIgnoreCase("SUCCESS")){
+			logger.info("checking if campaigns can be updated : "+oneDonation.getPgErrorMessage().equalsIgnoreCase("SUCCESS"));
+			if(oneDonation.getPgErrorMessage().equalsIgnoreCase("SUCCESS")){
 				updateDonationCampaigns(donation);	
 			}
 			
@@ -5029,16 +5113,17 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Override
 	@Transactional
 	public void saveDonationDump(DonationDump donationDump) {
-		System.out.println("saveDonationDump="+donationDump);
 		if(StringUtil.isEmpty(donationDump.getDonorId())){
 			logger.error("Invalid Donation Data, DONOR_ID is empty or null");
 			return;
 		}
 		DonationDump existingDonationDump = donationDao.getDonationDumpByDonorId(donationDump.getDonorId());
 		if(existingDonationDump == null){
+			logger.info("new Donation so will import in system");
 			donationDump = donationDao.saveDonationDump(donationDump);
 			importOneDonation(donationDump);
 		}else{
+			logger.info("Existing Donation so will NOT import in system");
 			Donation donation = donationDao.getDonationByDonorId(donationDump.getDonorId());
 			donation.setPgErrorDetail(donationDump.getPgErrorDetail());
 			donation.setPgErrorMessage(donationDump.getPgErrorMessage());
@@ -5161,51 +5246,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		
 	}
 
-	@Override
-	@Transactional
-	public LocationCampaignDto saveLocationCampaign(LocationCampaignDto locationCampaignDto) throws AppException{
-		LocationCampaign locationCampaign = null;
-		boolean newCampaign = false;
-		if(locationCampaignDto.getId() != null && locationCampaignDto.getId() > 0){
-			locationCampaign = locationCampaignDao.getLocationCampaignById(locationCampaignDto.getId());
-			if(locationCampaign == null){
-				throw new AppException("No Location Campaign found for id="+locationCampaignDto.getId());
-			}
-		}else{
-			locationCampaign = locationCampaignDao.getLocationCampaignByLocationCampaign(locationCampaignDto.getCampaignId());
-			if(locationCampaign != null){
-				throw new AppException("Location Campaign already exists for campaignId="+locationCampaignDto.getCampaignId());
-			}
-			newCampaign = true;
-			locationCampaign = new LocationCampaign();	
-			
-			locationCampaign.setCampaignId(locationCampaignDto.getCampaignId());
-			locationCampaign.setTotalDonation(locationCampaignDto.getTotalDonation());
-			locationCampaign.setTotalNumberOfDonations(locationCampaignDto.getTotalNumberOfDonations());
-			String longUrl = donationUrl + locationCampaignDto.getCampaignId();
-			locationCampaign.setLongUrl(longUrl);
-			String shortUrl = getShortUrl(longUrl, locationCampaignDto.getCampaignId());
-			locationCampaign.setMyAapShortUrl(shortUrl);
-		}
-		locationCampaign.setDescription(locationCampaignDto.getDescription());
-		locationCampaign.setTitle(locationCampaignDto.getTitle());
-		locationCampaign.setEndDate(locationCampaignDto.getEndDate());
-		locationCampaign.setStartDate(locationCampaignDto.getStartDate());
-		locationCampaign.setTargetDonation(locationCampaignDto.getTargetDonation());
-		
-		locationCampaign = locationCampaignDao.saveLocationCampaign(locationCampaign);
-		
-		if(newCampaign){
-			
-		}
-		
-		return convertLocationCampaign(locationCampaign);
-	}
-	private LocationCampaignDto convertLocationCampaign(LocationCampaign locationCampaign){
-		LocationCampaignDto locationCampaignDto = new LocationCampaignDto();
-		BeanUtils.copyProperties(locationCampaign, locationCampaignDto);
-		return locationCampaignDto;
-	}
+	
 	@Override
 	@Transactional
 	public GlobalCampaignDto saveGlobalCampaign(GlobalCampaignDto globalCampaignDto) throws AppException{
@@ -5737,6 +5778,144 @@ public class AapServiceImpl implements AapService, Serializable {
 	@Transactional
 	public Map<Long, List<Long>> getPollQuestionItemsOfAllCountryRegion() {
 		return pollQuestionDao.getPollQuestionItemsOfAllCountryRegion();
+	}
+
+	public LocationCampaign saveLocationCampaign(LocationCampaignDto locationCampaignDto) throws AppException{
+		LocationCampaign locationCampaign = null;
+		boolean newCampaign = false;
+		if(locationCampaignDto.getId() != null && locationCampaignDto.getId() > 0){
+			locationCampaign = locationCampaignDao.getLocationCampaignById(locationCampaignDto.getId());
+			if(locationCampaign == null){
+				throw new AppException("No Location Campaign found for id="+locationCampaignDto.getId());
+			}
+		}else{
+			locationCampaign = locationCampaignDao.getLocationCampaignByLocationCampaign(locationCampaignDto.getCampaignId());
+			if(locationCampaign != null){
+				throw new AppException("Location Campaign already exists for campaignId="+locationCampaignDto.getCampaignId());
+			}
+			newCampaign = true;
+			locationCampaign = new LocationCampaign();	
+			
+			locationCampaign.setCampaignId(locationCampaignDto.getCampaignId());
+			locationCampaign.setTotalDonation(locationCampaignDto.getTotalDonation());
+			locationCampaign.setTotalNumberOfDonations(locationCampaignDto.getTotalNumberOfDonations());
+			locationCampaign.setCampaignType(locationCampaignDto.getCampaignType());
+			locationCampaign.setDateCreated(new Date());
+			locationCampaign.setDateModified(new Date());
+			String longUrl = donationUrl + "lcid="+locationCampaignDto.getCampaignId();
+			locationCampaign.setLongUrl(longUrl);
+			String shortUrl = getShortUrl(longUrl, locationCampaignDto.getCampaignId());
+			locationCampaign.setMyAapShortUrl(shortUrl);
+		}
+		locationCampaign.setDescription(locationCampaignDto.getDescription());
+		locationCampaign.setTitle(locationCampaignDto.getTitle());
+		locationCampaign.setEndDate(locationCampaignDto.getEndDate());
+		locationCampaign.setStartDate(locationCampaignDto.getStartDate());
+		locationCampaign.setTargetDonation(locationCampaignDto.getTargetDonation());
+		
+		locationCampaign = locationCampaignDao.saveLocationCampaign(locationCampaign);
+		
+		return locationCampaign;
+	}
+	
+	@Override
+	@Transactional
+	public LocationCampaignDto saveStateLocationCampaign(LocationCampaignDto locationCampaignDto, long stateId) throws AppException{
+		LocationCampaign locationCampaign = saveLocationCampaign(locationCampaignDto);
+		
+		State state = stateDao.getStateById(stateId);
+		if(state.getCampaigns() == null){
+			state.setCampaigns(new HashSet<LocationCampaign>());
+		}
+		state.getCampaigns().add(locationCampaign);
+	
+		return convertLocationCampaign(locationCampaign);
+	}
+	private LocationCampaignDto convertLocationCampaign(LocationCampaign locationCampaign){
+		if(locationCampaign == null){
+			return null;
+		}
+		LocationCampaignDto locationCampaignDto = new LocationCampaignDto();
+		BeanUtils.copyProperties(locationCampaign, locationCampaignDto);
+		return locationCampaignDto;
+	}
+
+	@Override
+	@Transactional
+	public LocationCampaignDto saveDistrictLocationCampaign(LocationCampaignDto locationCampaignDto, long districtId) throws AppException {
+		LocationCampaign locationCampaign = saveLocationCampaign(locationCampaignDto);
+		
+		District district = districtDao.getDistrictById(districtId);
+		if(district.getCampaigns() == null){
+			district.setCampaigns(new HashSet<LocationCampaign>());
+		}
+		district.getCampaigns().add(locationCampaign);
+	
+		return convertLocationCampaign(locationCampaign);
+	}
+
+	@Override
+	@Transactional
+	public LocationCampaignDto saveAcLocationCampaign(LocationCampaignDto locationCampaignDto, long acId) throws AppException {
+		LocationCampaign locationCampaign = saveLocationCampaign(locationCampaignDto);
+		
+		AssemblyConstituency ac = assemblyConstituencyDao.getAssemblyConstituencyById(acId);
+		if(ac.getCampaigns() == null){
+			ac.setCampaigns(new HashSet<LocationCampaign>());
+		}
+		ac.getCampaigns().add(locationCampaign);
+	
+		return convertLocationCampaign(locationCampaign);
+	}
+
+	@Override
+	@Transactional
+	public LocationCampaignDto savePcLocationCampaign(LocationCampaignDto locationCampaignDto, long pcId) throws AppException {
+		LocationCampaign locationCampaign = saveLocationCampaign(locationCampaignDto);
+		
+		ParliamentConstituency pc = parliamentConstituencyDao.getParliamentConstituencyById(pcId);
+		if(pc.getCampaigns() == null){
+			pc.setCampaigns(new HashSet<LocationCampaign>());
+		}
+		pc.getCampaigns().add(locationCampaign);
+	
+		return convertLocationCampaign(locationCampaign);
+	}
+
+	@Override
+	@Transactional
+	public LocationCampaignDto getDefaultStateLocationCampaign(long stateId) throws AppException {
+		LocationCampaign locationCampaign = locationCampaignDao.getDefaultLocationCampaignByStateId(stateId);
+		return convertLocationCampaign(locationCampaign);
+	}
+
+	@Override
+	@Transactional
+	public LocationCampaignDto getDefaultDistrictLocationCampaign(long districtId) throws AppException {
+		LocationCampaign locationCampaign = locationCampaignDao.getDefaultLocationCampaignByDistrictId(districtId);
+		return convertLocationCampaign(locationCampaign);
+	}
+
+	@Override
+	@Transactional
+	public LocationCampaignDto getDefaultAcLocationCampaign(long acId) throws AppException {
+		LocationCampaign locationCampaign = locationCampaignDao.getDefaultLocationCampaignByAcId(acId);
+		return convertLocationCampaign(locationCampaign);
+	}
+
+	@Override
+	@Transactional
+	public LocationCampaignDto getDefaultPcLocationCampaign(long pcId) throws AppException {
+		LocationCampaign locationCampaign = locationCampaignDao.getDefaultLocationCampaignByPcId(pcId);
+		return convertLocationCampaign(locationCampaign);
+	}
+
+	@Override
+	@Transactional
+	public List<DistrictDto> getAllDistricts() {
+		List<District> allDistricts = districtDao.getAllDistricts();
+		List<DistrictDto> returnList = convertDistricts(allDistricts);
+		return returnList;
 	}
 
 	

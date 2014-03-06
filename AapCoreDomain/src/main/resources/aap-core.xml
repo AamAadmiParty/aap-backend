@@ -38,6 +38,12 @@
 		<property name="validationQuery" value="SELECT 1"/>
 	    
 	</bean>
+	
+	<bean id="cacheService" class="com.next.aap.cache.MemcachClient_SpyMemecached">
+	    
+	</bean>
+	
+	
  	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		

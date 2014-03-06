@@ -4,16 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.google.gdata.util.common.base.StringUtil;
-import com.next.aap.web.ItemList;
-import com.next.aap.web.cache.AapDataCache;
-import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.LoginAccountDto;
-import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 

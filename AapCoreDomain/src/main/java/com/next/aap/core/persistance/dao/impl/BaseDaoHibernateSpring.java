@@ -119,6 +119,32 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
         }
 		return returnList;
 	}
+	public Long executeSqlQueryGetLong(String query){
+		return executeSqlQueryGetLong(query, null);
+	}
+	public Long executeSqlQueryGetLong(String query,Map<String, Object> params){
+		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
+		if(params != null){
+			for(Entry<String, Object> oneEntry:params.entrySet()){
+				if(oneEntry.getValue() instanceof Collection){
+					sqlQuery.setParameterList(oneEntry.getKey(), (Collection)oneEntry.getValue());
+				}else{
+					sqlQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());	
+				}
+			}
+		}
+		@SuppressWarnings("rawtypes")
+		List results = sqlQuery.list();
+		System.out.println("results="+results);
+		if(results == null || results.isEmpty()){
+			return null;
+		}
+				
+		if(results.get(0) instanceof BigInteger){
+			return ((BigInteger)results.get(0)).longValue();
+		}
+		return (Long)results.get(0);
+	}
 	public List executeSqlQueryGetResultList(String query){
 		return executeSqlQueryGetResultList(query, null);
 	}

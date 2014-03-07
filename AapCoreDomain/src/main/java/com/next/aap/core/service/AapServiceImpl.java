@@ -205,7 +205,7 @@ import com.next.aap.web.dto.VolunteerDto;
 public class AapServiceImpl implements AapService, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private final String donationUrl = "https://donate.aamaadmiparty.org/?utm_source=donate4india&utm_medium=web&utm_term=donate-purl&utm_content=donation&utm_campaign=affliation&cid=";
+	private final String donationUrl = "https://donate.aamaadmiparty.org/?utm_source=myaap&utm_medium=web&utm_term=donate-purl&utm_content=donation&utm_campaign=affliation&cid=";
 	private final String urlShortnerUrl="http://myaap.in/yourls-api.php?format=json&username=arvind&password=4delhi&action=shorturl&url=";
 	private final String missingImageUrl = "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign/images/aap-article.jpg";
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -4247,7 +4247,10 @@ public class AapServiceImpl implements AapService, Serializable {
 			if(globalCampaign != null){
 				globalCampaign.setTotalDonation(globalCampaign.getTotalDonation() + donation.getAmount());
 				globalCampaign.setTotalNumberOfDonations(globalCampaign.getTotalNumberOfDonations() + 1);
+				globalCampaign.setTotalDonationInTime(globalCampaign.getTotalDonationInTime() + donation.getAmount());
+				globalCampaign.setTotalNumberOfDonationsInTime(globalCampaign.getTotalNumberOfDonationsInTime() + 1);
 				globalCampaign = globalCampaignDao.saveGlobalCampaign(globalCampaign);
+				updateGlobalDonationCampaignInMemcache(globalCampaign);
 			}
 		}else{
 			List<GlobalCampaign> globalCampaigns = globalCampaignDao.getGlobalCampaigns();
@@ -4258,10 +4261,17 @@ public class AapServiceImpl implements AapService, Serializable {
 						oneGlobalCampaign.setTotalDonationInTime(oneGlobalCampaign.getTotalDonationInTime() + donation.getAmount());
 						oneGlobalCampaign.setTotalNumberOfDonationsInTime(oneGlobalCampaign.getTotalNumberOfDonationsInTime() + 1);
 						oneGlobalCampaign = globalCampaignDao.saveGlobalCampaign(oneGlobalCampaign);
+						//updateGlobalDonationCampaignInMemcache(oneGlobalCampaign);
 					}
 				}
 			}
 		}
+	}
+	private void updateGlobalDonationCampaignInMemcache(GlobalCampaign globalCampaign){
+		List<Donation> donations = donationDao.getDonationsByCampaignId(globalCampaign.getCampaignId(), 100);
+		String key = CacheKeyService.createGlobalCampaignKey(globalCampaign.getCampaignIdUp());
+		updateDonationsInMemCache(key, donations, globalCampaign.getTotalDonation(), globalCampaign.getTotalNumberOfDonations());
+
 	}
 	private void updateLocationCampaigns(Donation donation){
 		if(!StringUtil.isEmpty(donation.getLcid())){
@@ -4275,22 +4285,25 @@ public class AapServiceImpl implements AapService, Serializable {
 				//update in Memcache
 				List<Donation> donations = donationDao.getDonationsByLocationCampaignId(donation.getLcid(), 100);
 				String key = CacheKeyService.createLocationCampaignKey(locationCampaign.getCampaignIdUp());
-				logger.info("key = "+key);
-				DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
-				logger.info("donationCampaignInfo from cache = "+donationCampaignInfo);
-				if(donationCampaignInfo == null){
-					donationCampaignInfo = new DonationCampaignInfo();
-				}
-				donationCampaignInfo.setTamt(locationCampaign.getTotalDonation());
-				donationCampaignInfo.setTtxn(locationCampaign.getTotalNumberOfDonations());
-				donationCampaignInfo.getDns().clear();
-				for(Donation oneDonation:donations){
-					donationCampaignInfo.getDns().add(new DonationBean(oneDonation));
-				}
-				cacheService.saveData(key, donationCampaignInfo);
+				updateDonationsInMemCache(key, donations, locationCampaign.getTotalDonation(), locationCampaign.getTotalNumberOfDonations());
 			}
 			
 		}
+	}
+	private void updateDonationsInMemCache(String key, List<Donation> donations, Double totalAmount, int totalTxn){
+		logger.info("key = "+key);
+		DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
+		logger.info("donationCampaignInfo from cache = "+donationCampaignInfo);
+		if(donationCampaignInfo == null){
+			donationCampaignInfo = new DonationCampaignInfo();
+		}
+		donationCampaignInfo.setTamt(totalAmount);
+		donationCampaignInfo.setTtxn(totalTxn);
+		donationCampaignInfo.getDns().clear();
+		for(Donation oneDonation:donations){
+			donationCampaignInfo.getDns().add(new DonationBean(oneDonation));
+		}
+		cacheService.saveData(key, donationCampaignInfo);
 	}
 	
 	private void updateUserCampaigns(Donation donation){
@@ -4305,19 +4318,7 @@ public class AapServiceImpl implements AapService, Serializable {
 				//update in Memcache
 				List<Donation> donations = donationDao.getDonationsByCampaignId(donation.getCid(), 100);
 				String key = CacheKeyService.createDonationCampaignKey(donationCampaign.getCampaignIdUp());
-				logger.info("key = "+key);
-				DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
-				logger.info("donationCampaignInfo from cache = "+donationCampaignInfo);
-				if(donationCampaignInfo == null){
-					donationCampaignInfo = new DonationCampaignInfo();
-				}
-				donationCampaignInfo.setTamt(donationCampaign.getTotalDonation());
-				donationCampaignInfo.setTtxn(donationCampaign.getTotalNumberOfDonations());
-				donationCampaignInfo.getDns().clear();
-				for(Donation oneDonation:donations){
-					donationCampaignInfo.getDns().add(new DonationBean(oneDonation));
-				}
-				cacheService.saveData(key, donationCampaignInfo);
+				updateDonationsInMemCache(key, donations, donationCampaign.getTotalDonation(), donationCampaign.getTotalNumberOfDonations());
 			}
 			
 		}

@@ -38,6 +38,14 @@
 						<li><a href="#failed">failed</a></li>
 					</ul>
 					<div id="success" class="languagetab">
+						<table><tr>
+                                                        <th> Total Donation Amount</th>
+                                                        <td> ${total} </td>
+                                                        </tr><tr>
+                                                        <th> Total Donations </th>
+                                                        <td> ${fn:length(successDonations)}</td>
+                                                        </tr>
+                                                        </table>
 						<table id="successTable" style="border: 1px solid;">
 							<thead>
 								<tr>

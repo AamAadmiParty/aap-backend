@@ -4898,6 +4898,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			
 		}else{
 			donationCampaign.setDescription(description);
+			donationCampaign = donationCampaignDao.saveDonationCampaign(donationCampaign);
 		}
 		return convertDonationCampaign(donationCampaign);
 	}

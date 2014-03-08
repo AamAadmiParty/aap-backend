@@ -22,7 +22,6 @@ public class ReceiveDonationListener extends AwsQueueListener{
 			, @Value("${aws_access_secret}") String accessSecret) {
 		super(queueName, accessKey, accessSecret);
 	}
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private AapService aapService;
 	@Override

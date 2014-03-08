@@ -3,6 +3,9 @@ package com.next.aap.task.util;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
@@ -20,6 +23,8 @@ public abstract class AwsQueueListener {
 	private String queueName;
 	private int defaultWaitTime = 20;
 	private AmazonSQS sqs;
+
+	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public AwsQueueListener(String queueName, String acccessKey, String secretKey) {
 		this(Regions.US_WEST_2, queueName, acccessKey, secretKey);
@@ -49,7 +54,7 @@ public abstract class AwsQueueListener {
 				receiveMessageRequest.setMaxNumberOfMessages(1);
 				while (true) {
 					try {
-						System.out.println("Reading Message from Queue "+ queueName);
+						logger.info("Reading Message from Queue "+ queueName);
 						ReceiveMessageResult rmResult = sqs.receiveMessage(receiveMessageRequest);
 						// System.out.println("Got Result "+ rmResult);
 						if (rmResult.getMessages().size() > 0) {
@@ -74,12 +79,12 @@ public abstract class AwsQueueListener {
 
 							}
 						} else {
-							System.out.println("No messages available, attempt ");
+							logger.info("No messages available, attempt ");
 							// Wait for few second before trying again
 						}
 
 					} catch (Exception ex) {
-						ex.printStackTrace();
+						logger.error(ex.getMessage(), ex);
 					}
 					/*
 					try {

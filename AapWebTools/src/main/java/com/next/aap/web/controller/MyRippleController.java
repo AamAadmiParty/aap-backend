@@ -85,6 +85,7 @@ public class MyRippleController extends AppBaseController {
 				campaignId = campaignId.trim();
 			}
 			String description = httpServletRequest.getParameter("description");
+			System.out.println("Description : "+description);
 			if(description != null){
 				description = description.trim();
 			}

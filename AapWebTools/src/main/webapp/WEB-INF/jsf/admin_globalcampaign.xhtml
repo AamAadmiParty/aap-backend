@@ -35,8 +35,8 @@
 <h:body>
 	<ui:include src="admin_menu.xhtml" />
 	<!-- menu ends -->
-	<div style="width: 1000px; margin: 0 auto;">
-		<div style="width: 1000px; margin: 0;">
+	<div style="width: 1200px; margin: 0 auto;">
+		<div style="width: 1200px; margin: 0;">
 			<p:blockUI block="adminGlobalCampaign" trigger=":adminGlobalCampaign:saveGlobalCampaign">
 			Saving Profile<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
@@ -52,6 +52,9 @@
 							paginatorAlwaysVisible="false" emptyMessage="No News"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">Global Donation Campaign</f:facet>
+							<p:column style="width:2%">
+								<p:rowToggler />
+							</p:column>
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="CampaignId" />
@@ -74,23 +77,27 @@
 								<f:facet name="header">
 									<h:outputText value="TotalDonation" />
 								</f:facet>
-								<h:outputText value="#{oneGlobalCampaign.totalDonation}" />
+								<h:outputText value="#{oneGlobalCampaign.totalDonation}" >
+									<f:convertNumber pattern="#0.00" />
+								</h:outputText>
 							</p:column>
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="TargetDonation" />
 								</f:facet>
-								<h:outputText value="#{oneGlobalCampaign.targetDonation}" />
+								<h:outputText value="#{oneGlobalCampaign.targetDonation}" >
+									<f:convertNumber pattern="#0.00" />
+								</h:outputText>
 							</p:column>
 							<p:column>
 								<f:facet name="header">
-									<h:outputText value="TargetDonation" />
+									<h:outputText value="Duration" />
 								</f:facet>
-								<h:outputText value="#{oneGlobalCampaign.startDate}" >
-								 	<f:convertDateTime pattern="dd-MMM-yyyy" />
+								<h:outputText value="#{oneGlobalCampaign.startDate}">
+									<f:convertDateTime pattern="dd-MMM-yyyy" />
 								</h:outputText>
 								to
-								<h:outputText value="#{oneGlobalCampaign.endDate}" >
+								<h:outputText value="#{oneGlobalCampaign.endDate}">
 									<f:convertDateTime pattern="dd-MMM-yyyy" />
 								</h:outputText>
 							</p:column>
@@ -98,25 +105,69 @@
 								<f:facet name="header">
 									<h:outputText value="Update" />
 								</f:facet>
-								<p:commandLink update=":adminGlobalCampaign:mainPanel" title="Update Post" >
+								<p:commandLink update=":adminGlobalCampaign:mainPanel" title="Update Post">
 									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
 									<f:setPropertyActionListener value="#{oneGlobalCampaign}" target="#{adminGlobalDonationBean.selectedGlobalCampaign}" />
 								</p:commandLink>
 							</p:column>
+							<p:rowExpansion>
+								<h:panelGrid width="1000" id="display" columns="2" cellpadding="4" style="width:300px;" styleClass=" ui-widget-content grid">
+
+									<f:facet name="header">
+										<h:outputText value="Global Campaign Details" />
+									</f:facet>
+
+									<h:outputText value="Long Url" />
+									<h:outputText value="#{oneGlobalCampaign.longUrl}" />
+
+									<h:outputText value="Description" />
+									<h:outputText value="#{oneGlobalCampaign.description}" escape="false" />
+
+									<h:outputText value="Total Donations(Amount)" />
+									<h:outputText value="#{oneGlobalCampaign.totalDonation}" >
+										<f:convertNumber pattern="#0.00" />
+									</h:outputText>
+
+									<h:outputText value="Total Donations(Count)" />
+									<h:outputText value="#{oneGlobalCampaign.totalNumberOfDonations}" />
+
+									<h:outputText value="Total Donations During Campaign(Amount)" />
+									<h:outputText value="#{oneGlobalCampaign.totalDonationInTime}" >
+										<f:convertNumber pattern="#0.00" />
+									</h:outputText>
+
+									<h:outputText value="Total Donations During Campaign(Count)" />
+									<h:outputText value="#{oneGlobalCampaign.totalNumberOfDonationsInTime}" />
+
+									<h:outputText value="Start Date" />
+									<h:outputText value="#{oneGlobalCampaign.startDate}">
+									<f:convertDateTime pattern="dd-MMM-yyyy" />
+									</h:outputText>
+
+									<h:outputText value="End Date" />
+									<h:outputText value="#{oneGlobalCampaign.endDate}">
+										<f:convertDateTime pattern="dd-MMM-yyyy" />
+									</h:outputText>
+
+								</h:panelGrid>
+
+							</p:rowExpansion>
 						</p:dataTable>
 					</p:outputPanel>
 					<p:outputPanel id="formView" rendered="#{!adminGlobalDonationBean.showList}">
 						<p:panelGrid columns="2">
 							<p:outputLabel value="Campaign Id"></p:outputLabel>
 							<p:outputPanel>
-							<p:inputText value="#{adminGlobalDonationBean.selectedGlobalCampaign.campaignId}" style="width:200px" disabled="#{!adminGlobalDonationBean.editAllowed}">
-							</p:inputText><br/>
-							<p:outputLabel value="*You can enter campaignId only once and WILL NOT be able to edit later"></p:outputLabel>
-							
+								<p:inputText value="#{adminGlobalDonationBean.selectedGlobalCampaign.campaignId}" style="width:200px" disabled="#{!adminGlobalDonationBean.editAllowed}">
+								</p:inputText>
+								<br />
+								<p:outputLabel value="*You can enter campaignId only once and WILL NOT be able to edit later"></p:outputLabel>
+
 							</p:outputPanel>
 							<p:outputLabel value="Public Page URL" rendered="#{!adminGlobalDonationBean.editAllowed}"></p:outputLabel>
-							<p:outputLabel value="http://my.aamaadmiparty.org/campaign/global/#{adminGlobalDonationBean.selectedGlobalCampaign.campaignId}" rendered="#{!adminGlobalDonationBean.editAllowed}"></p:outputLabel>
-							
+							<p:outputLabel value="http://my.aamaadmiparty.org/campaign/global/#{adminGlobalDonationBean.selectedGlobalCampaign.campaignId}"
+								rendered="#{!adminGlobalDonationBean.editAllowed}"></p:outputLabel>
+
 							<p:outputLabel value="Title"></p:outputLabel>
 							<p:inputText value="#{adminGlobalDonationBean.selectedGlobalCampaign.title}" style="width:600px">
 							</p:inputText>
@@ -135,7 +186,7 @@
 						<p:commandButton value="Cancel" update=":adminGlobalCampaign:mainPanel" actionListener="#{adminGlobalDonationBean.cancel}" styleClass="ui-priority-primary">
 						</p:commandButton>
 						<p:commandButton id="saveGlobalCampaign" value="Save Campaign" update=":adminGlobalCampaign:mainPanel" actionListener="#{adminGlobalDonationBean.saveGlobalCampaign}"
-							styleClass="ui-priority-primary" >
+							styleClass="ui-priority-primary">
 						</p:commandButton>
 
 

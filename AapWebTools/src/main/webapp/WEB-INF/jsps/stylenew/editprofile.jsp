@@ -169,7 +169,7 @@ $(function(){
 			changeYear : true,
 			yearRange : '-99Y:-18Y'
 		});
-		$("#dateOfBirth").datepicker("option", "dateFormat", "mm/dd/yy");
+		$("#dateOfBirth").datepicker("option", "dateFormat", "dd/mmm/yyyy");
 		$("#dateOfBirth").datepicker("option", "autoSize", "true");
 	});
 	$(document).ready(function() {
@@ -281,8 +281,8 @@ $(function(){
 					</div>
 
 					<div class="blockdiv">
-						<label>Date of Birth(dd/mm/yyyy)</label>
-						<form:input path="dateOfBirth" class="textbox" title="Your date of Birth, i.e. 18/09/1981 dd/mm/yyyy"/>
+						<label>Date of Birth(dd/mmm/yyyy)</label>
+						<form:input path="dateOfBirth" class="textbox" title="Your date of Birth, i.e. 18/Sep/1981 dd/mmm/yyyy"/>
 					</div>
 
 					<div class="blockdiv">

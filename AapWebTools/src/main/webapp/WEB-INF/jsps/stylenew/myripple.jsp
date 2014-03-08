@@ -125,7 +125,8 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 								<div class="blockdiv">
 									<label>My Campaign Name</label>
 									<c:if test="${rippleCampaignExists}">
-									<input disabled=true type="text" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"
+									<input type="hidden" name="campaignId" id="campaignId" value="<c:out value='${rippleCampaign.campaignId}'/>"/>
+									<input disabled=true type="text" name="campaignId2" id="campaignId2" value="<c:out value='${rippleCampaign.campaignId}'/>"
 										class="textbox" title="Name of your campaign, can contain only letters and numbers, NO Space or any special character"/>
 									</c:if> 
 									<c:if test="${!rippleCampaignExists}">

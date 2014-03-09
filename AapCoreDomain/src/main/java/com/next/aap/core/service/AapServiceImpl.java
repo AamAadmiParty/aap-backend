@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.GroupMembership;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
@@ -172,6 +173,7 @@ import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
+import com.next.aap.web.dto.FacebookGroupDto;
 import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.FinancialPlanningDto;
 import com.next.aap.web.dto.GlobalCampaignDto;
@@ -618,6 +620,9 @@ public class AapServiceImpl implements AapService, Serializable {
 				user.setName(facebookAccountEmail);
 			} else {
 				user.setName(fbConnectionData.getDisplayName());
+			}
+			if(StringUtil.isEmpty(user.getName())){
+				user.setName("NoName");
 			}
 
 			user.setDateCreated(new Date());
@@ -1281,6 +1286,16 @@ public class AapServiceImpl implements AapService, Serializable {
 		BeanUtils.copyProperties(facebookAppPermission, facebookAppPermissionDto);
 		return facebookAppPermissionDto;
 	}
+	private List<FacebookAppPermissionDto> convertFacebookAppPermissions(Collection<FacebookAppPermission> facebookAppPermissions) {
+		if (facebookAppPermissions == null || facebookAppPermissions.isEmpty()) {
+			return new ArrayList<FacebookAppPermissionDto>(1);
+		}
+		List<FacebookAppPermissionDto> returnList = new ArrayList<>(facebookAppPermissions.size());
+		for(FacebookAppPermission oneFacebookAppPermission: facebookAppPermissions){
+			returnList.add(convertFacebookAppPermission(oneFacebookAppPermission));
+		}
+		return returnList;
+	}
 
 	@Override
 	@Transactional
@@ -1336,6 +1351,8 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		FacebookGroupMembership oneFacebookGroupMembership;
 		FacebookGroup oneFacebookGroup;
+		Calendar defaultLastPostDate = Calendar.getInstance();
+		defaultLastPostDate.set(Calendar.YEAR, 2012);
 		for (GroupMembership oneGroupMembership : userGroupMembership) {
 			oneFacebookGroup = facebookGroupDao.getFacebookGroupByFacebookGroupExternalId(oneGroupMembership.getId());
 			if (oneFacebookGroup == null) {
@@ -1351,6 +1368,12 @@ public class AapServiceImpl implements AapService, Serializable {
 				oneFacebookGroupMembership = new FacebookGroupMembership();
 				oneFacebookGroupMembership.setFacebookAccount(dbFacebookAccount);
 				oneFacebookGroupMembership.setFacebookGroup(oneFacebookGroup);
+				oneFacebookGroupMembership.setLastPostDate(defaultLastPostDate.getTime());
+				oneFacebookGroupMembership.setLastReadDate(defaultLastPostDate.getTime());
+				oneFacebookGroupMembership.setAllowDduPost(true);
+				oneFacebookGroupMembership.setAllowVoiceOfAapPost(true);
+				oneFacebookGroupMembership.setDateCreated(new Date());
+				oneFacebookGroupMembership.setDateModified(new Date());
 				oneFacebookGroupMembership = facebookGroupMembershipDao.saveFacebookGroupMembership(oneFacebookGroupMembership);
 			}
 		}
@@ -2153,18 +2176,31 @@ public class AapServiceImpl implements AapService, Serializable {
 	public FacebookPostDto saveFacebookPost(FacebookPostDto facebookPostDto) {
 		FacebookPost facebookPost = new FacebookPost();
 		FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountById(facebookPostDto.getFacebookAccountId());
+		if("Success".equalsIgnoreCase(facebookPostDto.getPostStatus())){
+			facebookAccount.setLastSuccess(new Date());
+		}else{
+			facebookAccount.setLastFailure(new Date());
+		}
 		facebookPost.setFacebookAccount(facebookAccount);
-		PlannedFacebookPost plannedFacebookPost = plannedFacebookPostDao.getPlannedFacebookPostById(facebookPostDto.getPlannedFacebookPostId());
-		facebookPost.setPlannedFacebookPost(plannedFacebookPost);
+		if (facebookPostDto.getPlannedFacebookPostId() != null && facebookPostDto.getPlannedFacebookPostId() > 0) {
+			PlannedFacebookPost plannedFacebookPost = plannedFacebookPostDao.getPlannedFacebookPostById(facebookPostDto.getPlannedFacebookPostId());
+			facebookPost.setPlannedFacebookPost(plannedFacebookPost);
+		}
+		
 		if (facebookPostDto.getFacebookGroupId() != null && facebookPostDto.getFacebookGroupId() > 0) {
 			FacebookGroup facebookGroup = facebookGroupDao.getFacebookGroupById(facebookPostDto.getFacebookGroupId());
 			facebookPost.setFacebookGroup(facebookGroup);
+			
+			FacebookGroupMembership facebookGroupMembership = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookUserIdAndGroupId(facebookPostDto.getFacebookAccountId(), facebookPostDto.getFacebookGroupId());
+			facebookGroupMembership.setLastPostDate(new Date());
 		}
 		if (facebookPostDto.getFacebookPageId() != null && facebookPostDto.getFacebookPageId() > 0) {
 			FacebookPage facebookPage = facebookPageDao.getFacebookPageById(facebookPostDto.getFacebookPageId());
 			facebookPost.setFacebookPage(facebookPage);
 		}
 		facebookPost.setFacebookPostExternalId(facebookPostDto.getFacebookPostExternalId());
+		facebookPost.setPostStatus(facebookPostDto.getPostStatus());
+		facebookPost.setErrorMessage(facebookPostDto.getErrorMessage());
 		facebookPost.setDateCreated(new Date());
 		facebookPost.setDateModified(new Date());
 		facebookPost = facebookPostDao.saveFacebookPost(facebookPost);
@@ -5918,6 +5954,138 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<District> allDistricts = districtDao.getAllDistricts();
 		List<DistrictDto> returnList = convertDistricts(allDistricts);
 		return returnList;
+	}
+
+	@Override
+	@Transactional
+	public List<FacebookAccountDto> getFacebookAccounts(Long lastId, int pageSize) throws AppException {
+		List<FacebookAccount> facebookAccounts = facebookAccountDao.getFacebookAccountsAfterId(lastId, pageSize);
+		return convertFacebookAccounts(facebookAccounts);
+	}
+
+	@Override
+	@Transactional
+	public List<FacebookAppPermissionDto> getAllFacebookAppPermissions(Long facebookAccountId) throws AppException {
+		List<FacebookAppPermission> facebookAppPermissions =  facebookAppPermissionDao.getFacebookAppPermissionByFacebookAccountId(facebookAccountId);
+		return convertFacebookAppPermissions(facebookAppPermissions);
+	}
+
+	@Override
+	@Transactional
+	public void saveFacebookUserFriends(Long facebookAccountId, List<FacebookProfile> facebookProfiles) throws AppException {
+		FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountById(facebookAccountId);
+		if(facebookAccount.getFriendsAccounts() == null){
+			facebookAccount.setFriendsAccounts(new HashSet<FacebookAccount>());
+		}
+		
+		for(FacebookProfile oneFacebookProfile : facebookProfiles){
+			FacebookAccount friendFacebookAccount = facebookAccountDao.getFacebookAccountByFacebookUserId(oneFacebookProfile.getId());
+			if(friendFacebookAccount == null){
+				//may be we can create Facebook accounts
+			}else{
+				facebookAccount.getFriendsAccounts().add(friendFacebookAccount);
+			}
+		}
+		
+	}
+
+	@Override
+	@Transactional
+	public Double getDayDonation(Date date) throws AppException {
+		return donationDao.getTotalDonationOnDay(date);
+	}
+
+	@Override
+	@Transactional
+	public Double getMonthDonation(Date date) throws AppException {
+		return donationDao.getTotalDonationInMonth(date);
+	}
+
+	@Override
+	@Transactional
+	public List<FacebookGroupDto> getAllFacebookGroupsWhereWeCanPost(Long lastGroupId, int pageSize) throws AppException {
+		List<FacebookGroup> facebookGroups = facebookGroupDao.getFacebookGroupsForPostingAfterId(lastGroupId, pageSize);
+		return convertFacebookGroups(facebookGroups);
+	}
+	private FacebookGroupDto convertFacebookGroup(FacebookGroup facebookGroup){
+		if(facebookGroup == null){
+			return null;
+		}
+		FacebookGroupDto facebookGroupDto = new FacebookGroupDto();
+		BeanUtils.copyProperties(facebookGroup, facebookGroupDto);
+		return facebookGroupDto;
+	}
+	
+	private List<FacebookGroupDto> convertFacebookGroups(List<FacebookGroup> facebookGroups){
+		if(facebookGroups == null || facebookGroups.isEmpty()){
+			return new ArrayList<FacebookGroupDto>(0);
+		}
+		List<FacebookGroupDto> facebookGroupDtos = new ArrayList<>(facebookGroups.size());
+		for(FacebookGroup oneFacebookGroup : facebookGroups){
+			facebookGroupDtos.add(convertFacebookGroup(oneFacebookGroup));
+		}
+		return facebookGroupDtos;
+	}
+
+	@Override
+	@Transactional
+	public FacebookAccountDto getFacebookAccountToPostOnGroup(Long facebookGroupId) throws AppException {
+		FacebookGroupMembership facebookGroupMembership = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookGroupIdForPosting(facebookGroupId);
+		if (facebookGroupMembership == null) {
+			return null;
+		}
+		FacebookAccountDto facebookAccountWeb = convertFacebookAccount(facebookGroupMembership.getFacebookAccount());
+		return facebookAccountWeb;
+		
+	}
+
+	@Override
+	@Transactional
+	public int updateFacebookGroupTotalMemberWithUs(Long lastGroupId, int fbGroupPageSize) {
+		List<FacebookGroup> facebookGroups = facebookGroupDao.getFacebookGroups(lastGroupId, fbGroupPageSize);
+		if(facebookGroups == null || facebookGroups.isEmpty()){
+			logger.info("No Groups found so returning 0");
+			return 0;
+		}
+		
+		List<FacebookGroupMembership> facebookGroupMemberships;
+		long startMembershipId;
+		int pageSize = 50;
+		int totalMemberWithUs;
+		int totalMemberWithPermisionGivenToUs;
+		int totalGroupsUpdated = 0;
+		
+		for(FacebookGroup oneFacebookGroup:facebookGroups){
+			logger.info("Working on FB Group : "+ oneFacebookGroup.getGroupName());
+			totalGroupsUpdated++;
+			startMembershipId = 0L;
+			totalMemberWithUs = 0;
+			totalMemberWithPermisionGivenToUs = 0;
+			facebookGroupMemberships = facebookGroupMembershipDao.getFacebookGroupMembershipsAfterIdForFacebookGroup(oneFacebookGroup.getId(), startMembershipId, pageSize);
+			logger.info("   Total Members : "+ facebookGroupMemberships.size());
+			while(facebookGroupMemberships != null && !facebookGroupMemberships.isEmpty()){
+				totalMemberWithUs = totalMemberWithUs + facebookGroupMemberships.size();
+				for(FacebookGroupMembership oneFacebookGroupMembership: facebookGroupMemberships){
+					if(oneFacebookGroupMembership.getFacebookAccount().isVoiceOfAap() ||oneFacebookGroupMembership.getFacebookAccount().isAllowDdu()
+							||oneFacebookGroupMembership.getFacebookAccount().isAllowTimeLine()){
+						totalMemberWithPermisionGivenToUs++;
+					}
+					startMembershipId = oneFacebookGroupMembership.getId();
+				}
+				facebookGroupMemberships = facebookGroupMembershipDao.getFacebookGroupMembershipsAfterIdForFacebookGroup(oneFacebookGroup.getId(), startMembershipId, pageSize);
+			}
+			oneFacebookGroup.setTotalMembersWithUs(totalMemberWithUs);
+			oneFacebookGroup.setTotalMembersWithPermissionToPost(totalMemberWithPermisionGivenToUs);
+			oneFacebookGroup = facebookGroupDao.saveFacebookGroup(oneFacebookGroup);
+		}
+		return totalGroupsUpdated;
+	}
+
+	@Override
+	@Transactional
+	public List<FacebookGroupDto> getFacebookGroups(Long lastGroupId, int pageSize) {
+		List<FacebookGroup> facebookGroups = facebookGroupDao.getFacebookGroups(lastGroupId, pageSize);
+		return convertFacebookGroups(facebookGroups);
 	}
 
 	

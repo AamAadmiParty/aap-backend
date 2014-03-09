@@ -1,5 +1,7 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -48,6 +50,13 @@ public class FacebookAppPermissionDaoHibernateSpringImpl extends BaseDaoHibernat
 		params.put("facebookAccountId", facebookAccountId);
 		FacebookAppPermission facebookAppPermission = executeQueryGetObject("from FacebookAppPermission where facebookApp.appId = :facebookAppId and facebookAccountId = :facebookAccountId", params);
 		return facebookAppPermission;
+	}
+
+	@Override
+	public List<FacebookAppPermission> getFacebookAppPermissionByFacebookAccountId(Long facebookAccountId) {
+		Map<String, Object> params = new HashMap<String, Object>(1);
+		params.put("facebookAccountId", facebookAccountId);
+		return executeQueryGetList("from FacebookAppPermission where facebookAccountId = :facebookAccountId", params);
 	}
 	
 }

@@ -56,6 +56,7 @@ public class FacebookGroupDaoHibernateSpringImpl extends BaseDaoHibernateSpring<
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("lastId", lastId);
 		List<FacebookGroup> list = executeQueryGetList("from FacebookGroup where id > :lastId and postAllowed = true and totalMembers > 50 and totalMembersWithPermissionToPost > 1 order by id asc", params, pageSize);
+		//List<FacebookGroup> list = executeQueryGetList("from FacebookGroup where id > :lastId and postAllowed = true order by id asc", params, pageSize);
 		return list;
 
 	}

@@ -37,6 +37,12 @@ public class FacebookPost {
 	@Column(name = "facebook_post_ext_id", nullable = false)
 	private String facebookPostExternalId;
 
+	@Column(name = "post_status")
+	private String postStatus;
+
+	@Column(name = "error_message")
+	private String errorMessage;
+
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="facebook_page_id")
     private FacebookPage facebookPage;
@@ -152,7 +158,16 @@ public class FacebookPost {
 	public void setPlannedFacebookPostId(Long plannedFacebookPostId) {
 		this.plannedFacebookPostId = plannedFacebookPostId;
 	}
-	
-	
-	
+	public String getPostStatus() {
+		return postStatus;
+	}
+	public void setPostStatus(String postStatus) {
+		this.postStatus = postStatus;
+	}
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 }

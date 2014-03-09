@@ -86,6 +86,7 @@ public class PostOnUserFacebookTimeLineTask implements Callable<Boolean> {
 			facebookPostDto.setFacebookAccountId(facebookAccountDto.getId());
 			facebookPostDto.setFacebookPostExternalId(facebookPostExternalId);
 			facebookPostDto.setPlannedFacebookPostId(plannedFacebookPostDto.getId());
+			facebookPostDto.setPostStatus("Success");
 			facebookPostDto = aapService.saveFacebookPost(facebookPostDto);
 			
 		}catch(Exception ex){

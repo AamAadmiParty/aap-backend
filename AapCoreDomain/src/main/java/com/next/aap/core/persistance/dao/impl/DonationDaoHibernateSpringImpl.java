@@ -1,6 +1,10 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -320,5 +324,61 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 	@Override
 	public List<Donation> getDonationsByLocationCampaignId(String lcid) {
 		return getDonationsByLocationCampaignId(lcid, 0);//0 page size means no limit
+	}
+
+	@Override
+	public Double getTotalDonationOnDay(Date date) {
+		Calendar startDate = Calendar.getInstance();
+		startDate.setTime(date);
+		startDate.set(Calendar.HOUR_OF_DAY, 0);
+		startDate.set(Calendar.MINUTE, 0);
+		startDate.set(Calendar.SECOND, 0);
+		startDate.set(Calendar.MILLISECOND, 1);
+		
+		Calendar endDate = Calendar.getInstance();
+		endDate.setTime(date);
+		endDate.set(Calendar.HOUR_OF_DAY, 23);
+		endDate.set(Calendar.MINUTE, 59);
+		endDate.set(Calendar.SECOND, 59);
+		endDate.set(Calendar.MILLISECOND, 999);
+		endDate.add(Calendar.SECOND, 1);
+
+		return getTotalDonationBetweenTimes(startDate.getTime(), endDate.getTime());
+	}
+
+	@Override
+	public Double getTotalDonationInMonth(Date date) {
+		Calendar startDate = Calendar.getInstance();
+		startDate.setTime(date);
+		startDate.set(Calendar.DATE, 1);
+		startDate.set(Calendar.HOUR_OF_DAY, 0);
+		startDate.set(Calendar.MINUTE, 0);
+		startDate.set(Calendar.SECOND, 0);
+		startDate.set(Calendar.MILLISECOND, 1);
+		
+		Calendar endDate = Calendar.getInstance();
+		endDate.setTime(date);
+		endDate.set(Calendar.DAY_OF_MONTH,endDate.getActualMaximum(Calendar.DAY_OF_MONTH));
+		endDate.set(Calendar.HOUR_OF_DAY, 23);
+		endDate.set(Calendar.MINUTE, 59);
+		endDate.set(Calendar.SECOND, 59);
+		endDate.set(Calendar.MILLISECOND, 999);
+
+		return getTotalDonationBetweenTimes(startDate.getTime(), endDate.getTime());
+	}
+	
+	private Double getTotalDonationBetweenTimes(Date startDate, Date endDate){
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("status1", "'SUCCESS'");
+		params.put("status2", "'Success'");
+		DateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd");
+		params.put("startDate", "'"+ simpleDateFormat.format(startDate)+"'");
+		params.put("endDate", "'"+simpleDateFormat.format(endDate)+"'");
+		String startDateStr = "'"+ simpleDateFormat.format(startDate)+"'";
+		String endDateStr = "'"+ simpleDateFormat.format(endDate)+"'";
+
+		String sql = "select sum(amount) from donations where donation_date BETWEEN "+startDateStr+" AND "+endDateStr+" and (pg_error_msg='SUCCESS' or pg_error_msg='Success')";
+		//String sql = "select sum(amount) from donations where donation_date BETWEEN :startDate AND :endDate and (pg_error_msg=:status1 or pg_error_msg=:status2)";
+		return executeSqlQueryGetDouble(sql);
 	}
 }

@@ -1,6 +1,7 @@
 package com.next.aap.core.persistance;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -59,6 +62,22 @@ public class FacebookAccount {
 	@Column(name = "allow_timeline", nullable = false)
 	private boolean allowTimeLine;
 
+	@Column(name = "last_success")
+	private Date lastSuccess;
+
+	@Column(name = "last_failure")
+	private Date lastFailure;
+
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "facebook_friends",
+	joinColumns = {
+	@JoinColumn(name="facebook_account_id") 
+	},
+	inverseJoinColumns = {
+	@JoinColumn(name="friend_facebook_account_id")
+	})
+	private Set<FacebookAccount> friendsAccounts;
+	
 	public Long getId() {
 		return id;
 	}
@@ -143,5 +162,22 @@ public class FacebookAccount {
 	public void setAllowTimeLine(boolean allowTimeLine) {
 		this.allowTimeLine = allowTimeLine;
 	}
-
+	public Set<FacebookAccount> getFriendsAccounts() {
+		return friendsAccounts;
+	}
+	public void setFriendsAccounts(Set<FacebookAccount> friendsAccounts) {
+		this.friendsAccounts = friendsAccounts;
+	}
+	public Date getLastSuccess() {
+		return lastSuccess;
+	}
+	public void setLastSuccess(Date lastSuccess) {
+		this.lastSuccess = lastSuccess;
+	}
+	public Date getLastFailure() {
+		return lastFailure;
+	}
+	public void setLastFailure(Date lastFailure) {
+		this.lastFailure = lastFailure;
+	}
 }

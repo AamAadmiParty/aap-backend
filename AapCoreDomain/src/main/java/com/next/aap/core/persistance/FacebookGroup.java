@@ -51,7 +51,7 @@ public class FacebookGroup {
 	private int totalMembers;
 
 	@Column(name = "members_with_us", columnDefinition="INT default 0")
-	private int totalMembersEithUs;
+	private int totalMembersWithUs;
 
 	@Column(name = "member_with_permission_to_post", columnDefinition="INT default 0")
 	private int totalMembersWithPermissionToPost;
@@ -136,12 +136,12 @@ public class FacebookGroup {
 		this.totalMembers = totalMembers;
 	}
 
-	public int getTotalMembersEithUs() {
-		return totalMembersEithUs;
+	public int getTotalMembersWithUs() {
+		return totalMembersWithUs;
 	}
 
-	public void setTotalMembersEithUs(int totalMembersEithUs) {
-		this.totalMembersEithUs = totalMembersEithUs;
+	public void setTotalMembersWithUs(int totalMembersEithUs) {
+		this.totalMembersWithUs = totalMembersEithUs;
 	}
 
 	public int getTotalMembersWithPermissionToPost() {

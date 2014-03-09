@@ -24,7 +24,7 @@ public class CreateLocationCampaignIds {
 	@Autowired
 	private AapService aapService;
 	
-	@PostConstruct
+	//@PostConstruct
 	public void runTask(){
 		logger.info("Start Creating Location Campaign Ids");
 		try{

@@ -1,17 +1,18 @@
 package com.next.aap.core.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.social.connect.Connection;
 import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.GroupMembership;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 
 import com.next.aap.core.exception.AppException;
 import com.next.aap.core.persistance.DonationDump;
-import com.next.aap.core.persistance.FacebookGroup;
 import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AdminAccountDto;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
@@ -27,6 +28,7 @@ import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.FacebookAppPermissionDto;
+import com.next.aap.web.dto.FacebookGroupDto;
 import com.next.aap.web.dto.FacebookPostDto;
 import com.next.aap.web.dto.FinancialPlanningDto;
 import com.next.aap.web.dto.GlobalCampaignDto;
@@ -441,4 +443,23 @@ public interface AapService {
 	Map<Long, List<Long>> getPollQuestionItemsOfAllCountry();
 	
 	Map<Long, List<Long>> getPollQuestionItemsOfAllCountryRegion();
+	
+	List<FacebookAccountDto> getFacebookAccounts(Long startId, int pageSize) throws AppException;
+	
+	List<FacebookAppPermissionDto> getAllFacebookAppPermissions(Long facebookAccountId) throws AppException;
+	
+	void saveFacebookUserFriends(Long facebookAccountId, List<FacebookProfile> facebookProfiles) throws AppException;
+	
+	Double getDayDonation(Date date) throws AppException;
+	
+	Double getMonthDonation(Date date) throws AppException;
+	
+	List<FacebookGroupDto> getAllFacebookGroupsWhereWeCanPost(Long lastGroupId, int pageSize) throws AppException;
+	
+	FacebookAccountDto getFacebookAccountToPostOnGroup(Long facebookGroupId) throws AppException;
+	
+	int updateFacebookGroupTotalMemberWithUs(Long lastGroupId, int pageSize);
+	
+	List<FacebookGroupDto> getFacebookGroups(Long lastGroupId, int pageSize);
+	
 }

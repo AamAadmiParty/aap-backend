@@ -39,7 +39,7 @@ public class DonationCampaignDaoHibernateSpringImpl extends BaseDaoHibernateSpri
 	public DonationCampaign getDonationCampaignByDonationCampaign(String donationCampaignId) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("donationCampaign", donationCampaignId.toUpperCase());
-		DonationCampaign donationCampaign = executeQueryGetObject("from DonationCampaign where donationCampaignUp = :donationCampaign", params);
+		DonationCampaign donationCampaign = executeQueryGetObject("from DonationCampaign where campaignIdUp = :donationCampaign", params);
 		return donationCampaign;
 	}
 

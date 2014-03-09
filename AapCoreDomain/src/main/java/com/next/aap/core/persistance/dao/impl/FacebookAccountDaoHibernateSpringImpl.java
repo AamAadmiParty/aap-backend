@@ -59,8 +59,7 @@ public class FacebookAccountDaoHibernateSpringImpl extends BaseDaoHibernateSprin
 	public List<FacebookAccount> getFacebookAccountsAfterId(Long lastId,int pageSize){
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("lastId", lastId);
-		params.put("pageSize", pageSize);
-		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where id > :lastId order by id asc limit :pageSize", params);
+		List<FacebookAccount> list = executeQueryGetList("from FacebookAccount where id > :lastId order by id asc", params, pageSize);
 		return list;
 	}
 

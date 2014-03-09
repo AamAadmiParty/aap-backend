@@ -115,7 +115,7 @@ public class FacebookGroupMembershipDaoHibernateSpringImpl extends BaseDaoHibern
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("lastId", lastId);
 		params.put("facebookGroupId", facebookGroupId);
-		List<FacebookGroupMembership> list = executeQueryGetList("from FacebookGroupMembership where id > :lastId and facebookGroupId > :facebookGroupId order by id asc", params, pageSize);
+		List<FacebookGroupMembership> list = executeQueryGetList("from FacebookGroupMembership where id > :lastId and facebookGroupId = :facebookGroupId order by id asc", params, pageSize);
 		return list;
 
 	}

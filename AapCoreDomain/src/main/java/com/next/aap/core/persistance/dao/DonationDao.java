@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.next.aap.core.persistance.Donation;
@@ -50,6 +51,11 @@ public interface DonationDao {
 	public abstract DonationDump getDonationDumpByDonorId(String donorId);
 	
 	public abstract DonationDump saveDonationDump(DonationDump donationDump);
+	
+	
+	public abstract Double getTotalDonationOnDay(Date date);
+	
+	public abstract Double getTotalDonationInMonth(Date date);
 	
 	
 

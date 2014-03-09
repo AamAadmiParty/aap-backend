@@ -1,6 +1,7 @@
 package com.next.aap.web.dto;
 
 
+
 public class FacebookPostDto {
 
 	private Long id;
@@ -10,6 +11,9 @@ public class FacebookPostDto {
 	private Long facebookAccountId;
 	private Long plannedFacebookPostId;
 	private String facebookShareLink;
+	private String postStatus;
+	private String errorMessage;
+
 	public Long getId() {
 		return id;
 	}
@@ -56,6 +60,18 @@ public class FacebookPostDto {
 	}
 	public void setFacebookShareLink(String facebookShareLink) {
 		this.facebookShareLink = facebookShareLink;
+	}
+	public String getPostStatus() {
+		return postStatus;
+	}
+	public void setPostStatus(String postStatus) {
+		this.postStatus = postStatus;
+	}
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 	
 	

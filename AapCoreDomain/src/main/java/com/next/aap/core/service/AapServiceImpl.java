@@ -32,6 +32,7 @@ import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.GroupMembership;
+import org.springframework.social.facebook.api.impl.json.FacebookModule;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
@@ -6086,6 +6087,41 @@ public class AapServiceImpl implements AapService, Serializable {
 	public List<FacebookGroupDto> getFacebookGroups(Long lastGroupId, int pageSize) {
 		List<FacebookGroup> facebookGroups = facebookGroupDao.getFacebookGroups(lastGroupId, pageSize);
 		return convertFacebookGroups(facebookGroups);
+	}
+
+	@Override
+	@Transactional
+	public FacebookAppPermissionDto getFacebookPermissionForAGroup(long facebookGroupId) {
+		FacebookGroupMembership facebookMembership = facebookGroupMembershipDao.getFacebookGroupMembershipByFacebookGroupIdForReading(facebookGroupId);
+		if(facebookMembership == null){
+			return null;
+		}
+		FacebookAccount facebookAccount = facebookMembership.getFacebookAccount();
+		List<FacebookAppPermission> facebookAppPermissions = facebookAppPermissionDao.getFacebookAppPermissionByFacebookAccountId(facebookAccount.getId());
+		if(facebookAppPermissions == null || facebookAppPermissions.isEmpty()){
+			return null;
+		}
+		FacebookAppPermission selectedFacebookAppPermission = null;
+		for(FacebookAppPermission oneFacebookAppPermission:facebookAppPermissions){
+			if(selectedFacebookAppPermission == null){
+				selectedFacebookAppPermission = oneFacebookAppPermission;
+			}else{
+				if(selectedFacebookAppPermission.getExpireTime() != null && oneFacebookAppPermission.getExpireTime() != null &&
+						selectedFacebookAppPermission.getExpireTime().before(oneFacebookAppPermission.getExpireTime())){
+					selectedFacebookAppPermission = oneFacebookAppPermission;
+				}
+			}
+		}
+		return convertFacebookAppPermission(selectedFacebookAppPermission);
+	}
+
+	@Override
+	@Transactional
+	public int updateFacebookGroupOverallTotalMembes(Long facebookGroupId, int totalMembers) {
+		FacebookGroup facebookGroup = facebookGroupDao.getFacebookGroupById(facebookGroupId);
+		facebookGroup.setTotalMembers(totalMembers);
+		facebookGroup = facebookGroupDao.saveFacebookGroup(facebookGroup);
+		return totalMembers;
 	}
 
 	

@@ -462,4 +462,7 @@ public interface AapService {
 	
 	List<FacebookGroupDto> getFacebookGroups(Long lastGroupId, int pageSize);
 	
+	FacebookAppPermissionDto getFacebookPermissionForAGroup(long facebookGroupId);
+	
+	int updateFacebookGroupOverallTotalMembes(Long facebookGroupId, int totalMembers);
 }

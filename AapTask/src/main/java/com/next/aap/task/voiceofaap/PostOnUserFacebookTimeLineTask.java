@@ -91,6 +91,14 @@ public class PostOnUserFacebookTimeLineTask implements Callable<Boolean> {
 			
 		}catch(Exception ex){
 			ex.printStackTrace();
+			//Now update data base that post has been posted
+			FacebookPostDto facebookPostDto = new FacebookPostDto();
+			facebookPostDto.setFacebookAccountId(facebookAccountDto.getId());
+			facebookPostDto.setFacebookPostExternalId("");
+			facebookPostDto.setPlannedFacebookPostId(plannedFacebookPostDto.getId());
+			facebookPostDto.setPostStatus("Failed");
+			facebookPostDto.setErrorMessage(ex.getMessage());
+			facebookPostDto = aapService.saveFacebookPost(facebookPostDto);
 		}finally{
 			countDownLatch.countDown();
 		}

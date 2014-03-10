@@ -50,7 +50,8 @@ public class LoginController extends BaseController {
 		mv.getModel().put("design", design);
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		mv.getModel().put("loggedInUser", loggedInUser);
-		mv.getModel().put("staticDirectory", "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign");
+		//mv.getModel().put("staticDirectory", "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign");
+		mv.getModel().put("staticDirectory", "https://s3.amazonaws.com/myaap");
 		mv.getModel().put("contextPath", httpServletRequest.getContextPath());
 		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
 		mv.getModel().put("loginAccounts", loginAccountDto);

@@ -31,7 +31,6 @@ public class FacebookGroupTotalMemberUpdateTask implements Runnable{
 	//http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	//ss mm hh dd
 	@Scheduled(cron="0 45 04 * * *")
-	@PostConstruct
 	public void downlaodFacebookDataForUsers(){
 		logger.info("Starting FacebookGroupUpdateTask");
 		int pageSize = 50;

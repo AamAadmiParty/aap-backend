@@ -75,7 +75,7 @@ public class DailyDonationImageTask implements Runnable {
 	// http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
 	// http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	// ss mm hh dd
-	@Scheduled(cron = "0 45 00 * * *")
+	@Scheduled(cron = "0 45 01 * * *")
 	public void downloadImageAndPostToFacebook() {
 		logger.info(new Date().toString());
 		logger.info("Starting Scheduled task");
@@ -172,7 +172,7 @@ public class DailyDonationImageTask implements Runnable {
 				logger.info("Published photo ID: " + facebookPostExternalId + " on group " + oneFacebookGroupDto.getGroupName() + " from user "
 						+ facebookAccountForGroupPosting.getUserName());
 				updateFacebookPost(facebookPostExternalId, "Success", "", oneFacebookGroupDto, facebookAccountForGroupPosting);
-				Thread.sleep(5000);
+				Thread.sleep(15000);
 				break;
 			} catch (Exception ex) {
 				alreadyTriedUsers.add(facebookAccountForGroupPosting.getFacebookUserId());

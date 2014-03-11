@@ -98,9 +98,19 @@
 								<p:ajax event="change" update=":adminBlogForm" />
 							</p:inputText>
 							<p:outputLabel value="Message"></p:outputLabel>
-							<p:outputLabel value="#{blogAdminBean.selectedBlog.content}" escape="false" rendered="#{!blogAdminBean.editAllowed}" />
-							<p:editor id="editor" value="#{blogAdminBean.selectedBlog.content}" width="600" height="500" rendered="#{blogAdminBean.editAllowed}">
-							</p:editor>
+							<p:outputPanel>
+								<p:outputLabel value="#{blogAdminBean.selectedBlog.content}" escape="false" rendered="#{!blogAdminBean.editAllowed}" />
+								<p:editor id="editor" value="#{blogAdminBean.selectedBlog.content}" width="600" height="500" rendered="#{blogAdminBean.editAllowed and blogAdminBean.showEditor}">
+								</p:editor>
+								<p:inputTextarea rows="25" cols="100" value="#{blogAdminBean.htmlNewsContent}" rendered="#{blogAdminBean.editAllowed and !blogAdminBean.showEditor}" />
+								<p:commandButton value="Edit Raw HTML" update=":adminBlogForm" actionListener="#{blogAdminBean.editRawHtml}" styleClass="ui-priority-primary"
+									rendered="#{blogAdminBean.editAllowed and blogAdminBean.showEditor}">
+								</p:commandButton>
+								<p:commandButton value="Edit Text" update=":adminBlogForm" actionListener="#{blogAdminBean.editText}" styleClass="ui-priority-primary"
+									rendered="#{blogAdminBean.editAllowed and !blogAdminBean.showEditor}">
+								</p:commandButton>
+							</p:outputPanel>
+
 							<p:outputLabel value="Author"></p:outputLabel>
 							<p:inputText value="#{blogAdminBean.selectedBlog.author}" disabled="#{!blogAdminBean.editAllowed}" />
 							<p:outputLabel value="Source"></p:outputLabel>
@@ -121,8 +131,8 @@
 
 							</p:outputPanel>
 							<p:outputPanel rendered="#{blogAdminBean.showTweetList}">
-								<p:commandButton value="Create Blog Tweet" update=":adminBlogForm:tweetPanel" actionListener="#{blogAdminBean.createBlogTweet}" 
-								rendered="#{blogAdminBean.editAllowed}" styleClass="ui-priority-primary">
+								<p:commandButton value="Create Blog Tweet" update=":adminBlogForm:tweetPanel" actionListener="#{blogAdminBean.createBlogTweet}" rendered="#{blogAdminBean.editAllowed}"
+									styleClass="ui-priority-primary">
 								</p:commandButton>
 								<br></br>
 								<p:dataTable id="listOfTweets" var="oneTweet" value="#{blogAdminBean.tweetList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"

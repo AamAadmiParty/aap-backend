@@ -1,6 +1,7 @@
 package com.next.aap.core.persistance.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,6 +167,17 @@ public class EventDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Event> i
 		String query = "from Event where id in (:ids) order by dateCreated desc";
 		Map<String, Object> queryParams = new HashMap<String, Object>(1);
 		queryParams.put("ids", newsIds);
+		List<Event> list = executeQueryGetList(query, queryParams);
+		return list;
+	}
+
+	@Override
+	public List<Event> getAllFutureEvents() {
+		String query = "from Event where startDate > :startDate order by dateCreated desc";
+		Map<String, Object> queryParams = new HashMap<String, Object>(1);
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -2);
+		queryParams.put("startDate", calendar.getTime());
 		List<Event> list = executeQueryGetList(query, queryParams);
 		return list;
 	}

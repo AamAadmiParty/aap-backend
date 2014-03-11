@@ -41,10 +41,13 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	private boolean showTweetList = true;
 	private String otherReason;
 	private boolean showOtherReasonTextBox;
+	private String htmlNewsContent;
+	private boolean showEditor;
 	
 	private List<NewsDto> newsList;
 	public NewsAdminBean(){
 		super("/admin/news", AppPermission.CREATE_NEWS,AppPermission.UPDATE_NEWS, AppPermission.DELETE_NEWS, AppPermission.APPROVE_NEWS);
+		showEditor = true;
 		selectedTweet = new ContentTweetDto();
 	}
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
@@ -124,6 +127,14 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return (ClientPermissionUtil.isAllowed(AppPermission.CREATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()) ||
 				ClientPermissionUtil.isAllowed(AppPermission.UPDATE_NEWS, userRolePermissionDto, menuBean.getAdminSelectedLocationId(), menuBean.getLocationType()));
+	}
+	public void editRawHtml() {
+		htmlNewsContent = selectedNews.getContent();
+		showEditor = false;
+	}
+	public void editText() {
+		selectedNews.setContent(htmlNewsContent);
+		showEditor = true;
 	}
 	public void saveAndPublishPost() {
 		savePost();
@@ -304,6 +315,18 @@ public class NewsAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void setShowOtherReasonTextBox(boolean showOtherReasonTextBox) {
 		this.showOtherReasonTextBox = showOtherReasonTextBox;
+	}
+	public String getHtmlNewsContent() {
+		return htmlNewsContent;
+	}
+	public void setHtmlNewsContent(String htmlNewsContent) {
+		this.htmlNewsContent = htmlNewsContent;
+	}
+	public boolean isShowEditor() {
+		return showEditor;
+	}
+	public void setShowEditor(boolean showEditor) {
+		this.showEditor = showEditor;
 	}
 
 

@@ -138,6 +138,11 @@
 		<servlet-name>aap</servlet-name>
 		<url-pattern>/aaps/poll</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>aap</servlet-name>
+		<url-pattern>/aaps/event</url-pattern>
+	</servlet-mapping>
+		
 		<servlet-mapping>
 		<servlet-name>aap</servlet-name>
 		<url-pattern>/aaps/all</url-pattern>
@@ -149,7 +154,7 @@
 		<url-pattern>/home</url-pattern>
 	</servlet-mapping>
 	<session-config>
-		<session-timeout>30</session-timeout>
+		<session-timeout>300</session-timeout>
 	</session-config>
 
 	<welcome-file-list>

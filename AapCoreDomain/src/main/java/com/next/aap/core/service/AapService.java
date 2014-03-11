@@ -343,6 +343,10 @@ public interface AapService {
 	
 	List<EventDto> getEventsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
 	
+	List<EventDto> getFutureEventsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
+	
+	List<EventDto> getAllFutureEvents() throws AppException;
+	
 	FinancialPlanningDto saveFinancialPlanning(FinancialPlanningDto financialPlanningDto) throws AppException;
 	
 	List<Long> getNewsItemsOfAc(long acId);

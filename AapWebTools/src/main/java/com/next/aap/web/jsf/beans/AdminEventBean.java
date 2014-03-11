@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -27,6 +28,7 @@ import org.springframework.social.facebook.api.Post.PostType;
 import com.google.gdata.util.ErrorContent.LocationType;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.exception.AppException;
+import com.next.aap.web.cache.EventCacheImpl;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.LoginAccountDto;
@@ -50,6 +52,10 @@ public class AdminEventBean extends BaseAdminJsfBean {
 	private AapScheduleEvent event = new AapScheduleEvent();
 
 	private MapModel draggableMapModel;
+	
+	@ManagedProperty("#{eventCacheImpl}")
+	protected EventCacheImpl eventCacheImpl;
+
 
 	Marker marker;
 
@@ -115,6 +121,7 @@ public class AdminEventBean extends BaseAdminJsfBean {
 			if (isValidInput()) {
 				saveEvent(event);
 				sendInfoMessageToJsfScreen("Event saved succesfully");
+				eventCacheImpl.refreshCache();
 			}
 
 		} catch (Exception ex) {
@@ -251,6 +258,14 @@ public class AdminEventBean extends BaseAdminJsfBean {
 
 	public void setDraggableMapModel(MapModel draggableMapModel) {
 		this.draggableMapModel = draggableMapModel;
+	}
+
+	public EventCacheImpl getEventCacheImpl() {
+		return eventCacheImpl;
+	}
+
+	public void setEventCacheImpl(EventCacheImpl eventCacheImpl) {
+		this.eventCacheImpl = eventCacheImpl;
 	}
 	
 }

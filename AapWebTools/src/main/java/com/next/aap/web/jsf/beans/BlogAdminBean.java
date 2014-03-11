@@ -34,10 +34,13 @@ public class BlogAdminBean extends BaseMultiPermissionAdminJsfBean {
 	private ContentTweetDto selectedTweet;
 	private boolean newTweet = false;
 	private boolean showTweetList = true;
-	
+	private String htmlNewsContent;
+	private boolean showEditor;
+
 	private List<BlogDto> blogList;
 	public BlogAdminBean(){
 		super("/admin/blog", AppPermission.CREATE_BLOG,AppPermission.UPDATE_BLOG, AppPermission.DELETE_BLOG, AppPermission.APPROVE_BLOG);
+		showEditor = true;
 		selectedTweet = new ContentTweetDto();
 	}
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
@@ -77,6 +80,15 @@ public class BlogAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public BlogDto getSelectedBlog() {
 		return selectedBlog;
 	}
+	public void editRawHtml() {
+		htmlNewsContent = selectedBlog.getContent();
+		showEditor = false;
+	}
+	public void editText() {
+		selectedBlog.setContent(htmlNewsContent);
+		showEditor = true;
+	}
+
 	public void setSelectedBlog(BlogDto selectedBlog) {
 		this.selectedBlog = selectedBlog;
 		showList = false;
@@ -232,6 +244,18 @@ public class BlogAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 	public void setShowTweetList(boolean showTweetList) {
 		this.showTweetList = showTweetList;
+	}
+	public String getHtmlNewsContent() {
+		return htmlNewsContent;
+	}
+	public void setHtmlNewsContent(String htmlNewsContent) {
+		this.htmlNewsContent = htmlNewsContent;
+	}
+	public boolean isShowEditor() {
+		return showEditor;
+	}
+	public void setShowEditor(boolean showEditor) {
+		this.showEditor = showEditor;
 	}
 
 

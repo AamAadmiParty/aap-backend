@@ -32,7 +32,6 @@ import org.springframework.social.connect.ConnectionData;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.GroupMembership;
-import org.springframework.social.facebook.api.impl.json.FacebookModule;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
@@ -6122,6 +6121,19 @@ public class AapServiceImpl implements AapService, Serializable {
 		facebookGroup.setTotalMembers(totalMembers);
 		facebookGroup = facebookGroupDao.saveFacebookGroup(facebookGroup);
 		return totalMembers;
+	}
+
+	@Override
+	@Transactional
+	public List<EventDto> getFutureEventsOfLocation(PostLocationType locationType, Long locationId) throws AppException {
+		return null;
+	}
+
+	@Override
+	@Transactional
+	public List<EventDto> getAllFutureEvents() throws AppException {
+		List<Event> events = eventDao.getAllFutureEvents();
+		return convertEvents(events);	
 	}
 
 	

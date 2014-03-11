@@ -98,9 +98,18 @@
 								<p:ajax event="change" update=":adminNewsForm" />
 							</p:inputText>
 							<p:outputLabel value="Message"></p:outputLabel>
+							<p:outputPanel>
 							<p:outputLabel value="#{newsAdminBean.selectedNews.content}" escape="false" rendered="#{!newsAdminBean.editAllowed}" />
-							<p:editor id="editor" value="#{newsAdminBean.selectedNews.content}" width="600" height="500" rendered="#{newsAdminBean.editAllowed}">
+							<p:editor id="editor" value="#{newsAdminBean.selectedNews.content}" width="600" height="500" rendered="#{newsAdminBean.editAllowed and newsAdminBean.showEditor}">
 							</p:editor>
+							<p:inputTextarea rows="25" cols="100" value="#{newsAdminBean.htmlNewsContent}" rendered="#{newsAdminBean.editAllowed and !newsAdminBean.showEditor}"/>
+							<p:commandButton value="Edit Raw HTML" update=":adminNewsForm" actionListener="#{newsAdminBean.editRawHtml}" styleClass="ui-priority-primary"
+							rendered="#{newsAdminBean.editAllowed and newsAdminBean.showEditor}" >
+								</p:commandButton>  
+							<p:commandButton value="Edit Text" update=":adminNewsForm" actionListener="#{newsAdminBean.editText}" styleClass="ui-priority-primary"
+							rendered="#{newsAdminBean.editAllowed and !newsAdminBean.showEditor}" >
+								</p:commandButton>  
+								</p:outputPanel>
 							<p:outputLabel value="Author"></p:outputLabel>
 							<p:inputText value="#{newsAdminBean.selectedNews.author}" disabled="#{!newsAdminBean.editAllowed}" />
 							<p:outputLabel value="Source"></p:outputLabel>

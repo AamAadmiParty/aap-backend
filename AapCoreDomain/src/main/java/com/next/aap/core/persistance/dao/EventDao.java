@@ -10,6 +10,7 @@ public interface EventDao {
 
 	public abstract Event getEventById(Long id);
 
+	public abstract List<Event> getAllFutureEvents();
 	
 	public abstract List<Event> getAllNationalEvents();
 	

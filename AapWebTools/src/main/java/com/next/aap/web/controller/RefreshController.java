@@ -57,6 +57,13 @@ public class RefreshController extends AppBaseController {
 		blogItemCacheImpl.refreshFullCache();
 		return "blog downloaded";
 	}
+	@RequestMapping(value = "/aaps/event", method = RequestMethod.GET)
+	@ResponseBody
+	public String refreshEvents(ModelAndView mv,
+			HttpServletRequest httpServletRequest) {
+		eventCacheImpl.refreshCache();
+		return "Events refreshed";
+	}
 	
 	@RequestMapping(value = "/aaps/all", method = RequestMethod.GET)
 	@ResponseBody
@@ -65,6 +72,8 @@ public class RefreshController extends AppBaseController {
 		contentDonwloadUtil.refreshAllCache();
 		return "all downloaded";
 	}
+	
+	
 	
 	
 }

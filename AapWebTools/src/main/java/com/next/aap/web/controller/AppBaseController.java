@@ -15,6 +15,7 @@ import com.next.aap.web.ItemList;
 import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.cache.BlogItemCacheImpl;
+import com.next.aap.web.cache.EventCacheImpl;
 import com.next.aap.web.cache.LocationCacheDbImpl;
 import com.next.aap.web.cache.NewsItemCacheImpl;
 import com.next.aap.web.cache.PollItemCacheImpl;
@@ -25,6 +26,7 @@ import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
+import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
@@ -56,6 +58,8 @@ public class AppBaseController extends BaseController{
 	protected VideoItemCacheImpl videoItemCacheImpl;
 	@Autowired
 	protected PollItemCacheImpl pollItemCacheImpl;
+	@Autowired
+	protected EventCacheImpl eventCacheImpl;
 	@Autowired
 	protected CacheService cacheService;
 
@@ -106,6 +110,10 @@ public class AppBaseController extends BaseController{
 				votingPcId, nriCountryId, nriCountryRegionId,  pageNumber);
 		mv.getModel().put("newsItems", newsItems);
 		mv.getModel().put("pageNumber", pageNumber);
+	}
+	protected void addAllEventsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
+		List<EventDto> allEvents = eventCacheImpl.getEvents();
+		mv.getModel().put("events", allEvents);
 	}
 	
 	protected void addSingleNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv, Long newsId){

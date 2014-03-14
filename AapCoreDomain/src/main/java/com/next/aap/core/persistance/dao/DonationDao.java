@@ -57,7 +57,7 @@ public interface DonationDao {
 	
 	public abstract Double getTotalDonationInMonth(Date date);
 	
-	
+	public Donation getDonationByTransactionId(String transactionId);
 
 
 }

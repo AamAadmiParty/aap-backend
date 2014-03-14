@@ -57,6 +57,15 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 		Donation donation = executeQueryGetObject("from Donation where donationUp = :donation", params);
 		return donation;
 	}
+	
+	@Override
+	public Donation getDonationByTransactionId(String transactionId) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("transactionId", transactionId);
+		Donation donation = executeQueryGetObject("from Donation where transactionId = :transactionId", params);
+		return donation;
+	}
+	
 
 	@Override
 	public List<Donation> getDonationsByUserId(Long userId) {

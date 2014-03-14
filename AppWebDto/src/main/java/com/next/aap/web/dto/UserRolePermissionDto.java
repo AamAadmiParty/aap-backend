@@ -156,7 +156,7 @@ public class UserRolePermissionDto implements Serializable{
 		return !allPermissions.isEmpty(); 
 	}
 	public boolean isAdmin(){
-		return isSuperUser() || isStateAdmin() || isDistrictAdmin() || isAcAdmin() || isPcAdmin() || isAllAdmin();
+		return isSuperUser() || isStateAdmin() || isDistrictAdmin() || isAcAdmin() || isPcAdmin() || isAllAdmin() || isCountryAdmin() || isCountryRegionAdmin();
 	}
 	public List<CountryDto> getAdminCountries() {
 		return adminCountries;

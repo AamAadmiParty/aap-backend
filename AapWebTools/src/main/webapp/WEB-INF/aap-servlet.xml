@@ -29,6 +29,7 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 	<context:component-scan base-package="com.next.aap.web.controller" />
 	<context:component-scan base-package="com.next.aap.web.controller.validators" />
 	<context:component-scan base-package="com.next.aap.web.util" />
+	<context:component-scan base-package="com.next.aap.web.task" />
 	
 	
 
@@ -66,5 +67,9 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 	</bean>
 
 	<mvc:view-controller path="/" view-name="index" />
+	
+	<task:executor id="donationCertificateExecutor"
+	               pool-size="5-25"
+	               queue-capacity="100000"/>
 
 </beans>

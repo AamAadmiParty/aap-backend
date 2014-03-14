@@ -91,12 +91,15 @@ public class FacebookDataSyncTask implements Runnable{
 	}
 	private void downloadFriendsAndSave(Long facebookAccountId, Facebook facebook) throws AppException{
 		int offset = 0;
-		List<FacebookProfile> friendProfiles = facebook.friendOperations().getFriendProfiles(offset, 100);
+		int pageSize = 100;
+		int totalFriends = 0;
+		List<FacebookProfile> friendProfiles = facebook.friendOperations().getFriendProfiles(offset, pageSize);
 		while(friendProfiles != null && !friendProfiles.isEmpty()){
-			aapService.saveFacebookUserFriends(facebookAccountId, friendProfiles);
-			offset = offset + 100;
+			totalFriends = totalFriends + friendProfiles.size();
+			aapService.saveFacebookUserFriends(facebookAccountId, friendProfiles, totalFriends);
+			offset = offset + pageSize;
 			logger.info("calling Service again with offset " + offset);
-			friendProfiles = facebook.friendOperations().getFriendProfiles(offset, 100);
+			friendProfiles = facebook.friendOperations().getFriendProfiles(offset, pageSize);
 		}
 	}
 	

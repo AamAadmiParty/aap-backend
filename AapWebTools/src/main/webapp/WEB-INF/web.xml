@@ -142,6 +142,11 @@
 		<servlet-name>aap</servlet-name>
 		<url-pattern>/aaps/event</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>aap</servlet-name>
+		<url-pattern>*.jpg</url-pattern>
+	</servlet-mapping>
+		
 		
 		<servlet-mapping>
 		<servlet-name>aap</servlet-name>

@@ -279,6 +279,8 @@ public interface AapService {
 	
 	List<DonationDto> getUserFacebookDonations(Long userId);
 	
+	DonationDto getUserDonationByTxnid(String txnId);
+	
 	List<DonationCampaignDto> getUserCampaigns(Long userId);
 	
 	DonationCampaignDto getRippleDonationCamapign(Long userId);
@@ -452,7 +454,7 @@ public interface AapService {
 	
 	List<FacebookAppPermissionDto> getAllFacebookAppPermissions(Long facebookAccountId) throws AppException;
 	
-	void saveFacebookUserFriends(Long facebookAccountId, List<FacebookProfile> facebookProfiles) throws AppException;
+	void saveFacebookUserFriends(Long facebookAccountId, List<FacebookProfile> facebookProfiles, int totalFriends) throws AppException;
 	
 	Double getDayDonation(Date date) throws AppException;
 	

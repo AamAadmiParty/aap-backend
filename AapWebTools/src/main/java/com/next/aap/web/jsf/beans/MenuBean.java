@@ -406,7 +406,7 @@ public class MenuBean extends BaseJsfBean {
 	}
 
 	public boolean isContentAllowed() {
-		return isManageNewsAllowed() || isManageBlogAllowed() || isManagePollAllowed();
+		return isManageNewsAllowed() || isManageBlogAllowed() || isManagePollAllowed() || isManageEventAllowed();
 	}
 
 	public boolean isManageNewsAllowed() {

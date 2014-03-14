@@ -174,7 +174,7 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 											<td style="border: 1px solid;"><c:out value="${oneDonation.transactionId}"></c:out></td>
 											<td style="border: 1px solid;"><fmt:formatDate value="${oneDonation.donationDate}" pattern="dd-MMM-yyyy HH:mm:ss" /></td>
 											<td style="border: 1px solid;"><c:out value="${oneDonation.amount}"></c:out></td>
-											<td style="border: 1px solid;"><a target=_new href='http://www.donate4india.org/web/prevbadger.html?txnid=${oneDonation.transactionId}'> Generate</a></td>
+											<td style="border: 1px solid;"><a href='${contextPath}/donationcertifcates.html?txnid=${oneDonation.transactionId}'> Generate</a></td>
 										</tr>
 									</c:forEach>
 								</tbody>

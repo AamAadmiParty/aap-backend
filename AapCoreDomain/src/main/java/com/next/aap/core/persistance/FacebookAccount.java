@@ -78,6 +78,12 @@ public class FacebookAccount {
 	})
 	private Set<FacebookAccount> friendsAccounts;
 	
+	@Column(name = "total_friends")
+	private Integer totalFriends;
+
+	@Column(name = "total_friends_with_us")
+	private Integer totalFriendsWithUs;
+
 	public Long getId() {
 		return id;
 	}
@@ -179,5 +185,17 @@ public class FacebookAccount {
 	}
 	public void setLastFailure(Date lastFailure) {
 		this.lastFailure = lastFailure;
+	}
+	public Integer getTotalFriends() {
+		return totalFriends;
+	}
+	public void setTotalFriends(Integer totalFriends) {
+		this.totalFriends = totalFriends;
+	}
+	public Integer getTotalFriendsWithUs() {
+		return totalFriendsWithUs;
+	}
+	public void setTotalFriendsWithUs(Integer totalFriendsWithUs) {
+		this.totalFriendsWithUs = totalFriendsWithUs;
 	}
 }

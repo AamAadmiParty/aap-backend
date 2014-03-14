@@ -5972,12 +5972,12 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public void saveFacebookUserFriends(Long facebookAccountId, List<FacebookProfile> facebookProfiles) throws AppException {
+	public void saveFacebookUserFriends(Long facebookAccountId, List<FacebookProfile> facebookProfiles, int totalFriends) throws AppException {
 		FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountById(facebookAccountId);
 		if(facebookAccount.getFriendsAccounts() == null){
 			facebookAccount.setFriendsAccounts(new HashSet<FacebookAccount>());
 		}
-		
+		facebookAccount.setTotalFriends(totalFriends);
 		for(FacebookProfile oneFacebookProfile : facebookProfiles){
 			FacebookAccount friendFacebookAccount = facebookAccountDao.getFacebookAccountByFacebookUserId(oneFacebookProfile.getId());
 			if(friendFacebookAccount == null){
@@ -5986,6 +5986,7 @@ public class AapServiceImpl implements AapService, Serializable {
 				facebookAccount.getFriendsAccounts().add(friendFacebookAccount);
 			}
 		}
+		facebookAccount.setTotalFriendsWithUs(facebookAccount.getFriendsAccounts().size());
 		
 	}
 
@@ -6134,6 +6135,13 @@ public class AapServiceImpl implements AapService, Serializable {
 	public List<EventDto> getAllFutureEvents() throws AppException {
 		List<Event> events = eventDao.getAllFutureEvents();
 		return convertEvents(events);	
+	}
+
+	@Override
+	@Transactional
+	public DonationDto getUserDonationByTxnid(String txnId) {
+		Donation donation = donationDao.getDonationByTransactionId(txnId);
+		return convertDonation(donation);
 	}
 
 	

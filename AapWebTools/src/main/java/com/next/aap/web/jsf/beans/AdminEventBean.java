@@ -149,15 +149,10 @@ public class AdminEventBean extends BaseAdminJsfBean {
 		eventDto.setFbEventId(event.getFbEventId());
 		eventDto.setLattitude(marker.getLatlng().getLat());
 		eventDto.setLongitude(marker.getLatlng().getLng());
-		if(menuBean.getLocationType().equals(PostLocationType.Global)){
-			eventDto.setNational(true);	
-		}else{
-			eventDto.setNational(false);
-		}
 		
 		eventDto.setStartDate(event.getStartDate());
 		eventDto.setTitle(event.getTitle());
-		eventDto = aapService.saveEvent(eventDto);
+		eventDto = aapService.saveEvent(eventDto, menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
 		event = new AapScheduleEvent(eventDto);
 		//eventModel.addEvent(event);
 		refreshEvents();

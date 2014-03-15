@@ -40,12 +40,15 @@
 		<div class="divblogarticle">
 			<!--divarticle-->
 			<h1>
-				<a href="${contextPath}/content/blog/${oneBlog.id}"> <c:if test="${fn:length(oneBlog.title) gt 47}">
+				<a href="${contextPath}/content/blog/${oneBlog.id}">
+				<c:out value="${oneBlog.title}" />
+				<!--  
+					<c:if test="${fn:length(oneBlog.title) gt 47}">
 						<c:out value="${fn:substring(oneBlog.title, 0, 47)}" />
 					</c:if> <c:if test="${fn:length(oneBlog.title) le 47}">
 						<c:out value="${oneBlog.title}" />
 					</c:if>
-
+				 -->
 				</a>
 			</h1>
 			<div class="img">

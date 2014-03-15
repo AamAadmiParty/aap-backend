@@ -17,6 +17,7 @@ import com.next.aap.web.dto.AccountTransactionDto;
 import com.next.aap.web.dto.AdminAccountDto;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
+import com.next.aap.web.dto.CandidateDto;
 import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
@@ -341,7 +342,7 @@ public interface AapService {
 
 	List<DonationDto> getDonationsByCampaignId(String campaignId);
 	
-	EventDto saveEvent(EventDto eventDto) throws AppException;
+	EventDto saveEvent(EventDto eventDto,PostLocationType locationType, Long locationId) throws AppException;
 	
 	List<EventDto> getEventsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
 	
@@ -471,4 +472,10 @@ public interface AapService {
 	FacebookAppPermissionDto getFacebookPermissionForAGroup(long facebookGroupId);
 	
 	int updateFacebookGroupOverallTotalMembes(Long facebookGroupId, int totalMembers);
+	
+	CandidateDto saveCandidate(CandidateDto candidateDto) throws AppException;
+	
+	List<CandidateDto> getCandidates(int pageSize, int pageNumber) throws AppException;
+	
+	CandidateDto getCandidateByPcId(Long pcId) throws AppException;
 }

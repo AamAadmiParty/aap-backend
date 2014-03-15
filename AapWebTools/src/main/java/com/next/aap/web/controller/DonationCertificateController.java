@@ -79,9 +79,11 @@ public class DonationCertificateController extends AppBaseController {
 		
 		String imageKey = UUID.randomUUID().toString();
 		taskManager.startDonationCertificateTask(imageKey, donation, donationTemplateEnum);
+		String httpImagePath = taskManager.getRemoteHttpFilePath(imageKey);
 		modelAndView.getModel().put("ImageSource", imageKey + ".jpg");
 		modelAndView.getModel().put("ImageKey", imageKey);
 		modelAndView.getModel().put("template", template);
+		modelAndView.getModel().put("httpImagePath", httpImagePath);
 		
 		StringBuilder sb = new StringBuilder("http://");
 		URL url = new URL(httpServletRequest.getRequestURL().toString());
@@ -98,7 +100,7 @@ public class DonationCertificateController extends AppBaseController {
 		return modelAndView;
 	}
 	@RequestMapping(value = "/dc/images/{imageKey}.jpg", method = RequestMethod.GET)
-	public void showImage(HttpServletRequest httpServletRequest, HttpServletResponse response, ModelAndView modelAndView,
+	public ModelAndView showImage(HttpServletRequest httpServletRequest, HttpServletResponse response, ModelAndView modelAndView,
 			@PathVariable String imageKey) throws IOException {
 		logger.info("Generating Image for {}",imageKey);
 		Future<Boolean> future = futureCacheManager.getImageKeyFuture(imageKey);
@@ -118,11 +120,17 @@ public class DonationCertificateController extends AppBaseController {
 			}
 			
 		}
+		/*
 		response.setContentType("image/jpeg");
 		response.setDateHeader("Expires", expiry);
 		response.setHeader("Cache-Control", "max-age="+ cacheAge);
+		
 		String fileName = taskManager.getFilePath(imageKey);
 		IOUtils.copyLarge(new FileInputStream(fileName), response.getOutputStream());
+		*/
+		RedirectView rv = new RedirectView(taskManager.getRemoteHttpFilePath(imageKey));
+		modelAndView.setView(rv);
+		return modelAndView;
 	}
 
 }

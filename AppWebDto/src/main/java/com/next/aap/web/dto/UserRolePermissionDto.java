@@ -19,6 +19,8 @@ public class UserRolePermissionDto implements Serializable{
 		districtPermissions = new HashMap<Long, Set<AppPermission>>();
 		acPermissions = new HashMap<Long, Set<AppPermission>>();
 		pcPermissions = new HashMap<Long, Set<AppPermission>>();
+		countryPermissions = new HashMap<Long, Set<AppPermission>>();
+		countryRegionPermissions = new HashMap<Long, Set<AppPermission>>();
 		
 		adminStates = new ArrayList<StateDto>();
 		adminDistricts = new ArrayList<DistrictDto>();

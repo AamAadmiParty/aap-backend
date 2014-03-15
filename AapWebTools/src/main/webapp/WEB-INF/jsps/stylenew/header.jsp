@@ -12,7 +12,7 @@
 		<!--toplinks-->
 		<ul>
 			<li><a class="home" href="${contextPath}/index.html">Home</a></li>
-			<li><a class="about" href="http://www.aamaadmiparty.org/why-are-we-entering-politics">About Us</a></li>
+			<li><a class="about" href="http://www.aamaadmiparty.org/why-are-we-entering-politics" target="_new">About Us</a></li>
 			<li><a class="event" href="http://www.aamaadmiparty.org/events" target="_new">Events</a></li>
 			<li><a class="livetv" href="http://www.youtube.com/liveaap" target="_new">Live TV</a></li>
 			<li><a class="contact" href="http://www.aamaadmiparty.org/contact-us" target="_new">Contact Us</a></li>

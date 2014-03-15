@@ -11,6 +11,7 @@
 		<mapping class="com.next.aap.core.persistance.AapAccount" />
 		<mapping class="com.next.aap.core.persistance.AssemblyConstituency" />
 		<mapping class="com.next.aap.core.persistance.Blog" />
+		<mapping class="com.next.aap.core.persistance.Candidate" />
 		<mapping class="com.next.aap.core.persistance.ContentTweet" />
 		<mapping class="com.next.aap.core.persistance.Country" />
 		<mapping class="com.next.aap.core.persistance.CountryRole" />

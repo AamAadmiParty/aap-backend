@@ -93,6 +93,7 @@ public class FacebookDataSyncTask implements Runnable{
 		int offset = 0;
 		int pageSize = 100;
 		int totalFriends = 0;
+		logger.info("calling Service again with offset " + offset);
 		List<FacebookProfile> friendProfiles = facebook.friendOperations().getFriendProfiles(offset, pageSize);
 		while(friendProfiles != null && !friendProfiles.isEmpty()){
 			totalFriends = totalFriends + friendProfiles.size();

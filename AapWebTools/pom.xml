@@ -20,6 +20,7 @@
 		<social-google-version>1.0.0.M3</social-google-version>
 		<project.http.version>1.17.0-rc</project.http.version>
 		<project.oauth.version>1.17.0-rc</project.oauth.version>
+		<aws.java.sdk.version>1.7.3</aws.java.sdk.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -356,6 +357,11 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>2.37.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>${aws.java.sdk.version}</version>
 		</dependency>
 	</dependencies>
 	<repositories>

@@ -50,6 +50,7 @@ import com.next.aap.core.persistance.Account;
 import com.next.aap.core.persistance.AccountTransaction;
 import com.next.aap.core.persistance.AssemblyConstituency;
 import com.next.aap.core.persistance.Blog;
+import com.next.aap.core.persistance.Candidate;
 import com.next.aap.core.persistance.ContentTweet;
 import com.next.aap.core.persistance.Country;
 import com.next.aap.core.persistance.CountryRegion;
@@ -104,6 +105,7 @@ import com.next.aap.core.persistance.dao.AccountDao;
 import com.next.aap.core.persistance.dao.AccountTransactionDao;
 import com.next.aap.core.persistance.dao.AssemblyConstituencyDao;
 import com.next.aap.core.persistance.dao.BlogDao;
+import com.next.aap.core.persistance.dao.CandidateDao;
 import com.next.aap.core.persistance.dao.ContentTweetDao;
 import com.next.aap.core.persistance.dao.CountryDao;
 import com.next.aap.core.persistance.dao.CountryRegionAreaDao;
@@ -159,6 +161,7 @@ import com.next.aap.web.dto.AdminAccountDto;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
+import com.next.aap.web.dto.CandidateDto;
 import com.next.aap.web.dto.ContentStatus;
 import com.next.aap.web.dto.ContentTweetDto;
 import com.next.aap.web.dto.CountryDto;
@@ -316,6 +319,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private GlobalCampaignDao globalCampaignDao;
 	@Autowired
 	private EventDao eventDao;
+	@Autowired
+	private CandidateDao candidateDao;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -1541,11 +1546,13 @@ public class AapServiceImpl implements AapService, Serializable {
 				true, false, AppPermission.ADMIN_SMS);
 		createRoleWithPermissions("EmailSender", "User of this role will be able to send EMAIL to all people in his/her location", true, true, true, true,
 				true, true, false, AppPermission.ADMIN_EMAIL);
-*/
 		createRoleWithPermissions("GlobalDonationCampaigner", "User of this role will be able to create global donation campaign", false, false, false, false,
 				false, false, false, AppPermission.ADMIN_GLOBAL_CAMPAIGN);
 		createRoleWithPermissions("EventManager", "User of this role will be able to create events at various level", true, true, true, true,
 				true, true, false, AppPermission.ADMIN_EVENT);
+*/
+		createRoleWithPermissions("CandidateCampaigner", "User of this role will be able to create/update Candidate Profile", false, false, false, false,
+				false, false, false, AppPermission.ADMIN_CANDIDATE_PC);
 		logger.info("All Roles and permissions are created");
 	}
 
@@ -5395,7 +5402,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public EventDto saveEvent(EventDto eventDto) throws AppException {
+	public EventDto saveEvent(EventDto eventDto,PostLocationType locationType, Long locationId) throws AppException {
 		Event dbEvent = null;
 		if(eventDto.getId() != null && eventDto.getId() > 0){
 			dbEvent = eventDao.getEventById(eventDto.getId());
@@ -5418,9 +5425,63 @@ public class AapServiceImpl implements AapService, Serializable {
 		dbEvent.setFbEventId(eventDto.getFbEventId());
 		dbEvent.setLattitude(eventDto.getLattitude());
 		dbEvent.setLongitude(eventDto.getLongitude());
-		dbEvent.setNational(eventDto.isNational());
 		dbEvent.setStartDate(eventDto.getStartDate());
 		dbEvent.setTitle(eventDto.getTitle());
+		
+		switch (locationType) {
+		case Global:
+			dbEvent.setNational(true);
+			break;
+		case STATE:
+			if (dbEvent.getStates() == null) {
+				dbEvent.setStates(new ArrayList<State>());
+			}
+			State state = stateDao.getStateById(locationId);
+			dbEvent.getStates().add(state);
+			break;
+		case DISTRICT:
+			if (dbEvent.getDistricts() == null) {
+				dbEvent.setDistricts(new ArrayList<District>());
+			}
+			District district = districtDao.getDistrictById(locationId);
+			dbEvent.getDistricts().add(district);
+			break;
+		case AC:
+			if (dbEvent.getAssemblyConstituencies() == null) {
+				dbEvent.setAssemblyConstituencies(new ArrayList<AssemblyConstituency>());
+			}
+			AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(locationId);
+			dbEvent.getAssemblyConstituencies().add(assemblyConstituency);
+			break;
+		case PC:
+			if (dbEvent.getParliamentConstituencies() == null) {
+				dbEvent.setParliamentConstituencies(new ArrayList<ParliamentConstituency>());
+			}
+			ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(locationId);
+			dbEvent.getParliamentConstituencies().add(parliamentConstituency);
+			break;
+		case COUNTRY:
+			if (dbEvent.getCountries() == null) {
+				dbEvent.setCountries(new ArrayList<Country>());
+			}
+			Country country = countryDao.getCountryById(locationId);
+			dbEvent.getCountries().add(country);
+			break;
+		case REGION:
+			if (dbEvent.getCountryRegions() == null) {
+				dbEvent.setCountryRegions(new ArrayList<CountryRegion>());
+			}
+			CountryRegion countryRegion = countryRegionDao.getCountryRegionById(locationId);
+			dbEvent.getCountryRegions().add(countryRegion);
+			break;
+		case AREA:
+			if (dbEvent.getCountryRegionsAreas() == null) {
+				dbEvent.setCountryRegionsAreas(new ArrayList<CountryRegionArea>());
+			}
+			CountryRegionArea countryRegionArea = countryRegionAreaDao.getCountryRegionAreaById(locationId);
+			dbEvent.getCountryRegionsAreas().add(countryRegionArea);
+			break;
+		}
 		
 		dbEvent = eventDao.saveEvent(dbEvent);
 		
@@ -6142,6 +6203,73 @@ public class AapServiceImpl implements AapService, Serializable {
 	public DonationDto getUserDonationByTxnid(String txnId) {
 		Donation donation = donationDao.getDonationByTransactionId(txnId);
 		return convertDonation(donation);
+	}
+
+	@Override
+	@Transactional
+	public CandidateDto saveCandidate(CandidateDto candidateDto) throws AppException {
+		Candidate candidate = null;
+		if (candidateDto.getId() != null && candidateDto.getId() > 0) {
+			candidate = candidateDao.getCandidateById(candidateDto.getId());
+		}
+		if(candidateDto.getParliamentConstituencyId() == null || candidateDto.getParliamentConstituencyId() <= 0){
+			throw new AppException("Please select a Parliament Constituency");
+		}
+		if (candidate == null) {
+			candidate = candidateDao.getCandidateByPcId(candidateDto.getParliamentConstituencyId());
+		}
+		if (candidate == null) {
+			candidate = new Candidate();
+			candidate.setDateCreated(new Date());
+		}
+		candidate.setContent(candidateDto.getContent());
+		candidate.setDateModified(new Date());
+		candidate.setDonatePageUrlId(candidateDto.getDonatePageUrlId());
+		candidate.setLandingPageUrlId(candidateDto.getLandingPageUrlId());
+		candidate.setName(candidateDto.getName());
+		
+		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(candidateDto.getParliamentConstituencyId());
+		candidate.setParliamentConstituency(parliamentConstituency);
+		candidate.setPcName(parliamentConstituency.getName());
+		candidate.setState(parliamentConstituency.getState());
+		candidate.setStateName(parliamentConstituency.getState().getName());
+		candidate.setPcIdExt(candidateDto.getPcIdExt());
+		candidate.setStateIdExt(candidateDto.getStateIdExt());
+		candidate = candidateDao.saveCandidate(candidate);
+		return convertCandidate(candidate);
+	}
+	private CandidateDto convertCandidate(Candidate candidate){
+		if(candidate == null){
+			return null;
+		}
+		CandidateDto candidateDto = new CandidateDto();
+		BeanUtils.copyProperties(candidate, candidateDto);
+		return candidateDto;
+	}
+	
+	private List<CandidateDto> convertCandidates(List<Candidate> candidates){
+		List<CandidateDto> returnList = new ArrayList<>();
+		if(candidates == null || candidates.isEmpty()){
+			return returnList;
+		}
+		for(Candidate oneCandidate:candidates){
+			returnList.add(convertCandidate(oneCandidate));
+		}
+		return returnList;
+	}
+
+	@Override
+	@Transactional
+	public List<CandidateDto> getCandidates(int pageSize, int pageNumber) throws AppException {
+		List<Candidate> candidates = candidateDao.getAllCandidates(pageSize, pageNumber);
+		return convertCandidates(candidates);
+	}
+
+	@Override
+	@Transactional
+	public CandidateDto getCandidateByPcId(Long pcId) throws AppException {
+		Candidate candidate = candidateDao.getCandidateByPcId(pcId);
+		return convertCandidate(candidate);
 	}
 
 	

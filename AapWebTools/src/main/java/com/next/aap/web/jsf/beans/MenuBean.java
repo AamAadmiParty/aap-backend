@@ -320,6 +320,14 @@ public class MenuBean extends BaseJsfBean {
 		}
 	}
 
+	public void goToCandidateAdminPage() {
+		if (isCandidateAllowed()) {
+			buildAndRedirect("/admin/candidate");
+		} else {
+			buildAndRedirect("/admin/notallowed");
+		}
+	}
+
 	public void goToManageNewsPage() {
 		if (isManageNewsAllowed()) {
 			buildAndRedirect("/admin/news");
@@ -392,7 +400,8 @@ public class MenuBean extends BaseJsfBean {
 	}
 
 	public boolean isCampaignAllowed() {
-		return isVoiceOfAapFbAllowed() || isVoiceOfAapTwitterAllowed() || isEmailAllowed() || isSmsAllowed() || isGlobalDonationCampaignAllowed();
+		return isVoiceOfAapFbAllowed() || isVoiceOfAapTwitterAllowed() || isEmailAllowed() || isSmsAllowed() || isGlobalDonationCampaignAllowed()
+				|| isCandidateAllowed();
 	}
 
 	public boolean isVoiceOfAapFbAllowed() {
@@ -421,6 +430,10 @@ public class MenuBean extends BaseJsfBean {
 	public boolean isGlobalDonationCampaignAllowed() {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isGlobalDonationCampaignAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+	}
+	public boolean isCandidateAllowed() {
+		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+		return ClientPermissionUtil.isCandidateAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
 	}
 	
 	public boolean isEmailAllowed() {

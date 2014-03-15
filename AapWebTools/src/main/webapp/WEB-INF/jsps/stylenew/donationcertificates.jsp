@@ -10,9 +10,7 @@
 <title>Aam Aadmi Party, India</title>
 <jsp:include page="includes.jsp" />
 <script>
-	$(function() {
-		$("#tabs").tabs();
-	});
+
 </script>
 </head>
 <body>
@@ -20,8 +18,10 @@
 	<jsp:include page="header.jsp" />
 
 	<jsp:include page="topscroller.jsp" />
-
-
+ 
+  
+</div>
+ 
 
 	<div class="contentarea">
 		<!--contentarea-->
@@ -40,17 +40,24 @@
 				<c:if test="${!empty donation }">
 					<table cellpadding="10">
 						<tr>
-							<td><a href="${contextPath}/dc/template01.html?txnid=${donation.transactionId}"><img style="width: 300px;height:200px;" src="https://lh5.googleusercontent.com/-v9IxH4yKots/UeEjk0Xf-9I/AAAAAAAAMR0/xbaXkSqNHug/w987-h822-no/donations01.jpg" /></a></td>
-							<td><a href="${contextPath}/dc/template02.html?txnid=${donation.transactionId}"><img style="width: 300px;height:200px;" src="https://lh6.googleusercontent.com/-Nw1eaaraEP0/UeDXYRXvmvI/AAAAAAAAMRM/M0UjgS2M_ek/w658-h436-no/donation02.jpg" /></a></td>
-							<td><a href="${contextPath}/dc/template03.html?txnid=${donation.transactionId}"><img style="width: 300px;height:200px;" src="https://lh4.googleusercontent.com/-4kGDOBFxpMY/UfCwashxxkI/AAAAAAAANNw/DCk6O5jwX_E/w1064-h822-no/donations03.jpg" /></a></td>
+							<td><a id="template01" href="${contextPath}/dc/template01.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+									src="https://lh5.googleusercontent.com/-v9IxH4yKots/UeEjk0Xf-9I/AAAAAAAAMR0/xbaXkSqNHug/w987-h822-no/donations01.jpg" /></a></td>
+							<td><a href="${contextPath}/dc/template02.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+									src="https://lh6.googleusercontent.com/-Nw1eaaraEP0/UeDXYRXvmvI/AAAAAAAAMRM/M0UjgS2M_ek/w658-h436-no/donation02.jpg" /></a></td>
+							<td><a href="${contextPath}/dc/template03.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+									src="https://lh4.googleusercontent.com/-4kGDOBFxpMY/UfCwashxxkI/AAAAAAAANNw/DCk6O5jwX_E/w1064-h822-no/donations03.jpg" /></a></td>
 						</tr>
 						<tr>
-							<td><a href="${contextPath}/dc/template04.html?txnid=${donation.transactionId}"><img style="width: 300px;height:200px;" src="https://lh4.googleusercontent.com/-R8T_ggjcylM/UeF7XfPz7iI/AAAAAAAAMSQ/5sybsvhpiDA/w1064-h822-no/donations04.jpg" /></a></td>
-							<td><a href="${contextPath}/dc/template05.html?txnid=${donation.transactionId}"><img style="width: 300px;height:200px;" src="https://lh6.googleusercontent.com/-zeL8afs-9Ek/Uu2ilbjDaAI/AAAAAAAANys/e4q5PbAPNFY/s720/donations05.jpg" /></a></td>
-							<td><a href="${contextPath}/dc/template06.html?txnid=${donation.transactionId}"><img style="width: 300px;height:200px;" src="https://lh4.googleusercontent.com/-MLVEUgPRceQ/Uu2ilGhmdCI/AAAAAAAANyo/yTBBY7zJ-5w/s720/donations06.jpg" /></a></td>
+							<td><a href="${contextPath}/dc/template04.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+									src="https://lh4.googleusercontent.com/-R8T_ggjcylM/UeF7XfPz7iI/AAAAAAAAMSQ/5sybsvhpiDA/w1064-h822-no/donations04.jpg" /></a></td>
+							<td><a href="${contextPath}/dc/template05.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+									src="https://lh6.googleusercontent.com/-zeL8afs-9Ek/Uu2ilbjDaAI/AAAAAAAANys/e4q5PbAPNFY/s720/donations05.jpg" /></a></td>
+							<td><a href="${contextPath}/dc/template06.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+									src="https://lh4.googleusercontent.com/-MLVEUgPRceQ/Uu2ilGhmdCI/AAAAAAAANyo/yTBBY7zJ-5w/s720/donations06.jpg" /></a></td>
 						</tr>
 						<tr>
-							<td><a href="${contextPath}/dc/template07.html?txnid=${donation.transactionId}"><img style="width: 300px;height:200px;" src="https://lh6.googleusercontent.com/-rDFFI6sP8do/UvGz3Mtgb4I/AAAAAAAAPZ0/yZxsuNoAMw8/s720/donations07.jpg" /></a></td>
+							<td><a href="${contextPath}/dc/template07.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+									src="https://lh6.googleusercontent.com/-rDFFI6sP8do/UvGz3Mtgb4I/AAAAAAAAPZ0/yZxsuNoAMw8/s720/donations07.jpg" /></a></td>
 						</tr>
 					</table>
 				</c:if>

@@ -109,7 +109,7 @@ public class DailyDonationImageTask implements Runnable {
 
 			try {
 				fileOutputStream = new FileOutputStream(filePath);
-				DduUtil.createBoardTemplateImageForJoinApp(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
+				DduUtil.createTemplate01DDU(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
 
 				fileOutputStream.close();
 				logger.info("File created");

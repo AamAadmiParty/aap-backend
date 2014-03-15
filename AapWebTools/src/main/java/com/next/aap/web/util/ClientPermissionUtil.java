@@ -37,6 +37,11 @@ public class ClientPermissionUtil {
 				(userRolePermissionDto.isSuperUser() || 
 				isAllowed(AppPermission.ADMIN_GLOBAL_CAMPAIGN, userRolePermissionDto, locationId, locationType));
 	}
+	public static boolean isCandidateAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
+		return checkLocationType(locationType, locationId) &&
+				(userRolePermissionDto.isSuperUser() || 
+				isAllowed(AppPermission.ADMIN_CANDIDATE_PC, userRolePermissionDto, locationId, locationType));
+	}
 	public static boolean isEmailAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return checkLocationType(locationType, locationId) &&
 				(userRolePermissionDto.isSuperUser() || 

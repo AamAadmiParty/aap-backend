@@ -309,4 +309,60 @@ public class Event {
 		this.national = national;
 	}
 
+	public List<AssemblyConstituency> getAssemblyConstituencies() {
+		return assemblyConstituencies;
+	}
+
+	public void setAssemblyConstituencies(List<AssemblyConstituency> assemblyConstituencies) {
+		this.assemblyConstituencies = assemblyConstituencies;
+	}
+
+	public List<ParliamentConstituency> getParliamentConstituencies() {
+		return parliamentConstituencies;
+	}
+
+	public void setParliamentConstituencies(List<ParliamentConstituency> parliamentConstituencies) {
+		this.parliamentConstituencies = parliamentConstituencies;
+	}
+
+	public List<District> getDistricts() {
+		return districts;
+	}
+
+	public void setDistricts(List<District> districts) {
+		this.districts = districts;
+	}
+
+	public List<State> getStates() {
+		return states;
+	}
+
+	public void setStates(List<State> states) {
+		this.states = states;
+	}
+
+	public List<Country> getCountries() {
+		return countries;
+	}
+
+	public void setCountries(List<Country> countries) {
+		this.countries = countries;
+	}
+
+	public List<CountryRegion> getCountryRegions() {
+		return countryRegions;
+	}
+
+	public void setCountryRegions(List<CountryRegion> countryRegions) {
+		this.countryRegions = countryRegions;
+	}
+
+	public List<CountryRegionArea> getCountryRegionsAreas() {
+		return countryRegionsAreas;
+	}
+
+	public void setCountryRegionsAreas(List<CountryRegionArea> countryRegionsAreas) {
+		this.countryRegionsAreas = countryRegionsAreas;
+	}
+
 }

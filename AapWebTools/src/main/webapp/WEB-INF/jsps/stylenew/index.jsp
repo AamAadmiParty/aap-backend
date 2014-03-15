@@ -40,12 +40,16 @@
 		<div class="divarticle">
 			<!--divarticle-->
 			<h1>
-				<a href="${contextPath}/content/news/${oneNews.id}"> <c:if test="${fn:length(oneNews.title) gt 47}">
+				<a href="${contextPath}/content/news/${oneNews.id}">
+				<c:out value="${oneNews.title}" />
+				<!--  
+					<c:if test="${fn:length(oneNews.title) gt 47}">
 						<c:out value="${fn:substring(oneNews.title, 0, 47)}" />
-					</c:if> <c:if test="${fn:length(oneNews.title) le 47}">
+					</c:if> 
+					<c:if test="${fn:length(oneNews.title) le 47}">
 						<c:out value="${oneNews.title}" />
 					</c:if>
-
+				--> 
 				</a>
 			</h1>
 			<div class="img">

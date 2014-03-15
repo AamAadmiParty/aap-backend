@@ -90,10 +90,10 @@ public class MyRippleController extends AppBaseController {
 				description = description.trim();
 			}
 			if(StringUtil.isEmpty(campaignId)){
-				addErrorInModel(mv, "Please enter a campaign Identifier");
+				addErrorInModel(mv, "Please enter a campaign Identifier/Name");
 			}else{
 				if(!myPattern.matcher(campaignId).find()){
-					addErrorInModel(mv, "campaign Identifier must contain only number and alphabets");
+					addErrorInModel(mv, "campaign Identifier/Name must contain only number and alphabets");
 				}
 			}
 			if(isValidInput(mv)){

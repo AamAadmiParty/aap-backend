@@ -1,5 +1,6 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<link rel="shortcut icon" href="https://s3.amazonaws.com/myaap/favicon.ico" />
 	<style type="text/css">
 body {
 	background:
@@ -68,6 +69,7 @@ body {
 				<p:menuitem value="Email" actionListener="#{menuBean.goToEmailAdminPageTwitter}" rendered="#{menuBean.emailAllowed}"></p:menuitem>
 				<p:menuitem value="Sms" actionListener="#{menuBean.goToSmsAdminPageTwitter}" rendered="#{menuBean.smsAllowed}"></p:menuitem>
 				<p:menuitem value="Global Donation Campaign" actionListener="#{menuBean.goToGlobalDonationcampaignAdminPage}" rendered="#{menuBean.globalDonationCampaignAllowed}"></p:menuitem>
+				<p:menuitem value="Candidates" actionListener="#{menuBean.goToCandidateAdminPage}" rendered="#{menuBean.candidateAllowed}"></p:menuitem>
 			</p:submenu>
 
 			<p:submenu label="Content" rendered="#{menuBean.contentAllowed}">
@@ -235,7 +237,7 @@ body {
 	</p:dock>
   -->
 	<p:stack icon="http://www.primefaces.org/showcase/images/stack/stack.png">
-		<p:menuitem style="font-size:10px;" value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="/home" />
+		<p:menuitem style="font-size:10px;" value="Home" icon="https://cdn2.iconfinder.com/data/icons/snipicons/5000/home-128.png" url="/index.html" />
 		<!-- 
 		<p:menuitem style="font-size:10px;" value="Edit Profile" icon="https://cdn1.iconfinder.com/data/icons/macosxstyle/macosxstyle_png/128/System%20Preferences.png" url="/profile" />
 		<p:menuitem style="font-size:10px;" value="Login Accounts" icon="https://cdn1.iconfinder.com/data/icons/VistaICO_Toolbar-Icons/128/Login.png" url="/socialaccounts" />

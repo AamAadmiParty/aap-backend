@@ -40,11 +40,14 @@ public class LocationCacheDbImpl {
 	}
 
 	private List<StateDto> allStates;
+	private Map<Long,StateDto> allStatesMapById;
 	private Map<Long, List<DistrictDto>> stateToDistrictMap;
+	private Map<Long,DistrictDto> allDistrictMapById;
+	private Map<Long,AssemblyConstituencyDto> allAssemblyConstituencyMapById;
 	private Map<Long, List<AssemblyConstituencyDto>> districtToAcMap;
 	private Map<Long, List<AssemblyConstituencyDto>> stateToAcMap;
 	private Map<Long, List<ParliamentConstituencyDto>> stateToPcMap;
-	
+	private Map<Long,ParliamentConstituencyDto> allPcMapById;	
 	private List<CountryDto> allCountries;
 	private Map<Long, List<CountryRegionDto>> allCountryRegions;
 	private Map<Long, List<CountryRegionAreaDto>> allCountryRegionAreas;
@@ -81,10 +84,16 @@ public class LocationCacheDbImpl {
 	public void refreshCache(){
 		logger.info("refreshing Location cache");
 		List<StateDto> allDbStates;
+		Map<Long, StateDto> allDStatesMapById;
 		Map<Long, List<AssemblyConstituencyDto>> localDistrictToAcMap = new HashMap<>();
+		Map<Long, DistrictDto> allDbDistrictMapById = new HashMap<>();
 		Map<Long, List<DistrictDto>> localStateToDistrictMap = new HashMap<>();
 		Map<Long, List<AssemblyConstituencyDto>> localStateToAcMap = new HashMap<>();
+		Map<Long, AssemblyConstituencyDto> allDbAssemblyConstituencyMapById = new HashMap<>();
 		Map<Long, List<ParliamentConstituencyDto>> localStateToPcMap = new HashMap<>();
+		Map<Long, ParliamentConstituencyDto> allDbPcMapById = new HashMap<>();
+		
+		allDStatesMapById = new HashMap<>();
 		
 		List<CountryDto> allCountriesLocal;
 		Map<Long, List<CountryRegionDto>> allCountryRegionsLocal = new HashMap<>();
@@ -99,19 +108,27 @@ public class LocationCacheDbImpl {
 			List<AssemblyConstituencyDto> allStateAssemblyConstituencies = new ArrayList<AssemblyConstituencyDto>();
 			List<ParliamentConstituencyDto> parliamentConstituencyDtos;
 			for(StateDto oneStateDto:allDbStates){
+				allDStatesMapById.put(oneStateDto.getId(), oneStateDto);
 				allStateAssemblyConstituencies.clear();
 				allDistricts = aapService.getAllDistrictOfState(oneStateDto.getId());
 				localStateToDistrictMap.put(oneStateDto.getId(), allDistricts);
 				//Create Assembly COnstituency Cache
 				for(DistrictDto oneDistrictDto:allDistricts){
+					allDbDistrictMapById.put(oneDistrictDto.getId(), oneDistrictDto);
 					allAssemblyConstituencies = aapService.getAllAssemblyConstituenciesOfDistrict(oneDistrictDto.getId());
 					allStateAssemblyConstituencies.addAll(allAssemblyConstituencies);
 					localDistrictToAcMap.put(oneDistrictDto.getId(), allAssemblyConstituencies);
+					for(AssemblyConstituencyDto oneAc:allAssemblyConstituencies){
+						allDbAssemblyConstituencyMapById.put(oneAc.getId(), oneAc);
+					}
 					
 				}
 				localStateToAcMap.put(oneStateDto.getId(), allStateAssemblyConstituencies);
 				
 				parliamentConstituencyDtos = aapService.getAllParliamentConstituenciesOfState(oneStateDto.getId());
+				for(ParliamentConstituencyDto onePc:parliamentConstituencyDtos){
+					allDbPcMapById.put(onePc.getId(), onePc);
+				}
 				localStateToPcMap.put(oneStateDto.getId(), parliamentConstituencyDtos);
 			}
 			allCountriesLocal = aapService.getNriCountries();
@@ -139,6 +156,7 @@ public class LocationCacheDbImpl {
 			}
 			
 			this.allStates = allDbStates;
+			this.allStatesMapById = allDStatesMapById;
 			this.stateToDistrictMap = localStateToDistrictMap;
 			this.districtToAcMap = localDistrictToAcMap;
 			this.stateToAcMap = localStateToAcMap;
@@ -146,6 +164,14 @@ public class LocationCacheDbImpl {
 			this.allCountries = allCountriesLocal;
 			this.allCountryRegions = allCountryRegionsLocal;
 			this.allCountryRegionAreas = allCountryRegionAreasLocal;
+			this.allPcMapById = allDbPcMapById;
+			this.allDistrictMapById = allDbDistrictMapById;
+			this.allAssemblyConstituencyMapById = allDbAssemblyConstituencyMapById;
+			
+			logger.info("total acs = "+ allAssemblyConstituencyMapById.size());
+			logger.info("total pcs = "+ allPcMapById.size());
+			logger.info("total Districts = "+ allDistrictMapById.size());
+			logger.info("total States = "+ allStatesMapById.size());
 		}catch (Exception e) {
 			logger.error("Error occured while refreshing Location cache",e);
 		}finally{
@@ -158,6 +184,19 @@ public class LocationCacheDbImpl {
 	 */
 	public List<StateDto> getAllStates() {
 		return allStates;
+	}
+	
+	public StateDto getStateById(Long stateId) {
+		return allStatesMapById.get(stateId);
+	}
+	public ParliamentConstituencyDto getParliamentConstituenciesById(Long pcId) {
+		return allPcMapById.get(pcId);
+	}
+	public DistrictDto getDistrictById(Long districtId) {
+		return allDistrictMapById.get(districtId);
+	}
+	public AssemblyConstituencyDto getAssemblyConstituencyById(Long acId) {
+		return allAssemblyConstituencyMapById.get(acId);
 	}
 
 	/* (non-Javadoc)

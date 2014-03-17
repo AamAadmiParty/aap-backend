@@ -27,6 +27,12 @@ public class CandidateDto {
 	private String pcName;
 	private String candidateFbPageId;
 	private String twitterId;
+	private String urlTextPart1;
+	private String urlTextPart2;
+	private String landingPageSmallUrl;
+	private String landingPageFullUrl;
+	private String donationPageFullUrl;
+	
 
 	public Long getId() {
 		return id;
@@ -159,6 +165,46 @@ public class CandidateDto {
 	}
 	public void setTwitterId(String twitterId) {
 		this.twitterId = twitterId;
+	}
+	public String getUrlTextPart1() {
+		return urlTextPart1;
+	}
+	public void setUrlTextPart1(String urlTextPart1) {
+		this.urlTextPart1 = urlTextPart1;
+	}
+	public String getUrlTextPart2() {
+		return urlTextPart2;
+	}
+	public void setUrlTextPart2(String urlTextPart2) {
+		this.urlTextPart2 = urlTextPart2;
+	}
+	public String getLandingPageSmallUrl() {
+		return landingPageSmallUrl;
+	}
+	public void setLandingPageSmallUrl(String landingPageSmallUrl) {
+		this.landingPageSmallUrl = landingPageSmallUrl;
+	}
+	public String getLandingPageFullUrl() {
+		return landingPageFullUrl;
+	}
+	public void setLandingPageFullUrl(String landingPageFullUrl) {
+		this.landingPageFullUrl = landingPageFullUrl;
+	}
+	public String getDonationPageFullUrl() {
+		return donationPageFullUrl;
+	}
+	public void setDonationPageFullUrl(String donationPageFullUrl) {
+		this.donationPageFullUrl = donationPageFullUrl;
+	}
+	@Override
+	public String toString() {
+		return "CandidateDto [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId
+				+ ", modifierId=" + modifierId + ", name=" + name + ", content=" + content + ", stateIdExt=" + stateIdExt + ", pcIdExt=" + pcIdExt
+				+ ", landingPageUrlId=" + landingPageUrlId + ", donatePageUrlId=" + donatePageUrlId + ", lattitude=" + lattitude + ", longitude=" + longitude
+				+ ", depth=" + depth + ", stateId=" + stateId + ", parliamentConstituencyId=" + parliamentConstituencyId + ", imageUrl=" + imageUrl
+				+ ", stateName=" + stateName + ", pcName=" + pcName + ", candidateFbPageId=" + candidateFbPageId + ", twitterId=" + twitterId
+				+ ", urlTextPart1=" + urlTextPart1 + ", urlTextPart2=" + urlTextPart2 + ", landingPageSmallUrl=" + landingPageSmallUrl
+				+ ", landingPageFullUrl=" + landingPageFullUrl + ", donationPageFullUrl=" + donationPageFullUrl + "]";
 	}
 	
 	

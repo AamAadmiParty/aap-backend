@@ -10,12 +10,18 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.next.aap.web.ItemList;
+import com.next.aap.web.dto.AssemblyConstituencyDto;
+import com.next.aap.web.dto.DistrictDto;
 
 public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemType>{
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Autowired
+	private LocationCacheDbImpl locationCacheDbImpl;
 	
 	public BasItemCacheImpl(int pageSize){
 		this.pageSize = pageSize;
@@ -75,6 +81,8 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 	@Override
 	public ItemList<ItemType> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
 			long livingCountryRegionId, int pageNumber) {
+		logger.info("Getting Items for livingAcId="+livingAcId+",votingAcId="+votingAcId+",livingPcId="+livingPcId+",votingPcId"+votingPcId+
+				",livingCountryId="+livingCountryId +",livingCountryRegionId="+livingCountryRegionId+",pageNumber="+pageNumber);
 		return getItemsFromCache(lang, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId, pageNumber, pageSize);
 	}
 	public ItemList<ItemType> getItemsFromCache(String language, Long livingAcId, Long votingAcId, Long livingPcId, Long votingPcId, 
@@ -145,12 +153,37 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 			Long livingCountryId,Long livingCountryRegionId){
 		Set<Long> returnList = new HashSet<>(allGlobalItemIds.size());
 		returnList.addAll(allGlobalItemIds);
+		
 		addItems(returnList, votingAcId, acItemDtos);
-		addItems(returnList, votingPcId, pcItemDtos);
 		addItems(returnList, livingAcId, acItemDtos);
+		addItems(returnList, votingPcId, pcItemDtos);
+		addItems(returnList, livingPcId, pcItemDtos);
 		addItems(returnList, livingCountryId, countryItemDtos);
 		addItems(returnList, livingCountryRegionId, countryRegionItemDtos);
+		
+		addDistrictItems(returnList, votingAcId);
+		addDistrictItems(returnList, livingAcId);
+		
 		return returnList;
+	}
+	private void addDistrictItems(Set<Long> returnList,Long acId){
+		if(acId == null || acId <= 0 ){
+			return;
+		}
+		AssemblyConstituencyDto ac = locationCacheDbImpl.getAssemblyConstituencyById(acId);
+		addItems(returnList, ac.getDistrictId(), districtItemDtos);
+		addStateItemsByDistrictIds(returnList, ac.getDistrictId());
+	}
+	private void addStateItemsByDistrictIds(Set<Long> returnList,Long districtId){
+		if(districtId == null || districtId <= 0 ){
+			return;
+		}
+		DistrictDto district = locationCacheDbImpl.getDistrictById(districtId);
+		if(district == null){
+			logger.warn("District with Id "+districtId+" not found");
+			return;
+		}
+		addItems(returnList, district.getStateId(), stateItemDtos);
 	}
 	private void addItems(Set<Long> returnList, Long locationId, Map<Long, List<Long>> cacheItemsOfLocation){
 		if(locationId != null && locationId != null){

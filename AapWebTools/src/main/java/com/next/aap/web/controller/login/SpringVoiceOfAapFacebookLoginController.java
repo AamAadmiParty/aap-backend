@@ -2,6 +2,7 @@ package com.next.aap.web.controller.login;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +86,7 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 		return "Please login to facebook and give permission";
 	}
 	@RequestMapping(value = "/voa/facebooksuccess", method = RequestMethod.GET)
-	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, ModelAndView mv) {
+	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,  ModelAndView mv) {
 		try {
 			FacebookConnectionFactory facebookConnectionFactory = new FacebookConnectionFactory(voiceOfAapAppId, voiceOfAapAppSecret);
 			OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
@@ -93,7 +94,7 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, facebookRedirectUrl, null);
 			Connection<Facebook> facebookConnection = facebookConnectionFactory.createConnection(accessGrant);
 			
-			afterSuccesfullLogin(httpServletRequest, facebookConnection);
+			afterSuccesfullLogin(httpServletRequest, httpServletResponse, facebookConnection);
 			
 			String redirectUrl = getAndRemoveRedirectUrlFromSession(httpServletRequest);
 			logger.info("url= {}", redirectUrl);

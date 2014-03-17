@@ -151,9 +151,14 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 						<table><tr>
                                                         <th> Total Donation Amount</th>
                                                         <td> ${total} </td>
-                                                        </tr><tr>
+                                                        </tr>
+                                                        <tr>
                                                         <th> Total Donations </th>
                                                         <td> ${fn:length(successDonations)}</td>
+                                                        </tr>
+                                                        <tr>
+                                                        <th> Total URL Clicks </th>
+                                                        <td> ${totalClicks}</td>
                                                         </tr>
                                                         </table>
 							<table id="successTable" style="border: 1px solid;">

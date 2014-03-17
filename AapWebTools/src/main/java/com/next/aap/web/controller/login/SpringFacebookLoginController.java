@@ -70,7 +70,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, facebookRedirectUrl, null);
 			Connection<Facebook> facebookConnection = facebookConnectionFactory.createConnection(accessGrant);
 			
-			afterSuccesfullLogin(httpServletRequest, facebookConnection);
+			afterSuccesfullLogin(httpServletRequest, httpServletResponse, facebookConnection);
 			
 			/*
 			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId());

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.exception.AppException;
+import com.next.aap.core.util.MyaapInUtil;
 import com.next.aap.web.dto.DonationCampaignDto;
 import com.next.aap.web.dto.DonationDto;
 import com.next.aap.web.dto.UserDto;
@@ -23,6 +25,8 @@ public class MyRippleController extends AppBaseController {
 	
 	@Autowired
 	private ContentDonwloadUtil contentDonwloadUtil;
+	@Autowired
+	private MyaapInUtil myaapInUtil;
 	
 	@RequestMapping(value = "/ripple.html", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
@@ -61,6 +65,11 @@ public class MyRippleController extends AppBaseController {
 						failedDonations.add(oneDonationDto);
 					}
 				}
+			}
+			try {
+				int totalClicks = myaapInUtil.getUrlTotalClicks(rippleCampaign.getCampaignId());
+				mv.getModel().put("totalClicks", totalClicks);
+			} catch (AppException e) {
 			}
 		}
 		

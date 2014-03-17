@@ -6227,6 +6227,16 @@ public class AapServiceImpl implements AapService, Serializable {
 		candidate.setDonatePageUrlId(candidateDto.getDonatePageUrlId());
 		candidate.setLandingPageUrlId(candidateDto.getLandingPageUrlId());
 		candidate.setName(candidateDto.getName());
+		candidate.setCandidateFbPageId(candidateDto.getCandidateFbPageId());
+		candidate.setDepth(candidateDto.getDepth());
+		candidate.setDonationPageFullUrl(candidateDto.getDonationPageFullUrl());
+		candidate.setLandingPageFullUrl(candidateDto.getLandingPageFullUrl());
+		candidate.setLandingPageSmallUrl(candidateDto.getLandingPageSmallUrl());
+		candidate.setLattitude(candidateDto.getLattitude());
+		candidate.setLongitude(candidateDto.getLongitude());
+		candidate.setTwitterId(candidateDto.getTwitterId());
+		candidate.setUrlTextPart1(candidateDto.getUrlTextPart1());
+		candidate.setUrlTextPart2(candidateDto.getUrlTextPart2());
 		
 		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(candidateDto.getParliamentConstituencyId());
 		candidate.setParliamentConstituency(parliamentConstituency);

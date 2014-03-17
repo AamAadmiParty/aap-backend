@@ -1,6 +1,7 @@
 package com.next.aap.web.controller.login;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,7 @@ public class SpringGoogleLoginController extends BaseSocialLoginController<Googl
 		return "Please login to facebook and give permission";
 	}
 	@RequestMapping(value = "/googlesuccess", method = RequestMethod.GET)
-	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest, ModelAndView mv) {
+	public ModelAndView loginSuccess(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse,  ModelAndView mv) {
 		try {
 			GoogleConnectionFactory googleConnectionFactory = (GoogleConnectionFactory)connectionFactoryLocator.getConnectionFactory(Google.class);
 			OAuth2Operations oauthOperations = googleConnectionFactory.getOAuthOperations();
@@ -64,7 +65,7 @@ public class SpringGoogleLoginController extends BaseSocialLoginController<Googl
 			AccessGrant accessGrant = oauthOperations.exchangeForAccess(authorizationCode, getFacebookRedirectUrl(httpServletRequest), null);
 			Connection<Google> googleConnection = googleConnectionFactory.createConnection(accessGrant);
 			
-			afterSuccesfullLogin(httpServletRequest, googleConnection);
+			afterSuccesfullLogin(httpServletRequest, httpServletResponse, googleConnection);
 			
 			/*
 			ConnectionRepository facebookConnectionRepository = usersConnectionRepository.createConnectionRepository("ravi");

@@ -55,8 +55,18 @@ public class Candidate {
 	@Column(name = "landing_page_url_id")
 	private String landingPageUrlId;
 
+	@Column(name = "landing_page_small_url")
+	private String landingPageSmallUrl;
+
+	@Column(name = "landing_page_full_url", length=256)
+	private String landingPageFullUrl;
+	
+	@Column(name = "donation_page_full_url")
+	private String donationPageFullUrl;
+
 	@Column(name = "donate_page_url_id")
 	private String donatePageUrlId;
+
 
 	@Column(name = "image_url")
 	private String imageUrl;
@@ -77,6 +87,11 @@ public class Candidate {
 	private Long stateId;
 	@Column(name = "state_name")
 	private String stateName;
+
+	@Column(name = "url_text_part1")
+	private String urlTextPart1;
+	@Column(name = "url_text_part2")
+	private String urlTextPart2;
 
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name="pc_id")
@@ -229,6 +244,36 @@ public class Candidate {
 	}
 	public void setPcName(String pcName) {
 		this.pcName = pcName;
+	}
+	public String getUrlTextPart1() {
+		return urlTextPart1;
+	}
+	public void setUrlTextPart1(String urlTextPart1) {
+		this.urlTextPart1 = urlTextPart1;
+	}
+	public String getUrlTextPart2() {
+		return urlTextPart2;
+	}
+	public void setUrlTextPart2(String urlTextPart2) {
+		this.urlTextPart2 = urlTextPart2;
+	}
+	public String getLandingPageSmallUrl() {
+		return landingPageSmallUrl;
+	}
+	public void setLandingPageSmallUrl(String landingPageSmallUrl) {
+		this.landingPageSmallUrl = landingPageSmallUrl;
+	}
+	public String getLandingPageFullUrl() {
+		return landingPageFullUrl;
+	}
+	public void setLandingPageFullUrl(String landingPageFullUrl) {
+		this.landingPageFullUrl = landingPageFullUrl;
+	}
+	public String getDonationPageFullUrl() {
+		return donationPageFullUrl;
+	}
+	public void setDonationPageFullUrl(String donationPageFullUrl) {
+		this.donationPageFullUrl = donationPageFullUrl;
 	}
 	
 	

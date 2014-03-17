@@ -11,18 +11,22 @@
 	<!-- menu ends -->
 	<div style="width: 1200px; margin: 0 auto;">
 		<div style="width: 1200px; margin: 0;">
+		<h:form id="adminCandidateForm1">
+			<p:messages autoUpdate="true" />
+			<p:outputPanel id="mainPanel">
+			</p:outputPanel>
+			<p:blockUI block="mainPanel" trigger="addButton1" />
+			<p:commandButton id="addButton1" update=":adminCandidateForm1:mainPanel" value="Save Test" actionListener="#{adminCandidateBean.saveCandidate}" />
+		</h:form>
 		<p:messages autoUpdate="true" />
-			<p:blockUI block=":adminCandidateForm:mainPanel" trigger=":adminCandidateForm:addButton" />  
 			<h:form id="adminCandidateForm">
+				<p:blockUI block="mainPanel" trigger="addButton" />  
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView" rendered="#{adminCandidateBean.showList}">
 						<p:commandButton value="Create Candidate" actionListener="#{adminCandidateBean.createCandidate}" update=":adminCandidateForm:mainPanel">
 						</p:commandButton>
 						<p:dataTable id="listOfBlog" var="oneCandidate" value="#{adminCandidateBean.candidates}" emptyMessage="No Candidates">
 							<f:facet name="header">Candidates</f:facet>
-							<p:column style="width:2%">
-								<p:rowToggler />
-							</p:column>
 							<p:column>
 								<f:facet name="header">
 									<h:outputText value="Id" />
@@ -50,28 +54,7 @@
 									<f:setPropertyActionListener value="#{oneCandidate}" target="#{adminCandidateBean.candidate}" />
 								</p:commandLink>
 							</p:column>
-							<p:rowExpansion>
-								<h:panelGrid width="1000" id="display" columns="2" cellpadding="4" style="width:300px;" styleClass=" ui-widget-content grid">
 
-									<f:facet name="header">
-										<h:outputText value="Candidate Details" />
-									</f:facet>
-
-									<h:outputText value="Landing Page Small Url" />
-									<h:outputText value="#{oneCandidate.landingPageSmallUrl}" />
-
-									<h:outputText value="Landing Page Full Url" />
-									<h:outputText value="#{oneCandidate.landingPageFullUrl}" />
-
-									<h:outputText value="Donation Page Small Url" />
-									<h:outputText value="http://myaap.in/#{oneCandidate.donatePageUrlId}" />
-
-									<h:outputText value="Donation Page Full Url" />
-									<h:outputText value="#{oneCandidate.donationPageFullUrl}" />
-
-								</h:panelGrid>
-
-							</p:rowExpansion>
 						</p:dataTable>
 					</p:outputPanel>
 					<p:outputPanel id="formView" rendered="#{!adminCandidateBean.showList}">
@@ -126,6 +109,15 @@
 									<h:outputLabel value="&amp;Loksabha=" />
 									<p:inputText style="width:40px" disabled="#{!adminCandidateBean.formEditable}" id="pcIdExt" value="#{adminCandidateBean.candidate.pcIdExt}" />
 								</p:outputPanel>
+								<!-- 
+								<h:panelGrid columns="4">
+									<h:outputLabel value="https://donate.aamaadmiparty.org?State=" />
+									<p:inputText disabled="#{!adminCandidateBean.formEditable}" id="stateIdExt" value="#{adminCandidateBean.candidate.stateIdExt}" />
+									<h:outputLabel value="&amp;Loksabha=" />
+									<p:inputText disabled="#{!adminCandidateBean.formEditable}" id="pcIdExt" value="#{adminCandidateBean.candidate.pcIdExt}" />
+									
+								</h:panelGrid>
+ -->
 								<h:outputLabel for="fbCandidateId" value="Candidate Facebook Page Id" />
 								<h:panelGrid columns="2">
 									<h:outputLabel value="http://www.facebook.com/" />
@@ -140,17 +132,17 @@
 								</h:panelGrid>
 
 							</h:panelGrid>
-							<!-- 
 							<h:panelGrid columns="1" styleClass="topAlignPanelColumns">
+							<h:outputLabel for="twitterId" value="#{adminCandidateBean.candidate.lattitude}" />
+							<h:outputLabel for="twitterId" value="#{adminCandidateBean.candidate.longitude}" />
+							<h:outputLabel for="twitterId" value="#{adminCandidateBean.candidate.depth}" />
 								<p:gmap center="#{adminCandidateBean.candidate.lattitude},#{adminCandidateBean.candidate.longitude}" zoom="#{adminCandidateBean.candidate.depth}" type="HYBRID"
 									model="#{adminCandidateBean.draggableMapModel}" fitBounds="true" style="width:900px;height:600px">
 									<p:ajax event="markerDrag" listener="#{adminCandidateBean.onMarkerDrag}" />
 									<p:ajax event="stateChange" listener="#{adminCandidateBean.onStateChange}" />
 
 								</p:gmap>
-								 
 							</h:panelGrid>
-							-->
 							<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
 								<p:commandButton  value="Cancel" actionListener="#{adminCandidateBean.cancel}"  update=":adminCandidateForm:mainPanel"/>
 								<p:commandButton disabled="#{!adminCandidateBean.formEditable}" id="addButton" update=":adminCandidateForm:mainPanel" value="Save" actionListener="#{adminCandidateBean.saveCandidate}" />

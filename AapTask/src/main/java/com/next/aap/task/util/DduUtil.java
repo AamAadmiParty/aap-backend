@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
@@ -32,6 +33,7 @@ public class DduUtil {
 
 	public static void main(String[] args) throws IOException {
 		// for(int i=5;i<=22;i++){
+		
 		for (int i = 0; i <= 0; i++) {
 			// File outputfile = new File("d:\\tmp\\saved0"+i+".png");
 			File outputfile = new File("/Users/ravi/Desktop/saved0" + i + ".png");
@@ -45,10 +47,16 @@ public class DduUtil {
 			String message = "Have you paid your EMI for better future?";
 			String monthTarget = "70000000";
 
-			createTemplate01DDU(bufferedOutputStream, date, dayDonation, monthDonation, monthTarget);
+			createTemplate02DDU(bufferedOutputStream, date, dayDonation, monthDonation, monthTarget);
 			bufferedOutputStream.close();
 
 		}
+		
+		GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	    Font[] fonts = e.getAllFonts(); // Get the fonts
+	    for (Font f : fonts) {
+	      System.out.println(f.getFontName());
+	    }
 		// InputStream in = new FileInputStream("D:\\tmp\\raj\\image01.jpg");//
 		// createChange4IndiaImage07(bufferedOutputStream, in, message,42);
 
@@ -109,6 +117,8 @@ public class DduUtil {
 
 		monthTarget = RsFormatter.formatAmount(monthTarget);
 
+		
+		
 		graphics.setColor(Color.RED);
 		graphics.drawChars(dayDonation.toCharArray(), 0, dayDonation.length(), 1398, 518);
 		graphics.drawChars(monthDonation.toCharArray(), 0, monthDonation.length(), 1398, 718);
@@ -129,7 +139,7 @@ public class DduUtil {
 
 	public static void createTemplate01DDU(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget)
 			throws IOException {
-		String templateFileName = "ddu/ddu.jpg";
+		String templateFileName = "ddu/template01.jpg";
 		float dateFontSize = 20.0f;
 		float amountFontSize = 30.0f;
 		BufferedImage image = null;
@@ -176,6 +186,10 @@ public class DduUtil {
 		monthTarget = RsFormatter.formatAmount(monthTarget);
 		font = font.deriveFont(Font.BOLD);
 		graphics.setColor(Color.WHITE);
+		
+		dayDonation = "₹" +dayDonation;
+		monthDonation = "₹" +monthDonation;
+		monthTarget = "₹" +monthTarget;
 		graphics.drawChars(monthDonation.toCharArray(), 0, dayDonation.length(), 170, 170);
 		graphics.drawChars(dayDonation.toCharArray(), 0, monthDonation.length(), 170, 245);
 		graphics.drawChars(monthTarget.toCharArray(), 0, monthTarget.length(), 170, 320);
@@ -186,11 +200,67 @@ public class DduUtil {
 		graphics.drawChars(monthTarget.toCharArray(), 0, monthTarget.length(), 142, 322);
 		*/
 		
+	}
+	
+	public static void createTemplate02DDU(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget)
+			throws IOException {
+		String templateFileName = "ddu/template02.jpg";
+		float dateFontSize = 30.0f;
+		float amountFontSize = 45.0f;
+		BufferedImage image = null;
+
+		InputStream in = DduUtil.class.getClassLoader().getResourceAsStream(templateFileName);
+		image = ImageIO.read(in);
+
+		Graphics2D graphics = image.createGraphics();
+
+		// Font font = new Font("Microsoft Sans Serif", Font.BOLD, fontSize);
+		Font font = graphics.getFont();
+
 		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, ImageUtil.class.getClassLoader().getResourceAsStream("fonts/ALGER.TTF"));
+			font = Font.createFont(Font.TRUETYPE_FONT, ImageUtil.class.getClassLoader().getResourceAsStream("fonts/NexaBold.otf"));
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		}
+		// graphics.drawChars(monthDonation.toCharArray(), 0,
+		// monthDonation.length(), 1400, 550);
+
+		// graphics.setColor(Color.RED);
+		dayDonation = RsFormatter.formatAmount(dayDonation);
+		monthDonation = RsFormatter.formatAmount(monthDonation);
+		font = font.deriveFont(dateFontSize);
+		font = font.deriveFont(Font.BOLD);
+		graphics.setFont(font);
+		graphics.setColor(Color.ORANGE);
+		graphics.drawChars(date.toCharArray(), 0, date.length(), 780, 590);
+		graphics.setColor(Color.decode("#663300"));
+		graphics.drawChars(date.toCharArray(), 0, date.length(), 782, 592);
+
+		String donationUrl = "donate.aamaadmiparty.org";
+		graphics.setColor(Color.YELLOW);
+		graphics.drawChars(donationUrl.toCharArray(), 0, donationUrl.length(), 700, 672);
+		graphics.drawChars(donationUrl.toCharArray(), 0, donationUrl.length(), 450, 190);
+		
+		font = font.deriveFont(amountFontSize);
+		graphics.setFont(font);
+
+		monthTarget = RsFormatter.formatAmount(monthTarget);
+		font = font.deriveFont(Font.BOLD);
+		graphics.setColor(Color.WHITE);
+		
+		//dayDonation = "₹" +dayDonation;
+		//monthDonation = "₹" +monthDonation;
+		//monthTarget = "₹" +monthTarget;
+		graphics.drawChars(dayDonation.toCharArray(), 0, dayDonation.length(), 310, 370);
+		graphics.drawChars(monthDonation.toCharArray(), 0, monthDonation.length(), 780, 370);
+		graphics.drawChars(monthTarget.toCharArray(), 0, monthTarget.length(), 290, 620);
+		/*
+		graphics.setColor(Color.decode("#663300"));
+		graphics.drawChars(dayDonation.toCharArray(), 0, dayDonation.length(), 142, 172);
+		graphics.drawChars(monthDonation.toCharArray(), 0, monthDonation.length(), 142, 247);
+		graphics.drawChars(monthTarget.toCharArray(), 0, monthTarget.length(), 142, 322);
+		*/
+		
 		ImageIO.write(image, "png", outputStream);
 	}
 

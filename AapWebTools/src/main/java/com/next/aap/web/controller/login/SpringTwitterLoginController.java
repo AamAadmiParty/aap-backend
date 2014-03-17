@@ -69,7 +69,7 @@ public class SpringTwitterLoginController extends BaseSocialLoginController<Twit
 			Connection<Twitter> twitterConnection = twitterConnectionFactory.createConnection(accessToken);
 										
 			
-			afterSuccesfullLogin(httpServletRequest, twitterConnection);
+			afterSuccesfullLogin(httpServletRequest, httpServletResponse, twitterConnection);
 			/*
 			ConnectionRepository twitterConnectionRepository = usersConnectionRepository.createConnectionRepository(user.getExternalId());
 			twitterConnectionRepository.updateConnection(connection);

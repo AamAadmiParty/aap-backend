@@ -29,6 +29,7 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
     
 	<context:component-scan base-package="com.next.aap.web.jsf.beans" />
 	<context:component-scan base-package="com.next.aap.web.cache" />	
+	<context:component-scan base-package="com.next.aap.web.util" />	
 	
 	<task:annotation-driven executor="scheduleExecutor" scheduler="taskScheduler" />
 

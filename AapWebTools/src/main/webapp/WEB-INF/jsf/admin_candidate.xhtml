@@ -13,7 +13,7 @@
 		<div style="width: 1200px; margin: 0;">
 		<p:messages autoUpdate="true" />
 			<p:blockUI block=":adminCandidateForm:mainPanel" trigger=":adminCandidateForm:addButton" />  
-			<h:form id="adminCandidateForm">
+			<h:form id="adminCandidateForm" enctype="multipart/form-data">
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView" rendered="#{adminCandidateBean.showList}">
 						<p:commandButton value="Create Candidate" actionListener="#{adminCandidateBean.createCandidate}" update=":adminCandidateForm:mainPanel">
@@ -91,8 +91,15 @@
 										itemValue="#{oneParliamentConstituency.id}" />
 									<p:ajax event="change" update=":adminCandidateForm:mainPanel" listener="#{adminCandidateBean.handlePcChange}" />
 								</p:selectOneMenu>
-
-								<h:outputLabel for="name" value="Name" />
+								<h:outputLabel value="Profile Pic" />
+								 <!-- <p:fileUpload value="#{adminCandidateBean.profilePicFile}" mode="simple"-->
+								 <p:outputPanel>
+								 <h:outputLabel value="Profile Pic upload will be available after you save the Profile first time" /><br></br>
+								 <p:fileUpload fileUploadListener="#{adminCandidateBean.handleFileUpload}" mode="advanced" update="profilePic" 
+            					 auto="true" sizeLimit="5000000" allowTypes="/(\.|\/)(jpe?g)$/" disabled="#{adminCandidateBean.fileUploadDisabled}" />
+								 <p:graphicImage style="width:200px;" id="profilePic" value="#{adminCandidateBean.candidate.imageUrl}" />  
+								 </p:outputPanel>  
+								<h:outputLabel for="name" value="Name" invalidSizeMessage="maximum size of file can 500KB"/>
 								<p:inputText id="name" value="#{adminCandidateBean.candidate.name}" disabled="#{!adminCandidateBean.formEditable}" style="width:200px;" required="true" />
 
 								<p:outputLabel value="Description"></p:outputLabel>
@@ -136,21 +143,30 @@
 								<h:outputLabel for="twitterId" value="Candidate Twitter Id" />
 								<h:panelGrid columns="2">
 									<h:outputLabel value="http://www.twitter.com/" />
-									<p:inputText disabled="#{!adminCandidateBean.formEditable}" id="twitterId" value="#{adminCandidateBean.candidate.candidateFbPageId}" />
+									<p:inputText disabled="#{!adminCandidateBean.formEditable}" id="twitterId" value="#{adminCandidateBean.candidate.twitterId}" />
 								</h:panelGrid>
 
 							</h:panelGrid>
+							#{adminCandidateBean.candidate.depth}
+							#{adminCandidateBean.candidate.lattitude}
+							#{adminCandidateBean.candidate.longitude}
 							<!-- 
-							<h:panelGrid columns="1" styleClass="topAlignPanelColumns">
-								<p:gmap center="#{adminCandidateBean.candidate.lattitude},#{adminCandidateBean.candidate.longitude}" zoom="#{adminCandidateBean.candidate.depth}" type="HYBRID"
+								<p:gmap center="#{adminEventBean.event.lattitude},#{adminEventBean.event.longitude}" zoom="#{adminEventBean.event.depth}" 
+								type="HYBRID" model="#{adminEventBean.draggableMapModel}" fitBounds="true" style="width:400px;height:400px">
+									<p:ajax event="markerDrag" listener="#{adminEventBean.onMarkerDrag}" />
+									<p:ajax event="stateChange" listener="#{adminEventBean.onStateChange}" />
+										
+								</p:gmap>
+							-->								
+								<p:gmap center="#{adminCandidateBean.candidate.lattitude},#{adminCandidateBean.candidate.longitude}" 
+								zoom="#{adminCandidateBean.candidate.depth}" type="terrain"
 									model="#{adminCandidateBean.draggableMapModel}" fitBounds="true" style="width:900px;height:600px">
 									<p:ajax event="markerDrag" listener="#{adminCandidateBean.onMarkerDrag}" />
 									<p:ajax event="stateChange" listener="#{adminCandidateBean.onStateChange}" />
 
 								</p:gmap>
 								 
-							</h:panelGrid>
-							-->
+							
 							<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
 								<p:commandButton  value="Cancel" actionListener="#{adminCandidateBean.cancel}"  update=":adminCandidateForm:mainPanel"/>
 								<p:commandButton disabled="#{!adminCandidateBean.formEditable}" id="addButton" update=":adminCandidateForm:mainPanel" value="Save" actionListener="#{adminCandidateBean.saveCandidate}" />

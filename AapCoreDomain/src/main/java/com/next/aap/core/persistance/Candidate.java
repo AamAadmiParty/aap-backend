@@ -67,9 +67,17 @@ public class Candidate {
 	@Column(name = "donate_page_url_id")
 	private String donatePageUrlId;
 
+	@Column(name = "location_campaign_id")
+	private String locationCampaignId;
 
 	@Column(name = "image_url")
 	private String imageUrl;
+
+	@Column(name = "image_url_64")
+	private String imageUrl64;
+
+	@Column(name = "image_url_32")
+	private String imageUrl32;
 
 	@Column(name = "lattitude")
 	private double lattitude;
@@ -274,6 +282,24 @@ public class Candidate {
 	}
 	public void setDonationPageFullUrl(String donationPageFullUrl) {
 		this.donationPageFullUrl = donationPageFullUrl;
+	}
+	public String getLocationCampaignId() {
+		return locationCampaignId;
+	}
+	public void setLocationCampaignId(String locationCampaignId) {
+		this.locationCampaignId = locationCampaignId;
+	}
+	public String getImageUrl64() {
+		return imageUrl64;
+	}
+	public void setImageUrl64(String imageUrl64) {
+		this.imageUrl64 = imageUrl64;
+	}
+	public String getImageUrl32() {
+		return imageUrl32;
+	}
+	public void setImageUrl32(String imageUrl32) {
+		this.imageUrl32 = imageUrl32;
 	}
 	
 	

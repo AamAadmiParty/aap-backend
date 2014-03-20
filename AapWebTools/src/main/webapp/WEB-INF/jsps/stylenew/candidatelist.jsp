@@ -7,46 +7,58 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party, India</title>
+<title>Aam Aadmi Party Candidates for Loksabha Elections</title>
 <jsp:include page="includes.jsp" />
+<!-- 
 <script>
 	$(function() {
 		$("#tabs").tabs();
 	});
 </script>
-
+ -->
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map-canvas { height: 100% }
-    </style>
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDz1Btzrgtb0YEtHFgjZLEGaw-ggjnWlrc&sensor=false&region=IN">
+<style type="text/css">
+html {
+	height: 100%
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0
+}
+
+#map-canvas {
+	height: 100%
+}
+</style>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDz1Btzrgtb0YEtHFgjZLEGaw-ggjnWlrc&sensor=false&region=IN">
     </script>
-    <script type="text/javascript">
+<script type="text/javascript">
     ;
       function initialize() {
         var mapOptions = {
           center: new google.maps.LatLng(23.934102635197338, 78.310546875),
-          zoom: 2
+          zoom: 5
         };
-        var map = new google.maps.Map(document.getElementById("map-canvas"),
-            mapOptions);
-        <c:forEach items="${events}" var="oneEvent">
-	createMarker(map, <c:out value="${oneEvent.lattitude}" />,<c:out value="${oneEvent.longitude}" />, '<c:out value="${oneEvent.title}" />', '<fmt:formatDate value="${oneEvent.startDate}" pattern="dd-MMM-yyyy HH:mm" />','<c:out value="${oneEvent.address}" escapeXml="false" />');
+        var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        /*createMarker(map, <c:out value="${oneCandidate.lattitude}" />,<c:out value="${oneCandidate.longitude}" />, '<c:out value="${oneCandidate.name}" />', '<c:out value="${oneCandidate.content}" escapeXml="false" />');*/
+        <c:forEach items="${candidates}" var="oneCandidate">
+		
+		createMarker(map, <c:out value="${oneCandidate.lattitude}" />,<c:out value="${oneCandidate.longitude}" />, '<c:out value="${oneCandidate.name}" />', '<c:out value="${oneCandidate.landingPageFullUrl}" />', '<c:out value="${oneCandidate.imageUrl32}" />');
     </c:forEach>
       }
       google.maps.event.addDomListener(window, 'load', initialize);
 
-      function createMarker(map, lattitude, longitude,title, startTime, address){
+      function createMarker(map, lattitude, longitude,name,  pageUrl, iconUrl){
     	  var marker = new google.maps.Marker({
     		    position: new google.maps.LatLng(lattitude, longitude),
     		    map: map,
-    		    title:title
+    		    title:name,
+    		    icon :iconUrl
     		});
     	  var infowindow = new google.maps.InfoWindow({
-    	      content: "<div style='height:150px;'>" + title +"<br>Address : " + address+"<br><br> Start on : "+startTime +"</div>"
+    	      content: "<div><a href='"+pageUrl+"'>" + name +"</a><br></div>"
     	  });
     	  google.maps.event.addListener(marker, 'click', function() {
     		    infowindow.open(map,marker);
@@ -69,28 +81,32 @@
 			<div class="loginwithinnerholder">
 				<!--loginwithinnerholder-->
 				<div id="tabs">
+					<!-- 
 					<ul>
 						<li><a href="#map">Map</a></li>
-						<li><a href="#listevent">List</a></li>
+						<li><a href="#list">List</a></li>
+						
 					</ul>
+					 -->
 					<div id="map" class="languagetab">
-						<div id="map-canvas" style="width:900px;height:600px;border:1px solid;" />
+						<div id="map-canvas" style="width: 900px; height: 1100px; border: 1px solid;" />
 					</div>
-					<div id="listevent" class="languagetab">
+
+					<div id="list" class="languagetab">
 						<table>
 							<thead>
 								<tr>
-									<th style="border: 1px solid;">Date</th>
-									<th style="border: 1px solid;">Venue</th>
-									<th style="border: 1px solid;">Title</th>
+									<th style="border: 1px solid;">State</th>
+									<th style="border: 1px solid;">Loksabha</th>
+									<th style="border: 1px solid;">Name</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach items="${events}" var="oneEvent">
+								<c:forEach items="${candidates}" var="oneCandidate">
 									<tr>
-										<td style="border: 1px solid;"><fmt:formatDate value="${oneEvent.startDate}" pattern="dd-MMM-yyyy HH:mm a" /></td>
-										<td style="border: 1px solid;"><c:out value="${oneEvent.address}"></c:out></td>
-										<td style="border: 1px solid;"><c:out value="${oneEvent.title}"></c:out></td>
+										<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.stateName}" /></a></td>
+										<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.pcName}" /></a> </td>
+										<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.name}" /></a></td>
 
 									</tr>
 								</c:forEach>
@@ -98,7 +114,6 @@
 						</table>
 					</div>
 				</div>
-
 			</div>
 			<!--loginwithinnerholder-->
 		</div>
@@ -109,6 +124,6 @@
 
 
 	<jsp:include page="footer.jsp" />
-
+	<jsp:include page="addthis.jsp" />
 </body>
 </html>

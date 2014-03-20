@@ -78,7 +78,7 @@ public class ProfileController extends AppBaseController {
 
 	@RequestMapping(value = "/profile.html", method = RequestMethod.POST)
 	public ModelAndView saveUserProfile(@ModelAttribute("user") UserDto user, BindingResult result, ModelAndView mv, HttpServletRequest httpServletRequest) {
-		mv.setViewName(design + "/editprofile");
+		mv = new ModelAndView(design + "/editprofile", "user", user);
 		if (result.hasErrors()) {
 			System.out.println("Has Errors " +result);
 			preparePage(httpServletRequest, user, mv);

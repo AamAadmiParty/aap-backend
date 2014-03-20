@@ -252,7 +252,7 @@ public class DduUtil {
 		//monthDonation = "₹" +monthDonation;
 		//monthTarget = "₹" +monthTarget;
 		graphics.drawChars(dayDonation.toCharArray(), 0, dayDonation.length(), 310, 370);
-		graphics.drawChars(monthDonation.toCharArray(), 0, monthDonation.length(), 780, 370);
+		graphics.drawChars(monthDonation.toCharArray(), 0, monthDonation.length(), 730, 370);
 		graphics.drawChars(monthTarget.toCharArray(), 0, monthTarget.length(), 290, 620);
 		/*
 		graphics.setColor(Color.decode("#663300"));

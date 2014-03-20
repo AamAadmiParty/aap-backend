@@ -6224,27 +6224,35 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		candidate.setContent(candidateDto.getContent());
 		candidate.setDateModified(new Date());
-		candidate.setDonatePageUrlId(candidateDto.getDonatePageUrlId());
-		candidate.setLandingPageUrlId(candidateDto.getLandingPageUrlId());
+		if(candidate.getId() == null || candidate.getId() <= 0){
+			candidate.setDonatePageUrlId(candidateDto.getDonatePageUrlId());
+			candidate.setLandingPageUrlId(candidateDto.getLandingPageUrlId());
+			candidate.setDonationPageFullUrl(candidateDto.getDonationPageFullUrl());
+			candidate.setLandingPageFullUrl(candidateDto.getLandingPageFullUrl());
+			candidate.setLandingPageSmallUrl(candidateDto.getLandingPageSmallUrl());
+			candidate.setUrlTextPart1(candidateDto.getUrlTextPart1());
+			candidate.setUrlTextPart2(candidateDto.getUrlTextPart2());
+			candidate.setPcIdExt(candidateDto.getPcIdExt());
+			candidate.setStateIdExt(candidateDto.getStateIdExt());
+		}
+		candidate.setLocationCampaignId(candidateDto.getLocationCampaignId());
 		candidate.setName(candidateDto.getName());
 		candidate.setCandidateFbPageId(candidateDto.getCandidateFbPageId());
 		candidate.setDepth(candidateDto.getDepth());
-		candidate.setDonationPageFullUrl(candidateDto.getDonationPageFullUrl());
-		candidate.setLandingPageFullUrl(candidateDto.getLandingPageFullUrl());
-		candidate.setLandingPageSmallUrl(candidateDto.getLandingPageSmallUrl());
 		candidate.setLattitude(candidateDto.getLattitude());
 		candidate.setLongitude(candidateDto.getLongitude());
 		candidate.setTwitterId(candidateDto.getTwitterId());
-		candidate.setUrlTextPart1(candidateDto.getUrlTextPart1());
-		candidate.setUrlTextPart2(candidateDto.getUrlTextPart2());
+		candidate.setImageUrl(candidateDto.getImageUrl());
+		System.out.println("candidateDto.getImageUrl64()="+candidateDto.getImageUrl64());
+		System.out.println("candidateDto.getImageUrl32()="+candidateDto.getImageUrl32());
+		candidate.setImageUrl64(candidateDto.getImageUrl64());
+		candidate.setImageUrl32(candidateDto.getImageUrl32());
 		
 		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(candidateDto.getParliamentConstituencyId());
 		candidate.setParliamentConstituency(parliamentConstituency);
 		candidate.setPcName(parliamentConstituency.getName());
 		candidate.setState(parliamentConstituency.getState());
 		candidate.setStateName(parliamentConstituency.getState().getName());
-		candidate.setPcIdExt(candidateDto.getPcIdExt());
-		candidate.setStateIdExt(candidateDto.getStateIdExt());
 		candidate = candidateDao.saveCandidate(candidate);
 		return convertCandidate(candidate);
 	}

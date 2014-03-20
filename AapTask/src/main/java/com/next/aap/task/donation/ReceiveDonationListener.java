@@ -73,7 +73,7 @@ public class ReceiveDonationListener extends AwsQueueListener{
 			donationDump.setPaymentGateway(donationJsonObject.getString("PaymentGatewayUsed"));
 			//donationDump.setPgErrorDetail(donationJsonObject.getString("PaymentGateway"));
 			donationDump.setPgErrorMessage(donationJsonObject.getString("PGErrorMsg"));
-			donationDump.setRemark(donationJsonObject.getString("Remark"));
+			//donationDump.setRemark(donationJsonObject.getString("Remark"));
 			donationDump.setStatus("Pending");
 			donationDump.setStatusMessage("");
 			donationDump.setTransactionId(donationJsonObject.getString("TransactionId"));

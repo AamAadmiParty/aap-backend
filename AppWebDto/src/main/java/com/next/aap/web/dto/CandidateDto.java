@@ -32,7 +32,10 @@ public class CandidateDto {
 	private String landingPageSmallUrl;
 	private String landingPageFullUrl;
 	private String donationPageFullUrl;
-	
+	private String locationCampaignId;
+	private String imageUrl64;
+	private String imageUrl32;
+
 
 	public Long getId() {
 		return id;
@@ -195,6 +198,24 @@ public class CandidateDto {
 	}
 	public void setDonationPageFullUrl(String donationPageFullUrl) {
 		this.donationPageFullUrl = donationPageFullUrl;
+	}
+	public String getLocationCampaignId() {
+		return locationCampaignId;
+	}
+	public void setLocationCampaignId(String locationCampaignId) {
+		this.locationCampaignId = locationCampaignId;
+	}
+	public String getImageUrl64() {
+		return imageUrl64;
+	}
+	public void setImageUrl64(String imageUrl64) {
+		this.imageUrl64 = imageUrl64;
+	}
+	public String getImageUrl32() {
+		return imageUrl32;
+	}
+	public void setImageUrl32(String imageUrl32) {
+		this.imageUrl32 = imageUrl32;
 	}
 	@Override
 	public String toString() {

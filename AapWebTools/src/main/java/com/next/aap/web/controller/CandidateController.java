@@ -1,5 +1,7 @@
 package com.next.aap.web.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.cache.CacheKeyService;
+import com.next.aap.cache.beans.DonationCampaignInfo;
 import com.next.aap.web.cache.CandidateCacheImpl;
 import com.next.aap.web.dto.CandidateDto;
+import com.next.aap.web.dto.DonationCampaignDto;
 
 @Controller
 public class CandidateController extends AppBaseController {
@@ -26,7 +32,22 @@ public class CandidateController extends AppBaseController {
 		CandidateDto candidateDto = candidateCacheImpl.getCandidate(urlPart1, urlPart2);
 		System.out.println("candidate = "+candidateDto);
 		mv.getModel().put("candidate", candidateDto);
+		if(!StringUtil.isEmpty(candidateDto.getLocationCampaignId())){
+			String key = CacheKeyService.createLocationCampaignKey(candidateDto.getLocationCampaignId());
+			System.out.println("Key = "+ key);
+			DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
+			mv.getModel().put("donationCampaignInfo", donationCampaignInfo);
+		}
 		mv.setViewName(design+"/candidate");
+		return mv;
+	}
+	@RequestMapping(value = "/candidates.html", method = RequestMethod.GET)
+	public ModelAndView showCandidateMap(ModelAndView mv,HttpServletRequest httpServletRequest) {
+		
+		addGenericValuesInModel(httpServletRequest, mv);
+		List<CandidateDto> allCandidates = candidateCacheImpl.getAllCandidates();
+		mv.getModel().put("candidates", allCandidates);
+		mv.setViewName(design+"/candidatelist");
 		return mv;
 	}
 	

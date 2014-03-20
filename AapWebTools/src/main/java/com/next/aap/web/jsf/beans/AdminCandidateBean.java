@@ -1,15 +1,31 @@
 package com.next.aap.web.jsf.beans;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.imageio.ImageIO;
 
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.map.MarkerDragEvent;
 import org.primefaces.event.map.StateChangeEvent;
 import org.primefaces.model.map.DefaultMapModel;
@@ -18,6 +34,7 @@ import org.primefaces.model.map.MapModel;
 import org.primefaces.model.map.Marker;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.core.exception.AppException;
 import com.next.aap.core.util.MyaapInUtil;
 import com.next.aap.web.cache.CandidateCacheImpl;
 import com.next.aap.web.cache.LocationCacheDbImpl;
@@ -28,12 +45,14 @@ import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.util.AwsImageUploadUtil;
+import com.next.aap.web.util.AwsImageUtil;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 @URLMapping(id = "adminCandidateBean", beanName = "adminCandidateBean", pattern = "/admin/candidate", viewId = "/WEB-INF/jsf/admin_candidate.xhtml")
 @URLBeanName("adminCandidateBean")
 public class AdminCandidateBean extends BaseAdminJsfBean {
@@ -58,8 +77,16 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 	@ManagedProperty("#{locationCacheDbImpl}")
 	private LocationCacheDbImpl locationCacheDbImpl;
 	
+	@ManagedProperty("#{awsImageUtil}")
+	private AwsImageUtil awsImageUtil;
+	
+	@ManagedProperty("#{awsImageUploadUtil}")
+	private AwsImageUploadUtil awsImageUploadUtil;
+	
+
 	@ManagedProperty("#{myaapInUtil}")
 	private MyaapInUtil myaapInUtil;
+	
 	
 	List<StateDto> stateList;
 	
@@ -76,6 +103,73 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 	public AdminCandidateBean() {
 		super(AppPermission.ADMIN_CANDIDATE_PC, "/admin/candidate");
 	}
+	public static BufferedImage resize(BufferedImage img, int newW, int newH) {  
+        int w = img.getWidth();  
+        int h = img.getHeight();  
+        BufferedImage dimg = dimg = new BufferedImage(newW, newH, img.getType());  
+        Graphics2D g = dimg.createGraphics();  
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);  
+        g.drawImage(img, 0, 0, newW, newH, 0, 0, w, h, null);  
+        g.dispose();  
+        return dimg;  
+    }  
+	public void handleFileUpload(FileUploadEvent event) {  
+		//.
+		
+		System.out.println("event.getFileName()" +event.getFile().getFileName());
+		System.out.println("event.getContentType()" +event.getFile().getContentType());
+		System.out.println("event.getSize()" +event.getFile().getSize());
+		logger.info("event.getFileName()" +event.getFile().getFileName());
+		logger.info("event.getContentType()" +event.getFile().getContentType());
+		logger.info("event.getSize()" +event.getFile().getSize());
+		logger.info("awsImageUtil=" +awsImageUtil+",myaapInUtil="+myaapInUtil);
+		logger.info("awsImageUploadUtil=" +awsImageUploadUtil+",myaapInUtil="+myaapInUtil);
+		
+		String imageType = ".jpg";
+		if("image/png".equals(event.getFile().getContentType())){
+			imageType = ".png";
+		}
+		if("image/jpeg".equals(event.getFile().getContentType())){
+			imageType = ".jpg";
+		}
+		String remoteFileName = candidate.getId() + imageType;
+			try {
+				String httpFilePath = awsImageUtil.uploadCandidateProfileImage(remoteFileName, event.getFile().getInputstream());
+				candidate.setImageUrl(httpFilePath);
+				
+				candidate.setImageUrl64(createAndUploadIcons(event.getFile().getInputstream(), imageType, 64));
+				candidate.setImageUrl32(createAndUploadIcons(event.getFile().getInputstream(), imageType, 32));
+				System.out.println("handleFileUpload:candidateDto.getImageUrl64()="+candidate.getImageUrl64());
+				System.out.println("handleFileUpload:candidateDto.getImageUrl32()="+candidate.getImageUrl32());
+
+				candidate = aapService.saveCandidate(candidate);
+				System.out.println("httpFilePath = " +httpFilePath);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (AppException e) {
+				e.printStackTrace();
+			}
+        FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+    }  
+	private String createAndUploadIcons(InputStream is,String imageType, int size) throws IOException, AppException{
+		BufferedImage bufferedImage = ImageIO.read(is);
+		BufferedImage iconImage = resize(bufferedImage, size, size);
+		String remoteIconFileName = candidate.getId()+"_"+size+imageType;
+		String localIconFileNameAndPath = "/tmp/"+remoteIconFileName;
+		ImageIO.write(iconImage, "png", new FileOutputStream(localIconFileNameAndPath));
+		String httpFilePath = awsImageUtil.uploadCandidateProfileImage(remoteIconFileName, new FileInputStream(localIconFileNameAndPath));
+		System.out.println("createAndUploadIcons : httpFilePath = " +httpFilePath);
+		return httpFilePath;
+	}
+	public boolean isFileUploadDisabled(){
+		if(candidate.getId() == null || candidate.getId() <= 0){
+			return true;
+		}
+		return false;
+	}
 
 	// @URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback = false)
@@ -85,7 +179,6 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 			return;
 		}
 
-		System.out.println("Init");
 		try {
 			draggableMapModel = new DefaultMapModel();
 
@@ -100,8 +193,6 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 			candidate.setDepth(defaultDepth);
 			
 			stateList = locationCacheDbImpl.getAllStates();
-			System.out.println("stateList = "+ stateList);
-			System.out.println("stateList.size = "+ stateList.size());
 			
 			refreshCandidates();
 		} catch (Exception ex) {
@@ -110,8 +201,6 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 
 	}
 	public void handleStateChange(AjaxBehaviorEvent event) {
-		System.out.println("handleStateChange() = "+ event);
-		System.out.println("candidate.getStateId() = "+ candidate.getStateId());
 		try {
 			if (candidate.getStateId() == null || candidate.getStateId() <= 0) {
 				enablePcBox = false;
@@ -133,6 +222,10 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 				if(existingCandidate != null){
 					candidate = existingCandidate;
 				}else{
+					CandidateDto selectedCandidate = candidate;
+					candidate = new CandidateDto();
+					candidate.setStateId(selectedCandidate.getStateId());
+					candidate.setParliamentConstituencyId(selectedCandidate.getParliamentConstituencyId());
 					StateDto selectedState = locationCacheDbImpl.getStateById(candidate.getStateId());
 					if(selectedState != null){
 						String selectedStateName = selectedState.getName();
@@ -157,7 +250,6 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 		}
 	}	
 	public List<StateDto> getStateList(){
-		System.out.println("getStateList() = "+ stateList);
 		return stateList;
 	}
 	public void setStateList(List<StateDto> stateList) {
@@ -190,6 +282,7 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 	}
 	public void saveCandidate(ActionEvent actionEvent) {
 		try {
+			logger.info("awsImageUtil=" +awsImageUtil+",myaapInUtil="+myaapInUtil);
 			/*
 			if (StringUtil.isEmpty(candidate.getName())) {
 				sendErrorMessageToJsfScreen("Please enter Name");
@@ -199,26 +292,29 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 				sendErrorMessageToJsfScreen("Please enter Candidate Description");
 			}
 			*/
-			if (StringUtil.isEmpty(candidate.getDonatePageUrlId())) {
-				sendErrorMessageToJsfScreen("Please enter the donation page id");
-			}else{
-				if(!myPattern.matcher(candidate.getDonatePageUrlId()).find()){
-					sendErrorMessageToJsfScreen("Donation page URL Identifier/Name["+candidate.getDonatePageUrlId()+"] must contain only number and alphabets");
+			if(candidate.getId() == null || candidate.getId() <= 0){
+				if (StringUtil.isEmpty(candidate.getDonatePageUrlId())) {
+					sendErrorMessageToJsfScreen("Please enter the donation page id");
+				}else{
+					if(!myPattern.matcher(candidate.getDonatePageUrlId()).find()){
+						sendErrorMessageToJsfScreen("Donation page URL Identifier/Name["+candidate.getDonatePageUrlId()+"] must contain only number and alphabets");
+					}
+					if(myaapInUtil.isUrlAlreadyExists(candidate.getDonatePageUrlId())){
+						sendErrorMessageToJsfScreen("Donation page URL Identifier/Name["+candidate.getDonatePageUrlId()+"] already used, please try something else");
+					}
 				}
-				if(myaapInUtil.isUrlAlreadyExists(candidate.getDonatePageUrlId())){
-					sendErrorMessageToJsfScreen("Donation page URL Identifier/Name["+candidate.getDonatePageUrlId()+"] already used, please try something else");
+				if (StringUtil.isEmpty(candidate.getLandingPageUrlId())) {
+					sendErrorMessageToJsfScreen("Please enter the Landing page id");
+				}else{
+					if(!myPattern.matcher(candidate.getLandingPageUrlId()).find()){
+						sendErrorMessageToJsfScreen("Donation page URL Identifier/Name["+candidate.getLandingPageUrlId()+"] must contain only number and alphabets");
+					}
+					if(myaapInUtil.isUrlAlreadyExists(candidate.getLandingPageUrlId())){
+						sendErrorMessageToJsfScreen("Donation page URL Identifier/Name["+candidate.getLandingPageUrlId()+"] already used, please try something else");
+					}
 				}
 			}
-			if (StringUtil.isEmpty(candidate.getLandingPageUrlId())) {
-				sendErrorMessageToJsfScreen("Please enter the Landing page id");
-			}else{
-				if(!myPattern.matcher(candidate.getLandingPageUrlId()).find()){
-					sendErrorMessageToJsfScreen("Donation page URL Identifier/Name["+candidate.getLandingPageUrlId()+"] must contain only number and alphabets");
-				}
-				if(myaapInUtil.isUrlAlreadyExists(candidate.getLandingPageUrlId())){
-					sendErrorMessageToJsfScreen("Donation page URL Identifier/Name["+candidate.getLandingPageUrlId()+"] already used, please try something else");
-				}
-			}
+			
 			if (StringUtil.isEmpty(candidate.getPcIdExt())) {
 				sendErrorMessageToJsfScreen("Please enter the Parliament Constituency Number(provided by .net team)");
 			}
@@ -235,15 +331,12 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 			if (candidate.getParliamentConstituencyId() == null) {
 				sendErrorMessageToJsfScreen("Please select a parliament Constituency");
 			}
-			
 			if (isValidInput()) {
-				System.out.println("Valid Input, saving it now ");
-				System.out.println("Getting Location Campaign For " + candidate.getParliamentConstituencyId());
 				LocationCampaignDto locationCampaign = aapService.getDefaultPcLocationCampaign(candidate.getParliamentConstituencyId());
-				System.out.println("locationCampaign : " + locationCampaign);
 				String campaignId = "temp";
 				if(locationCampaign != null){
 					campaignId = locationCampaign.getCampaignId();
+					candidate.setLocationCampaignId(campaignId);
 				}
 				if(candidate.getId() == null || candidate.getId() <= 0){
 					String donationPageFullUrl = baseDonationUrl +"&State=" +candidate.getStateIdExt()+"&Loksabha="+candidate.getPcIdExt() +"&cid=lcid="+campaignId;
@@ -251,19 +344,19 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 					candidate.setDonationPageFullUrl(donationPageFullUrl);
 					candidate.setLandingPageSmallUrl("http://myaap.in/"+candidate.getLandingPageUrlId());
 					
-					String landingPageFullUrl = baseUrl +"/candidate/"+candidate.getUrlTextPart1()+"/"+candidate.getUrlTextPart2();
+					String landingPageFullUrl = baseUrl +"/candidate/"+candidate.getUrlTextPart1()+"/"+candidate.getUrlTextPart2()+".html";
 					myaapInUtil.createShortUrl(landingPageFullUrl, candidate.getLandingPageUrlId());
 					candidate.setLandingPageFullUrl(landingPageFullUrl);
 
 				}
+				candidate.setLongitude(marker.getLatlng().getLng());
+				candidate.setLattitude(marker.getLatlng().getLat());
 
 				candidate = aapService.saveCandidate(candidate);
 				sendInfoMessageToJsfScreen("Candidate saved succesfully");
 				showList = true;
 				refreshCandidates();
 				candidateCacheImpl.refreshCache();
-			}else{
-				System.out.println("Error foudn so can not save");
 			}
 
 		} catch (Exception ex) {
@@ -288,12 +381,10 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 	}
 
 	public void onMarkerDrag(MarkerDragEvent markerDragEvent) {
-		System.out.println("onMarkerDrag:"+markerDragEvent);
 		marker = markerDragEvent.getMarker();
 	}
 
 	public void onStateChange(StateChangeEvent stateChangeEvent) {
-		System.out.println("onStateChange:"+stateChangeEvent);
 		this.candidate.setDepth(stateChangeEvent.getZoomLevel());
 	}
 
@@ -303,7 +394,9 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 
 	public void setCandidate(CandidateDto candidate) {
 		this.candidate = candidate;
-		System.out.println("Candidate = "+candidate);
+		LatLng coord1 = new LatLng(candidate.getLattitude(), candidate.getLongitude());
+		// Draggable
+		marker.setLatlng(coord1);
 		showList = false;
 		formEditable = true;
 	}
@@ -370,6 +463,18 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 
 	public void setMyaapInUtil(MyaapInUtil myaapInUtil) {
 		this.myaapInUtil = myaapInUtil;
+	}
+	public AwsImageUtil getAwsImageUtil() {
+		return awsImageUtil;
+	}
+	public void setAwsImageUtil(AwsImageUtil awsImageUtil) {
+		this.awsImageUtil = awsImageUtil;
+	}
+	public AwsImageUploadUtil getAwsImageUploadUtil() {
+		return awsImageUploadUtil;
+	}
+	public void setAwsImageUploadUtil(AwsImageUploadUtil awsImageUploadUtil) {
+		this.awsImageUploadUtil = awsImageUploadUtil;
 	}
 	
 }

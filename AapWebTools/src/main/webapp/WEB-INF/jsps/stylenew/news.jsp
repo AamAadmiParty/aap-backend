@@ -52,6 +52,6 @@
 
 
 	<jsp:include page="footer.jsp" />
-
+	<jsp:include page="addthis.jsp" />
 </body>
 </html>

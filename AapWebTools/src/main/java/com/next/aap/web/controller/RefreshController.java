@@ -32,6 +32,14 @@ public class RefreshController extends AppBaseController {
 		return "Video downloaded";
 	}
 	
+	@RequestMapping(value = "/aaps/location", method = RequestMethod.GET)
+	@ResponseBody
+	public String refreshLocation(ModelAndView mv,
+			HttpServletRequest httpServletRequest) {
+		locationCacheDbImpl.refreshCache();
+		return "Location Refreshed";
+	}
+	
 	@RequestMapping(value = "/aaps/news", method = RequestMethod.GET)
 	@ResponseBody
 	public String downloadNews(ModelAndView mv,

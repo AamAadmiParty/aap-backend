@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.RevokedAuthorizationException;
@@ -23,6 +24,7 @@ import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.VoiceOfAapData;
 import com.next.aap.web.util.ContentDonwloadUtil;
+import com.next.aap.web.util.CookieUtil;
 
 @Controller
 public class VoiceOfAapController extends AppBaseController {
@@ -102,7 +104,7 @@ public class VoiceOfAapController extends AppBaseController {
 		return mv;
 	}
 	@RequestMapping(value = "/voa.html", method = RequestMethod.POST)
-	public ModelAndView saveVoiceOFAAp(ModelAndView mv, HttpServletRequest httpServletRequest) {
+	public ModelAndView saveVoiceOFAAp(ModelAndView mv, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		System.out.println("saveVoiceOFAAp");
 		try{
 			LoginAccountDto loginAccounts = getLoggedInAccountsFromSesion(httpServletRequest);
@@ -132,6 +134,7 @@ public class VoiceOfAapController extends AppBaseController {
 				}
 			}
 			aapService.saveVoiceOfAapSettings(oneFacebookAccountDto.getId(), true, postOnTimeLine, selectedGroups, null, postOnTwitter);
+			CookieUtil.setVoiceOfAapPageCookie(httpServletResponse);
 		}catch(Exception ex){
 			ex.printStackTrace();
 			addErrorInModel(mv, "unable to save setting");

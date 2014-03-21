@@ -22,6 +22,7 @@ public class BlogListController extends AppBaseController {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		addBlogsInModel(httpServletRequest, mv);
+		addUserPcCandidateInModel(httpServletRequest, mv);
 		mv.setViewName(design+"/bloglist");
 		return mv;
 	}

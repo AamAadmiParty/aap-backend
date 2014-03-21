@@ -16,6 +16,7 @@ public class HomeController extends AppBaseController {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		addNewsInModel(httpServletRequest, mv);
+		addUserPcCandidateInModel(httpServletRequest, mv);
 		mv.setViewName(design+"/index");
 		return mv;
 	}

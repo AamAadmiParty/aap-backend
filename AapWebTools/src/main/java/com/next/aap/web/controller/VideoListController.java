@@ -22,6 +22,7 @@ public class VideoListController extends AppBaseController {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		addVideosInModel(httpServletRequest, mv);
+		addUserPcCandidateInModel(httpServletRequest, mv);
 		mv.setViewName(design+"/videolist");
 		return mv;
 	}

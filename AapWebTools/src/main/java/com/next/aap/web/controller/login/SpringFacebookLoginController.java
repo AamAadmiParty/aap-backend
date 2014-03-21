@@ -1,5 +1,8 @@
 package com.next.aap.web.controller.login;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -81,10 +84,22 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			if(StringUtil.isEmpty(redirectUrl)){
 				redirectUrl = httpServletRequest.getContextPath()+"/signin";
 			}
+			UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
+			Date userCreationDate = loggedInUser.getDateCreated();
+			if(userCreationDate != null){
+				//and if user created in last 3-4 days then forward user to Voice of AAP Page
+				Calendar calendar = Calendar.getInstance();
+				calendar.add(Calendar.DATE, 30);
+				if(!userCreationDate.after(calendar.getTime()))
+				{
+					if(!CookieUtil.isUserBeenToVoiceOfAAp(httpServletRequest)){
+						redirectUrl = httpServletRequest.getContextPath()+"/voa.html";
+					}
+				}
+			}
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);
 			mv.setView(rv);
-			logger.info("Setting facebook Cookie");
 			CookieUtil.setLastLoggedInAccountAsFacebookCookie(httpServletResponse);
 
 		} catch (Exception ex) {

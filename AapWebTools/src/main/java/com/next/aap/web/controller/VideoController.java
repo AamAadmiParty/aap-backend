@@ -22,6 +22,7 @@ public class VideoController extends AppBaseController {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		addSingleVideoInModel(httpServletRequest, mv, videoId);
+		addUserPcCandidateInModel(httpServletRequest, mv);
 		mv.setViewName(design+"/video");
 		return mv;
 		

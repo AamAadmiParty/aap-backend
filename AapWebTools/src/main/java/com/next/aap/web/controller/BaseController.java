@@ -35,6 +35,13 @@ public class BaseController {
 			return defaultValue;
 		}
 	}
+	protected long getLongPramater(HttpServletRequest httpServletRequest,String paramName, int defaultValue){
+		try{
+			return Long.parseLong(httpServletRequest.getParameter(paramName));
+		}catch(Exception ex){
+			return defaultValue;
+		}
+	}
 	protected void passRedirectUrl(HttpServletRequest httpServletRequest, ModelAndView mv){
 		String redirectUrl = httpServletRequest.getParameter(REDIRECT_URL_PARAM_ID);
 		mv.getModel().put("redirectUrl", redirectUrl);

@@ -58,7 +58,7 @@ public class ContentDonwloadUtil {
 		// aapService.saveAllCountries();
 	}
 
-	@Scheduled(cron = "01 01 * * * *")
+	//@Scheduled(cron = "01 01 * * * *")
 	public void refreshAllCache() {
 		try {
 			// Curently it can not run on EC2 server as HtmlUnitDriver fails

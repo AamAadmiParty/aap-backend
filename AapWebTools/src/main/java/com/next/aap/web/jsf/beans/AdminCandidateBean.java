@@ -212,6 +212,11 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 			e.printStackTrace();
 		}
 	}	
+	public static void main(String[] args){
+		String selectedStateName = "Ambaba (sc)";
+		selectedStateName = selectedStateName.replaceAll("\\(sc\\)" , "");
+		System.out.println(selectedStateName);
+	}
 	public void handlePcChange(AjaxBehaviorEvent event) {
 		try {
 			if (candidate.getParliamentConstituencyId() == null || candidate.getParliamentConstituencyId() <= 0) {
@@ -226,11 +231,15 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 					candidate = new CandidateDto();
 					candidate.setStateId(selectedCandidate.getStateId());
 					candidate.setParliamentConstituencyId(selectedCandidate.getParliamentConstituencyId());
+					candidate.setDepth(defaultDepth);
 					StateDto selectedState = locationCacheDbImpl.getStateById(candidate.getStateId());
 					if(selectedState != null){
 						String selectedStateName = selectedState.getName();
-						selectedStateName = selectedStateName.replaceAll(" " , "");
 						selectedStateName = selectedStateName.toLowerCase();
+						selectedStateName = selectedStateName.replaceAll(" " , "");
+						selectedStateName = selectedStateName.replaceAll("&" , "");
+						selectedStateName = selectedStateName.replaceAll("\\(sc\\)" , "");
+						selectedStateName = selectedStateName.replaceAll("\\(st\\)" , "");
 						candidate.setUrlTextPart1(selectedStateName);	
 					}
 					
@@ -239,6 +248,9 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 						String selectedPcName = selectedPc.getName();
 						selectedPcName = selectedPcName.replaceAll(" " , "");
 						selectedPcName = selectedPcName.toLowerCase();
+						selectedPcName = selectedPcName.replaceAll("&" , "");
+						selectedPcName = selectedPcName.replaceAll("\\(sc\\)" , "");
+						selectedPcName = selectedPcName.replaceAll("\\(st\\)" , "");
 						candidate.setUrlTextPart2(selectedPcName);
 						candidate.setLandingPageUrlId(selectedPcName);
 						candidate.setDonatePageUrlId("donate4"+selectedPcName);

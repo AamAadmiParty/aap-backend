@@ -7,15 +7,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party Candidates for Loksabha Elections</title>
+<title>Aam Aadmi Party Candidates for Loksabha Elections 2014</title>
 <jsp:include page="includes.jsp" />
-<!-- 
-<script>
-	$(function() {
-		$("#tabs").tabs();
-	});
-</script>
- -->
+
+<meta name="description" content="Meet Aam Aadmi Party candidate for Loksabha election 2014" />
+<meta name="og:image" property="og:image" content="https://s3.amazonaws.com/myaap/test/candidate/profile/leaders.jpg"/>
+
+<c:forEach items="${candidates}" var="oneCandidate">
+	<c:if test="${!empty oneCandidate.imageUrl }">
+		<meta name="og:image" property="og:image" content="${oneCandidate.imageUrl}"/>
+	</c:if>
+</c:forEach>
+<meta name="og:title"  property="og:title" content="Aam Aadmi party candidates for Loksabha Eletions 2014"/>
+<meta name="og:url" property="og:url" content="http://my.aamaadmiparty.org/candidates.html"/>
+<meta name="og:site_name" property="og:site_name" content="my.aamaadmiparty.org"/>
+<meta name="og:type" property="og:type" content="blog"/>
+<meta name="og:description" property="og:description" content="Meet Aam Aadmi Party candidates for loksabha elections 2014"/>
+
+
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <style type="text/css">
 html {
@@ -58,7 +67,7 @@ body {
     		    icon :iconUrl
     		});
     	  var infowindow = new google.maps.InfoWindow({
-    	      content: "<div><a href='"+pageUrl+"'>" + name +"</a><br></div>"
+    	      content: "<div><a href='"+pageUrl+"'>" + name +"</a></div>"
     	  });
     	  google.maps.event.addListener(marker, 'click', function() {
     		    infowindow.open(map,marker);

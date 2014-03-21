@@ -23,6 +23,8 @@ public class CookieUtil {
 	private static final String NRI_COUNTRY_REGION_ID_COOKIE = "NCRIC";
 	private static final String NRI_COUNTRY_REGION_AREA_ID_COOKIE = "NCRAIC";
 	
+	private static final String VOICE_OF_PAGE_COOKIE = "VOAC";
+	
 	private static Logger logger = LoggerFactory.getLogger(CookieUtil.class);
 
 	public static boolean isLastLoggedInViaFacebook(HttpServletRequest httpServletRequest){
@@ -43,6 +45,23 @@ public class CookieUtil {
 			}
 		}
 		return false;
+	}
+
+	public static void setVoiceOfAapPageCookie(HttpServletResponse httpServletResponse){
+		logger.info("Creating Cookie "+ VOICE_OF_PAGE_COOKIE);
+		Cookie lastAccountCookie = new Cookie(VOICE_OF_PAGE_COOKIE, VOICE_OF_PAGE_COOKIE);
+		lastAccountCookie.setPath("/");
+		lastAccountCookie.setMaxAge(30 * 24 * 60 * 60);
+		httpServletResponse.addCookie(lastAccountCookie);
+	}
+	public static boolean isUserBeenToVoiceOfAAp(HttpServletRequest httpServletRequest){
+		logger.info("Creating Cookie "+ VOICE_OF_PAGE_COOKIE);
+		String cookie = getStringCookie(httpServletRequest, VOICE_OF_PAGE_COOKIE);
+		if(cookie == null){
+			return false;
+		}
+		return true;
+		
 	}
 
 	public static void setLastLoggedInAccountAsFacebookCookie(HttpServletResponse httpServletResponse){
@@ -113,6 +132,40 @@ public class CookieUtil {
 			
 		}
 		return 0l;
+	}
+	private static Long getLongCookie(HttpServletRequest httpServletRequest, String cookieName){
+		try{
+			Cookie[] allCookies = httpServletRequest.getCookies();
+			if(allCookies == null || allCookies.length == 0){
+				return 0L;
+			}
+			for(Cookie oneCookie:allCookies){
+				if(oneCookie.getName().equals(cookieName)){
+					return Long.valueOf(oneCookie.getValue());
+				}
+			}
+			
+		}catch(Exception ex){
+			
+		}
+		return 0l;
+	}
+	private static String getStringCookie(HttpServletRequest httpServletRequest, String cookieName){
+		try{
+			Cookie[] allCookies = httpServletRequest.getCookies();
+			if(allCookies == null || allCookies.length == 0){
+				return null;
+			}
+			for(Cookie oneCookie:allCookies){
+				if(oneCookie.getName().equals(cookieName)){
+					return oneCookie.getValue();
+				}
+			}
+			
+		}catch(Exception ex){
+			
+		}
+		return null;
 	}
 
 }

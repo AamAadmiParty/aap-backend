@@ -21,8 +21,6 @@ import com.next.aap.web.dto.DonationCampaignDto;
 @Controller
 public class CandidateController extends AppBaseController {
 	
-	@Autowired
-	private CandidateCacheImpl candidateCacheImpl;
 	
 	@RequestMapping(value = "/candidate/{urlPart1}/{urlPart2}.html", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,HttpServletRequest httpServletRequest,
@@ -30,14 +28,8 @@ public class CandidateController extends AppBaseController {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		CandidateDto candidateDto = candidateCacheImpl.getCandidate(urlPart1, urlPart2);
-		System.out.println("candidate = "+candidateDto);
 		mv.getModel().put("candidate", candidateDto);
-		if(!StringUtil.isEmpty(candidateDto.getLocationCampaignId())){
-			String key = CacheKeyService.createLocationCampaignKey(candidateDto.getLocationCampaignId());
-			System.out.println("Key = "+ key);
-			DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
-			mv.getModel().put("donationCampaignInfo", donationCampaignInfo);
-		}
+		addCandidateDonationInfo(candidateDto, mv);
 		mv.setViewName(design+"/candidate");
 		return mv;
 	}
@@ -48,6 +40,15 @@ public class CandidateController extends AppBaseController {
 		List<CandidateDto> allCandidates = candidateCacheImpl.getAllCandidates();
 		mv.getModel().put("candidates", allCandidates);
 		mv.setViewName(design+"/candidatelist");
+		return mv;
+	}
+	
+	@RequestMapping(value = "/aapcandidates.html", method = RequestMethod.GET)
+	public ModelAndView showRandonAapCandidate(ModelAndView mv,HttpServletRequest httpServletRequest) {
+		
+		addGenericValuesInModel(httpServletRequest, mv);
+		addUserPcCandidateInModel(httpServletRequest, mv);
+		mv.setViewName(design+"/candidatewidget");
 		return mv;
 	}
 	

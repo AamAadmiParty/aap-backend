@@ -41,6 +41,8 @@ public class UserDto implements Serializable{
 	private String voterId;
 	private String email;
 	private String legacyMembershipNumber;
+	private Date dateCreated;
+	private Date dateModified;
 
 
 	public Long getId() {
@@ -323,6 +325,22 @@ public class UserDto implements Serializable{
 
 	public void setLegacyMembershipNumber(String legacyMembershipNumber) {
 		this.legacyMembershipNumber = legacyMembershipNumber;
+	}
+
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getDateModified() {
+		return dateModified;
+	}
+
+	public void setDateModified(Date dateModified) {
+		this.dateModified = dateModified;
 	}
 
 	@Override

@@ -9,12 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gdata.util.common.base.StringUtil;
+import com.next.aap.cache.CacheKeyService;
 import com.next.aap.cache.CacheService;
+import com.next.aap.cache.beans.DonationCampaignInfo;
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.ItemList;
 import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.cache.BlogItemCacheImpl;
+import com.next.aap.web.cache.CandidateCacheImpl;
 import com.next.aap.web.cache.EventCacheImpl;
 import com.next.aap.web.cache.LocationCacheDbImpl;
 import com.next.aap.web.cache.NewsItemCacheImpl;
@@ -22,6 +26,7 @@ import com.next.aap.web.cache.PollItemCacheImpl;
 import com.next.aap.web.cache.VideoItemCacheImpl;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
+import com.next.aap.web.dto.CandidateDto;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
 import com.next.aap.web.dto.CountryRegionDto;
@@ -62,7 +67,48 @@ public class AppBaseController extends BaseController{
 	protected EventCacheImpl eventCacheImpl;
 	@Autowired
 	protected CacheService cacheService;
+	@Autowired
+	protected CandidateCacheImpl candidateCacheImpl;
 
+	protected void addUserPcCandidateInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
+		Long pcId = getLongPramater(httpServletRequest, "pcId", 0);
+		if(pcId <= 0){
+			UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
+			long livingPcId = 0;
+			long votingPcId = 0;
+			if(loggedInUser != null){
+				//get user's location candidate
+				if(loggedInUser.getParliamentConstituencyLivingId() != null){
+					livingPcId = loggedInUser.getParliamentConstituencyLivingId();
+				}
+				if(loggedInUser.getParliamentConstituencyVotingId() != null){
+					votingPcId = loggedInUser.getParliamentConstituencyVotingId();	
+				}
+			}else{
+				livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
+				votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
+			}
+			CandidateDto candidateDto = candidateCacheImpl.getCandidateByPcId(livingPcId, votingPcId);
+			mv.getModel().put("candidate", candidateDto);
+			addCandidateDonationInfo(candidateDto, mv);
+		}else{
+			CandidateDto candidateDto = candidateCacheImpl.getCandidateByPcId(pcId);
+			mv.getModel().put("candidate", candidateDto);
+			addCandidateDonationInfo(candidateDto, mv);
+		}
+		
+		
+	}
+	protected void addCandidateDonationInfo(CandidateDto candidateDto, ModelAndView mv){
+		if(candidateDto != null){
+			if(!StringUtil.isEmpty(candidateDto.getLocationCampaignId())){
+				String key = CacheKeyService.createLocationCampaignKey(candidateDto.getLocationCampaignId());
+				System.out.println("Key = "+ key);
+				DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
+				mv.getModel().put("donationCampaignInfo", donationCampaignInfo);
+			}
+		}
+	}
 	protected void addNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
 		long livingAcId = 0;
 		long votingAcId = 0;

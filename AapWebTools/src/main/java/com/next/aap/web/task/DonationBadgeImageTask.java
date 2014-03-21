@@ -116,7 +116,7 @@ public class DonationBadgeImageTask implements Callable<Boolean> {
 
 			fileOutputStream = new FileOutputStream(filePath);
 			logger.info("filePath {}", filePath);
-			String amount = String.format("%8.1f", donationDto.getAmount());
+			String amount = String.format("%8.2f", donationDto.getAmount());
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
 			String donationDate = simpleDateFormat.format(donationDto.getDonationDate());
 			switch (donationTemplateEnum) {

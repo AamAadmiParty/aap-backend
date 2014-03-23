@@ -1,5 +1,7 @@
 package com.next.aap.core.persistance.dao;
 
+import java.util.List;
+
 import com.next.aap.core.persistance.LocationCampaign;
 
 public interface LocationCampaignDao {
@@ -17,5 +19,7 @@ public interface LocationCampaignDao {
 	public abstract LocationCampaign getDefaultLocationCampaignByAcId(Long acId);
 	
 	public abstract LocationCampaign getDefaultLocationCampaignByPcId(Long pcId);
+	
+	public abstract List<LocationCampaign> getAllLocationCampaigns();
 	
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -14,12 +15,14 @@ import javax.annotation.PostConstruct;
 import net.spy.memcached.ConnectionFactory;
 import net.spy.memcached.ConnectionFactoryBuilder;
 import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.internal.GetFuture;
 import net.spy.memcached.internal.OperationFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+
+import com.next.aap.cache.beans.DonationBean;
+import com.next.aap.cache.beans.DonationCampaignInfo;
 
 public class MemcachClient_SpyMemecached implements CacheService{
 	@Value("${mysql_memcache_host:localhost}")
@@ -36,15 +39,32 @@ public class MemcachClient_SpyMemecached implements CacheService{
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
+	private static void addOneDonation(DonationCampaignInfo donationCampaignInfo, double amount, String cid, String donorName){
+		DonationBean donationBean = new DonationBean();
+		donationBean.setAmt(amount);
+		donationBean.setDid(cid);
+		donationBean.setDt(new Date());
+		donationBean.setName(donorName);
+		donationCampaignInfo.getDns().add(donationBean);
+	}
 	public static void main(String[] args){
 		MemcachClient_SpyMemecached ms = new MemcachClient_SpyMemecached("myaapin.c4rkdapgr3v5.us-east-1.rds.amazonaws.com", 11211,500, 3600);
 		ms.saveData("name1", "Ravi");
 		System.out.println("Name : "+ ms.getData("name"));
 		List<String> allKeys = new ArrayList<>();
 		allKeys.add("name");
-		allKeys.add("LOC_LSTATE6");
+		allKeys.add("RAVI_TEST");
 		
-		Map<String, Object> data = ms.getDataForAll(allKeys);
+		DonationCampaignInfo donationCampaignInfo = new DonationCampaignInfo();
+		donationCampaignInfo.setTamt(100.0);
+		donationCampaignInfo.setTtxn(12);
+		for(int i=1;i<5;i++){
+			addOneDonation(donationCampaignInfo, 50 * i, "DID"+i, "Ravi Sharma Diya"+i);
+		}
+		
+		ms.saveData("RAVI_TEST", donationCampaignInfo);
+		//Map<String, Object> data = ms.getDataForAll(allKeys);
+		Object data = ms.getData("RAVI_TEST");
 		System.out.println("Name : "+ data);
 		
 		Calendar cal = Calendar.getInstance();
@@ -72,7 +92,10 @@ public class MemcachClient_SpyMemecached implements CacheService{
 			logger.info("opTimeOut : "+opTimeOut);
 			logger.info("defaultTimeToLive : "+defaultTimeToLive);
 			ConnectionFactoryBuilder cfb = new ConnectionFactoryBuilder();
+			//cfb.setTranscoder(new CustomSerializingTranscoder()); // use this line
+			//cfb.setProtocol(ConnectionFactoryBuilder.Protocol.BINARY);
 			cfb.setOpTimeout(opTimeOut);
+			//cfb.setReadBufferSize(10240000);
 			ConnectionFactory cf = cfb.build();
 			List<InetSocketAddress> servers = new ArrayList<>();
 			servers.add(new InetSocketAddress(hostName, portNumber));
@@ -100,6 +123,7 @@ public class MemcachClient_SpyMemecached implements CacheService{
 
 	@Override
 	public Object getData(String key) {
+		/*
 		long startTime = System.currentTimeMillis();
 		GetFuture<Object> f = memcachedClient.asyncGet(key);
 		Object returnObject = null;
@@ -117,6 +141,8 @@ public class MemcachClient_SpyMemecached implements CacheService{
 		long endTime = System.currentTimeMillis();
 		System.out.println("Total Time "+(endTime - startTime) +" ms");
 		return returnObject;
+		*/
+		return memcachedClient.get(key);
 	}
 	@Override
 	public <T> T getData(String key, Class<T> classType) {

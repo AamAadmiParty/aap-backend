@@ -58,6 +58,10 @@ public interface DonationDao {
 	public abstract Double getTotalDonationInMonth(Date date);
 	
 	public Donation getDonationByTransactionId(String transactionId);
+	
+	public abstract Double getTotalDonationAmountByLcid(String lcid);
+	
+	public abstract Integer getTotalDonationCountByLcid(String lcid);
 
 
 }

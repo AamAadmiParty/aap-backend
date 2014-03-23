@@ -1,14 +1,10 @@
 package com.next.aap.task.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
@@ -23,15 +19,20 @@ public abstract class AwsQueueListener {
 	private String queueName;
 	private int defaultWaitTime = 20;
 	private AmazonSQS sqs;
+	private boolean deleteMessageOnFail;
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public AwsQueueListener(String queueName, String acccessKey, String secretKey) {
-		this(Regions.US_WEST_2, queueName, acccessKey, secretKey);
+		this(Regions.US_WEST_2, queueName, acccessKey, secretKey, true);
+	}
+	public AwsQueueListener(String queueName, String acccessKey, String secretKey, boolean deleteMessageOnFail) {
+		this(Regions.US_WEST_2, queueName, acccessKey, secretKey, deleteMessageOnFail);
 	}
 
-	public AwsQueueListener(Regions regions, String queueName, String accessKey, String secretKey) {
+	public AwsQueueListener(Regions regions, String queueName, String accessKey, String secretKey,boolean deleteMessageOnFail) {
 		this.queueName = queueName;
+		this.deleteMessageOnFail = deleteMessageOnFail;
 		AWSCredentials awsCredentials;
 		awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
 		sqs = new AmazonSQSClient(awsCredentials);
@@ -62,43 +63,38 @@ public abstract class AwsQueueListener {
 							for (Message message : rmResult.getMessages()) {
 								try {
 									onQueueMessage(message.getBody());
+									deleteMessage(message);
 								} catch (Exception ex) {
-
-								} finally {
-									// Doesnt matter what happened, remove it
-									// from AWS, its App's responsbility to make
-									// sure that persist this message
-									// in case of failure/exception
-									try {
-										 sqs.deleteMessage(new DeleteMessageRequest(queueName,message.getReceiptHandle()));
-									} catch (Exception ex) {
-										// In case some error occurs
+									if(deleteMessageOnFail){
+										deleteMessage(message);
 									}
-
-								}
-
+								} 
 							}
 						} else {
 							logger.info("No messages available, attempt ");
-							// Wait for few second before trying again
 						}
 
 					} catch (Exception ex) {
 						logger.error(ex.getMessage(), ex);
 					}
-					/*
-					try {
-						Thread.sleep(10000);
-					} catch (Exception ex) {
-					
-					}
-					*/
 				}
 
 			}
 		};
 
 		new Thread(runnable).start();
+	}
+	
+	private void deleteMessage(Message message){
+		// Doesnt matter what happened, remove it
+		// from AWS, its App's responsbility to make
+		// sure that persist this message
+		// in case of failure/exception
+		try {
+			 sqs.deleteMessage(new DeleteMessageRequest(queueName,message.getReceiptHandle()));
+		} catch (Exception ex) {
+			// In case some error occurs
+		}
 	}
 
 }

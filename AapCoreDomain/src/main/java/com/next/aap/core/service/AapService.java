@@ -478,4 +478,6 @@ public interface AapService {
 	List<CandidateDto> getCandidates(int pageSize, int pageNumber) throws AppException;
 	
 	CandidateDto getCandidateByPcId(Long pcId) throws AppException;
+	
+	void updateAllLocationCampaignInCache() throws AppException;
 }

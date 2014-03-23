@@ -33,16 +33,12 @@
 <script>
 	$(function() {
 
-		$('#globalDonationButton').click(function() {
-			window.location.href = '${candidate.donationPageFullUrl}';
-			return false;
-		});
 		$('#globalDonationButton2').click(function() {
-			window.location.href = '${candidate.donationPageFullUrl}';
+			ga('send', 'event', 'donation', 'candidatewidgetwidetop','${candidate.name}', 1);
 			return false;
 		});
 		$('#globalDonationButton3').click(function() {
-			window.location.href = '${candidate.donationPageFullUrl}';
+			ga('send', 'event', 'donation', 'candidatewidgetwidebottom','${candidate.name}', 1);
 			return false;
 		});
 		$("#embedDialog").dialog({
@@ -62,8 +58,7 @@
 
 		$("#embedButton").click(
 				function() {
-					ga('send', 'event', 'candidate', 'myaap-embed',
-							'${candidate.name}', 1);
+					ga('send', 'event', 'candidate', 'wideprofile-embed','${candidate.name}', 1);
 					$("#embedDialog").dialog("open");
 				});
 		$("#accordion").accordion({
@@ -87,28 +82,6 @@
 	</script>
 
 
-	<jsp:include page="header.jsp" />
-
-
-	<!--donatetabwrapper-->
-	<!-- 
-	<div class="donatetabwrapper">
-		<input name="globalDonationButton" id="globalDonationButton" value="" type="button" class="donatebtnbig" />
-	</div>
-
-	<div class="slider">
-		<ul class="rslides">
-			<li><img src="<c:out value='${staticDirectory}'/>/images/slider-green.jpg" alt="" border="0" /></li>
-			<li><img src="<c:out value='${staticDirectory}'/>/images/slider-blue-green.jpg" alt="" border="0" /></li>
-			<li><img src="<c:out value='${staticDirectory}'/>/images/slider-pink.jpg" alt="" border="0" /></li>
-			<li><img src="<c:out value='${staticDirectory}'/>/images/slider-red.jpg" alt="" border="0" /></li>
-		</ul>
-
-	</div>
-	 -->
-	<!--slider-->
-
-
 	<div class="contentarea">
 		<!--contentarea-->
 
@@ -120,65 +93,56 @@
 					<li><a href=""><img src="<c:out value='${staticDirectory}'/>/images/news-icon.png" border="0" align="absmiddle" /> Candidate Profile</a></li>
 				</ul>
 			</div>
-			<!--
-                        <div class="divarticle">
-                                <input name="globalDonationButton2" id="globalDonationButton2" value="" type="button" class="donatebtnbig" />
-                        </div>-->
+			<div class="divarticle">
+				*You can donate for below candidate by clicking here and can show your support.
+				<div class="blockdiv">
+					<a name="globalDonationButton2" id="globalDonationButton2" href="${candidate.donationPageFullUrl}" target=_new ><input value="" type="button" class="donatebtnbig" /></a>
+				</div>
+			</div>
 			<!--articleCategory-tablist-->
 
 			<div class="divarticle">
 				<!--divarticle-->
 				<table width="100%">
 					<tr valign="top">
-						<td><c:if test="${empty candidate.imageUrl }">
-								<img src='http://kanpuria.com/wp-content/uploads/2013/12/AAP_Kanpur.jpg' style="max-width: 300px; max-height: 300px;" />
-							</c:if> <c:if test="${!empty candidate.imageUrl }">
-								<img src='${candidate.imageUrl}' style="max-width: 300px; max-height: 300px;" />
-							</c:if></td>
 						<td>
 							<h1>
 								<c:out value="${candidate.name}" />
 							</h1>
 							<h3>State : ${candidate.stateName}</h3>
 							<h3>Loksabha : ${candidate.pcName}</h3>
-							<div id="success" class="languagetab">
-								<table border="0" cellpadding="0" cellspacing="0">
-									<tbody>
-										<tr>
-											<th width="200">Total Money Required</th>
-											<td width="200">Rs 40,00,000</td>
-										</tr>
-										<tr>
-											<th width="200">Total Transactions</th>
-											<td width="200">${donationCampaignInfo.ttxn}</td>
-										</tr>
-										<tr>
-											<th>Total Amount</th>
-											<td>${donationCampaignInfo.tamt}</td>
-										</tr>
-										<tr>
-											<th>URL to this page</th>
-											<td>${candidate.landingPageSmallUrl}</td>
-										</tr>
-										<tr>
-											<th>Direct Donation URL</th>
-											<td>http://myaap.in/${candidate.donatePageUrlId}</td>
-										</tr>
-									</tbody>
-								</table>
-								<input name="globalDonationButton2" id="globalDonationButton2" value="" type="button" class="donatebtnbig" />
-							</div>
+							<h3>URL to this page : ${candidate.landingPageSmallUrl}</h3>
+							<h3>Direct Donation URL : http://myaap.in/${candidate.donatePageUrlId}</h3>
+
+						</td>
+						<td>
+							<img src='${candidate.imageUrl}' style="max-width: 400px; max-height: 400px;" />
 						</td>
 					</tr>
 				</table>
-
+				
 			</div>
-
 			<div>
 				<c:out value="${candidate.content}" escapeXml="false" />
 			</div>
 			<br></br>
 			<div id="success" class="languagetab">
+				<table border="0" cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<th width="200">Total Money Required</th>
+							<td width="200">Rs 40,00,000</td>
+						</tr>
+						<tr>
+							<th width="200">Total Transactions</th>
+							<td width="200">${donationCampaignInfo.ttxn}</td>
+						</tr>
+						<tr>
+							<th>Total Amount</th>
+							<td>${donationCampaignInfo.tamt}</td>
+						</tr>
+					</tbody>
+				</table>
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tbody>
 						<tr>
@@ -203,7 +167,9 @@
 			<div class="voiceapp-inner-div">
 				<table width="100%">
 					<tr valign="top">
-						<td><input name="globalDonationButton3" id="globalDonationButton3" value="" type="button" class="donatebtnbig" /></td>
+						<td>
+						<a name="globalDonationButton3" id="globalDonationButton3" href="${candidate.donationPageFullUrl}" target=_new ><input value="" type="button" class="donatebtnbig" /></a>
+						</td>
 						<td align="right"><input id="embedButton" name="embedButton" type="button" value="Embed Profile in your Website" class="button" /></td>
 					</tr>
 				</table>
@@ -213,41 +179,6 @@
 		</div>
 		<!--article-leftarea-->
 
-
-
-		<div class="rhsarea">
-			<!--rhsarea-->
-			<div class="facebookWidget">
-				<!--facebookWidget-->
-				<iframe
-					src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2F${candidate.candidateFbPageId}&amp;width=728&amp;height=590&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;show_border=true&amp;header=true"
-					scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 322px; height: 530px;" allowTransparency="true"></iframe>
-			</div>
-			<!--facebookWidget-->
-			<div class="twitterWidget">
-				<!--twitterWidget-->
-				<a class="twitter-timeline" href="https://twitter.com/${candidate.twitterId}" data-widget-id="339326037013958656" data-screen-name="${candidate.twitterId}">Tweets by
-					@${candidate.twitterId}</a>
-				<script>
-					!function(d, s, id) {
-						var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
-								.test(d.location) ? 'http' : 'https';
-						if (!d.getElementById(id)) {
-							js = d.createElement(s);
-							js.id = id;
-							js.src = p + "://platform.twitter.com/widgets.js";
-							fjs.parentNode.insertBefore(js, fjs);
-						}
-					}(document, "script", "twitter-wjs");
-				</script>
-
-
-			</div>
-			<!--twitterWidget-->
-
-			<div class="clear"></div>
-		</div>
-		<!--rhsarea-->
 
 
 	</div>
@@ -260,7 +191,7 @@
 					<b>Copy paste code below HTMl code in your website</b>
 				</p>
 				<textarea rows="5" cols="50" readonly="readonly">
-					<iframe src="http://my.aamaadmiparty.org/aapcandidates.html?pcId=${candidate.parliamentConstituencyId}" width="300" scrolling="no" frameborder="0" height="500" />
+					<iframe src="http://my.aamaadmiparty.org/aapcandidates.html?pcId=${candidate.parliamentConstituencyId}" width="300" height="400" frameborder="0" />
 				</textarea>
 			</div>
 			<h3>All Candidates</h3>
@@ -269,15 +200,12 @@
 					<b>Copy paste code below HTMl code in your website</b>
 				</p>
 				<textarea rows="5" cols="50" readonly="readonly">
-					<iframe src="http://my.aamaadmiparty.org/aapcandidates.html" width="300" scrolling="no" frameborder="0" height="500" />
+					<iframe src="http://my.aamaadmiparty.org/aapcandidates.html" width="300" height="400" frameborder="0" />
 				</textarea>
 			</div>
 		</div>
 	</div>
 
-
-	<jsp:include page="footer.jsp" />
-	<jsp:include page="addthis.jsp" />
 
 </body>
 </html>

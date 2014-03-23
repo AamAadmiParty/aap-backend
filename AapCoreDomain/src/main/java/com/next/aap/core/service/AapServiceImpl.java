@@ -4326,7 +4326,7 @@ public class AapServiceImpl implements AapService, Serializable {
 				locationCampaign = locationCampaignDao.saveLocationCampaign(locationCampaign);
 				
 				//update in Memcache
-				List<Donation> donations = donationDao.getDonationsByLocationCampaignId(donation.getLcid(), 100);
+				List<Donation> donations = donationDao.getDonationsByLocationCampaignId(donation.getLcid(), 5);
 				String key = CacheKeyService.createLocationCampaignKey(locationCampaign.getCampaignIdUp());
 				updateDonationsInMemCache(key, donations, locationCampaign.getTotalDonation(), locationCampaign.getTotalNumberOfDonations());
 			}
@@ -4334,9 +4334,8 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 	}
 	private void updateDonationsInMemCache(String key, List<Donation> donations, Double totalAmount, int totalTxn){
-		logger.info("key = "+key);
 		DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
-		logger.info("donationCampaignInfo from cache = "+donationCampaignInfo);
+		logger.info("key = "+key+" , donationCampaignInfo from cache = "+donationCampaignInfo);
 		if(donationCampaignInfo == null){
 			donationCampaignInfo = new DonationCampaignInfo();
 		}
@@ -6288,6 +6287,25 @@ public class AapServiceImpl implements AapService, Serializable {
 	public CandidateDto getCandidateByPcId(Long pcId) throws AppException {
 		Candidate candidate = candidateDao.getCandidateByPcId(pcId);
 		return convertCandidate(candidate);
+	}
+
+	@Override
+	@Transactional
+	public void updateAllLocationCampaignInCache() throws AppException {
+		List<LocationCampaign> locationCampaigns = locationCampaignDao.getAllLocationCampaigns();
+		for(LocationCampaign oneLocationCampaign:locationCampaigns){
+			logger.info("Working on "+oneLocationCampaign.getCampaignId());
+			Double totalAmount = donationDao.getTotalDonationAmountByLcid(oneLocationCampaign.getCampaignId());
+			if(totalAmount == null){
+				continue;
+			}
+			List<Donation> donations = donationDao.getDonationsByLocationCampaignId(oneLocationCampaign.getCampaignId(), 5);
+			Integer totalTransactions = donationDao.getTotalDonationCountByLcid(oneLocationCampaign.getCampaignId());
+			String key = CacheKeyService.createLocationCampaignKey(oneLocationCampaign.getCampaignIdUp());
+			updateDonationsInMemCache(key, donations, totalAmount, totalTransactions);
+		}
+				
+		
 	}
 
 	

@@ -10,6 +10,10 @@ public class FacebookAccountDto implements Serializable{
 	private String facebookUserId;
 	private String imageUrl;
 	private Long userId;
+	private Integer totalFriends;
+	private Integer totalFriendsWithUs;
+
+
 	public Long getId() {
 		return id;
 	}
@@ -39,6 +43,18 @@ public class FacebookAccountDto implements Serializable{
 	}
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+	public Integer getTotalFriends() {
+		return totalFriends;
+	}
+	public void setTotalFriends(Integer totalFriends) {
+		this.totalFriends = totalFriends;
+	}
+	public Integer getTotalFriendsWithUs() {
+		return totalFriendsWithUs;
+	}
+	public void setTotalFriendsWithUs(Integer totalFriendsWithUs) {
+		this.totalFriendsWithUs = totalFriendsWithUs;
 	}
 	
 	

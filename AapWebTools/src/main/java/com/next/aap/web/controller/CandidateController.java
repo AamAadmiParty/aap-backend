@@ -39,7 +39,13 @@ public class CandidateController extends AppBaseController {
 		addGenericValuesInModel(httpServletRequest, mv);
 		List<CandidateDto> allCandidates = candidateCacheImpl.getAllCandidates();
 		mv.getModel().put("candidates", allCandidates);
-		mv.setViewName(design+"/candidatelist");
+		String view = httpServletRequest.getParameter("type");
+		if(view != null && view.equalsIgnoreCase("map")){
+			mv.setViewName(design+"/candidatemap");	
+		}else{
+			mv.setViewName(design+"/candidatelist");
+		}
+		
 		return mv;
 	}
 	
@@ -48,7 +54,13 @@ public class CandidateController extends AppBaseController {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		addUserPcCandidateInModel(httpServletRequest, mv);
-		mv.setViewName(design+"/candidatewidget");
+		String param = httpServletRequest.getParameter("wide");
+		if(param != null && param.equals("1")){
+			mv.setViewName(design+"/candidatewidgetwide");	
+		}else{
+			mv.setViewName(design+"/candidatewidget");
+		}
+		
 		return mv;
 	}
 	

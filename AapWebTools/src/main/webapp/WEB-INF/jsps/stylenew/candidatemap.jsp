@@ -41,7 +41,45 @@ body {
 	height: 100%
 }
 </style>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDz1Btzrgtb0YEtHFgjZLEGaw-ggjnWlrc&sensor=false&region=IN">
+	
+</script>
+<script type="text/javascript">
+	;
+	function initialize() {
+		var mapOptions = {
+			center : new google.maps.LatLng(23.934102635197338, 78.310546875),
+			zoom : 5
+		};
+		var map = new google.maps.Map(document.getElementById("map-canvas"),
+				mapOptions);
+		/*createMarker(map, <c:out value="${oneCandidate.lattitude}" />,<c:out value="${oneCandidate.longitude}" />, '<c:out value="${oneCandidate.name}" />', '<c:out value="${oneCandidate.content}" escapeXml="false" />');*/
+		<c:forEach items="${candidates}" var="oneCandidate">
 
+		createMarker(map, <c:out value="${oneCandidate.lattitude}" />,
+				<c:out value="${oneCandidate.longitude}" />,
+				'<c:out value="${oneCandidate.name}" />',
+				'<c:out value="${oneCandidate.landingPageFullUrl}" />',
+				'<c:out value="${oneCandidate.imageUrl32}" />');
+		</c:forEach>
+	}
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+	function createMarker(map, lattitude, longitude, name, pageUrl, iconUrl) {
+		var marker = new google.maps.Marker({
+			position : new google.maps.LatLng(lattitude, longitude),
+			map : map,
+			title : name,
+			icon : iconUrl
+		});
+		var infowindow = new google.maps.InfoWindow({
+			content : "<div><a href='"+pageUrl+"'>" + name + "</a></div>"
+		});
+		google.maps.event.addListener(marker, 'click', function() {
+			infowindow.open(map, marker);
+		});
+	}
+</script>
 </head>
 <body>
 
@@ -57,30 +95,16 @@ body {
 			<!--loginwithholder-->
 			<div class="loginwithinnerholder">
 				<!--loginwithinnerholder-->
-				<h2><a href="${contextPath}/candidates.html?type=map">Map View</a></h2>
-				<div id="list" class="languagetab">
-					List of AAP candidates for the LokSabha is given below. Locate your constituency, click on the candidate or constituency to view the full details
-					<table>
-						<tr>
-							<th style="border: 1px solid;">State</th>
-							<th style="border: 1px solid;">Loksabha</th>
-							<th style="border: 1px solid;">Name</th>
-						</tr>
-						<c:forEach items="${candidates}" var="oneCandidate">
-							<tr>
-								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.stateName}" /></a></td>
-								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.pcName}" /></a></td>
-								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.name}" /></a></td>
-
-							</tr>
-						</c:forEach>
-					</table>
+				<h2><a href="${contextPath}/candidates.html">List View</a></h2>
+				<div id="map">
+				List of AAP candidates for the LokSabha is given below. Locate your constituency, click on the candidate or constituency to view the full details
+					<div id="map-canvas" style="width: 920px; height: 900px; border: 1px solid;" />
 				</div>
+			<!--loginwithinnerholder-->
 			</div>
 		</div>
-		<!--loginwithinnerholder-->
+		<!--loginwithholder-->
 	</div>
-	<!--loginwithholder-->
 	<!--contentarea-->
 
 

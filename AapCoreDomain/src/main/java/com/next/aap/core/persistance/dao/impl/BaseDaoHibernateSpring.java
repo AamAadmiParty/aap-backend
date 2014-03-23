@@ -146,6 +146,32 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 		}
 		return (Long)results.get(0);
 	}
+	public Integer executeSqlQueryGetInt(String query){
+		return executeSqlQueryGetInt(query, null);
+	}
+	public Integer executeSqlQueryGetInt(String query,Map<String, Object> params){
+		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
+		if(params != null){
+			for(Entry<String, Object> oneEntry:params.entrySet()){
+				if(oneEntry.getValue() instanceof Collection){
+					sqlQuery.setParameterList(oneEntry.getKey(), (Collection)oneEntry.getValue());
+				}else{
+					sqlQuery.setParameter(oneEntry.getKey(), oneEntry.getValue());	
+				}
+			}
+		}
+		@SuppressWarnings("rawtypes")
+		List results = sqlQuery.list();
+		System.out.println("results="+results);
+		if(results == null || results.isEmpty()){
+			return null;
+		}
+				
+		if(results.get(0) instanceof BigInteger){
+			return ((BigInteger)results.get(0)).intValue();
+		}
+		return (Integer)results.get(0);
+	}
 	public Double executeSqlQueryGetDouble(String query){
 		return executeSqlQueryGetDouble(query, null);
 	}

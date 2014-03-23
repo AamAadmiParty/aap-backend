@@ -15,7 +15,6 @@
 				function() {
 					ga('send', 'event', 'donation', 'candidatewidget',
 							'${candidate.name}', 1);
-					window.location.href = '${candidate.donationPageFullUrl}';
 					return false;
 				});
 		$('#candidate1').click(
@@ -41,9 +40,9 @@
 			<div class="aap-performance">
 				*You can donate for below candidate by clicking here and can show your support.
 				<div class="blockdiv">
-					<input name="globalDonationButtonOnRight" id="globalDonationButtonOnRight" value="" type="button" class="donatebtnbig" />
+					<a name="globalDonationButtonOnRight" id="globalDonationButtonOnRight" href="${candidate.donationPageFullUrl}" target=_new ><input value="" type="button" class="donatebtnbig" /></a>
 				</div>
-				<a href="${candidate.landingPageFullUrl}" id="candidate1"> <img src="<c:out value='${candidate.imageUrl}'/>" style="width: 280px; min-width: 280px;" border="0" />
+				<a target=_new href="${candidate.landingPageFullUrl}" id="candidate1"> <img src="<c:out value='${candidate.imageUrl}'/>" style="width: 280px; min-width: 280px;" border="0" />
 				</a>
 				<div id="success" class="languagetab">
 					<table border="0" cellpadding="0" cellspacing="0">
@@ -70,7 +69,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<a href="${candidate.landingPageFullUrl}" id="candidate2">Read more .....</a>
+					<a target=_new href="${candidate.landingPageFullUrl}" id="candidate2">Read more .....</a>
 				</div>
 			</div>
 		</c:if>

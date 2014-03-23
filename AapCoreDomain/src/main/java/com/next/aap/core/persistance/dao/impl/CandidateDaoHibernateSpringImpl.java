@@ -33,7 +33,7 @@ public class CandidateDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Cand
 
 	@Override
 	public List<Candidate> getAllCandidates(int totalItems, int pageNumber) {
-		String query = "from Candidate order by name desc";
+		String query = "from Candidate order by stateName, pcName";
 		List<Candidate> list = executeQueryGetList(query, null, totalItems, pageNumber);
 		return list;
 	}

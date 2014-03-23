@@ -1,5 +1,6 @@
 package com.next.aap.core.persistance.dao.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -82,6 +83,11 @@ public class LocationCampaignDaoHibernateSpringImpl extends BaseDaoHibernateSpri
 			return null;
 		}
 		return getLocationCampaignById(campaignId);
+	}
+
+	@Override
+	public List<LocationCampaign> getAllLocationCampaigns() {
+		return executeQueryGetList("from LocationCampaign");
 	}
 
 }

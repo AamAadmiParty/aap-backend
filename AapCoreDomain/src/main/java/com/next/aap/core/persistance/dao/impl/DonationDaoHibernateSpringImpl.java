@@ -390,4 +390,17 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 		//String sql = "select sum(amount) from donations where donation_date BETWEEN :startDate AND :endDate and (pg_error_msg=:status1 or pg_error_msg=:status2)";
 		return executeSqlQueryGetDouble(sql);
 	}
+
+	@Override
+	public Double getTotalDonationAmountByLcid(String lcid) {
+
+		String sql = "select sum(amount) from donations where lcid = '"+lcid+"' and (pg_error_msg='SUCCESS' or pg_error_msg='Success')";
+		return executeSqlQueryGetDouble(sql);
+	}
+
+	@Override
+	public Integer getTotalDonationCountByLcid(String lcid) {
+		String sql = "select count(0) from donations where lcid = '"+lcid+"' and (pg_error_msg='SUCCESS' or pg_error_msg='Success')";
+		return executeSqlQueryGetInt(sql);
+	}
 }

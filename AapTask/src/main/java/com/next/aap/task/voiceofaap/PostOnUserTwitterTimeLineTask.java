@@ -71,13 +71,14 @@ public class PostOnUserTwitterTimeLineTask implements Callable<Boolean> {
 			tweetDto.setTwitterAccountId(twitterAccountDto.getId());
 			tweetDto.setTweetExternalId(tweetExternalId);
 			tweetDto = aapService.saveTweetPost(tweetDto);
+			return true;
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
 			countDownLatch.countDown();
 		}
-		return null;
+		return false;
 	}
 
 }

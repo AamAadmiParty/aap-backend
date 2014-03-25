@@ -1,7 +1,11 @@
 package com.next.aap.task.voiceofaap;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +17,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.service.AapService;
+import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
@@ -46,23 +51,38 @@ public class TwitterUserTimeLinePostTask {
 				return;
 			}
 			List<TwitterAccountDto> allTwitterAccounts = aapService.getAllTwitterAccountsForVoiceOfAap(plannedTweetDto.getLocationType(), plannedTweetDto.getLocationId());
+			Map<Future<Boolean>, TwitterAccountDto> twitterAccountsFutureMap = new HashMap<Future<Boolean>, TwitterAccountDto>();
+			int totalSuccessTweet = 0;
+			int totalFailedTweet = 0;
+			Future<Boolean> futureResult;
 			try{
 				if(allTwitterAccounts != null && !allTwitterAccounts.isEmpty()){
 					CountDownLatch countDownLatch = new CountDownLatch(allTwitterAccounts.size());
 					for(TwitterAccountDto oneTwitterAccount:allTwitterAccounts){
 						PostOnUserTwitterTimeLineTask postOnUserTimeLineTask = new PostOnUserTwitterTimeLineTask(aapService, oneTwitterAccount, plannedTweetDto, countDownLatch, twitterConsumerKey, twitterConsumerSecret);
-						threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
+						futureResult = threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
+						twitterAccountsFutureMap.put(futureResult, oneTwitterAccount);
 					}
 					//wait for all task to finish before proceeding
+					logger.info("waiting for countdown latch to go to Zero");
 					countDownLatch.await();
-					aapService.updatePlannedTweetStatus(plannedTweetDto.getId(), PlannedPostStatus.DONE, null);	
+					logger.info("waiting for countdown latch finished");
+					for(Entry<Future<Boolean>, TwitterAccountDto> oneEntry:twitterAccountsFutureMap.entrySet()){
+						if(oneEntry.getKey().get()){
+							totalSuccessTweet++;
+						}else{
+							totalFailedTweet++;
+						}
+					}
+					aapService.updatePlannedTweetStatus(plannedTweetDto.getId(), PlannedPostStatus.DONE, null, totalSuccessTweet, totalFailedTweet);	
 				}else{
 					logger.info("No twitter accounts found for LocationType="+plannedTweetDto.getLocationType() +" and location Id="+plannedTweetDto.getLocationId());
-					aapService.updatePlannedTweetStatus(plannedTweetDto.getId(), PlannedPostStatus.DONE_WITH_ERROR, "No twitter accounts found for LocationType="+plannedTweetDto.getLocationType() +" and location Id="+plannedTweetDto.getLocationId());
+					aapService.updatePlannedTweetStatus(plannedTweetDto.getId(), PlannedPostStatus.DONE_WITH_ERROR, "No twitter accounts found for LocationType="+plannedTweetDto.getLocationType() +" and location Id="+plannedTweetDto.getLocationId(),
+							totalSuccessTweet, totalFailedTweet);
 				}
 				
 			}catch(Exception ex){
-				aapService.updatePlannedTweetStatus(plannedTweetDto.getId(), PlannedPostStatus.DONE_WITH_ERROR, ex.getMessage());
+				aapService.updatePlannedTweetStatus(plannedTweetDto.getId(), PlannedPostStatus.DONE_WITH_ERROR, ex.getMessage(), totalSuccessTweet, totalFailedTweet);
 			}
 		}
 	}

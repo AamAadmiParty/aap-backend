@@ -64,6 +64,11 @@ public class PlannedTweet {
 	@Column(name = "error_message")
 	private String errorMessage;
 
+	@Column(name = "total_success_tweets")
+	private int totalSuccessTweets;
+	@Column(name = "total_failed_tweets")
+	private int totalFailedTweets;
+
 	public Long getId() {
 		return id;
 	}
@@ -182,6 +187,22 @@ public class PlannedTweet {
 
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
+	}
+
+	public int getTotalSuccessTweets() {
+		return totalSuccessTweets;
+	}
+
+	public void setTotalSuccessTweets(int totalSuccessTweets) {
+		this.totalSuccessTweets = totalSuccessTweets;
+	}
+
+	public int getTotalFailedTweets() {
+		return totalFailedTweets;
+	}
+
+	public void setTotalFailedTweets(int totalFailedTweets) {
+		this.totalFailedTweets = totalFailedTweets;
 	}
 
 }

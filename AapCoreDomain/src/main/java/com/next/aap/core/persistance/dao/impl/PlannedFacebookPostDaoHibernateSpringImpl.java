@@ -52,6 +52,22 @@ public class PlannedFacebookPostDaoHibernateSpringImpl extends BaseDaoHibernateS
 		query = query + " order by postingTime asc";
 		return executeQueryGetList(query, params);
 	}
+	@Override
+	public List<PlannedFacebookPost> getExecutedFacebookPostByLocationTypeAndLocationId(PostLocationType postLocationType, Long locationId) {
+		PlannedPostStatus pending = PlannedPostStatus.PENDING;
+		String query = "from PlannedFacebookPost where status != :status and  locationType = :postLocationType ";
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("postLocationType", postLocationType);
+		params.put("status", pending);
+		if(!postLocationType.equals(PostLocationType.Global)){
+			query = query + "and locationId = :locationId";
+			params.put("locationId", locationId);	
+		}
+		query = query + " order by postingTime asc";
+		return executeQueryGetList(query, params);
+	}
+	
+	
 
 	@Override
 	public PlannedFacebookPost getNextPlannedFacebookPostToPublish() {

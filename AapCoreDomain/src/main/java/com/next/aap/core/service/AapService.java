@@ -126,11 +126,14 @@ public interface AapService {
 	
 	PlannedFacebookPostDto savePlannedFacebookPost(PlannedFacebookPostDto plannedFacebookPostDto);
 	
-	PlannedFacebookPostDto updatePlannedFacebookPostStatus(Long plannedFacebookPostId, PlannedPostStatus status, String message);
+	PlannedFacebookPostDto updatePlannedFacebookPostStatus(Long plannedFacebookPostId, PlannedPostStatus status, String message, int totalSuccessTimeLines,
+			int totalSuccessTimeLineFriends, int totalFailedTimeLines, int totalFailedTimeLineFriends);
 	
 	List<PlannedFacebookPostDto> getPlannedFacebookPosts(int pageNumber, int pageSize);
 	
 	List<PlannedFacebookPostDto> getPlannedFacebookPostsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
+	
+	List<PlannedFacebookPostDto> getExecutedFacebookPostsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
 	
 	UserRolePermissionDto getUserRolePermissions(Long userId);
 	
@@ -147,7 +150,8 @@ public interface AapService {
 	
 	PlannedTweetDto savePlannedTweet(PlannedTweetDto plannedTweetDto);
 	
-	PlannedTweetDto updatePlannedTweetStatus(Long plannedTweetId, PlannedPostStatus status, String message);
+	PlannedTweetDto updatePlannedTweetStatus(Long plannedTweetId, PlannedPostStatus status, String message, int totalSuccessTweet,
+			int totalFailedTweet);
 	
 	List<PlannedTweetDto> getPlannedTweets(int pageNumber, int pageSize);
 	

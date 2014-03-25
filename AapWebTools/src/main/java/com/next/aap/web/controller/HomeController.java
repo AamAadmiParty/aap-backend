@@ -13,11 +13,15 @@ public class HomeController extends AppBaseController {
 	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
-		
-		addGenericValuesInModel(httpServletRequest, mv);
-		addNewsInModel(httpServletRequest, mv);
-		addUserPcCandidateInModel(httpServletRequest, mv);
-		mv.setViewName(design+"/index");
+		try{
+			addGenericValuesInModel(httpServletRequest, mv);
+			mv.setViewName(design+"/index");
+			addNewsInModel(httpServletRequest, mv);
+			addUserPcCandidateInModel(httpServletRequest, mv);
+			
+		}catch(Exception ex){
+			logger.error("Unable to Generate Main Page",ex);
+		}
 		return mv;
 	}
 	

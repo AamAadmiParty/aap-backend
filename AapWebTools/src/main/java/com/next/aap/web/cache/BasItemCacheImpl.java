@@ -140,6 +140,9 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		Map<Long, ItemType> cacheItemsByLang = cacheByLanguage.get(language);
 		ItemType item = cacheItemsByLang.get(itemId);
 		if(item == null){
+			if(DEFAULT_LANGUAGE.equals(language)){
+				return null;
+			}
 			item = getCacheItemById(itemId);
 			if(item != null){
 				cacheItemsByLang.put(itemId, item);

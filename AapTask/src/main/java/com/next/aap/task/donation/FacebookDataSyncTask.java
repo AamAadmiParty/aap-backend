@@ -47,8 +47,8 @@ public class FacebookDataSyncTask implements Runnable{
 	//http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
 	//http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	//ss mm hh dd
-	@Scheduled(cron="0 45 02 * * *")
-	@PostConstruct
+	@Scheduled(cron="0 45 05 * * *")
+	//@PostConstruct
 	public void downlaodFacebookDataForUsers(){
 		logger.info("Starting downlaodFacebookDataForUsers");
 		long startId = 0l;

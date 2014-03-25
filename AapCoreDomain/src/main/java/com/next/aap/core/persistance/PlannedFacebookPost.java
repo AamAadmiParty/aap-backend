@@ -77,6 +77,15 @@ public class PlannedFacebookPost {
 	@Column(name = "error_message")
 	private String errorMessage;
 
+	@Column(name = "total_success_timelines")
+	private int totalSuccessTimeLines;
+	@Column(name = "total_success_timeline_friends")
+	private int totalSuccessTimeLineFriends;
+	@Column(name = "total_failed_timelines")
+	private int totalFailedTimeLines;
+	@Column(name = "total_failed_timeline_friends")
+	private int totalFailedTimeLineFriends;
+
 	public Long getId() {
 		return id;
 	}
@@ -227,6 +236,38 @@ public class PlannedFacebookPost {
 
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
+	}
+
+	public int getTotalSuccessTimeLines() {
+		return totalSuccessTimeLines;
+	}
+
+	public void setTotalSuccessTimeLines(int totalSuccessTimeLines) {
+		this.totalSuccessTimeLines = totalSuccessTimeLines;
+	}
+
+	public int getTotalSuccessTimeLineFriends() {
+		return totalSuccessTimeLineFriends;
+	}
+
+	public void setTotalSuccessTimeLineFriends(int totalSuccessTimeLineFriends) {
+		this.totalSuccessTimeLineFriends = totalSuccessTimeLineFriends;
+	}
+
+	public int getTotalFailedTimeLines() {
+		return totalFailedTimeLines;
+	}
+
+	public void setTotalFailedTimeLines(int totalFailedTimeLines) {
+		this.totalFailedTimeLines = totalFailedTimeLines;
+	}
+
+	public int getTotalFailedTimeLineFriends() {
+		return totalFailedTimeLineFriends;
+	}
+
+	public void setTotalFailedTimeLineFriends(int totalFailedTimeLineFriends) {
+		this.totalFailedTimeLineFriends = totalFailedTimeLineFriends;
 	}
 	
 	

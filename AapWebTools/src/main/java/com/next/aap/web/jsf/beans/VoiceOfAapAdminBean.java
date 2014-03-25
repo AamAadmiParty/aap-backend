@@ -1,11 +1,14 @@
 package com.next.aap.web.jsf.beans;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.model.chart.CartesianChartModel;
+import org.primefaces.model.chart.ChartSeries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -36,8 +39,11 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 	private int pageNumber = 1;
 	private int pageSize = 20;
 	private boolean showList = true;
+	private int maxChartY;
+	private CartesianChartModel totalReachModel; 
 	
 	private List<PlannedFacebookPostDto> plannedFacebookPosts;
+	private List<PlannedFacebookPostDto> executedFacebookPosts;
 	public VoiceOfAapAdminBean(){
 		super(AppPermission.ADMIN_VOICE_OF_AAP_FB, "/admin/voiceofaapfb");
 	}
@@ -122,6 +128,27 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 	}
 	private void refreshPosts(){
 		plannedFacebookPosts = aapService.getPlannedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+		executedFacebookPosts = aapService.getExecutedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+		maxChartY = 200;
+		totalReachModel = new CartesianChartModel();
+		
+		ChartSeries totalSuccessTimelineSeries = new ChartSeries();  
+		totalSuccessTimelineSeries.setLabel("TimeLine");  
+  
+		ChartSeries totalSuccessTimelineReachSeries = new ChartSeries();  
+		totalSuccessTimelineReachSeries.setLabel("Total Reach");  
+  
+		for(PlannedFacebookPostDto onePlannedFacebookPostDto:executedFacebookPosts){
+			
+			totalSuccessTimelineSeries.set(onePlannedFacebookPostDto.getId() +"", onePlannedFacebookPostDto.getTotalSuccessTimeLines());
+			totalSuccessTimelineReachSeries.set(onePlannedFacebookPostDto.getId() +"", onePlannedFacebookPostDto.getTotalSuccessTimeLineFriends());
+			
+			if(onePlannedFacebookPostDto.getTotalSuccessTimeLineFriends() > maxChartY){
+				maxChartY = onePlannedFacebookPostDto.getTotalSuccessTimeLineFriends() + onePlannedFacebookPostDto.getTotalSuccessTimeLineFriends() / 10;
+			}
+		}
+		totalReachModel.addSeries(totalSuccessTimelineSeries);  
+		totalReachModel.addSeries(totalSuccessTimelineReachSeries);
 	}
 	public void newPost(){
 		selectedFacebookPost = new PlannedFacebookPostDto();
@@ -189,6 +216,24 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 	}
 	public void setShowList(boolean showList) {
 		this.showList = showList;
+	}
+	public List<PlannedFacebookPostDto> getExecutedFacebookPosts() {
+		return executedFacebookPosts;
+	}
+	public void setExecutedFacebookPosts(List<PlannedFacebookPostDto> executedFacebookPosts) {
+		this.executedFacebookPosts = executedFacebookPosts;
+	}
+	public CartesianChartModel getTotalReachModel() {
+		return totalReachModel;
+	}
+	public void setTotalReachModel(CartesianChartModel totalReachModel) {
+		this.totalReachModel = totalReachModel;
+	}
+	public int getMaxChartY() {
+		return maxChartY;
+	}
+	public void setMaxChartY(int maxChartY) {
+		this.maxChartY = maxChartY;
 	}
 
 

@@ -16,6 +16,8 @@ public interface PlannedFacebookPostDao {
 	
 	public abstract List<PlannedFacebookPost> getPlannedFacebookPostByLocationTypeAndLocationId(PostLocationType postLocationType, Long locationId);
 	
+	public abstract List<PlannedFacebookPost> getExecutedFacebookPostByLocationTypeAndLocationId(PostLocationType postLocationType, Long locationId);
+	
 	public abstract PlannedFacebookPost getNextPlannedFacebookPostToPublish();
 
 }

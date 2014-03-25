@@ -37,151 +37,226 @@
 	<!-- menu ends -->
 	<div style="width: 800px; margin: 0 auto;">
 		<div style="width: 800px; margin: 0;">
+			<p:tabView id="tabView">
 
-			<h:form id="adminVoiceOfAapFbForm">
-				<p:messages id="messages" autoUpdate="true" closable="true" />
-				<p:outputPanel id="mainPanel">
-					<p:outputPanel id="listView" rendered="#{voiceOfAapAdminBean.showList}">
+				<p:tab id="voa1" title="Voice of AAP">
+					<h:form id="adminVoiceOfAapFbForm">
+						<p:messages id="messages" autoUpdate="true" closable="true" />
+						<p:outputPanel id="mainPanel">
+							<p:outputPanel id="listView" rendered="#{voiceOfAapAdminBean.showList}">
 
-						<p:commandButton value="New Facebook Post" actionListener="#{voiceOfAapAdminBean.newPost}" update=":adminVoiceOfAapFbForm:mainPanel">
-						</p:commandButton>
-						<p:dataTable id="listOfPlannedPosts" var="onePost" value="#{voiceOfAapAdminBean.plannedFacebookPosts}" paginator="true" rows="#{voiceOfAapAdminBean.pageSize}"
-							paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Facebook Post"
-							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
-							<f:facet name="header">Planned Facebook Posts</f:facet>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Id" />
-								</f:facet>
-								<h:outputText value="#{onePost.id}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Post Type" />
-								</f:facet>
-								<h:outputText value="#{onePost.postType}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Messasge" />
-								</f:facet>
-								<h:outputText value="#{onePost.message}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Post Time" />
-								</f:facet>
-								<h:outputText value="#{onePost.postingTime}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Status" />
-								</f:facet>
-								<h:outputText value="#{onePost.status}" />
-							</p:column>
-							<p:column style="width:100px;">
-								<f:facet name="header">
-									<h:outputText value="Update" />
-								</f:facet>
-								<p:commandLink update=":adminVoiceOfAapFbForm:mainPanel" title="Update Post">
-									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
-									<f:setPropertyActionListener value="#{onePost}" target="#{voiceOfAapAdminBean.selectedFacebookPost}" />
-								</p:commandLink>
-							</p:column>
-						</p:dataTable>
-					</p:outputPanel>
-					<p:outputPanel id="formView" rendered="#{!voiceOfAapAdminBean.showList}">
-						<p:panelGrid columns="2" styleClass="topAlignPanelColumns">
-							<p:panelGrid columns="2">
-								<p:outputLabel value="Post Type"></p:outputLabel>
-								<p:selectOneMenu value="#{voiceOfAapAdminBean.selectedFacebookPost.postType}">
-									<f:selectItem itemLabel="Select Post Type" itemValue="" />
-									<f:selectItem itemLabel="Photo" itemValue="Photo" />
-									<f:selectItem itemLabel="Text Only" itemValue="TextOnly" />
-									<f:selectItem itemLabel="Link" itemValue="Link" />
+								<p:commandButton value="New Facebook Post" actionListener="#{voiceOfAapAdminBean.newPost}" update=":tabView:adminVoiceOfAapFbForm:mainPanel">
+								</p:commandButton>
+								<p:dataTable id="listOfPlannedPosts" var="onePost" value="#{voiceOfAapAdminBean.plannedFacebookPosts}" paginator="true" rows="#{voiceOfAapAdminBean.pageSize}"
+									paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Facebook Post"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+									<f:facet name="header">Planned Facebook Posts</f:facet>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Id" />
+										</f:facet>
+										<h:outputText value="#{onePost.id}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Post Type" />
+										</f:facet>
+										<h:outputText value="#{onePost.postType}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Messasge" />
+										</f:facet>
+										<h:outputText value="#{onePost.message}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Post Time" />
+										</f:facet>
+										<h:outputText value="#{onePost.postingTime}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Status" />
+										</f:facet>
+										<h:outputText value="#{onePost.status}" />
+									</p:column>
+									<p:column style="width:100px;">
+										<f:facet name="header">
+											<h:outputText value="Update" />
+										</f:facet>
+										<p:commandLink update=":tabView:adminVoiceOfAapFbForm:mainPanel" title="Update Post">
+											<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+											<f:setPropertyActionListener value="#{onePost}" target="#{voiceOfAapAdminBean.selectedFacebookPost}" />
+										</p:commandLink>
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+							<p:outputPanel id="formView" rendered="#{!voiceOfAapAdminBean.showList}">
+								<p:panelGrid columns="2" styleClass="topAlignPanelColumns">
+									<p:panelGrid columns="2">
+										<p:outputLabel value="Post Type"></p:outputLabel>
+										<p:selectOneMenu value="#{voiceOfAapAdminBean.selectedFacebookPost.postType}">
+											<f:selectItem itemLabel="Select Post Type" itemValue="" />
+											<f:selectItem itemLabel="Photo" itemValue="Photo" />
+											<f:selectItem itemLabel="Text Only" itemValue="TextOnly" />
+											<f:selectItem itemLabel="Link" itemValue="Link" />
 
-									<p:ajax event="change" update=":adminVoiceOfAapFbForm" listener="#{voiceOfAapAdminBean.handlePostTypeChange}" />
-								</p:selectOneMenu>
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapFbForm" listener="#{voiceOfAapAdminBean.handlePostTypeChange}" />
+										</p:selectOneMenu>
 
-								<p:outputLabel value="Image Url" rendered="#{voiceOfAapAdminBean.photoTypeFbPost or voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
-								<p:inputText value="#{voiceOfAapAdminBean.selectedFacebookPost.picture}" rendered="#{voiceOfAapAdminBean.photoTypeFbPost or voiceOfAapAdminBean.linkTypeFbPost}" >
-									<p:ajax event="change" update=":adminVoiceOfAapFbForm" />
-								</p:inputText>
-								<p:outputLabel value="Message"></p:outputLabel>
-								<p:inputTextarea rows="5" cols="50" value="#{voiceOfAapAdminBean.selectedFacebookPost.message}">
-									<p:ajax event="change" update=":adminVoiceOfAapFbForm" />
-								</p:inputTextarea>
-								<!-- 
+										<p:outputLabel value="Image Url" rendered="#{voiceOfAapAdminBean.photoTypeFbPost or voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
+										<p:inputText value="#{voiceOfAapAdminBean.selectedFacebookPost.picture}" rendered="#{voiceOfAapAdminBean.photoTypeFbPost or voiceOfAapAdminBean.linkTypeFbPost}">
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapFbForm" />
+										</p:inputText>
+										<p:outputLabel value="Message"></p:outputLabel>
+										<p:inputTextarea rows="5" cols="50" value="#{voiceOfAapAdminBean.selectedFacebookPost.message}">
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapFbForm" />
+										</p:inputTextarea>
+										<!-- 
 						<p:outputLabel value="Source"></p:outputLabel>
 						<p:inputText value="#{voiceOfAapAdminBean.selectedFacebookPost.source}" />
 						 -->
-								<p:outputLabel value="Link" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
-								<p:inputText rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" value="#{voiceOfAapAdminBean.selectedFacebookPost.link}" >
-									<p:ajax event="change" update=":adminVoiceOfAapFbForm" />
-								</p:inputText>
-								<p:outputLabel value="Name" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
-								<p:inputText rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" value="#{voiceOfAapAdminBean.selectedFacebookPost.name}">
-									<p:ajax event="change" update=":adminVoiceOfAapFbForm" />
-								</p:inputText>
-								<p:outputLabel value="Caption" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
-								<p:inputText rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" value="#{voiceOfAapAdminBean.selectedFacebookPost.caption}">
-									<p:ajax event="change" update=":adminVoiceOfAapFbForm" />
-								</p:inputText>
-								<p:outputLabel value="Description" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
-								<p:inputTextarea rows="3" cols="50" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" value="#{voiceOfAapAdminBean.selectedFacebookPost.description}">
-									<p:ajax event="change" update=":adminVoiceOfAapFbForm" />
-								</p:inputTextarea>
-								<p:outputLabel value="Post Time"></p:outputLabel>
-								<p:calendar value="#{voiceOfAapAdminBean.selectedFacebookPost.postingTime}" pattern="MM/dd/yyyy HH:mm" />
-							</p:panelGrid>
-							<p:outputPanel id="postPreview" styleClass="topAlignPanelColumns">
-								<p:panelGrid columns="2" style="width:400px;" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" styleClass="topAlignPanelColumns">
-									<f:facet name="header"> Facebook Post Preview for Link</f:facet>
-								</p:panelGrid>
-								<br></br>
-								<br></br>
-								<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.message}" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" />
+										<p:outputLabel value="Link" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
+										<p:inputText rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" value="#{voiceOfAapAdminBean.selectedFacebookPost.link}">
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapFbForm" />
+										</p:inputText>
+										<p:outputLabel value="Name" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
+										<p:inputText rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" value="#{voiceOfAapAdminBean.selectedFacebookPost.name}">
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapFbForm" />
+										</p:inputText>
+										<p:outputLabel value="Caption" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
+										<p:inputText rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" value="#{voiceOfAapAdminBean.selectedFacebookPost.caption}">
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapFbForm" />
+										</p:inputText>
+										<p:outputLabel value="Description" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}"></p:outputLabel>
+										<p:inputTextarea rows="3" cols="50" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" value="#{voiceOfAapAdminBean.selectedFacebookPost.description}">
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapFbForm" />
+										</p:inputTextarea>
+										<p:outputLabel value="Post Time"></p:outputLabel>
+										<p:calendar value="#{voiceOfAapAdminBean.selectedFacebookPost.postingTime}" pattern="MM/dd/yyyy HH:mm" />
+									</p:panelGrid>
+									<p:outputPanel id="postPreview" styleClass="topAlignPanelColumns">
+										<p:panelGrid columns="2" style="width:400px;" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" styleClass="topAlignPanelColumns">
+											<f:facet name="header"> Facebook Post Preview for Link</f:facet>
+										</p:panelGrid>
+										<br></br>
+										<br></br>
+										<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.message}" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" />
 
-								<p:panelGrid id="linkPreview" columns="2" style="width:400px;" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" styleClass="topAlignPanelColumns">
-									<p:graphicImage width="100" value="#{voiceOfAapAdminBean.selectedFacebookPost.picture}"></p:graphicImage>
-									<p:outputPanel>
-										<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.name}" />
-										<br></br>
-										<b><p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.caption}" /></b>
-										<br></br>
-										<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.description}" />
-										<br></br>
+										<p:panelGrid id="linkPreview" columns="2" style="width:400px;" rendered="#{voiceOfAapAdminBean.linkTypeFbPost}" styleClass="topAlignPanelColumns">
+											<p:graphicImage width="100" value="#{voiceOfAapAdminBean.selectedFacebookPost.picture}"></p:graphicImage>
+											<p:outputPanel>
+												<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.name}" />
+												<br></br>
+												<b><p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.caption}" /></b>
+												<br></br>
+												<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.description}" />
+												<br></br>
+											</p:outputPanel>
+										</p:panelGrid>
+										<p:panelGrid id="imagePreview" columns="1" style="width:400px;" rendered="#{voiceOfAapAdminBean.photoTypeFbPost}">
+											<f:facet name="header"> Facebook Post Preview for Photo</f:facet>
+											<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.message}" />
+											<p:graphicImage width="400" value="#{voiceOfAapAdminBean.selectedFacebookPost.picture}"></p:graphicImage>
+										</p:panelGrid>
+
+										<p:panelGrid id="textPreview" columns="1" style="width:400px;" rendered="#{voiceOfAapAdminBean.textTypeFbPost}">
+											<f:facet name="header"> Facebook Post Preview for Text</f:facet>
+											<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.message}" />
+										</p:panelGrid>
+
 									</p:outputPanel>
-								</p:panelGrid>
-								<p:panelGrid id="imagePreview" columns="1" style="width:400px;" rendered="#{voiceOfAapAdminBean.photoTypeFbPost}">
-									<f:facet name="header"> Facebook Post Preview for Photo</f:facet>
-									<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.message}" />
-									<p:graphicImage width="400" value="#{voiceOfAapAdminBean.selectedFacebookPost.picture}"></p:graphicImage>
-								</p:panelGrid>
 
-								<p:panelGrid id="textPreview" columns="1" style="width:400px;" rendered="#{voiceOfAapAdminBean.textTypeFbPost}">
-									<f:facet name="header"> Facebook Post Preview for Text</f:facet>
-									<p:outputLabel value="#{voiceOfAapAdminBean.selectedFacebookPost.message}" />
 								</p:panelGrid>
-
+								<p:commandButton value="Cancel" update=":tabView:adminVoiceOfAapFbForm:mainPanel" actionListener="#{voiceOfAapAdminBean.cancel}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton value="Clear" update=":tabView:adminVoiceOfAapFbForm:postPreview" actionListener="#{voiceOfAapAdminBean.showPreview}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton value="Preview" update=":tabView:adminVoiceOfAapFbForm:postPreview" actionListener="#{voiceOfAapAdminBean.showPreview}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton value="Save" update=":tabView:adminVoiceOfAapFbForm:mainPanel" actionListener="#{voiceOfAapAdminBean.savePost}" styleClass="ui-priority-primary">
+								</p:commandButton>
 							</p:outputPanel>
+						</p:outputPanel>
+						<br></br>
+						<br></br>
+						<br></br>
+						<br></br>
+					</h:form>
+				</p:tab>
+				<p:tab id="voa2" title="Reports">
+					<p:lineChart id="category" value="#{voiceOfAapAdminBean.totalReachModel}" legendPosition="e"  
+     				title="Total Reach Chart" minY="0" maxY="#{voiceOfAapAdminBean.maxChartY}" style="height:300px;margin-top:20px"/>
+     				  
+					<p:dataTable id="listOfExecutedPosts" var="onePost" value="#{voiceOfAapAdminBean.executedFacebookPosts}" paginator="true" rows="100" paginatorPosition="bottom"
+						paginatorAlwaysVisible="false" emptyMessage="No Facebook Post"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+						<f:facet name="header">Executed Facebook Posts</f:facet>
+						<p:column style="width:2%">
+							<p:rowToggler />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{onePost.id}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Post Type" />
+							</f:facet>
+							<h:outputText value="#{onePost.postType}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Messasge" />
+							</f:facet>
+							<h:outputText value="#{onePost.message}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Post Time" />
+							</f:facet>
+							<h:outputText value="#{onePost.postingTime}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Total Reach" />
+							</f:facet>
+							<h:outputText value="#{onePost.totalSuccessTimeLineFriends}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Total Timelines" />
+							</f:facet>
+							<h:outputText value="#{onePost.totalSuccessTimeLines}" />
+						</p:column>
+						<p:rowExpansion>
+							<h:panelGrid id="display" columns="2" cellpadding="4" style="width:300px;" styleClass=" ui-widget-content grid">
 
-						</p:panelGrid>
-						<p:commandButton value="Cancel" update=":adminVoiceOfAapFbForm:mainPanel" actionListener="#{voiceOfAapAdminBean.cancel}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						<p:commandButton value="Clear" update=":adminVoiceOfAapFbForm:postPreview" actionListener="#{voiceOfAapAdminBean.showPreview}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						<p:commandButton value="Preview" update=":adminVoiceOfAapFbForm:postPreview" actionListener="#{voiceOfAapAdminBean.showPreview}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						<p:commandButton value="Save" update=":adminVoiceOfAapFbForm:mainPanel" actionListener="#{voiceOfAapAdminBean.savePost}" styleClass="ui-priority-primary">
-						</p:commandButton>
-					</p:outputPanel>
-				</p:outputPanel>
-				<br></br>
-				<br></br>
-				<br></br>
-				<br></br>
-			</h:form>
+								<f:facet name="header">
+									Details
+								</f:facet>
+
+								<h:outputText value="Error" />
+								<h:outputText value="#{onePost.errorMessage}" />
+
+								<h:outputText value="Total Failed Timelines" />
+								<h:outputText value="#{onePost.totalFailedTimeLines}" />
+
+								<h:outputText value="Total Failed Reach" />
+								<h:outputText value="#{onePost.totalFailedTimeLineFriends}" />
+
+								<h:outputText value="Color:" />
+								<h:outputText value="#{car.color}" />
+							</h:panelGrid>
+
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+
 
 
 			<!-- footer starts -->

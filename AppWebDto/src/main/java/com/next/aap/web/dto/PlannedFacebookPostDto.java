@@ -20,7 +20,12 @@ public class PlannedFacebookPostDto {
 	private PlannedPostStatus status;
 	private PostLocationType locationType;
 	private Long locationId;
-	
+	private int totalSuccessTimeLines;
+	private int totalSuccessTimeLineFriends;
+	private int totalFailedTimeLines;
+	private int totalFailedTimeLineFriends;
+	private String errorMessage;
+
 	
 	public Long getId() {
 		return id;
@@ -99,6 +104,36 @@ public class PlannedFacebookPostDto {
 	}
 	public void setLocationId(Long locationId) {
 		this.locationId = locationId;
+	}
+	public int getTotalSuccessTimeLines() {
+		return totalSuccessTimeLines;
+	}
+	public void setTotalSuccessTimeLines(int totalSuccessTimeLines) {
+		this.totalSuccessTimeLines = totalSuccessTimeLines;
+	}
+	public int getTotalSuccessTimeLineFriends() {
+		return totalSuccessTimeLineFriends;
+	}
+	public void setTotalSuccessTimeLineFriends(int totalSuccessTimeLineFriends) {
+		this.totalSuccessTimeLineFriends = totalSuccessTimeLineFriends;
+	}
+	public int getTotalFailedTimeLines() {
+		return totalFailedTimeLines;
+	}
+	public void setTotalFailedTimeLines(int totalFailedTimeLines) {
+		this.totalFailedTimeLines = totalFailedTimeLines;
+	}
+	public int getTotalFailedTimeLineFriends() {
+		return totalFailedTimeLineFriends;
+	}
+	public void setTotalFailedTimeLineFriends(int totalFailedTimeLineFriends) {
+		this.totalFailedTimeLineFriends = totalFailedTimeLineFriends;
+	}
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 	@Override
 	public String toString() {

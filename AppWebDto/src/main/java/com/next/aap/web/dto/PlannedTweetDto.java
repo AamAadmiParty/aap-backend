@@ -19,7 +19,9 @@ public class PlannedTweetDto implements Serializable{
 	private PostLocationType locationType;
 	private Long locationId;
 	private String errorMessage;
-	
+	private int totalSuccessTweets;
+	private int totalFailedTweets;
+
 	public Long getId() {
 		return id;
 	}
@@ -79,6 +81,18 @@ public class PlannedTweetDto implements Serializable{
 	}
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
+	}
+	public int getTotalSuccessTweets() {
+		return totalSuccessTweets;
+	}
+	public void setTotalSuccessTweets(int totalSuccessTweets) {
+		this.totalSuccessTweets = totalSuccessTweets;
+	}
+	public int getTotalFailedTweets() {
+		return totalFailedTweets;
+	}
+	public void setTotalFailedTweets(int totalFailedTweets) {
+		this.totalFailedTweets = totalFailedTweets;
 	}
 	@Override
 	public String toString() {

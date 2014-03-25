@@ -56,7 +56,7 @@ public class SendEmailTask {
 			}
 			aapService.updatePlannedEmailStatus(plannedEmail.getId(), PlannedPostStatus.DONE, null);
 		}catch(Exception ex){
-			aapService.updatePlannedFacebookPostStatus(plannedEmail.getId(), PlannedPostStatus.DONE_WITH_ERROR, null);
+			aapService.updatePlannedEmailStatus(plannedEmail.getId(), PlannedPostStatus.DONE_WITH_ERROR, null);
 		}
 		
 		

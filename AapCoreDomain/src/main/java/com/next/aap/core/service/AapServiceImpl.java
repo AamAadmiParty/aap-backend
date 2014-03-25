@@ -2100,7 +2100,14 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<PlannedFacebookPost> plannedFacebookPosts = plannedFacebookPostDao.getPlannedFacebookPostByLocationTypeAndLocationId(postLocationType, locationId);
 		return convertPlannedFacebookPosts(plannedFacebookPosts);
 	}
+	@Override
+	@Transactional
+	public List<PlannedFacebookPostDto> getExecutedFacebookPostsForLocation(PostLocationType postLocationType, Long locationId, int pageNumber, int pageSize) {
+		List<PlannedFacebookPost> plannedFacebookPosts = plannedFacebookPostDao.getExecutedFacebookPostByLocationTypeAndLocationId(postLocationType, locationId);
+		return convertPlannedFacebookPosts(plannedFacebookPosts);
+	}
 
+	
 	@Override
 	@Transactional
 	public PlannedFacebookPostDto getNextPlannedFacebookPostToPublish() {
@@ -2143,10 +2150,15 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public PlannedFacebookPostDto updatePlannedFacebookPostStatus(Long plannedFacebookPostId, PlannedPostStatus status, String errorMessage) {
+	public PlannedFacebookPostDto updatePlannedFacebookPostStatus(Long plannedFacebookPostId, PlannedPostStatus status, String errorMessage, int totalSuccessTimeLines,
+			int totalSuccessTimeLineFriends, int totalFailedTimeLines, int totalFailedTimeLineFriends) {
 		PlannedFacebookPost plannedFacebookPost = plannedFacebookPostDao.getPlannedFacebookPostById(plannedFacebookPostId);
 		plannedFacebookPost.setStatus(status);
 		plannedFacebookPost.setErrorMessage(errorMessage);
+		plannedFacebookPost.setTotalFailedTimeLineFriends(totalFailedTimeLineFriends);
+		plannedFacebookPost.setTotalFailedTimeLines(totalFailedTimeLines);
+		plannedFacebookPost.setTotalSuccessTimeLineFriends(totalSuccessTimeLineFriends);
+		plannedFacebookPost.setTotalSuccessTimeLines(totalSuccessTimeLines);
 		plannedFacebookPost = plannedFacebookPostDao.savePlannedFacebookPost(plannedFacebookPost);
 		return convertPlannedFacebookPost(plannedFacebookPost);
 	}
@@ -2270,10 +2282,13 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public PlannedTweetDto updatePlannedTweetStatus(Long plannedTweetId, PlannedPostStatus status, String errorMessage) {
+	public PlannedTweetDto updatePlannedTweetStatus(Long plannedTweetId, PlannedPostStatus status, String errorMessage, int totalSuccessTweets,
+			int totalFailedTweets) {
 		PlannedTweet plannedTweet = plannedTweetDao.getPlannedTweetById(plannedTweetId);
 		plannedTweet.setStatus(status);
 		plannedTweet.setErrorMessage(errorMessage);
+		plannedTweet.setTotalFailedTweets(totalSuccessTweets);
+		plannedTweet.setTotalSuccessTweets(totalSuccessTweets);
 		plannedTweet = plannedTweetDao.savePlannedTweet(plannedTweet);
 		return convertPlannedTweet(plannedTweet);
 	}
@@ -4311,7 +4326,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 	}
 	private void updateGlobalDonationCampaignInMemcache(GlobalCampaign globalCampaign){
-		List<Donation> donations = donationDao.getDonationsByCampaignId(globalCampaign.getCampaignId(), 100);
+		List<Donation> donations = donationDao.getDonationsByCampaignId(globalCampaign.getCampaignId(), 5);
 		String key = CacheKeyService.createGlobalCampaignKey(globalCampaign.getCampaignIdUp());
 		updateDonationsInMemCache(key, donations, globalCampaign.getTotalDonation(), globalCampaign.getTotalNumberOfDonations());
 

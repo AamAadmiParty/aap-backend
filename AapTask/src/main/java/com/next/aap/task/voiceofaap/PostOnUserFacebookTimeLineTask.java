@@ -88,7 +88,7 @@ public class PostOnUserFacebookTimeLineTask implements Callable<Boolean> {
 			facebookPostDto.setPlannedFacebookPostId(plannedFacebookPostDto.getId());
 			facebookPostDto.setPostStatus("Success");
 			facebookPostDto = aapService.saveFacebookPost(facebookPostDto);
-			
+			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();
 			//Now update data base that post has been posted
@@ -102,7 +102,7 @@ public class PostOnUserFacebookTimeLineTask implements Callable<Boolean> {
 		}finally{
 			countDownLatch.countDown();
 		}
-		return null;
+		return false;
 	}
 
 }

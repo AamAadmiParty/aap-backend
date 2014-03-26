@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
@@ -21,9 +22,8 @@ import com.next.aap.web.dto.PlannedFacebookPostDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 
 @Component
-public class FacebookUserTimeLinePostTask {
+public class FacebookUserTimeLinePostTask extends BaseSocialTask{
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private AapService aapService;
 	
@@ -55,13 +55,14 @@ public class FacebookUserTimeLinePostTask {
 					PostOnUserFacebookTimeLineTask postOnUserTimeLineTask = new PostOnUserFacebookTimeLineTask(aapService, oneFacebookAccount, plannedFacebookPostDto, countDownLatch);
 					Future<Boolean> futureResult = threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
 					facebookAccountsFutureMap.put(futureResult, oneFacebookAccount);
+					sleep();
 				}
 				//wait for all task to finish before proceeding
 				countDownLatch.await();
 				for(Entry<Future<Boolean>, FacebookAccountDto> oneEntry:facebookAccountsFutureMap.entrySet()){
 					if(oneEntry.getKey().get()){
 						totalSuccessTimeLines++;
-						totalSuccessTimeLineFriends = totalFailedTimeLineFriends + oneEntry.getValue().getTotalFriends();
+						totalSuccessTimeLineFriends = totalSuccessTimeLineFriends + oneEntry.getValue().getTotalFriends();
 					}else{
 						totalFailedTimeLines++;
 						totalFailedTimeLineFriends = totalFailedTimeLineFriends + oneEntry.getValue().getTotalFriends();
@@ -69,6 +70,8 @@ public class FacebookUserTimeLinePostTask {
 				}
 				
 			}
+			logger.info("Total Success TimeLine" + totalSuccessTimeLines+", Total Friends "+ totalSuccessTimeLineFriends);
+			logger.info("Total Failed TimeLine" + totalFailedTimeLines+", Total Friends "+ totalFailedTimeLineFriends);
 			aapService.updatePlannedFacebookPostStatus(plannedFacebookPostDto.getId(), PlannedPostStatus.DONE, null, totalSuccessTimeLines,
 					totalSuccessTimeLineFriends, totalFailedTimeLines, totalFailedTimeLineFriends);
 		}catch(Exception ex){
@@ -79,5 +82,4 @@ public class FacebookUserTimeLinePostTask {
 		
 		
 	}
-
 }

@@ -74,7 +74,7 @@ public class PostOnUserTwitterTimeLineTask implements Callable<Boolean> {
 			return true;
 
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			logger.error("Unable to twwet from account "+twitterAccountDto.getScreenName(), ex);
 		} finally {
 			countDownLatch.countDown();
 		}

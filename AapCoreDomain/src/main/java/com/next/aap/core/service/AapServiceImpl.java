@@ -2287,7 +2287,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		PlannedTweet plannedTweet = plannedTweetDao.getPlannedTweetById(plannedTweetId);
 		plannedTweet.setStatus(status);
 		plannedTweet.setErrorMessage(errorMessage);
-		plannedTweet.setTotalFailedTweets(totalSuccessTweets);
+		plannedTweet.setTotalFailedTweets(totalFailedTweets);
 		plannedTweet.setTotalSuccessTweets(totalSuccessTweets);
 		plannedTweet = plannedTweetDao.savePlannedTweet(plannedTweet);
 		return convertPlannedTweet(plannedTweet);

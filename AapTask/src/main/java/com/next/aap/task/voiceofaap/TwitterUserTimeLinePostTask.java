@@ -17,13 +17,12 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.service.AapService;
-import com.next.aap.web.dto.FacebookAccountDto;
 import com.next.aap.web.dto.PlannedPostStatus;
 import com.next.aap.web.dto.PlannedTweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 
 @Component
-public class TwitterUserTimeLinePostTask {
+public class TwitterUserTimeLinePostTask extends BaseSocialTask{
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
@@ -62,6 +61,7 @@ public class TwitterUserTimeLinePostTask {
 						PostOnUserTwitterTimeLineTask postOnUserTimeLineTask = new PostOnUserTwitterTimeLineTask(aapService, oneTwitterAccount, plannedTweetDto, countDownLatch, twitterConsumerKey, twitterConsumerSecret);
 						futureResult = threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
 						twitterAccountsFutureMap.put(futureResult, oneTwitterAccount);
+						sleep();
 					}
 					//wait for all task to finish before proceeding
 					logger.info("waiting for countdown latch to go to Zero");
@@ -74,6 +74,8 @@ public class TwitterUserTimeLinePostTask {
 							totalFailedTweet++;
 						}
 					}
+					logger.info("Total Success Tweets" + totalSuccessTweet);
+					logger.info("Total Failed Tweets " + totalFailedTweet);
 					aapService.updatePlannedTweetStatus(plannedTweetDto.getId(), PlannedPostStatus.DONE, null, totalSuccessTweet, totalFailedTweet);	
 				}else{
 					logger.info("No twitter accounts found for LocationType="+plannedTweetDto.getLocationType() +" and location Id="+plannedTweetDto.getLocationId());

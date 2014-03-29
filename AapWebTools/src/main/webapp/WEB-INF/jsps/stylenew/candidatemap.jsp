@@ -7,7 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party Candidates for Loksabha Elections 2014</title>
+<title>${PageTitle}</title>
 <jsp:include page="includes.jsp" />
 
 <meta name="description" content="Meet Aam Aadmi Party candidate for Loksabha election 2014" />
@@ -95,6 +95,7 @@ body {
 			<!--loginwithholder-->
 			<div class="loginwithinnerholder">
 				<!--loginwithinnerholder-->
+				<h1>${PageTitle}</h1>
 				<h2><a href="${contextPath}/candidates.html">List View</a></h2>
 				<div id="map">
 				List of AAP candidates for the LokSabha is given below. Locate your constituency, click on the candidate or constituency to view the full details

@@ -5,10 +5,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<c:if test="${!empty errorMessages}">
+<c:if test="${!empty successmessage}">
 <ul>
-<c:forEach items="${errorMessages}" var="oneError">
-	<li> <c:out value="${oneError}"></c:out> </li>
-</c:forEach>
+	<li> <c:out value="${successmessage}"></c:out> </li>
 </ul>
 </c:if>

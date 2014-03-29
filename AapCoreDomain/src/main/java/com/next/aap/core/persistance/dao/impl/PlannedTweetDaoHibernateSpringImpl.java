@@ -52,6 +52,20 @@ public class PlannedTweetDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		query = query + " order by postingTime asc";
 		return executeQueryGetList(query, params);
 	}
+	@Override
+	public List<PlannedTweet> getExecutedTweetByLocationTypeAndLocationId(PostLocationType postLocationType, Long locationId) {
+		PlannedPostStatus pending = PlannedPostStatus.PENDING;
+		String query = "from PlannedTweet where status != :status and  locationType = :postLocationType ";
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("postLocationType", postLocationType);
+		params.put("status", pending);
+		if(!postLocationType.equals(PostLocationType.Global)){
+			query = query + "and locationId = :locationId";
+			params.put("locationId", locationId);	
+		}
+		query = query + " order by postingTime asc";
+		return executeQueryGetList(query, params, 20);
+	}
 
 	@Override
 	public PlannedTweet getNextPlannedTweetToPublish() {
@@ -62,7 +76,7 @@ public class PlannedTweetDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		params.put("status", pending);
 		params.put("postingTime", now.getTime());
 		query = query + " order by postingTime asc";
-		List<PlannedTweet> list = executeQueryGetList(query, params);
+		List<PlannedTweet> list = executeQueryGetList(query, params, 20);
 		if(list ==  null || list.isEmpty()){
 			return null;
 		}

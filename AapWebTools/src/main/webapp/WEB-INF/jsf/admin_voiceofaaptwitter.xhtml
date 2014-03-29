@@ -37,112 +37,180 @@
 	<!-- menu ends -->
 	<div style="width: 800px; margin: 0 auto;">
 		<div style="width: 800px; margin: 0;">
+			<p:tabView id="tabView">
 
-			<h:form id="adminVoiceOfAapTwitterForm">
-				<p:messages id="messages" autoUpdate="true" closable="true" />
-				<p:outputPanel id="mainPanel">
-					<p:outputPanel id="listView" rendered="#{voiceOfAapTwitterAdminBean.showList}">
+				<p:tab id="voa1" title="Voice of AAP">
+					<h:form id="adminVoiceOfAapTwitterForm">
+						<p:messages id="messages" autoUpdate="true" closable="true" />
+						<p:outputPanel id="mainPanel">
+							<p:outputPanel id="listView" rendered="#{voiceOfAapTwitterAdminBean.showList}">
 
-						<p:commandButton value="New Tweet" actionListener="#{voiceOfAapTwitterAdminBean.newPost}" update=":adminVoiceOfAapTwitterForm:mainPanel">
-						</p:commandButton>
-						<p:dataTable id="listOfPlannedPosts" var="onePost" value="#{voiceOfAapTwitterAdminBean.plannedTweets}" paginator="true" rows="#{voiceOfAapTwitterAdminBean.pageSize}"
-							paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Tweets"
-							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
-							<f:facet name="header">Planned Tweets</f:facet>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Id" />
-								</f:facet>
-								<h:outputText value="#{onePost.id}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Post Type" />
-								</f:facet>
-								<h:outputText value="#{onePost.tweetType}" />
-							</p:column>
-							<p:column width="300px">
-								<f:facet name="header">
-									<h:outputText value="Messasge" />
-								</f:facet>
-								<h:outputText value="#{onePost.message}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Post Time" />
-								</f:facet>
-								<h:outputText value="#{onePost.postingTime}" />
-							</p:column>
-							<p:column>
-								<f:facet name="header">
-									<h:outputText value="Status" />
-								</f:facet>
-								<h:outputText value="#{onePost.status}" />
-							</p:column>
-							<p:column style="width:100px;">
-								<f:facet name="header">
-									<h:outputText value="Update" />
-								</f:facet>
-								<p:commandLink update=":adminVoiceOfAapTwitterForm:mainPanel" title="Update Post">
-									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
-									<f:setPropertyActionListener value="#{onePost}" target="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet}" />
-								</p:commandLink>
-							</p:column>
-						</p:dataTable>
-					</p:outputPanel>
-					<p:outputPanel id="formView" rendered="#{!voiceOfAapTwitterAdminBean.showList}">
-						<p:panelGrid columns="2" styleClass="topAlignPanelColumns">
-							<p:panelGrid columns="2">
-								<p:outputLabel value="Post Type"></p:outputLabel>
-								<p:selectOneMenu value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.tweetType}">
-									<f:selectItem itemLabel="Select Post Type" itemValue="" />
-									<f:selectItem itemLabel="Tweet" itemValue="Tweet" />
-									<f:selectItem itemLabel="Retweet" itemValue="Retweet" />
-									<p:ajax event="change" update=":adminVoiceOfAapTwitterForm" listener="#{voiceOfAapTwitterAdminBean.handlePostTypeChange}" />
-								</p:selectOneMenu>
+								<p:commandButton value="New Tweet" actionListener="#{voiceOfAapTwitterAdminBean.newPost}" update=":tabView:adminVoiceOfAapTwitterForm:mainPanel">
+								</p:commandButton>
+								<p:dataTable id="listOfPlannedPosts" var="onePost" value="#{voiceOfAapTwitterAdminBean.plannedTweets}" paginator="true" rows="#{voiceOfAapTwitterAdminBean.pageSize}"
+									paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Tweets"
+									paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+									<f:facet name="header">Planned Tweets</f:facet>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Id" />
+										</f:facet>
+										<h:outputText value="#{onePost.id}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Post Type" />
+										</f:facet>
+										<h:outputText value="#{onePost.tweetType}" />
+									</p:column>
+									<p:column width="300px">
+										<f:facet name="header">
+											<h:outputText value="Messasge" />
+										</f:facet>
+										<h:outputText value="#{onePost.message}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Post Time" />
+										</f:facet>
+										<h:outputText value="#{onePost.postingTime}" />
+									</p:column>
+									<p:column>
+										<f:facet name="header">
+											<h:outputText value="Status" />
+										</f:facet>
+										<h:outputText value="#{onePost.status}" />
+									</p:column>
+									<p:column style="width:100px;">
+										<f:facet name="header">
+											<h:outputText value="Update" />
+										</f:facet>
+										<p:commandLink update=":tabView:adminVoiceOfAapTwitterForm:mainPanel" title="Update Post">
+											<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+											<f:setPropertyActionListener value="#{onePost}" target="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet}" />
+										</p:commandLink>
+									</p:column>
+								</p:dataTable>
+							</p:outputPanel>
+							<p:outputPanel id="formView" rendered="#{!voiceOfAapTwitterAdminBean.showList}">
+								<p:panelGrid columns="2" styleClass="topAlignPanelColumns">
+									<p:panelGrid columns="2">
+										<p:outputLabel value="Post Type"></p:outputLabel>
+										<p:selectOneMenu value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.tweetType}">
+											<f:selectItem itemLabel="Select Post Type" itemValue="" />
+											<f:selectItem itemLabel="Tweet" itemValue="Tweet" />
+											<f:selectItem itemLabel="Retweet" itemValue="Retweet" />
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapTwitterForm" listener="#{voiceOfAapTwitterAdminBean.handlePostTypeChange}" />
+										</p:selectOneMenu>
 
-								<p:outputLabel value="Tweet Id" rendered="#{voiceOfAapTwitterAdminBean.retweetType}"></p:outputLabel>
-								<p:inputText value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.tweetId}" rendered="#{voiceOfAapTwitterAdminBean.retweetType}">
-									<p:ajax event="change" update=":adminVoiceOfAapTwitterForm" />
-								</p:inputText>
-								<p:outputLabel value="Image Url" rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}"></p:outputLabel>
-								<p:inputText value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.picture}" rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}">
-									<p:ajax event="change" update=":adminVoiceOfAapTwitterForm" />
-								</p:inputText>
-								<p:outputLabel value="Message" rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}"></p:outputLabel>
-								<p:outputPanel rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}">
-									<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining."
-										value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.message}">
-										<p:ajax event="change" update=":adminVoiceOfAapTwitterForm" />
-									</p:inputTextarea>
-									<br></br>
-									<h:outputText id="counter" />
+										<p:outputLabel value="Tweet Id" rendered="#{voiceOfAapTwitterAdminBean.retweetType}"></p:outputLabel>
+										<p:inputText value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.tweetId}" rendered="#{voiceOfAapTwitterAdminBean.retweetType}">
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapTwitterForm" />
+										</p:inputText>
+										<p:outputLabel value="Image Url" rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}"></p:outputLabel>
+										<p:inputText value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.picture}" rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}">
+											<p:ajax event="change" update=":tabView:adminVoiceOfAapTwitterForm" />
+										</p:inputText>
+										<p:outputLabel value="Message" rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}"></p:outputLabel>
+										<p:outputPanel rendered="#{voiceOfAapTwitterAdminBean.normalTweetType}">
+											<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining."
+												value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.message}">
+												<p:ajax event="change" update=":tabView:adminVoiceOfAapTwitterForm" />
+											</p:inputTextarea>
+											<br></br>
+											<h:outputText id="counter" />
+										</p:outputPanel>
+										<p:outputLabel value="Post Time"></p:outputLabel>
+										<p:calendar value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.postingTime}" pattern="MM/dd/yyyy HH:mm" />
+									</p:panelGrid>
+								</p:panelGrid>
+								<p:commandButton value="Cancel" update=":tabView:adminVoiceOfAapTwitterForm:mainPanel" actionListener="#{voiceOfAapTwitterAdminBean.cancel}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton value="Clear" update=":tabView:adminVoiceOfAapTwitterForm:postPreview" actionListener="#{voiceOfAapTwitterAdminBean.showPreview}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton value="Preview" update=":tabView:adminVoiceOfAapTwitterForm:postPreview" actionListener="#{voiceOfAapTwitterAdminBean.showPreview}"
+									styleClass="ui-priority-primary">
+								</p:commandButton>
+								<p:commandButton value="Save" update=":tabView:adminVoiceOfAapTwitterForm:mainPanel" actionListener="#{voiceOfAapTwitterAdminBean.savePost}" styleClass="ui-priority-primary">
+								</p:commandButton>
+								<br></br>
+								<p:outputPanel id="postPreview" styleClass="topAlignPanelColumns">
+									<p:outputLabel escape="false" value="#{voiceOfAapTwitterAdminBean.tweetPreview}"></p:outputLabel>
 								</p:outputPanel>
-								<p:outputLabel value="Post Time"></p:outputLabel>
-								<p:calendar value="#{voiceOfAapTwitterAdminBean.selectedPlannedTweet.postingTime}" pattern="MM/dd/yyyy HH:mm" />
-							</p:panelGrid>
-						</p:panelGrid>
-						<p:commandButton value="Cancel" update=":adminVoiceOfAapTwitterForm:mainPanel" actionListener="#{voiceOfAapTwitterAdminBean.cancel}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						<p:commandButton value="Clear" update=":adminVoiceOfAapTwitterForm:postPreview" actionListener="#{voiceOfAapTwitterAdminBean.showPreview}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						<p:commandButton value="Preview" update=":adminVoiceOfAapTwitterForm:postPreview" actionListener="#{voiceOfAapTwitterAdminBean.showPreview}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						<p:commandButton value="Save" update=":adminVoiceOfAapTwitterForm:mainPanel" actionListener="#{voiceOfAapTwitterAdminBean.savePost}" styleClass="ui-priority-primary">
-						</p:commandButton>
-						<br></br>
-						<p:outputPanel id="postPreview" styleClass="topAlignPanelColumns">
-							<p:outputLabel escape="false" value="#{voiceOfAapTwitterAdminBean.tweetPreview}"></p:outputLabel>
+
+							</p:outputPanel>
+
 						</p:outputPanel>
+						<br></br>
+						<br></br>
+						<br></br>
+						<br></br>
+					</h:form>
+				</p:tab>
+				<p:tab id="voa2" title="Report">
+					<p:lineChart id="category" value="#{voiceOfAapTwitterAdminBean.totalReachModel}" legendPosition="e"  
+     				title="Total Reach Chart" minY="0" maxY="#{voiceOfAapTwitterAdminBean.maxChartY}" style="height:300px;margin-top:20px"/>
+     				  
+					<p:dataTable id="listOfExecutedPosts" var="onePost" value="#{voiceOfAapTwitterAdminBean.executedTweets}" paginator="true" rows="100" paginatorPosition="bottom"
+						paginatorAlwaysVisible="false" emptyMessage="No Tweets"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
+						<f:facet name="header">Executed Tweets</f:facet>
+						<p:column style="width:2%">
+							<p:rowToggler />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{onePost.id}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Post Type" />
+							</f:facet>
+							<h:outputText value="#{onePost.tweetType}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Post Time" />
+							</f:facet>
+							<h:outputText value="#{onePost.postingTime}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Succesfull Tweets" />
+							</f:facet>
+							<h:outputText value="#{onePost.totalSuccessTweets}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Failed Tweets" />
+							</f:facet>
+							<h:outputText value="#{onePost.totalFailedTweets}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Messasge" />
+							</f:facet>
+							<h:outputText value="#{onePost.message}" />
+						</p:column>
+						<p:rowExpansion>
+							<h:panelGrid id="display" columns="2" cellpadding="4" style="width:300px;" styleClass=" ui-widget-content grid">
 
-					</p:outputPanel>
+								<f:facet name="header">
+									Details
+								</f:facet>
 
-				</p:outputPanel>
-				<br></br>
-				<br></br>
-				<br></br>
-				<br></br>
-			</h:form>
+								<h:outputText value="Error" />
+								<h:outputText value="#{onePost.errorMessage}" />
+
+							</h:panelGrid>
+
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:tab>
+			</p:tabView>
+
 
 
 			<!-- footer starts -->

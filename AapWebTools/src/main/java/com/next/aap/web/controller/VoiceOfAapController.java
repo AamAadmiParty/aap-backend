@@ -85,7 +85,7 @@ public class VoiceOfAapController extends AppBaseController {
 				logger.info("User has not given publish permission");
 				mv.getModel().put("postOnGroup", true);
 				mv.getModel().put("postOnTimeLine", true);
-				mv.getModel().put("postOnTwitter", true);
+				mv.getModel().put("postOnTwitter", false);
 			} else {
 				// get all facebook groups of user
 				//loadUserGroups(facebook, oneFacebookAccountDto);
@@ -134,6 +134,7 @@ public class VoiceOfAapController extends AppBaseController {
 				}
 			}
 			aapService.saveVoiceOfAapSettings(oneFacebookAccountDto.getId(), true, postOnTimeLine, selectedGroups, null, postOnTwitter);
+			mv.getModel().put("successmessage", "Your Voice of AAP settings have been saved. Thanks for your contribution");
 			CookieUtil.setVoiceOfAapPageCookie(httpServletResponse);
 		}catch(Exception ex){
 			ex.printStackTrace();

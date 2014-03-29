@@ -16,6 +16,7 @@ public interface PlannedTweetDao {
 	
 	public abstract List<PlannedTweet> getPlannedTweetByLocationTypeAndLocationId(PostLocationType postLocationType, Long locationId);
 	
+	public abstract List<PlannedTweet> getExecutedTweetByLocationTypeAndLocationId(PostLocationType postLocationType, Long locationId);
 	public abstract PlannedTweet getNextPlannedTweetToPublish();
 
 }

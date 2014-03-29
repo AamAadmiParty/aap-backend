@@ -1,10 +1,13 @@
 package com.next.aap.web.cache;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 
@@ -35,13 +38,21 @@ public class CandidateCacheImpl {
 	List<CandidateDto> allCandidates = new ArrayList<>();
 	Map<Long, CandidateDto> candidateMapByPcId = new HashMap<>();
 	
+	Map<String, Set<CandidateDto>> candidateMapByStateName = new HashMap<>();
+	
+	
 	public void refreshCache(){
 		try {
 			allCandidates = aapService.getCandidates(600, 0);
 			Map<String, CandidateDto> localCandidateMap = new HashMap<String, CandidateDto>(allCandidates.size());
+			Map<String, Set<CandidateDto>> localCandidateMapByStateName = new HashMap<>();
+			Set<CandidateDto> candidateSetForState;
 			for(CandidateDto oneCandidate:allCandidates){
 				candidateMapByPcId.put(oneCandidate.getParliamentConstituencyId(), oneCandidate);
 				localCandidateMap.put(createKey(oneCandidate.getUrlTextPart1().toLowerCase(), oneCandidate.getUrlTextPart2().toLowerCase()), oneCandidate);
+				candidateSetForState = getSortedSetOfCandidateOfState(localCandidateMapByStateName, oneCandidate.getStateName());
+				candidateSetForState.add(oneCandidate);
+				
 				if(StringUtil.isEmpty(oneCandidate.getCandidateFbPageId())){
 					oneCandidate.setCandidateFbPageId("AamAadmiParty");
 				}
@@ -56,13 +67,32 @@ public class CandidateCacheImpl {
 				}
 			}
 			candidateMap = localCandidateMap;
+			candidateMapByStateName = localCandidateMapByStateName;
 		} catch (AppException e) {
 			logger.error("Unable to refresh Cache", e);
 		} 
 	}
+	private Set<CandidateDto> getSortedSetOfCandidateOfState(Map<String, Set<CandidateDto>> localCandidateMapByStateName, String  stateName){
+		stateName = stateName.toLowerCase();
+		Set<CandidateDto> sortedSet = localCandidateMapByStateName.get(stateName);
+		if(sortedSet == null){
+			sortedSet = new TreeSet<>(new Comparator<CandidateDto>() {
+				@Override
+				public int compare(CandidateDto o1, CandidateDto o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+			localCandidateMapByStateName.put(stateName, sortedSet);
+		}
+		return sortedSet;
+		
+	}
 	public CandidateDto getCandidate(String urlPart1, String urlPart2){
 		String key = createKey(urlPart1, urlPart2);
 		return candidateMap.get(key);
+	}
+	public Set<CandidateDto> getCandidatesOfState(String stateName){
+		return getSortedSetOfCandidateOfState(candidateMapByStateName, stateName);
 	}
 	public List<CandidateDto> getAllCandidates(){
 		return allCandidates;

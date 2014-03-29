@@ -40,7 +40,9 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 	private int pageSize = 20;
 	private boolean showList = true;
 	private int maxChartY;
-	private CartesianChartModel totalReachModel; 
+	private CartesianChartModel totalReachModel;
+	private int maxChartYForTimeLine;
+	private CartesianChartModel totalTimeLineModel; 
 	
 	private List<PlannedFacebookPostDto> plannedFacebookPosts;
 	private List<PlannedFacebookPostDto> executedFacebookPosts;
@@ -130,25 +132,45 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 		plannedFacebookPosts = aapService.getPlannedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
 		executedFacebookPosts = aapService.getExecutedFacebookPostsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
 		maxChartY = 200;
+		maxChartYForTimeLine = 200;
 		totalReachModel = new CartesianChartModel();
+		totalTimeLineModel = new CartesianChartModel();
 		
 		ChartSeries totalSuccessTimelineSeries = new ChartSeries();  
-		totalSuccessTimelineSeries.setLabel("TimeLine");  
+		totalSuccessTimelineSeries.setLabel("Success");  
+		ChartSeries totalFailedTimelineSeries = new ChartSeries();  
+		totalFailedTimelineSeries.setLabel("Failed");  
   
 		ChartSeries totalSuccessTimelineReachSeries = new ChartSeries();  
-		totalSuccessTimelineReachSeries.setLabel("Total Reach");  
+		totalSuccessTimelineReachSeries.setLabel("Success");  
+		ChartSeries totalFailedTimelineReachSeries = new ChartSeries();  
+		totalFailedTimelineReachSeries.setLabel("Failed");  
   
 		for(PlannedFacebookPostDto onePlannedFacebookPostDto:executedFacebookPosts){
 			
 			totalSuccessTimelineSeries.set(onePlannedFacebookPostDto.getId() +"", onePlannedFacebookPostDto.getTotalSuccessTimeLines());
+			totalFailedTimelineSeries.set(onePlannedFacebookPostDto.getId() +"", onePlannedFacebookPostDto.getTotalFailedTimeLines());
 			totalSuccessTimelineReachSeries.set(onePlannedFacebookPostDto.getId() +"", onePlannedFacebookPostDto.getTotalSuccessTimeLineFriends());
+			totalFailedTimelineReachSeries.set(onePlannedFacebookPostDto.getId() +"", onePlannedFacebookPostDto.getTotalFailedTimeLineFriends());
 			
 			if(onePlannedFacebookPostDto.getTotalSuccessTimeLineFriends() > maxChartY){
 				maxChartY = onePlannedFacebookPostDto.getTotalSuccessTimeLineFriends() + onePlannedFacebookPostDto.getTotalSuccessTimeLineFriends() / 10;
 			}
+			if(onePlannedFacebookPostDto.getTotalFailedTimeLineFriends() > maxChartY){
+				maxChartY = onePlannedFacebookPostDto.getTotalFailedTimeLineFriends() + onePlannedFacebookPostDto.getTotalFailedTimeLineFriends() / 10;
+			}
+			if(onePlannedFacebookPostDto.getTotalSuccessTimeLines() > maxChartYForTimeLine){
+				maxChartYForTimeLine = onePlannedFacebookPostDto.getTotalSuccessTimeLines() + onePlannedFacebookPostDto.getTotalSuccessTimeLines() / 10;
+			}
+			if(onePlannedFacebookPostDto.getTotalFailedTimeLines() > maxChartYForTimeLine){
+				maxChartYForTimeLine = onePlannedFacebookPostDto.getTotalFailedTimeLines() + onePlannedFacebookPostDto.getTotalFailedTimeLines() / 10;
+			}
 		}
-		totalReachModel.addSeries(totalSuccessTimelineSeries);  
+		totalTimeLineModel.addSeries(totalSuccessTimelineSeries);
+		totalTimeLineModel.addSeries(totalFailedTimelineSeries);
+		
 		totalReachModel.addSeries(totalSuccessTimelineReachSeries);
+		totalReachModel.addSeries(totalFailedTimelineReachSeries);
 	}
 	public void newPost(){
 		selectedFacebookPost = new PlannedFacebookPostDto();
@@ -234,6 +256,18 @@ public class VoiceOfAapAdminBean extends BaseAdminJsfBean {
 	}
 	public void setMaxChartY(int maxChartY) {
 		this.maxChartY = maxChartY;
+	}
+	public CartesianChartModel getTotalTimeLineModel() {
+		return totalTimeLineModel;
+	}
+	public void setTotalTimeLineModel(CartesianChartModel totalTimeLineModel) {
+		this.totalTimeLineModel = totalTimeLineModel;
+	}
+	public int getMaxChartYForTimeLine() {
+		return maxChartYForTimeLine;
+	}
+	public void setMaxChartYForTimeLine(int maxChartYForTimeLine) {
+		this.maxChartYForTimeLine = maxChartYForTimeLine;
 	}
 
 

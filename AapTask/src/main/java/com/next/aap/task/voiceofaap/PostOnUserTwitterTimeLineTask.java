@@ -50,14 +50,17 @@ public class PostOnUserTwitterTimeLineTask implements Callable<Boolean> {
 			Twitter twitter = new TwitterTemplate(twitterConsumerKey, twitterConsumerSecret, twitterAccountDto.getToken(), twitterAccountDto.getTokenSecret());
 			Long tweetExternalId = null;
 			if (plannedTweetDto.getTweetType().equalsIgnoreCase(PlannedTweetDto.RETWEET_TYPE)) {
+				logger.info("Retweeting from account "+ twitterAccountDto.getScreenName());
 				twitter.timelineOperations().retweet(plannedTweetDto.getTweetId());
 				tweetExternalId = plannedTweetDto.getTweetId();
 			}
 			org.springframework.social.twitter.api.Tweet tweet = null;;
 			if (plannedTweetDto.getTweetType().equalsIgnoreCase(PlannedTweetDto.TWEET_TYPE)) {
 				if(StringUtil.isEmpty(plannedTweetDto.getPicture())){
+					logger.info("Tweeting from account "+ twitterAccountDto.getScreenName());
 					tweet = twitter.timelineOperations().updateStatus(plannedTweetDto.getMessage());
 				}else{
+					logger.info("Tweeting from account "+ twitterAccountDto.getScreenName()+" with picture");
 					Resource imageRespource = new UrlResource(plannedTweetDto.getPicture());
 					tweet = twitter.timelineOperations().updateStatus(plannedTweetDto.getMessage(), imageRespource);
 				}

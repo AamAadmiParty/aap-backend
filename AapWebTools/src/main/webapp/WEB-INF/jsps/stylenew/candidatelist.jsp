@@ -7,7 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party Candidates for Loksabha Elections 2014</title>
+<title>${PageTitle}</title>
 <jsp:include page="includes.jsp" />
 
 <meta name="description" content="Meet Aam Aadmi Party candidate for Loksabha election 2014" />
@@ -56,18 +56,22 @@ body {
 		<div class="loginwithholder">
 			<!--loginwithholder-->
 			<div class="loginwithinnerholder">
+				<h1>${PageTitle}</h1>
 				<!--loginwithinnerholder-->
 				<h2><a href="${contextPath}/candidates.html?type=map">Map View</a></h2>
 				<div id="list" class="languagetab">
 					List of AAP candidates for the LokSabha is given below. Locate your constituency, click on the candidate or constituency to view the full details
+					<% int count = 1; %>
 					<table>
 						<tr>
+							<th style="border: 1px solid;">S.No.</th>
 							<th style="border: 1px solid;">State</th>
 							<th style="border: 1px solid;">Loksabha</th>
 							<th style="border: 1px solid;">Name</th>
 						</tr>
 						<c:forEach items="${candidates}" var="oneCandidate">
 							<tr>
+								<td style="border: 1px solid;"><% out.println(count); count++; %> </td>
 								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.stateName}" /></a></td>
 								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.pcName}" /></a></td>
 								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.name}" /></a></td>

@@ -157,6 +157,8 @@ public interface AapService {
 	
 	List<PlannedTweetDto> getPlannedTweetsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
 	
+	List<PlannedTweetDto> getExecutedTweetsForLocation(PostLocationType locationType, Long locationId, int pageNumber, int pageSize);
+	
 	PlannedTweetDto getNextPlannedTweetToPublish();
 
 	TweetDto getTweetByPlannedTweetIdAndTwitterAccountId(Long plannedTweetId, Long twitterAccountId);

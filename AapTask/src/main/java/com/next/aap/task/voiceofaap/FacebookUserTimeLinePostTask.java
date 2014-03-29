@@ -55,7 +55,7 @@ public class FacebookUserTimeLinePostTask extends BaseSocialTask{
 					PostOnUserFacebookTimeLineTask postOnUserTimeLineTask = new PostOnUserFacebookTimeLineTask(aapService, oneFacebookAccount, plannedFacebookPostDto, countDownLatch);
 					Future<Boolean> futureResult = threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
 					facebookAccountsFutureMap.put(futureResult, oneFacebookAccount);
-					sleep();
+					sleep(3);
 				}
 				//wait for all task to finish before proceeding
 				countDownLatch.await();

@@ -50,6 +50,8 @@
 					<tr valign="top">
 						<td style="width: 350px;">
 								<jsp:include page="errors.jsp" />
+								<jsp:include page="successmessage.jsp" />
+								
 								<!--voiceapp-inner-div-->
 								<div class="fbwrapper">
 									<!--fbwrapper-->

@@ -137,6 +137,10 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>aap</servlet-name>
+		<url-pattern>/aaps/location</url-pattern>
+	</servlet-mapping>
+		<servlet-mapping>
+		<servlet-name>aap</servlet-name>
 		<url-pattern>/aaps/blog</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>

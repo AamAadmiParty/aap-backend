@@ -1,6 +1,7 @@
 package com.next.aap.web.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,7 +31,25 @@ public class CandidateController extends AppBaseController {
 		CandidateDto candidateDto = candidateCacheImpl.getCandidate(urlPart1, urlPart2);
 		mv.getModel().put("candidate", candidateDto);
 		addCandidateDonationInfo(candidateDto, mv);
+		mv.getModel().put("PageTitle", candidateDto.getName() +" : Lokasabha Candiate from " + candidateDto.getStateName() +" - "+candidateDto.getPcName() +" of Aam Aadmi Party for Election 2014");
 		mv.setViewName(design+"/candidate");
+		return mv;
+	}
+	@RequestMapping(value = "/candidate/{stateName}.html", method = RequestMethod.GET)
+	public ModelAndView showStateCandidates(ModelAndView mv,HttpServletRequest httpServletRequest,
+			@PathVariable String stateName) {
+		
+		addGenericValuesInModel(httpServletRequest, mv);
+		List<CandidateDto> allCandidates = candidateCacheImpl.getAllCandidates();
+		mv.getModel().put("candidates", allCandidates);
+		String view = httpServletRequest.getParameter("type");
+		if(view != null && view.equalsIgnoreCase("map")){
+			mv.setViewName(design+"/candidatemap");	
+		}else{
+			mv.setViewName(design+"/candidatelist");
+		}
+		mv.getModel().put("PageTitle", "Lokasabha Candiate of Aam Aadmi Party for Election 2014 from " +stateName);
+
 		return mv;
 	}
 	@RequestMapping(value = "/candidates.html", method = RequestMethod.GET)
@@ -45,6 +64,7 @@ public class CandidateController extends AppBaseController {
 		}else{
 			mv.setViewName(design+"/candidatelist");
 		}
+		mv.getModel().put("PageTitle", "Lokasabha Candiate of Aam Aadmi Party for Election 2014");
 		
 		return mv;
 	}

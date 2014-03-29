@@ -186,9 +186,12 @@
 					</h:form>
 				</p:tab>
 				<p:tab id="voa2" title="Reports">
-					<p:lineChart id="category" value="#{voiceOfAapAdminBean.totalReachModel}" legendPosition="e"  
+					<p:lineChart id="category" value="#{voiceOfAapAdminBean.totalReachModel}" legendPosition="nw"  
      				title="Total Reach Chart" minY="0" maxY="#{voiceOfAapAdminBean.maxChartY}" style="height:300px;margin-top:20px"/>
      				  
+					<p:lineChart id="timelines" value="#{voiceOfAapAdminBean.totalTimeLineModel}" legendPosition="nw"  
+     				title="Total Timeline Chart" minY="0" maxY="#{voiceOfAapAdminBean.maxChartYForTimeLine}" style="height:300px;margin-top:20px"/>
+
 					<p:dataTable id="listOfExecutedPosts" var="onePost" value="#{voiceOfAapAdminBean.executedFacebookPosts}" paginator="true" rows="100" paginatorPosition="bottom"
 						paginatorAlwaysVisible="false" emptyMessage="No Facebook Post"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15">
@@ -207,12 +210,6 @@
 								<h:outputText value="Post Type" />
 							</f:facet>
 							<h:outputText value="#{onePost.postType}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Messasge" />
-							</f:facet>
-							<h:outputText value="#{onePost.message}" />
 						</p:column>
 						<p:column>
 							<f:facet name="header">
@@ -248,8 +245,8 @@
 								<h:outputText value="Total Failed Reach" />
 								<h:outputText value="#{onePost.totalFailedTimeLineFriends}" />
 
-								<h:outputText value="Color:" />
-								<h:outputText value="#{car.color}" />
+								<h:outputText value="Message" />
+								<h:outputText value="#{onePost.message}" />
 							</h:panelGrid>
 
 						</p:rowExpansion>

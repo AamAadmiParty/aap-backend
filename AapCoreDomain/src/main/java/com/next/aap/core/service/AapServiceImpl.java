@@ -2306,6 +2306,14 @@ public class AapServiceImpl implements AapService, Serializable {
 		List<PlannedTweet> plannedTweets = plannedTweetDao.getPlannedTweetByLocationTypeAndLocationId(postLocationType, locationId);
 		return convertPlannedTweets(plannedTweets);
 	}
+	
+	@Override
+	@Transactional
+	public List<PlannedTweetDto> getExecutedTweetsForLocation(PostLocationType postLocationType, Long locationId, int pageNumber, int pageSize) {
+		List<PlannedTweet> plannedTweets = plannedTweetDao.getExecutedTweetByLocationTypeAndLocationId(postLocationType, locationId);
+		return convertPlannedTweets(plannedTweets);
+	}
+	
 
 	@Override
 	@Transactional

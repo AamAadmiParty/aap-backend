@@ -50,6 +50,7 @@ public class TwitterUserTimeLinePostTask extends BaseSocialTask{
 				return;
 			}
 			List<TwitterAccountDto> allTwitterAccounts = aapService.getAllTwitterAccountsForVoiceOfAap(plannedTweetDto.getLocationType(), plannedTweetDto.getLocationId());
+			logger.info("Total Acounts to retweet : "+ allTwitterAccounts.size());
 			Map<Future<Boolean>, TwitterAccountDto> twitterAccountsFutureMap = new HashMap<Future<Boolean>, TwitterAccountDto>();
 			int totalSuccessTweet = 0;
 			int totalFailedTweet = 0;
@@ -61,7 +62,7 @@ public class TwitterUserTimeLinePostTask extends BaseSocialTask{
 						PostOnUserTwitterTimeLineTask postOnUserTimeLineTask = new PostOnUserTwitterTimeLineTask(aapService, oneTwitterAccount, plannedTweetDto, countDownLatch, twitterConsumerKey, twitterConsumerSecret);
 						futureResult = threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
 						twitterAccountsFutureMap.put(futureResult, oneTwitterAccount);
-						sleep();
+						sleep(2);
 					}
 					//wait for all task to finish before proceeding
 					logger.info("waiting for countdown latch to go to Zero");

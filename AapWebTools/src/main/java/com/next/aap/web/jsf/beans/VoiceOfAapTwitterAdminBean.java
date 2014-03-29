@@ -6,6 +6,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.primefaces.model.chart.CartesianChartModel;
+import org.primefaces.model.chart.ChartSeries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.social.twitter.api.Twitter;
@@ -41,7 +43,11 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 	private boolean showList = true;
 
 	private List<PlannedTweetDto> plannedTweets;
+	private List<PlannedTweetDto> executedTweets;
 	private String tweetPreview;
+
+	private int maxChartY;
+	private CartesianChartModel totalReachModel; 
 
 	public VoiceOfAapTwitterAdminBean() {
 		super(AppPermission.ADMIN_VOICE_OF_AAP_TWITTER, "/admin/voiceofaaptwitter");
@@ -57,6 +63,22 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 	}
 	private void refreshTweetList(){
 		plannedTweets = aapService.getPlannedTweetsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+		executedTweets = aapService.getExecutedTweetsForLocation(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId(), pageNumber, pageSize);
+		maxChartY = 200;
+		totalReachModel = new CartesianChartModel();
+		
+		ChartSeries totalSuccessTimelineSeries = new ChartSeries();  
+		totalSuccessTimelineSeries.setLabel("Tweets");  
+  
+		for(PlannedTweetDto onePlannedTweetDto:executedTweets){
+			
+			totalSuccessTimelineSeries.set(onePlannedTweetDto.getId() +"", onePlannedTweetDto.getTotalSuccessTweets());
+			
+			if(onePlannedTweetDto.getTotalSuccessTweets() > maxChartY){
+				maxChartY = onePlannedTweetDto.getTotalSuccessTweets() + onePlannedTweetDto.getTotalSuccessTweets() / 10;
+			}
+		}
+		totalReachModel.addSeries(totalSuccessTimelineSeries);  
 	}
 
 	public LoginAccountDto getLoginAccounts() {
@@ -207,6 +229,30 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 
 	public void setTweetPreview(String tweetPreview) {
 		this.tweetPreview = tweetPreview;
+	}
+
+	public List<PlannedTweetDto> getExecutedTweets() {
+		return executedTweets;
+	}
+
+	public void setExecutedTweets(List<PlannedTweetDto> executedTweets) {
+		this.executedTweets = executedTweets;
+	}
+
+	public int getMaxChartY() {
+		return maxChartY;
+	}
+
+	public void setMaxChartY(int maxChartY) {
+		this.maxChartY = maxChartY;
+	}
+
+	public CartesianChartModel getTotalReachModel() {
+		return totalReachModel;
+	}
+
+	public void setTotalReachModel(CartesianChartModel totalReachModel) {
+		this.totalReachModel = totalReachModel;
 	}
 
 }

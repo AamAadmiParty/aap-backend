@@ -26,7 +26,6 @@
 		<!--rhsarea-->
 		<c:if test="${empty loggedInUser}">
 		<div class="joincommunity">
-			<h1>AAP Ke Candidate</h1>
 			<!--joincommunity-->
 			<a href="${contextPath}/login"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
 			<ul>

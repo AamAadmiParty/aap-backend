@@ -461,6 +461,10 @@ public interface AapService {
 	
 	List<FacebookAppPermissionDto> getAllFacebookAppPermissions(Long facebookAccountId) throws AppException;
 	
+	List<FacebookAppPermissionDto> getAllFacebookAppPermissions(Long startId, int pageSize) throws AppException;
+	
+	void updateFacebookAppPermissionExpiryTime(Long appPermissionId, Date expiryTime) throws AppException;
+	
 	void saveFacebookUserFriends(Long facebookAccountId, List<FacebookProfile> facebookProfiles, int totalFriends) throws AppException;
 	
 	Double getDayDonation(Date date) throws AppException;

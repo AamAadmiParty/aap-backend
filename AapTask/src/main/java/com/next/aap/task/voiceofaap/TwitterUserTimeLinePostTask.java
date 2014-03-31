@@ -58,10 +58,14 @@ public class TwitterUserTimeLinePostTask extends BaseSocialTask{
 			try{
 				if(allTwitterAccounts != null && !allTwitterAccounts.isEmpty()){
 					CountDownLatch countDownLatch = new CountDownLatch(allTwitterAccounts.size());
+					int count = 0;
+					int totalAccounts = allTwitterAccounts.size();
 					for(TwitterAccountDto oneTwitterAccount:allTwitterAccounts){
 						PostOnUserTwitterTimeLineTask postOnUserTimeLineTask = new PostOnUserTwitterTimeLineTask(aapService, oneTwitterAccount, plannedTweetDto, countDownLatch, twitterConsumerKey, twitterConsumerSecret);
 						futureResult = threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
 						twitterAccountsFutureMap.put(futureResult, oneTwitterAccount);
+						count++;
+						logger.info(count + "of " + totalAccounts +" done");
 						sleep(2);
 					}
 					//wait for all task to finish before proceeding

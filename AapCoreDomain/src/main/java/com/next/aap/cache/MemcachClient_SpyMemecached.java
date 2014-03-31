@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
+import net.spy.memcached.AddrUtil;
+import net.spy.memcached.BinaryConnectionFactory;
 import net.spy.memcached.ConnectionFactory;
 import net.spy.memcached.ConnectionFactoryBuilder;
 import net.spy.memcached.MemcachedClient;
@@ -58,14 +60,15 @@ public class MemcachClient_SpyMemecached implements CacheService{
 		DonationCampaignInfo donationCampaignInfo = new DonationCampaignInfo();
 		donationCampaignInfo.setTamt(100.0);
 		donationCampaignInfo.setTtxn(12);
-		for(int i=1;i<5;i++){
+		for(int i=1;i<500;i++){
 			addOneDonation(donationCampaignInfo, 50 * i, "DID"+i, "Ravi Sharma Diya"+i);
 		}
 		
-		ms.saveData("RAVI_TEST", donationCampaignInfo);
+		//ms.saveData("RAVI_TEST", donationCampaignInfo);
 		//Map<String, Object> data = ms.getDataForAll(allKeys);
-		Object data = ms.getData("RAVI_TEST");
+		DonationCampaignInfo data = (DonationCampaignInfo)ms.getData("LOC_LPC233");
 		System.out.println("Name : "+ data);
+		System.out.println("Size : "+ data.getDns().size());
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 2030);
@@ -95,11 +98,13 @@ public class MemcachClient_SpyMemecached implements CacheService{
 			//cfb.setTranscoder(new CustomSerializingTranscoder()); // use this line
 			//cfb.setProtocol(ConnectionFactoryBuilder.Protocol.BINARY);
 			cfb.setOpTimeout(opTimeOut);
-			//cfb.setReadBufferSize(10240000);
+			cfb.setReadBufferSize(10240000);
 			ConnectionFactory cf = cfb.build();
 			List<InetSocketAddress> servers = new ArrayList<>();
 			servers.add(new InetSocketAddress(hostName, portNumber));
-			memcachedClient = new MemcachedClient(cf, servers);
+			//memcachedClient = new MemcachedClient(cf, servers);
+			memcachedClient = new MemcachedClient(new BinaryConnectionFactory(), servers);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -149,8 +154,9 @@ public class MemcachClient_SpyMemecached implements CacheService{
 		Future<Object> f = memcachedClient.asyncGet(key);
 		Object returnObject = null;
 		try {
-			System.out.println("Waiting for Get Future to finish");
+			logger.info("Waiting for Get Future to finish");
 			returnObject = f.get(opTimeOut, TimeUnit.MILLISECONDS);
+			logger.info("Wait finished");
 			// throws expecting InterruptedException, ExecutionException
 			// or TimeoutException
 		} catch (Exception e) {

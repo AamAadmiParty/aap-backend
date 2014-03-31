@@ -4349,7 +4349,7 @@ public class AapServiceImpl implements AapService, Serializable {
 				locationCampaign = locationCampaignDao.saveLocationCampaign(locationCampaign);
 				
 				//update in Memcache
-				List<Donation> donations = donationDao.getDonationsByLocationCampaignId(donation.getLcid(), 5);
+				List<Donation> donations = donationDao.getDonationsByLocationCampaignId(donation.getLcid(), 500);
 				String key = CacheKeyService.createLocationCampaignKey(locationCampaign.getCampaignIdUp());
 				updateDonationsInMemCache(key, donations, locationCampaign.getTotalDonation(), locationCampaign.getTotalNumberOfDonations());
 			}
@@ -4368,6 +4368,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		for(Donation oneDonation:donations){
 			donationCampaignInfo.getDns().add(new DonationBean(oneDonation));
 		}
+		logger.info("key = "+key+" , saving donationCampaignInfo into cache = "+donationCampaignInfo);
 		cacheService.saveData(key, donationCampaignInfo);
 	}
 	
@@ -6322,12 +6323,29 @@ public class AapServiceImpl implements AapService, Serializable {
 			if(totalAmount == null){
 				continue;
 			}
-			List<Donation> donations = donationDao.getDonationsByLocationCampaignId(oneLocationCampaign.getCampaignId(), 5);
+			List<Donation> donations = donationDao.getDonationsByLocationCampaignId(oneLocationCampaign.getCampaignId(), 500);
 			Integer totalTransactions = donationDao.getTotalDonationCountByLcid(oneLocationCampaign.getCampaignId());
 			String key = CacheKeyService.createLocationCampaignKey(oneLocationCampaign.getCampaignIdUp());
 			updateDonationsInMemCache(key, donations, totalAmount, totalTransactions);
 		}
 				
+		
+	}
+
+	@Override
+	@Transactional
+	public List<FacebookAppPermissionDto> getAllFacebookAppPermissions(Long startId, int pageSize) throws AppException {
+		List<FacebookAppPermission> facebookAppPermissions =  facebookAppPermissionDao.getFacebookAppPermissionAfterId(startId, pageSize);
+		return convertFacebookAppPermissions(facebookAppPermissions);
+	}
+
+	@Override
+	@Transactional
+	public void updateFacebookAppPermissionExpiryTime(Long appPermissionId, Date expiryTime) throws AppException {
+		FacebookAppPermission facebookAppPermission = facebookAppPermissionDao.getFacebookAppPermissionById(appPermissionId);
+		logger.info("Updating expiry time from "+facebookAppPermission.getExpireTime()+" to "+expiryTime);
+		facebookAppPermission.setExpireTime(expiryTime);
+		facebookAppPermissionDao.saveFacebookAppPermission(facebookAppPermission);
 		
 	}
 

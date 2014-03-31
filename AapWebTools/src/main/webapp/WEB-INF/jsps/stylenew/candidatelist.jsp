@@ -68,13 +68,17 @@ body {
 							<th style="border: 1px solid;">State</th>
 							<th style="border: 1px solid;">Loksabha</th>
 							<th style="border: 1px solid;">Name</th>
+							<th style="border: 1px solid;">Total Donors</th>
+							<th style="border: 1px solid;">Total Amount</th>
 						</tr>
 						<c:forEach items="${candidates}" var="oneCandidate">
 							<tr>
 								<td style="border: 1px solid;"><% out.println(count); count++; %> </td>
-								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.stateName}" /></a></td>
+								<td style="border: 1px solid;"><a href="${contextPath}/candidate/${oneCandidate.stateName}.html"><c:out value="${oneCandidate.stateName}" /></a></td>
 								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.pcName}" /></a></td>
 								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.name}" /></a></td>
+								<td style="border: 1px solid;"><c:out value="${oneCandidate.totalTransactions}" /></td>
+								<td style="border: 1px solid;"><c:out value="${oneCandidate.totalAmount}" /></td>
 
 							</tr>
 						</c:forEach>

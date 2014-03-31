@@ -58,5 +58,12 @@ public class FacebookAppPermissionDaoHibernateSpringImpl extends BaseDaoHibernat
 		params.put("facebookAccountId", facebookAccountId);
 		return executeQueryGetList("from FacebookAppPermission where facebookAccountId = :facebookAccountId", params);
 	}
+
+	@Override
+	public List<FacebookAppPermission> getFacebookAppPermissionAfterId(Long facebookAppPermissionId, int pageSize) {
+		Map<String, Object> params = new TreeMap<String, Object>();
+		params.put("facebookAppPermissionId", facebookAppPermissionId);
+		return  executeQueryGetList("from FacebookAppPermission where id > :facebookAppPermissionId order by id asc", params, pageSize);
+	}
 	
 }

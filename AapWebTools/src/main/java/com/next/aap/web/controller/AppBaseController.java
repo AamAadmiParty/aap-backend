@@ -103,11 +103,22 @@ public class AppBaseController extends BaseController{
 		if(candidateDto != null){
 			if(!StringUtil.isEmpty(candidateDto.getLocationCampaignId())){
 				String key = CacheKeyService.createLocationCampaignKey(candidateDto.getLocationCampaignId());
-				System.out.println("Key = "+ key);
+				logger.info("Key = "+ key);
 				DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
+				logger.info("donationCampaignInfo = "+ donationCampaignInfo);
 				mv.getModel().put("donationCampaignInfo", donationCampaignInfo);
 			}
 		}
+	}
+	protected DonationCampaignInfo getCandidateDonationInfo(CandidateDto candidateDto){
+		if(candidateDto != null){
+			if(!StringUtil.isEmpty(candidateDto.getLocationCampaignId())){
+				String key = CacheKeyService.createLocationCampaignKey(candidateDto.getLocationCampaignId());
+				DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
+				return donationCampaignInfo;
+			}
+		}
+		return null;
 	}
 	protected void addNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
 		long livingAcId = 0;

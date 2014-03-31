@@ -23,7 +23,7 @@ public class DonationMemcacheUpdaterTask {
 	// http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
 	// http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	// ss mm hh dd
-	//@PostConstruct
+	@PostConstruct
 	public void startDonationMemcacheUpdaterTask() {
 		logger.info(new Date().toString());
 		logger.info("Starting DonationMemcacheUpdaterTask task");

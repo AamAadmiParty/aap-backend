@@ -1,6 +1,7 @@
 package com.next.aap.core.persistance.dao.impl;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -63,8 +64,10 @@ public class PlannedTweetDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 			query = query + "and locationId = :locationId";
 			params.put("locationId", locationId);	
 		}
-		query = query + " order by postingTime asc";
-		return executeQueryGetList(query, params, 20);
+		query = query + " order by postingTime desc";
+		List<PlannedTweet> tweets = executeQueryGetList(query, params, 20);
+		Collections.reverse(tweets);
+		return tweets;
 	}
 
 	@Override

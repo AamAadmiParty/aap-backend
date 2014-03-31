@@ -1,10 +1,13 @@
 package com.next.aap.web.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +20,7 @@ import com.next.aap.cache.CacheKeyService;
 import com.next.aap.cache.beans.DonationCampaignInfo;
 import com.next.aap.web.cache.CandidateCacheImpl;
 import com.next.aap.web.dto.CandidateDto;
+import com.next.aap.web.dto.CandidateWithDonation;
 import com.next.aap.web.dto.DonationCampaignDto;
 
 @Controller
@@ -40,8 +44,9 @@ public class CandidateController extends AppBaseController {
 			@PathVariable String stateName) {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
-		List<CandidateDto> allCandidates = candidateCacheImpl.getAllCandidates();
-		mv.getModel().put("candidates", allCandidates);
+		Set<CandidateDto> allCandidates = candidateCacheImpl.getCandidatesOfState(stateName);
+		List<CandidateWithDonation> candidates = addCandidateWithDonationInfoInModel(allCandidates);
+		mv.getModel().put("candidates", candidates);
 		String view = httpServletRequest.getParameter("type");
 		if(view != null && view.equalsIgnoreCase("map")){
 			mv.setViewName(design+"/candidatemap");	
@@ -52,12 +57,30 @@ public class CandidateController extends AppBaseController {
 
 		return mv;
 	}
+	protected List<CandidateWithDonation> addCandidateWithDonationInfoInModel(Collection<CandidateDto> candidates){
+		List<CandidateWithDonation> returnDonations = new ArrayList<>(candidates.size());
+		for(CandidateDto oneCandidate:candidates){
+			CandidateWithDonation candidateWithDonation = new CandidateWithDonation();
+			BeanUtils.copyProperties(oneCandidate, candidateWithDonation);
+			DonationCampaignInfo donationCampaignInfo = getCandidateDonationInfo(oneCandidate);
+			if(donationCampaignInfo == null){
+				candidateWithDonation.setTotalTransactions(0);
+				candidateWithDonation.setTotalAmount(0.0);
+			}else{
+				candidateWithDonation.setTotalTransactions(donationCampaignInfo.getTtxn());
+				candidateWithDonation.setTotalAmount(donationCampaignInfo.getTamt());
+			}
+			returnDonations.add(candidateWithDonation);
+		}
+		return returnDonations;
+	}
 	@RequestMapping(value = "/candidates.html", method = RequestMethod.GET)
 	public ModelAndView showCandidateMap(ModelAndView mv,HttpServletRequest httpServletRequest) {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		List<CandidateDto> allCandidates = candidateCacheImpl.getAllCandidates();
-		mv.getModel().put("candidates", allCandidates);
+		List<CandidateWithDonation> candidates = addCandidateWithDonationInfoInModel(allCandidates);
+		mv.getModel().put("candidates", candidates);
 		String view = httpServletRequest.getParameter("type");
 		if(view != null && view.equalsIgnoreCase("map")){
 			mv.setViewName(design+"/candidatemap");	

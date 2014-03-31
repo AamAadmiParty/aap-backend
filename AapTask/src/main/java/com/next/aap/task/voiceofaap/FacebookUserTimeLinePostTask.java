@@ -48,6 +48,8 @@ public class FacebookUserTimeLinePostTask extends BaseSocialTask{
 		int totalSuccessTimeLineFriends = 0;
 		int totalFailedTimeLines = 0;
 		int totalFailedTimeLineFriends = 0;
+		int count = 1;
+		int totalAccounts = allFacebookAccounts.size();
 		try{
 			if(allFacebookAccounts != null && !allFacebookAccounts.isEmpty()){
 				CountDownLatch countDownLatch = new CountDownLatch(allFacebookAccounts.size());
@@ -55,7 +57,9 @@ public class FacebookUserTimeLinePostTask extends BaseSocialTask{
 					PostOnUserFacebookTimeLineTask postOnUserTimeLineTask = new PostOnUserFacebookTimeLineTask(aapService, oneFacebookAccount, plannedFacebookPostDto, countDownLatch);
 					Future<Boolean> futureResult = threadPoolTaskExecutor.submit(postOnUserTimeLineTask);
 					facebookAccountsFutureMap.put(futureResult, oneFacebookAccount);
-					sleep(3);
+					logger.info("Working on " + count +" of " + totalAccounts);
+					count++;
+					sleep(1);
 				}
 				//wait for all task to finish before proceeding
 				countDownLatch.await();
@@ -75,8 +79,9 @@ public class FacebookUserTimeLinePostTask extends BaseSocialTask{
 			aapService.updatePlannedFacebookPostStatus(plannedFacebookPostDto.getId(), PlannedPostStatus.DONE, null, totalSuccessTimeLines,
 					totalSuccessTimeLineFriends, totalFailedTimeLines, totalFailedTimeLineFriends);
 		}catch(Exception ex){
-			aapService.updatePlannedFacebookPostStatus(plannedFacebookPostDto.getId(), PlannedPostStatus.DONE_WITH_ERROR, null, totalSuccessTimeLines,
+			aapService.updatePlannedFacebookPostStatus(plannedFacebookPostDto.getId(), PlannedPostStatus.DONE_WITH_ERROR, ex.getMessage(), totalSuccessTimeLines,
 					totalSuccessTimeLineFriends, totalFailedTimeLines, totalFailedTimeLineFriends);
+			logger.error("Unable to complete all FB posts",ex);
 		}
 		
 		

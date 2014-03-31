@@ -15,5 +15,7 @@ public interface FacebookAppPermissionDao {
 	public abstract FacebookAppPermission getFacebookAppPermissionByFacebookAppIdAndFacebookAccountId(String facebookAppId, Long facebookAccountId);
 	
 	public abstract List<FacebookAppPermission> getFacebookAppPermissionByFacebookAccountId(Long facebookAccountId);
+	
+	public abstract List<FacebookAppPermission> getFacebookAppPermissionAfterId(Long facebookAppId, int pageSize);
 
 }

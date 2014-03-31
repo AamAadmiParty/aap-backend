@@ -146,7 +146,7 @@
 									<tbody>
 										<tr>
 											<th width="200">Total Money Required</th>
-											<td width="200">Rs 40,00,000</td>
+											<td width="200">Rs 70,00,000</td>
 										</tr>
 										<tr>
 											<th width="200">Total Transactions</th>
@@ -179,6 +179,7 @@
 			</div>
 			<br></br>
 			<div id="success" class="languagetab">
+				<h2>Last 5 Donations</h2>
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tbody>
 						<tr>
@@ -217,6 +218,18 @@
 
 		<div class="rhsarea">
 			<!--rhsarea-->
+			<c:if test="${empty loggedInUser}">
+                <div class="joincommunity">
+                        <!--joincommunity-->
+                        <a href="${contextPath}/login"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
+                        <ul>
+                                <li>To participate in polls</li>
+                                <li>To track your donation network</li>
+                                <li>To help spread the word</li>
+                                <li>And lots more...</li>
+                        </ul>
+                </div>
+                </c:if>
 			<div class="facebookWidget">
 				<!--facebookWidget-->
 				<iframe

@@ -154,7 +154,7 @@
 										</tr>
 										<tr>
 											<th>Total Amount</th>
-											<td>${donationCampaignInfo.tamt}</td>
+											<td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2"  value="${donationCampaignInfo.tamt}" /></td>
 										</tr>
 										<tr>
 											<th>URL to this page</th>
@@ -179,21 +179,23 @@
 			</div>
 			<br></br>
 			<div id="success" class="languagetab">
-				<h2>Last 5 Donations</h2>
+				<h2>Recent Donations</h2>
+				<em>*Max Last 500 donations listed here</em>
+				<% int i=1; %>
 				<table border="0" cellpadding="0" cellspacing="0">
 					<tbody>
 						<tr>
+							<th width="20">S.No. </th>
 							<th width="140">Donor Name</th>
 							<th width="89">Date</th>
-							<th width="89">Transaction Id</th>
 							<th width="91">Amount</th>
 						</tr>
 						<c:forEach var="oneDonation" items="${donationCampaignInfo.dns}">
 							<tr>
+								<td><% out.println(i++); %></td>
 								<td><c:out value="${oneDonation.name}" /></td>
 								<td><fmt:formatDate value="${oneDonation.dt}" pattern="dd-MMM-yyyy HH:mm:ss" /></td>
-								<td><c:out value="${oneDonation.did}" /></td>
-								<td><c:out value="${oneDonation.amt}" /></td>
+								<td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2"  value="${oneDonation.amt}" /></td>
 							</tr>
 						</c:forEach>
 

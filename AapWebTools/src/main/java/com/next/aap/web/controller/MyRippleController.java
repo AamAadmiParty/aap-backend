@@ -8,11 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gdata.util.common.base.StringUtil;
+import com.mysql.jdbc.Statement;
 import com.next.aap.core.exception.AppException;
 import com.next.aap.core.util.MyaapInUtil;
 import com.next.aap.web.dto.DonationCampaignDto;
@@ -28,6 +30,15 @@ public class MyRippleController extends AppBaseController {
 	@Autowired
 	private MyaapInUtil myaapInUtil;
 	
+	@RequestMapping(value = "/ripple/{campaignId}.html", method = RequestMethod.GET)
+	public ModelAndView showRipplePublicPage(ModelAndView mv,HttpServletRequest httpServletRequest, @PathVariable String campaignId) {
+		
+		addUserRippleDonations(mv, campaignId);
+		addGenericValuesInModel(httpServletRequest, mv);
+		mv.setViewName(design+"/ripple");
+		return mv;
+	}
+	
 	@RequestMapping(value = "/ripple.html", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
@@ -42,10 +53,28 @@ public class MyRippleController extends AppBaseController {
 	}
 	private void addUserRippleDonations(ModelAndView mv,
 			HttpServletRequest httpServletRequest){
-		List<DonationDto> successDonations = new ArrayList<>();
-		List<DonationDto> failedDonations = new ArrayList<>();
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		DonationCampaignDto rippleCampaign = aapService.getRippleDonationCamapign(loggedInUser.getId());
+		addUserRippleDonations(mv, rippleCampaign);
+
+	}
+	private void addUserRippleDonations(ModelAndView mv,String rippleCampaignId){
+		try{
+			DonationCampaignDto rippleCampaign = aapService.getRippleDonationCamapignByCid(rippleCampaignId);
+			if(rippleCampaign != null){
+				UserDto rippleUser = aapService.getUserByid(rippleCampaign.getUserId());
+				mv.getModel().put("rippleUser", rippleUser);
+			}
+			
+			addUserRippleDonations(mv, rippleCampaign);
+			
+		}catch(Exception ex){
+			logger.error("Unable to addUserRippleDonations", ex);
+		}
+	}
+	private void addUserRippleDonations(ModelAndView mv,DonationCampaignDto rippleCampaign){
+		List<DonationDto> successDonations = new ArrayList<>();
+		List<DonationDto> failedDonations = new ArrayList<>();
 		double total = 0.0;
 		boolean rippleCampaignExists;
 		if(rippleCampaign == null){
@@ -55,7 +84,7 @@ public class MyRippleController extends AppBaseController {
 			rippleCampaignExists = true;
 			successDonations = new ArrayList<>();
 			failedDonations = new ArrayList<>();
-			List<DonationDto> donations = aapService.getUserRippleDonations(loggedInUser.getId());
+			List<DonationDto> donations = aapService.getUserRippleDonations(rippleCampaign.getUserId());
 			if(donations != null && donations.size() > 0){
 				for(DonationDto oneDonationDto:donations){
 					if("Success".equalsIgnoreCase(oneDonationDto.getPgErrorMessage())){

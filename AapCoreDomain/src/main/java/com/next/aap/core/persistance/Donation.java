@@ -95,6 +95,12 @@ public class Donation {
 	private String donorDistrictId;
 	@Column(name = "donor_address", length=512)
 	private String donorAddress;
+	@Column(name = "donate_to_state")
+	private String donateToState;
+	@Column(name = "donate_to_district")
+	private String donateToDistrict;
+	@Column(name = "donate_to_loksabha")
+	private String donateToLoksabha;
 
 	
 	public Long getId() {
@@ -306,6 +312,24 @@ public class Donation {
 	}
 	public void setLcid(String lcid) {
 		this.lcid = lcid;
+	}
+	public String getDonateToState() {
+		return donateToState;
+	}
+	public void setDonateToState(String donateToState) {
+		this.donateToState = donateToState;
+	}
+	public String getDonateToDistrict() {
+		return donateToDistrict;
+	}
+	public void setDonateToDistrict(String donateToDistrict) {
+		this.donateToDistrict = donateToDistrict;
+	}
+	public String getDonateToLoksabha() {
+		return donateToLoksabha;
+	}
+	public void setDonateToLoksabha(String donateToLoksabha) {
+		this.donateToLoksabha = donateToLoksabha;
 	}
 
 	

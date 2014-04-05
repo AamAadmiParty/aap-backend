@@ -38,6 +38,7 @@
 	<!--slider-->
 	<ul class="rslides">
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-green.jpg" alt="" border="0"></li>
+		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-kumar.jpg" alt="" border="0"></li>
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-blue-green.jpg" alt="" border="0"></li>
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-pink.jpg" alt="" border="0"></li>
 		<li> <img src="<c:out value='${staticDirectory}'/>/images/slider-red.jpg" alt="" border="0"></li>

@@ -114,15 +114,13 @@ public class MemcachClient_SpyMemecached implements CacheService{
 	public void saveData(String key, Object value) {
 		long startTime = System.currentTimeMillis();
 		try{
-			System.out.println("defaultTimeToLive="+defaultTimeToLive);
 			OperationFuture<Boolean> future = memcachedClient.set(key, defaultTimeToLive, value);
-			System.out.println("Waiting for Future to finish");
-			System.out.println("Status = "+ future.get() +", "+future.getStatus());
+			logger.info("memcache set result " + future.get());
 		}catch(Exception ex){
-			ex.printStackTrace();
+			logger.error("Unable to set key in cache"+key);
 		}
 		long endTime = System.currentTimeMillis();
-		System.out.println("Total Time "+(endTime - startTime) +" ms");
+		logger.info("Total Time "+(endTime - startTime) +" ms");
 		
 	}
 
@@ -154,9 +152,7 @@ public class MemcachClient_SpyMemecached implements CacheService{
 		Future<Object> f = memcachedClient.asyncGet(key);
 		Object returnObject = null;
 		try {
-			logger.info("Waiting for Get Future to finish");
 			returnObject = f.get(opTimeOut, TimeUnit.MILLISECONDS);
-			logger.info("Wait finished");
 			// throws expecting InterruptedException, ExecutionException
 			// or TimeoutException
 		} catch (Exception e) {

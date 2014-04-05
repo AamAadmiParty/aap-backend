@@ -8,20 +8,15 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gdata.util.common.base.StringUtil;
-import com.next.aap.cache.CacheKeyService;
 import com.next.aap.cache.beans.DonationCampaignInfo;
-import com.next.aap.web.cache.CandidateCacheImpl;
 import com.next.aap.web.dto.CandidateDto;
 import com.next.aap.web.dto.CandidateWithDonation;
-import com.next.aap.web.dto.DonationCampaignDto;
 
 @Controller
 public class CandidateController extends AppBaseController {
@@ -87,7 +82,7 @@ public class CandidateController extends AppBaseController {
 		}else{
 			mv.setViewName(design+"/candidatelist");
 		}
-		mv.getModel().put("PageTitle", "Lokasabha Candiate of Aam Aadmi Party for Election 2014");
+		mv.getModel().put("PageTitle", "Lokasabha Candidates of Aam Aadmi Party for Election 2014");
 		
 		return mv;
 	}

@@ -292,6 +292,8 @@ public interface AapService {
 	
 	DonationCampaignDto getRippleDonationCamapign(Long userId);
 	
+	DonationCampaignDto getRippleDonationCamapignByCid(String cid);
+	
 	DonationCampaignDto saveRippleDonationCamapign(String campaignId, String description, Long userId) throws AppException ;
 	
 	List<Long> getAllNewsItemsOfAc(long acId);
@@ -490,4 +492,6 @@ public interface AapService {
 	CandidateDto getCandidateByPcId(Long pcId) throws AppException;
 	
 	void updateAllLocationCampaignInCache() throws AppException;
+	
+	UserDto getUserByid(Long userId) throws AppException;
 }

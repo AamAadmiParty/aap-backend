@@ -162,7 +162,7 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 		}
 		@SuppressWarnings("rawtypes")
 		List results = sqlQuery.list();
-		System.out.println("results="+results);
+		logger.info("results="+results);
 		if(results == null || results.isEmpty()){
 			return null;
 		}
@@ -176,7 +176,7 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 		return executeSqlQueryGetDouble(query, null);
 	}
 	public Double executeSqlQueryGetDouble(String query,Map<String, Object> params){
-		System.out.println("query="+query);
+		logger.info("query="+query);
 		Query sqlQuery = this.sessionFactory.getCurrentSession().createSQLQuery(query);
 		if(params != null){
 			for(Entry<String, Object> oneEntry:params.entrySet()){
@@ -188,11 +188,11 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 				}
 			}
 		}
-		System.out.println("sqlQuery="+sqlQuery +", "+sqlQuery.uniqueResult());
+		logger.info("sqlQuery="+sqlQuery +", "+sqlQuery.uniqueResult());
 		@SuppressWarnings("rawtypes")
 		List results = sqlQuery.list();
 		
-		System.out.println("results="+results);
+		logger.info("results="+results);
 		if(results == null || results.isEmpty()){
 			return null;
 		}

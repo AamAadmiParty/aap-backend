@@ -62,4 +62,12 @@ public class CandidateDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Cand
 		return  executeQueryGetObject(query, params);
 	}
 
+	@Override
+	public Candidate getCandidateByExtPcId(String pcIdExt) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("pcIdExt", pcIdExt);
+		String query = "from Candidate where pcIdExt = :pcIdExt";
+		return  executeQueryGetObject(query, params);
+	}
+
 }

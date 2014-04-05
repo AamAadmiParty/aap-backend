@@ -14,6 +14,8 @@ public interface CandidateDao {
 	
 	public abstract Candidate getCandidateByPcId(Long pcId);
 	
+	public abstract Candidate getCandidateByExtPcId(String pcId);
+	
 	public abstract List<Candidate> getAllCandidates(int totalItems, int pageNumber);
 	
 	public abstract List<Candidate> getAllCandidates();

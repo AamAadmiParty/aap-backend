@@ -78,7 +78,7 @@ body {
 								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.pcName}" /></a></td>
 								<td style="border: 1px solid;"><a href="${oneCandidate.landingPageFullUrl}"><c:out value="${oneCandidate.name}" /></a></td>
 								<td style="border: 1px solid;"><c:out value="${oneCandidate.totalTransactions}" /></td>
-								<td style="border: 1px solid;"><c:out value="${oneCandidate.totalAmount}" /></td>
+								<td style="border: 1px solid;"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2"  value="${oneCandidate.totalAmount}" /></td>
 
 							</tr>
 						</c:forEach>

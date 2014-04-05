@@ -83,6 +83,9 @@ public class ReceiveDonationListener extends AwsQueueListener{
 			donationDump.setUtmMedium(donationJsonObject.getString("utm_medium"));
 			donationDump.setUtmSource(donationJsonObject.getString("utm_source"));
 			donationDump.setUtmTerm(donationJsonObject.getString("utm_term"));
+			donationDump.setDonateToState(donationJsonObject.getString("DonateToState"));
+			donationDump.setDonateToDistrict(donationJsonObject.getString("DonateToDistrict"));
+			donationDump.setDonateToLoksabha(donationJsonObject.getString("DonateToLokSabha"));
 			
 			logger.info("Saving Donation Dump : "+donationDump);
 			aapService.saveDonationDump(donationDump);

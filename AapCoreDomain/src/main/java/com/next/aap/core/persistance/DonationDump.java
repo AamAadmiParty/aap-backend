@@ -87,7 +87,13 @@ public class DonationDump {
 	private String status;
 	@Column(name = "status_message")
 	private String statusMessage;
-	
+	@Column(name = "DonateToState")
+	private String donateToState;
+	@Column(name = "DonateToDistrict")
+	private String donateToDistrict;
+	@Column(name = "DonateToLokSabha")
+	private String donateToLoksabha;
+
 	public Long getId() {
 		return id;
 	}
@@ -298,6 +304,24 @@ public class DonationDump {
 	public void setLid(String lid) {
 		this.lid = lid;
 	}
+	public String getDonateToState() {
+		return donateToState;
+	}
+	public void setDonateToState(String donateToState) {
+		this.donateToState = donateToState;
+	}
+	public String getDonateToDistrict() {
+		return donateToDistrict;
+	}
+	public void setDonateToDistrict(String donateToDistrict) {
+		this.donateToDistrict = donateToDistrict;
+	}
+	public String getDonateToLoksabha() {
+		return donateToLoksabha;
+	}
+	public void setDonateToLoksabha(String donateToLoksabha) {
+		this.donateToLoksabha = donateToLoksabha;
+	}
 	@Override
 	public String toString() {
 		return "DonationDump [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId
@@ -308,7 +332,7 @@ public class DonationDump {
 				+ ", donationDate=" + donationDate + ", donorIp=" + donorIp + ", amount=" + amount + ", utmSource=" + utmSource + ", utmMedium=" + utmMedium
 				+ ", utmTerm=" + utmTerm + ", utmContent=" + utmContent + ", utmCampaign=" + utmCampaign + ", pgErrorMessage=" + pgErrorMessage + ", cid="
 				+ cid + ", lid=" + lid + ", pgErrorDetail=" + pgErrorDetail + ", remark=" + remark + ", status=" + status + ", statusMessage=" + statusMessage
-				+ "]";
+				+ ", donateToState=" + donateToState + ", donateToDistrict=" + donateToDistrict + ", donateToLoksabha=" + donateToLoksabha + "]";
 	}
 	
 

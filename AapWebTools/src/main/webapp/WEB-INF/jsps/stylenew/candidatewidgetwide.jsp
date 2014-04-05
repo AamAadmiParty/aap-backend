@@ -131,7 +131,7 @@
 					<tbody>
 						<tr>
 							<th width="200">Total Money Required</th>
-							<td width="200">Rs 40,00,000</td>
+							<td width="200">Rs 70,00,000</td>
 						</tr>
 						<tr>
 							<th width="200">Total Transactions</th>

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.persistence.Column;
+
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.persistance.Donation;
@@ -290,25 +292,33 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 		params.put("Remarks", donationDump.getRemark());
 		params.put("status", donationDump.getStatus());
 		params.put("status_message", donationDump.getStatusMessage());
+		params.put("donateToDistrict", donationDump.getDonateToDistrict());
+		params.put("donateToLoksabha", donationDump.getDonateToLoksabha());
+		params.put("donateToState", donationDump.getDonateToState());
+
 		executeSqlQueryUpdate("INSERT INTO donation_dump" +
 				"(Donor_Id,Merchant_Reference_No,Transaction_Id,Name,Gender,Age,Mobile,Email,Country_Id,State_Id,District_Id,Address," +
 				"Payment_Gateway_Used,Payment_Gateway,Donation_Date,Donor_IP,Amount,Utm_Source,Utm_Medium,Utm_Term,Utm_Content," +
-				"Utm_Campaign,PGErrorMsg,cid,PGErrorDetail,Remarks,status,status_message)" +
+				"Utm_Campaign,PGErrorMsg,cid,PGErrorDetail,Remarks,status,status_message,DonateToState,DonateToDistrict,DonateToLokSabha)" +
 				"VALUES" +
 				"(:Donor_Id,:Merchant_Reference_No,:Transaction_Id,:Name,:Gender,:Age,:Mobile,:Email,:Country_Id,:State_Id,:District_Id,:Address," +
 				":Payment_Gateway_Used,:Payment_Gateway,:Donation_Date,:Donor_IP,:Amount,:Utm_Source,:Utm_Medium,:Utm_Term,:Utm_Content," +
-				":Utm_Campaign,:PGErrorMsg,:cid,:PGErrorDetail,:Remarks,:status,:status_message)", params);
+				":Utm_Campaign,:PGErrorMsg,:cid,:PGErrorDetail,:Remarks,:status,:status_message, :donateToState, :donateToDistrict, :donateToLoksabha)", params);
 		
 		return donationDump;
 	}
 
 	@Override
-	public void updateDonationPgStatus(String donorId, String PGErrorMsg, String PGErrorDetail) {
+	public void updateDonationPgStatus(DonationDump donationDump) {
 		Map<String, Object> params = new HashMap<>(1);
-		params.put("PGErrorMsg", PGErrorMsg);
-		params.put("PGErrorDetail", PGErrorDetail);
-		params.put("donorId", donorId);
-		executeSqlQueryUpdate("update donation_dump set PGErrorMsg=:PGErrorMsg, PGErrorDetail=:PGErrorDetail where Donor_Id = :donorId", params);
+		params.put("PGErrorMsg", donationDump.getPgErrorMessage());
+		params.put("PGErrorDetail", donationDump.getPgErrorDetail());
+		params.put("donorId", donationDump.getDonorId());
+		params.put("donateToDistrict", donationDump.getDonateToDistrict());
+		params.put("donateToLoksabha", donationDump.getDonateToLoksabha());
+		params.put("donateToState", donationDump.getDonateToState());
+		executeSqlQueryUpdate("update donation_dump set PGErrorMsg=:PGErrorMsg, PGErrorDetail=:PGErrorDetail,DonateToState = :donateToState" +
+				", DonateToDistrict = :donateToDistrict,DonateToLokSabha = :donateToLoksabha   where Donor_Id = :donorId", params);
 
 	}
 
@@ -328,7 +338,7 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 	public List<Donation> getDonationsByLocationCampaignId(String lcid, int pageSize) {
 		Map<String, Object> params = new TreeMap<String, Object>();
 		params.put("lcid", lcid);
-		return executeQueryGetList("from Donation where lcid = :lcid order by donationDate desc", params, pageSize);
+		return executeQueryGetList("from Donation where lcid = :lcid and (pg_error_msg='SUCCESS' or pg_error_msg='Success') order by donationDate desc", params, pageSize);
 	}
 	@Override
 	public List<Donation> getDonationsByLocationCampaignId(String lcid) {

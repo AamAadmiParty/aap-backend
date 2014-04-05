@@ -15,9 +15,9 @@ public class BaseSocialTask {
 	}
 	protected void sleep(int minimumTime){
 		try{
-			int waitTime = random.nextInt(5) + minimumTime;
-			logger.info("waiting for " + waitTime +" seconds");
-			Thread.sleep(waitTime * 1000);			
+			int waitTime = random.nextInt(3000) + minimumTime *1000;
+			logger.info("waiting for " + waitTime +" milli seconds");
+			Thread.sleep(waitTime);			
 		}catch(Exception ex){
 			
 		}

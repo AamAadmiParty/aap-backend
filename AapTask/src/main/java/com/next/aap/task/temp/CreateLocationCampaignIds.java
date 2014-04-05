@@ -7,30 +7,26 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.next.aap.core.service.AapService;
-import com.next.aap.web.dto.AssemblyConstituencyDto;
-import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.LocationCampaignDto;
 import com.next.aap.web.dto.LocationCampaignDto.LocationCampaignType;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
-import com.next.aap.web.dto.StateDto;
 
-@Component
 public class CreateLocationCampaignIds {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private AapService aapService;
 	
-	//@PostConstruct
+	@PostConstruct
 	public void runTask(){
 		logger.info("Start Creating Location Campaign Ids");
 		try{
+			LocationCampaignDto locationCampaign;
+			/*
 			List<StateDto> allStates = aapService.getAllStates();
 			logger.info("Creating State Campaign Ids");
-			LocationCampaignDto locationCampaign;
 			for(StateDto oneState:allStates){
 				locationCampaign = aapService.getDefaultStateLocationCampaign(oneState.getId());
 				if(locationCampaign == null){
@@ -47,7 +43,7 @@ public class CreateLocationCampaignIds {
 					aapService.saveDistrictLocationCampaign(locationCampaign, oneDistrict.getId());
 				}
 			}
-			
+			*/
 			//Create all PC Campaigns
 			List<ParliamentConstituencyDto> allPcs = aapService.getAllParliamentConstituencies();
 			for(ParliamentConstituencyDto onePc : allPcs){
@@ -58,7 +54,9 @@ public class CreateLocationCampaignIds {
 				}
 			}
 			
-			//Create all PC Campaigns
+			
+			//Create all AC Campaigns
+			/*
 			List<AssemblyConstituencyDto> allAcs = aapService.getAllAssemblyConstituencies();
 			for(AssemblyConstituencyDto oneAc : allAcs){
 				locationCampaign = aapService.getDefaultAcLocationCampaign(oneAc.getId());
@@ -67,6 +65,7 @@ public class CreateLocationCampaignIds {
 					aapService.saveAcLocationCampaign(locationCampaign, oneAc.getId());
 				}
 			}
+			*/
 		}catch(Exception ex){
 			logger.error("Unable to create Location campaign", ex);
 		}

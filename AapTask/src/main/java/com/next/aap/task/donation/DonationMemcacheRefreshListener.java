@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.amazonaws.regions.Regions;
 import com.next.aap.cache.CacheKeyService;
 import com.next.aap.cache.CacheService;
 import com.next.aap.core.service.AapService;
@@ -26,7 +27,7 @@ public class DonationMemcacheRefreshListener extends AwsQueueListener {
 	public DonationMemcacheRefreshListener(
 			@Value("${refresh_memcache_donation_info_queue}") String queueName,
 			@Value("${aws_access_key}") String accessKey, @Value("${aws_access_secret}") String accessSecret) {
-		super(queueName, accessKey, accessSecret);
+		super(Regions.US_EAST_1, queueName, accessKey, accessSecret, true);
 	}
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

@@ -7,8 +7,27 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party, India</title>
+<title>Ripple : ${rippleUser.name} - Aam Aadmi Party, India</title>
 <jsp:include page="includes.jsp" />
+
+<meta name="description"
+	content="Hi Friends, I ${rippleUser.name} supporting AAM AADMI PARTY and inviting you to help me and party. Come and join me to help our country and donate for better future" />
+<c:if test="${empty rippleUser.profilePic }">
+	<meta name="og:image" property="og:image" content="http://kanpuria.com/wp-content/uploads/2013/12/AAP_Kanpur.jpg" />
+	<meta name="og:image" property="og:image" content="https://lh5.ggpht.com/Agz_PiBlwdqdWE3ypjXo4stC-l8tiRlDJnnIZlKT_XapaKM_h5LPrdzNLtkbyW5n3JU=w300" />
+	<meta name="og:image" property="og:image" content="http://shakilahmed.org/assets/images/aap.png" />
+</c:if>
+<c:if test="${!empty rippleUser.profilePic }">
+	<meta name="og:image" property="og:image" content="${rippleUser.profilePic}" />
+</c:if>
+<meta name="og:title" property="og:title" content="Donate for ${rippleUser.name}" />
+<meta name="og:url" property="og:url" content="${rippleCampaign.myAapShortUrl}" />
+<meta name="og:site_name" property="og:site_name" content="my.aamaadmiparty.org" />
+<meta name="og:type" property="og:type" content="blog" />
+<meta name="og:description" property="og:description"
+	content="Hi Friends, I ${rippleUser.name} supporting AAM AADMI PARTY and inviting you to help me and party. Come and join me to help our country and donate for better future" />
+
+
 <script>
 	$(function() {
 
@@ -84,23 +103,17 @@
 </script>
 </head>
 <body>
-	<div id="fb-root"></div>
-	<script>
-		(function(d, s, id) {
-			var js, fjs = d.getElementsByTagName(s)[0];
-			if (d.getElementById(id))
-				return;
-			js = d.createElement(s);
-			js.id = id;
-			js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1389845241275842";
-			fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-	</script>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=1383280855238363";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
 	<jsp:include page="header.jsp" />
-<!-- 
-	<jsp:include page="topscroller.jsp" />
- -->
+	
 	<div class="contentarea">
 		<!--contentarea-->
 		<div class="loginwithholder">
@@ -114,13 +127,37 @@
 					<c:if test="${rippleCampaignExists}">
 						<div class="divarticle">
 							<!--divarticle-->
-							<table width="100%">
-								<tr valign="top">
+							<table width="100%" align="left">
+								<tr valign="top" align="left">
 									<td><c:if test="${empty rippleUser.profilePic }">
 											<img src='http://kanpuria.com/wp-content/uploads/2013/12/AAP_Kanpur.jpg' style="max-width: 300px; max-height: 300px;" />
 										</c:if> <c:if test="${!empty rippleUser.profilePic }">
-											<img src='${rippleUser.profilePic}?type=large' style="max-width: 300px; max-height: 300px;" />
-										</c:if></td>
+											<img src='${rippleUser.profilePic}?type=large' style="min-width: 250px; max-width: 300px; max-height: 300px;" />
+										</c:if> 
+										<br></br>
+										<c:if test="${!empty rippleUserFacebookAccount }">
+										<div class="fb-follow" data-href="https://www.facebook.com/${rippleUserFacebookAccount}" data-width="250" data-colorscheme="dark" data-layout="standard" data-show-faces="true"></div>
+										<br></br>
+										</c:if>
+										<c:if test="${!empty rippleUserTwitterAccount }">
+											<a class="twitter-timeline" width="250" href="https://twitter.com/${rippleUserTwitterAccount}" data-widget-id="339326037013958656" data-screen-name="${rippleUserTwitterAccount}">Tweets by
+											${rippleUserTwitterAccount}</a>
+										<script>
+											!function(d, s, id) {
+												var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+														.test(d.location) ? 'http' : 'https';
+												if (!d.getElementById(id)) {
+													js = d.createElement(s);
+													js.id = id;
+													js.src = p + "://platform.twitter.com/widgets.js";
+													fjs.parentNode.insertBefore(js, fjs);
+												}
+											}(document, "script", "twitter-wjs");
+										</script>
+										<br></br>
+										</c:if>
+										
+										</td>
 									<td>
 										<h1>
 											<c:out value="${rippleUser.name}" />
@@ -142,48 +179,42 @@
 													</tr>
 													<tr>
 														<th>Direct Donation URL</th>
-														<td>${rippleCampaign.myAapShortUrl}</td>
+														<td><a href="${rippleCampaign.myAapShortUrl}">${rippleCampaign.myAapShortUrl}</a></td>
 													</tr>
 												</tbody>
 											</table>
 											<input name="globalDonationButton" id="globalDonationButton" value="" type="button" class="donatebtnbig" />
 										</div>
-									</td>
-								</tr>
-								<tr>
-								<td>
-								</td>
-								<td>
-									<c:out value="${rippleCampaign.description}" escapeXml="false" />
-								</td>
-								</tr>
-								<tr>
-									<td></td>
-									<td>
-									<div class="divarticle">
-										<table id="successTable" class="languagetab">
-											<thead>
-												<tr>
-													<th style="border: 1px solid;">Donor Name</th>
-													<th style="border: 1px solid;">Transaction Id</th>
-													<th style="border: 1px solid;">Date</th>
-													<th style="border: 1px solid;">Amount</th>
-													<th style="border: 1px solid;">Donation Certificate</th>
-												</tr>
-											</thead>
-											<tbody>
-												<c:forEach items="${successDonations}" var="oneDonation">
-
+										<br></br><br></br>
+										<div>
+											<c:out value="${rippleCampaign.description}" escapeXml="false" />
+										</div>
+										<br></br>
+										<br></br>	
+										<div id="success" class="languagetab">
+											<table >
+												<thead>
 													<tr>
-														<td style="border: 1px solid;"><c:out value="${oneDonation.donorName}"></c:out></td>
-														<td style="border: 1px solid;"><c:out value="${oneDonation.transactionId}"></c:out></td>
-														<td style="border: 1px solid;"><fmt:formatDate value="${oneDonation.donationDate}" pattern="dd-MMM-yyyy HH:mm:ss" /></td>
-														<td style="border: 1px solid;"><c:out value="${oneDonation.amount}"></c:out></td>
-														<td style="border: 1px solid;"><a href='${contextPath}/donationcertifcates.html?txnid=${oneDonation.transactionId}'> Generate</a></td>
+														<th style="border: 1px solid;">Donor Name</th>
+														<th style="border: 1px solid;">Transaction Id</th>
+														<th style="border: 1px solid;">Date</th>
+														<th style="border: 1px solid;">Amount</th>
+														<th style="border: 1px solid;">Donation Certificate</th>
 													</tr>
-												</c:forEach>
-											</tbody>
-										</table>
+												</thead>
+												<tbody>
+													<c:forEach items="${successDonations}" var="oneDonation">
+
+														<tr>
+															<td style="border: 1px solid;"><c:out value="${oneDonation.donorName}"></c:out></td>
+															<td style="border: 1px solid;"><c:out value="${oneDonation.transactionId}"></c:out></td>
+															<td style="border: 1px solid;"><fmt:formatDate value="${oneDonation.donationDate}" pattern="dd-MMM-yyyy HH:mm:ss" /></td>
+															<td style="border: 1px solid;"><c:out value="${oneDonation.amount}"></c:out></td>
+															<td style="border: 1px solid;"><a href='${contextPath}/donationcertifcates.html?txnid=${oneDonation.transactionId}'> Generate</a></td>
+														</tr>
+													</c:forEach>
+												</tbody>
+											</table>
 										</div>
 									</td>
 								</tr>

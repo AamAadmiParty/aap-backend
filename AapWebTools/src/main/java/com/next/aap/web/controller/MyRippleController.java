@@ -19,6 +19,7 @@ import com.next.aap.core.exception.AppException;
 import com.next.aap.core.util.MyaapInUtil;
 import com.next.aap.web.dto.DonationCampaignDto;
 import com.next.aap.web.dto.DonationDto;
+import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.util.ContentDonwloadUtil;
 
@@ -63,7 +64,21 @@ public class MyRippleController extends AppBaseController {
 			DonationCampaignDto rippleCampaign = aapService.getRippleDonationCamapignByCid(rippleCampaignId);
 			if(rippleCampaign != null){
 				UserDto rippleUser = aapService.getUserByid(rippleCampaign.getUserId());
+				LoginAccountDto loginAccountDto = aapService.getUserLoginAccounts(rippleUser.getId());
 				mv.getModel().put("rippleUser", rippleUser);
+				if(loginAccountDto != null && loginAccountDto.getTwitterAccounts() != null && !loginAccountDto.getTwitterAccounts().isEmpty()){
+					if(loginAccountDto.getTwitterAccounts().get(0).getScreenName().startsWith("@")){
+						mv.getModel().put("rippleUserTwitterAccount", loginAccountDto.getTwitterAccounts().get(0).getScreenName().substring(1));	
+					}else{
+						mv.getModel().put("rippleUserTwitterAccount", loginAccountDto.getTwitterAccounts().get(0).getScreenName());
+					}
+					
+				}
+				if(loginAccountDto != null && loginAccountDto.getFacebookAccounts() != null && !loginAccountDto.getFacebookAccounts().isEmpty()){
+					mv.getModel().put("rippleUserFacebookAccount", loginAccountDto.getFacebookAccounts().get(0).getFacebookUserId());	
+					
+				}
+				
 			}
 			
 			addUserRippleDonations(mv, rippleCampaign);

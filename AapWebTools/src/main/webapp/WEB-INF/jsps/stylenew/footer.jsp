@@ -67,7 +67,7 @@
 		<!--conectleft-->
 		<div class="copyright">
 			<!--copyright-->
-			© Aam Aadmi Party. All Rights Reserved
+			© Aam Aadmi Party. All Rights Reserved, Developed by <a href="http://my.aamaadmiparty.org/ripple/ravi.html">Ravi Sharma</a>
 		</div>
 		<!--copyright-->
 	</div>

@@ -96,13 +96,17 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 										class="textbox" />
 								</div>
 								
+								
+								
+								<div class="blockdiv">
+									<label>My Page URL</label>
+									<input disabled=true type="text" name="campaignIdPage" id="campaignIdPage" value="http://my.aamaadmiparty.org/ripple/<c:out value='${rippleCampaign.campaignId}'/>.html"
+										class="textbox" />
+								</div>
+								
 								<div class="blockdiv">
 									<label>Share On Facebook/Twitter</label>
-									<div class="fb-share-button" data-href="${rippleCampaign.myAapShortUrl}" data-width="200" data-type="button_count"></div>
-									<!-- 
-									<input name="save" type="button" class="button" value="Share Personal URL" 
-									onclick="inviteFriendsToDonateUsingMyRipple('${rippleCampaign.myAapShortUrl}')" />
-									 -->
+									<div class="fb-share-button" data-href="http://my.aamaadmiparty.org/ripple/<c:out value='${rippleCampaign.campaignId}'/>.html" data-width="200" data-type="button_count"></div>
 									 <a href="https://twitter.com/share"
 								class="twitter-share-button" data-lang="en"
 								data-url="<c:out value='${rippleCampaign.myAapShortUrl}' />"
@@ -121,6 +125,8 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 									}(document, "script", "twitter-wjs");
 								</script>
 								</div>
+
+								
 								</c:if>
 								<div class="blockdiv">
 									<label>My Campaign Name</label>

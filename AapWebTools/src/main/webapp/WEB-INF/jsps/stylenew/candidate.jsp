@@ -27,7 +27,7 @@
 <meta name="og:site_name" property="og:site_name" content="my.aamaadmiparty.org" />
 <meta name="og:type" property="og:type" content="blog" />
 <meta name="og:description" property="og:description"
-	content="Donate to aam aadmi party candidates ${candidate.name} from ${candidate.pcName} - ${candidate.stateName} to help them fight election against corrupts  and now you can generate donation certificates online" />
+	content="Donate to aam aadmi party candidate ${candidate.name} from ${candidate.pcName} - ${candidate.stateName} to help them fight election against corrupts  and now you can generate donation certificates online" />
 
 
 <script>
@@ -91,6 +91,7 @@
 
 
 	<!--donatetabwrapper-->
+	
 	<!-- 
 	<div class="donatetabwrapper">
 		<input name="globalDonationButton" id="globalDonationButton" value="" type="button" class="donatebtnbig" />
@@ -146,7 +147,7 @@
 									<tbody>
 										<tr>
 											<th width="200">Total Money Required</th>
-											<td width="200">Rs 70,00,000</td>
+											<td width="200">Rs 40,00,000</td>
 										</tr>
 										<tr>
 											<th width="200">Total Transactions</th>
@@ -179,7 +180,7 @@
 			</div>
 			<br></br>
 			<div id="success" class="languagetab">
-				<h2>Recent Donations</h2>
+				<h2>Recent Online Donations</h2>
 				<em>*Max Last 500 donations listed here</em>
 				<% int i=1; %>
 				<table border="0" cellpadding="0" cellspacing="0">

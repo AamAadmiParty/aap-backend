@@ -11,21 +11,18 @@
 <jsp:include page="includes.jsp" />
 
 <meta name="description"
-	content="Hi Friends, I ${rippleUser.name} supporting AAM AADMI PARTY and inviting you to help me and party. Come and join me to help our country and donate for better future" />
-<c:if test="${empty rippleUser.profilePic }">
-	<meta name="og:image" property="og:image" content="http://kanpuria.com/wp-content/uploads/2013/12/AAP_Kanpur.jpg" />
-	<meta name="og:image" property="og:image" content="https://lh5.ggpht.com/Agz_PiBlwdqdWE3ypjXo4stC-l8tiRlDJnnIZlKT_XapaKM_h5LPrdzNLtkbyW5n3JU=w300" />
-	<meta name="og:image" property="og:image" content="http://shakilahmed.org/assets/images/aap.png" />
-</c:if>
-<c:if test="${!empty rippleUser.profilePic }">
-	<meta name="og:image" property="og:image" content="${rippleUser.profilePic}" />
-</c:if>
-<meta name="og:title" property="og:title" content="Donate for ${rippleUser.name}" />
-<meta name="og:url" property="og:url" content="${rippleCampaign.myAapShortUrl}" />
+        content="Hi Friends, I ${rippleUser.name} supporting AAM AADMI PARTY and inviting you to help me and party. Come and join me to help our country and donate for better future" />
+        <meta name="og:image" property="og:image" content="${rippleUser.profilePic}" />
+        <meta name="og:image" property="og:image" content="http://kanpuria.com/wp-content/uploads/2013/12/AAP_Kanpur.jpg" />
+        <meta name="og:image" property="og:image" content="https://lh5.ggpht.com/Agz_PiBlwdqdWE3ypjXo4stC-l8tiRlDJnnIZlKT_XapaKM_h5LPrdzNLtkbyW5n3JU=w300" />
+        <meta name="og:image" property="og:image" content="http://shakilahmed.org/assets/images/aap.png" />
+<meta name="og:title" property="og:title" content="Donate for ${rippleUser.name}'s ripple" />
+<meta name="og:url" property="og:url" content="http://my.aamaadmiparty.org${contextPath}/ripple/${rippleCampaign.campaignId}.html" />
 <meta name="og:site_name" property="og:site_name" content="my.aamaadmiparty.org" />
 <meta name="og:type" property="og:type" content="blog" />
 <meta name="og:description" property="og:description"
-	content="Hi Friends, I ${rippleUser.name} supporting AAM AADMI PARTY and inviting you to help me and party. Come and join me to help our country and donate for better future" />
+        content="Hi Friends, I ${rippleUser.name} supporting AAM AADMI PARTY and inviting you to help me and party. Come and join me to help our country and donate for better future" />
+
 
 
 <script>
@@ -216,6 +213,7 @@
 												</tbody>
 											</table>
 										</div>
+										<div class="fb-comments" data-href="http://my.aamaadmiparty.org${contextPath}/ripple/${rippleCampaign.campaignId}.html" data-width="640" data-numposts="5" data-colorscheme="light"></div>
 									</td>
 								</tr>
 							</table>

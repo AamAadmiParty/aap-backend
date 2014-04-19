@@ -187,6 +187,7 @@
 					<tbody>
 						<tr>
 							<th width="20">S.No. </th>
+							<th width="80">Transaction Id</th>
 							<th width="140">Donor Name</th>
 							<th width="89">Date</th>
 							<th width="91">Amount</th>
@@ -194,6 +195,7 @@
 						<c:forEach var="oneDonation" items="${donationCampaignInfo.dns}">
 							<tr>
 								<td><% out.println(i++); %></td>
+								<td><a href="my.aamaadmiparty.org/donationcertifcates.html?txnid=${oneDonation.did}"><c:out value="${oneDonation.did}" /></a></td>
 								<td><c:out value="${oneDonation.name}" /></td>
 								<td><fmt:formatDate value="${oneDonation.dt}" pattern="dd-MMM-yyyy HH:mm:ss" /></td>
 								<td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2"  value="${oneDonation.amt}" /></td>

@@ -350,6 +350,10 @@ public interface AapService {
 
 	List<DonationDto> getDonationsByCampaignId(String campaignId);
 	
+	DonationDto getDonationByTransactionId(String txnId);
+	
+	List<DonationDto> getDonationByEmailId(String txnId);
+	
 	EventDto saveEvent(EventDto eventDto,PostLocationType locationType, Long locationId) throws AppException;
 	
 	List<EventDto> getEventsOfLocation(PostLocationType locationType, Long locationId) throws AppException;
@@ -494,4 +498,6 @@ public interface AapService {
 	void updateAllLocationCampaignInCache() throws AppException;
 	
 	UserDto getUserByid(Long userId) throws AppException;
+	
+	void updateLocationCampaignDetailInMemcache(String oneLocationCampaignId);
 }

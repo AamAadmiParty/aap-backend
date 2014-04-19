@@ -6397,6 +6397,12 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 
 	}
+	@Override
+	@Transactional
+	public void updateLocationCampaignDetailInMemcache(String oneLocationCampaignId){
+		LocationCampaign oneLocationCampaign = locationCampaignDao.getLocationCampaignByLocationCampaign(oneLocationCampaignId);
+		updateLocationCampaignDetailInMemcache(oneLocationCampaign);
+	}
 	private void updateLocationCampaignDetailInMemcache(LocationCampaign oneLocationCampaign){
 		if(oneLocationCampaign == null){
 			return;
@@ -6444,6 +6450,23 @@ public class AapServiceImpl implements AapService, Serializable {
 	public UserDto getUserByid(Long userId) throws AppException {
 		User user = userDao.getUserById(userId);
 		return convertUser(user);
+	}
+
+	@Override
+	@Transactional
+	public DonationDto getDonationByTransactionId(String txnId) {
+		Donation donation = donationDao.getDonationByTransactionId(txnId);
+		return convertDonation(donation);
+	}
+
+	@Override
+	@Transactional
+	public List<DonationDto> getDonationByEmailId(String emailId) {
+		Email email = emailDao.getEmailByEmail(emailId);
+		if(email == null){
+			return null;
+		}
+		return getUserDonations(email.getUserId());
 	}
 
 }

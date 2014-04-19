@@ -70,6 +70,15 @@ public class DonationMemcacheRefreshListener extends AwsQueueListener {
 					}
 				}
 			}
+			if(data.equalsIgnoreCase("Lcid")){
+				String oneLocationCampaignId = jsonObject.getString("campaignId");
+				if(oneLocationCampaignId.equals("all")){
+					aapService.updateAllLocationCampaignInCache();
+				}else{
+					aapService.updateLocationCampaignDetailInMemcache(oneLocationCampaignId);	
+				}
+				
+			}
 
 		} catch (Exception ex) {
 			logger.error("Unable to import Donation" + jsonMessage, ex);

@@ -117,7 +117,7 @@ public class MemcachClient_SpyMemecached implements CacheService{
 			OperationFuture<Boolean> future = memcachedClient.set(key, defaultTimeToLive, value);
 			logger.info("memcache set result " + future.get());
 		}catch(Exception ex){
-			logger.error("Unable to set key in cache"+key);
+			logger.error("Unable to set key in cache"+key, ex);
 		}
 		long endTime = System.currentTimeMillis();
 		logger.info("Total Time "+(endTime - startTime) +" ms");

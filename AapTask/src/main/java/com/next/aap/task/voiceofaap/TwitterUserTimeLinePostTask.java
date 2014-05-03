@@ -66,7 +66,9 @@ public class TwitterUserTimeLinePostTask extends BaseSocialTask{
 						twitterAccountsFutureMap.put(futureResult, oneTwitterAccount);
 						count++;
 						logger.info(count + "of " + totalAccounts +" done");
-						sleep(2);
+						if(futureResult.get()){
+							sleep(2);	
+						}
 					}
 					//wait for all task to finish before proceeding
 					logger.info("waiting for countdown latch to go to Zero");

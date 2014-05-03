@@ -17,6 +17,7 @@ public class PollQuestionDto {
 	private String rejectionReason;
 	private Date publishDate;
 	private Date dateCreated;
+	private String contentWithoutHtml;
 
 	public Long getId() {
 		return id;
@@ -89,6 +90,12 @@ public class PollQuestionDto {
 	}
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
+	}
+	public String getContentWithoutHtml() {
+		return contentWithoutHtml;
+	}
+	public void setContentWithoutHtml(String contentWithoutHtml) {
+		this.contentWithoutHtml = contentWithoutHtml;
 	}
 
 	

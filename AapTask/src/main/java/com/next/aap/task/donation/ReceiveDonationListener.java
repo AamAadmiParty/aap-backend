@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.amazonaws.regions.Regions;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.core.service.AapService;
@@ -19,8 +20,8 @@ public class ReceiveDonationListener extends AwsQueueListener{
 
 	@Autowired
 	public ReceiveDonationListener(@Value("${donation_queue_name}") String queueName,@Value("${aws_access_key}") String accessKey
-			, @Value("${aws_access_secret}") String accessSecret) {
-		super(queueName, accessKey, accessSecret);
+			, @Value("${aws_access_secret}") String accessSecret,@Value("${donation_queue_region}") String donationQueueRegion) {
+		super(donationQueueRegion, queueName, accessKey, accessSecret, false);
 	}
 	@Autowired
 	private AapService aapService;

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -51,7 +53,7 @@ public class VideoDownloader{
 	// ss mm hh dd
 	public boolean refreshVideoList() {
 		logger.info("Downloading AAP Videos");
-		String channelIds[] = {"UCguJ7EOi-qn4ygQW4TFeS2A","UCZRtpY_4t1bJ1cafVwpTp_A","UCbau5NLKpsMWIqAXoFL4FhA"};
+		String channelIds[] = {"UCguJ7EOi-qn4ygQW4TFeS2A","UCZRtpY_4t1bJ1cafVwpTp_A","UCbau5NLKpsMWIqAXoFL4FhA","LIVEAAP"};
 		boolean newVideos = false;
 		try{
 			
@@ -81,11 +83,11 @@ public class VideoDownloader{
 			startIndex = startIndex + videoFeed.getEntries().size();
 			
 		}
-		return downloadAndSaveVideo(allVideos);
+		return downloadAndSaveVideo(allVideos, channelId);
 		
 	}
 
-	public boolean downloadAndSaveVideo(List<VideoEntry> allVideos) {
+	public boolean downloadAndSaveVideo(List<VideoEntry> allVideos, String channelId) {
 		boolean newVideoAvailable = false;
 		VideoDto videoItem;
 		VideoDto existingVideoDto;
@@ -110,6 +112,7 @@ public class VideoDownloader{
 					+ mediaGroup.getVideoId() + "/mqdefault.jpg");
 			videoItem.setYoutubeVideoId(mediaGroup.getVideoId());
 			videoItem.setTitle(videoEntry.getTitle().getPlainText());
+			videoItem.setChannelId(channelId);
 			videoItem.setWebUrl("http://www.youtube.com/watch?v="
 					+ mediaGroup.getVideoId());
 			logger.info("Saving Youtube Video : "+ videoItem.getTitle()+", Video Id = "+videoItem.getYoutubeVideoId());

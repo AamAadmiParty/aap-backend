@@ -7,6 +7,7 @@ public class PollAnswerDto {
 	private String content;//content of news which can be html or plain text
 	private Long pollQuestionId;
 	private Long totalVotes;
+	private String contentWithoutHtml;
 	
 	public Long getId() {
 		return id;
@@ -31,6 +32,12 @@ public class PollAnswerDto {
 	}
 	public void setTotalVotes(Long totalVotes) {
 		this.totalVotes = totalVotes;
+	}
+	public String getContentWithoutHtml() {
+		return contentWithoutHtml;
+	}
+	public void setContentWithoutHtml(String contentWithoutHtml) {
+		this.contentWithoutHtml = contentWithoutHtml;
 	}
 	@Override
 	public String toString() {

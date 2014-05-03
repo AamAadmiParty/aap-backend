@@ -25,6 +25,8 @@ public class CookieUtil {
 	
 	private static final String VOICE_OF_PAGE_COOKIE = "VOAC";
 	
+	private static final String POLL_COOKIE = "POC";
+	
 	private static Logger logger = LoggerFactory.getLogger(CookieUtil.class);
 
 	public static boolean isLastLoggedInViaFacebook(HttpServletRequest httpServletRequest){
@@ -53,6 +55,19 @@ public class CookieUtil {
 		lastAccountCookie.setPath("/");
 		lastAccountCookie.setMaxAge(30 * 24 * 60 * 60);
 		httpServletResponse.addCookie(lastAccountCookie);
+	}
+	public static void setUserPollCookie(HttpServletResponse httpServletResponse,Long userId , Long pollId, Long answerId){
+		String cookieName = POLL_COOKIE +"_"+userId+"_"+pollId;
+		logger.info("Creating Cookie "+ cookieName);
+		Cookie lastAccountCookie = new Cookie(cookieName, ""+answerId);
+		lastAccountCookie.setPath("/");
+		lastAccountCookie.setMaxAge(365 * 24 * 60 * 60);
+		httpServletResponse.addCookie(lastAccountCookie);
+	}
+	public static String getUserPollCookie(HttpServletRequest httpServletRequest,Long userId , Long pollId){
+		String cookieName = POLL_COOKIE +"_"+userId+"_"+pollId;
+		logger.info("Getting Cookie "+ cookieName);
+		return getStringCookie(httpServletRequest, cookieName);
 	}
 	public static boolean isUserBeenToVoiceOfAAp(HttpServletRequest httpServletRequest){
 		logger.info("Creating Cookie "+ VOICE_OF_PAGE_COOKIE);

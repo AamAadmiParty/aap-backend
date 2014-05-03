@@ -603,6 +603,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			if (facebookAppPermission == null) {
 				facebookAppPermission = new FacebookAppPermission();
 			}
+			logger.info("updating facebook User Token " + fbConnectionData.getAccessToken());
 			facebookAppPermission.setFacebookAccount(dbFacebookAccount);
 			facebookAppPermission.setFacebookApp(facebookApp);
 			facebookAppPermission.setToken(fbConnectionData.getAccessToken());
@@ -616,10 +617,10 @@ public class AapServiceImpl implements AapService, Serializable {
 
 			facebookAppPermission = facebookAppPermissionDao.saveFacebookAppPermission(facebookAppPermission);
 		}
-		System.out.println("user=" + user);
+		logger.info("user=" + user);
 		// First create/update user
 		if (user == null) {
-			System.out.println("creating new user=" + user);
+			logger.info("creating new user=" + user);
 			user = new User();
 			if (fbConnectionData.getDisplayName() == null) {
 				user.setName(facebookAccountEmail);
@@ -3367,6 +3368,9 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		PollQuestionDto pollQuestionDto = new PollQuestionDto();
 		BeanUtils.copyProperties(pollQuestion, pollQuestionDto);
+		String contentWithoutHtml = pollQuestion.getContent().replaceAll("\\<[^>]*>", "");
+		pollQuestionDto.setContentWithoutHtml(contentWithoutHtml);
+		
 		pollQuestionDto.setAnswers(convertPollAnswers(pollQuestion.getPollAnswers()));
 		return pollQuestionDto;
 	}
@@ -3428,6 +3432,9 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		PollAnswerDto pollAnswerDto = new PollAnswerDto();
 		BeanUtils.copyProperties(pollAnswer, pollAnswerDto);
+		String contentWithoutHtml = pollAnswer.getContent().replaceAll("\\<[^>]*>", "");
+		pollAnswerDto.setContentWithoutHtml(contentWithoutHtml);
+
 		return pollAnswerDto;
 	}
 
@@ -5243,27 +5250,34 @@ public class AapServiceImpl implements AapService, Serializable {
 			donationDump = donationDao.saveDonationDump(donationDump);
 			importOneDonation(donationDump);
 		} else {
-			logger.info("Existing Donation so will NOT import in system");
+			
 			Donation donation = donationDao.getDonationByDonorId(donationDump.getDonorId());
-			donation.setPgErrorDetail(donationDump.getPgErrorDetail());
-			donation.setPgErrorMessage(donationDump.getPgErrorMessage());
-			donation.setDonateToState(donationDump.getDonateToState());
-			donation.setDonateToLoksabha(donationDump.getDonateToLoksabha());
-			donation.setDonateToDistrict(donationDump.getDonateToDistrict());
+			if(donation == null){
+				logger.info("New Donation so will import in system");
+				importOneDonation(existingDonationDump);
+			}else{
+				logger.info("Existing Donation so will NOT import in system");
+				donation.setPgErrorDetail(donationDump.getPgErrorDetail());
+				donation.setPgErrorMessage(donationDump.getPgErrorMessage());
+				donation.setDonateToState(donationDump.getDonateToState());
+				donation.setDonateToLoksabha(donationDump.getDonateToLoksabha());
+				donation.setDonateToDistrict(donationDump.getDonateToDistrict());
 
-			donationDao.updateDonationPgStatus(donationDump);
-			if(!StringUtil.isEmpty(donationDump.getDonateToLoksabha()) && !"0".equals(donationDump.getDonateToLoksabha())){
-				logger.info("Updating Loksabha campaign detail");
-				Candidate candidate = candidateDao.getCandidateByExtPcId(donationDump.getDonateToLoksabha());
-				if(candidate != null){
-					LocationCampaign oneLocationCampaign = locationCampaignDao.getDefaultLocationCampaignByPcId(candidate.getParliamentConstituencyId());
-					if(oneLocationCampaign != null){
-						donation.setLcid(oneLocationCampaign.getCampaignId());
-						updateLocationCampaignDetailInMemcache(oneLocationCampaign);
+				donationDao.updateDonationPgStatus(donationDump);
+				if(!StringUtil.isEmpty(donationDump.getDonateToLoksabha()) && !"0".equals(donationDump.getDonateToLoksabha())){
+					logger.info("Updating Loksabha campaign detail");
+					Candidate candidate = candidateDao.getCandidateByExtPcId(donationDump.getDonateToLoksabha());
+					if(candidate != null){
+						LocationCampaign oneLocationCampaign = locationCampaignDao.getDefaultLocationCampaignByPcId(candidate.getParliamentConstituencyId());
+						if(oneLocationCampaign != null){
+							donation.setLcid(oneLocationCampaign.getCampaignId());
+							updateLocationCampaignDetailInMemcache(oneLocationCampaign);
+						}
 					}
 				}
+				donation = donationDao.saveDonation(donation);
 			}
-			donation = donationDao.saveDonation(donation);
+			
 		}
 		logger.info("Donation Dump Updated");
 
@@ -5278,6 +5292,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			if (dbVideo == null) {
 				dbVideo = new Video();
 				dbVideo.setDateCreated(new Date());
+				dbVideo.setContentStatus(ContentStatus.Pending);
 			}
 		} else {
 			dbVideo = videoDao.getVideoById(videoItem.getId());
@@ -5293,7 +5308,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		dbVideo.setYoutubeVideoId(videoItem.getYoutubeVideoId());
 		dbVideo.setPublishDate(videoItem.getPublishDate());
 		dbVideo.setGlobal(videoItem.isGlobal());
-		dbVideo.setContentStatus(ContentStatus.Pending);
+		dbVideo.setChannelId(videoItem.getChannelId());
 		dbVideo = videoDao.saveVideo(dbVideo);
 		return convertVideo(dbVideo);
 	}
@@ -5337,7 +5352,7 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public String savePollVote(Long userId, Long questionId, Long answerId) {
+	public String savePollVote(Long userId, Long questionId, Long answerId, boolean async) {
 		UserPollVote userPollVote = userPollVoteDao.getUserPollVote(userId, questionId);
 		PollAnswer pollAnswer = pollAnswerDao.getPollAnswerById(answerId);
 		if (userPollVote == null) {
@@ -5348,13 +5363,26 @@ public class AapServiceImpl implements AapService, Serializable {
 			userPollVote.setPollQuestion(pollQuestion);
 			userPollVote.setPollAnswer(pollAnswer);
 			userPollVote = userPollVoteDao.saveUserPollVote(userPollVote);
-			pollQuestionAnswerUpdater.updatePollAnswerStatsAsync(userId, questionId, answerId, null);
+			if(async){
+				pollQuestionAnswerUpdater.updatePollAnswerStatsAsync(userId, questionId, answerId, null);	
+			}else{
+				pollQuestionAnswerUpdater.updatePollAnswerStats(userId, questionId, answerId, null);
+			}
+			
 			return "Your Vote saved succesfully";
 		} else {
 			Long existingPollAnswerId = userPollVote.getPollAnswerId();
+			if(existingPollAnswerId.equals(answerId)){
+				//No need to do anything
+				return "No Update required";
+			}
 			userPollVote.setPollAnswer(pollAnswer);
 			userPollVote = userPollVoteDao.saveUserPollVote(userPollVote);
-			pollQuestionAnswerUpdater.updatePollAnswerStatsAsync(userId, questionId, answerId, existingPollAnswerId);
+			if(async){
+				pollQuestionAnswerUpdater.updatePollAnswerStatsAsync(userId, questionId, answerId, existingPollAnswerId);
+			}else{
+				pollQuestionAnswerUpdater.updatePollAnswerStats(userId, questionId, answerId, existingPollAnswerId);
+			}
 			return "Your Vote updated succesfully";
 		}
 

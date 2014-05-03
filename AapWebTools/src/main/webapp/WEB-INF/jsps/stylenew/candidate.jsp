@@ -29,7 +29,6 @@
 <meta name="og:description" property="og:description"
 	content="Donate to aam aadmi party candidate ${candidate.name} from ${candidate.pcName} - ${candidate.stateName} to help them fight election against corrupts  and now you can generate donation certificates online" />
 
-
 <script>
 	$(function() {
 
@@ -147,7 +146,7 @@
 									<tbody>
 										<tr>
 											<th width="200">Total Money Required</th>
-											<td width="200">Rs 40,00,000</td>
+											<td width="200">Rs 70,00,000(EC Limit)</td>
 										</tr>
 										<tr>
 											<th width="200">Total Transactions</th>

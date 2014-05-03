@@ -113,6 +113,10 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>aap</servlet-name>
+		<url-pattern>/poll/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>aap</servlet-name>
 		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>

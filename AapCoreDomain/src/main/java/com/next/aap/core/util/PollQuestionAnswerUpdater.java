@@ -4,6 +4,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,8 @@ public class PollQuestionAnswerUpdater {
 
 	LinkedBlockingQueue<Vote> voteQueue = new LinkedBlockingQueue<>(); 
 
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private AapService aapService;
 	
@@ -38,9 +42,8 @@ public class PollQuestionAnswerUpdater {
 			while(true){
 				vote = voteQueue.poll();
 				if(vote != null){
-					System.out.println("Got Next Vote "+vote);
-					aapService.updatePollVoteAnswerTotalCount(vote.getPollAnswerId(), vote.getPollExisitngAnswerId());
-					System.out.println("Updated Count");
+					logger.info("Got Next Vote "+vote);
+					updatePollAnswerStats(vote.getUserId(), vote.getPollQuestionId(), vote.getPollAnswerId(), vote.getPollExisitngAnswerId());
 				}
 			}
 		}catch(Exception ex){
@@ -51,6 +54,11 @@ public class PollQuestionAnswerUpdater {
 	
 	public void updatePollAnswerStatsAsync(Long userId, Long pollQuestionId, Long pollAnswerId,Long pollExisitngAnswerId){
 		voteQueue.add(new Vote(userId, pollQuestionId, pollAnswerId, pollExisitngAnswerId));
+	}
+	public void updatePollAnswerStats(Long userId, Long pollQuestionId, Long pollAnswerId,Long pollExisitngAnswerId){
+		aapService.updatePollVoteAnswerTotalCount(pollAnswerId, pollExisitngAnswerId);
+		logger.info("Updated Count");
+
 	}
 	
 	private class Vote{

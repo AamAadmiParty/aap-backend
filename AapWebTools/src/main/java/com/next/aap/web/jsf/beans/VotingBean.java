@@ -64,7 +64,7 @@ public class VotingBean extends BaseJsfBean {
 		}
 		if(isValidInput()){
 			UserDto user = getLoggedInUser();
-			String result = aapService.savePollVote(user.getId(), questionId, Long.parseLong(selectedAnswer.get(questionId)));
+			String result = aapService.savePollVote(user.getId(), questionId, Long.parseLong(selectedAnswer.get(questionId)), true);
 			sendErrorMessageToJsfScreen(result);
 			//save vote for user
 		}

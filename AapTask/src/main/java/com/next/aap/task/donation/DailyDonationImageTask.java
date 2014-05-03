@@ -75,7 +75,7 @@ public class DailyDonationImageTask implements Runnable {
 	// http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
 	// http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	// ss mm hh dd
-	@Scheduled(cron = "0 45 06 * * *")
+	//@Scheduled(cron = "0 45 06 * * *")
 	public void downloadImageAndPostToFacebook() {
 		logger.info(new Date().toString());
 		logger.info("Starting Scheduled task");

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.InvalidAuthorizationException;
 import org.springframework.social.RevokedAuthorizationException;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.GroupMembership;
@@ -67,8 +68,9 @@ public class VoiceOfAapController extends AppBaseController {
 			logger.info("User is logegd In to facebook,and given permission to voice of aap but permission about to expire");
 			return redirect(mv, contextPath+"/login/voa/facebook?group=timeline&" + REDIRECT_URL_PARAM_ID + "=voa.html");
 		}
-
+		logger.info("facebook User Token " + facebookAppPermission.getToken());
 		Facebook facebook = new FacebookTemplate(facebookAppPermission.getToken());
+		logger.info("isAuthorized = " + facebook.isAuthorized());
 		boolean beVoiceOfAap;
 		try {
 			if (!facebook.userOperations().getUserPermissions().contains("publish_actions")
@@ -99,6 +101,11 @@ public class VoiceOfAapController extends AppBaseController {
 		} catch (RevokedAuthorizationException ex) {
 			logger.info("User has revoked permission");
 			beVoiceOfAap = false;
+		} catch (InvalidAuthorizationException ex) {
+			logger.info("User is logegd In to facebook,and given permission to voice of aap but permission about to expire");
+			beVoiceOfAap = false;
+			return redirect(mv, contextPath+"/login/voa/facebook?group=timeline&" + REDIRECT_URL_PARAM_ID + "=voa.html");
+			
 		}
 		mv.setViewName(design + "/voa");
 		return mv;

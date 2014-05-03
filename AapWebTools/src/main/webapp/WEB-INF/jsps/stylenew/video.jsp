@@ -13,6 +13,18 @@
 </head>
 <body>
 <div id="fb-root"></div>
+<script src="https://apis.google.com/js/platform.js"></script>
+<script>
+  function onYtEvent(payload) {
+    if (payload.eventType == 'subscribe') {
+    	ga('send', 'event', 'youtube', 'subscribe',
+				'${video.channelId}', 1);
+    } else if (payload.eventType == 'unsubscribe') {
+    	ga('send', 'event', 'youtube', 'unsubscribe',
+				'${video.channelId}', 1);
+    }
+  }
+</script>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -39,6 +51,7 @@
 				<iframe width="610" height="425" src="http://www.youtube.com/embed/${video.youtubeVideoId}" frameborder="0" ></iframe>
 				
 				<br></br>
+				<div class="g-ytsubscribe" data-channel="${video.channelId}" data-layout="full" data-count="default" data-onytevent="onYtEvent"></div>
 				<br></br>
 				<div class="fb-comments" data-href="http://my.aamaadmiparty.org/content/video/${video.id}" data-width="640" data-numposts="5" data-colorscheme="light"></div>
 				

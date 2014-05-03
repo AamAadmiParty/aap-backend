@@ -86,7 +86,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			}
 			UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 			Date userCreationDate = loggedInUser.getDateCreated();
-			if(userCreationDate != null){
+			if(userCreationDate != null && !redirectUrl.contains("/poll/")){
 				//and if user created in last 3-4 days then forward user to Voice of AAP Page
 				Calendar calendar = Calendar.getInstance();
 				calendar.add(Calendar.DATE, 30);

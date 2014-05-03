@@ -11,6 +11,7 @@ public class VideoDto {
 	private Date publishDate;//Publish date of this item
 	private String description;//description of video
 	private String youtubeVideoId;
+	private String channelId;
 	private boolean global;//Whether this News is available global or not
 	private ContentStatus contentStatus;
 	private Date dateCreated;
@@ -75,11 +76,17 @@ public class VideoDto {
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
+	public String getChannelId() {
+		return channelId;
+	}
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
 	@Override
 	public String toString() {
 		return "VideoDto [id=" + id + ", title=" + title + ", imageUrl=" + imageUrl + ", webUrl=" + webUrl + ", publishDate=" + publishDate + ", description="
-				+ description + ", youtubeVideoId=" + youtubeVideoId + ", global=" + global + ", contentStatus=" + contentStatus + ", dateCreated="
-				+ dateCreated + "]";
+				+ description + ", youtubeVideoId=" + youtubeVideoId + ", channelId=" + channelId + ", global=" + global + ", contentStatus=" + contentStatus
+				+ ", dateCreated=" + dateCreated + "]";
 	}
 	
 	

@@ -1,11 +1,13 @@
 package com.next.aap.task.voiceofaap;
 
+import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.social.facebook.api.Facebook;
@@ -34,6 +36,42 @@ public class PostOnUserFacebookTimeLineTask implements Callable<Boolean> {
 		this.facebookAccountDto = facebookAccountDto;
 		this.plannedFacebookPostDto = plannedFacebookPostDto;
 		this.countDownLatch = countDownLatch;
+	}
+	public static void main(String args[]) throws MalformedURLException{
+		Facebook facebook = new FacebookTemplate("CAAHXYzhpziIBAOkP5FTERnOQRXGV3GmGmzVxSZAfgkBj7NGuP6G0pEZCLug5ZBQLyUiRP7Lyuz3YPpdcyCFDljdv8G3DQHUIx2V4U2eOoJkdw3BrFdSXly8aZAqMChwP6T13okTAkbQEx9W2OZCxScSZBbTLEPtMdjGmkGPF95WQijjpscII5w");
+		PlannedFacebookPostDto plannedFacebookPostDto = new PlannedFacebookPostDto();
+		plannedFacebookPostDto.setPostType(PlannedFacebookPostDto.LINK_TYPE);
+		plannedFacebookPostDto.setMessage("This is test message to test Voice of AAP");
+		plannedFacebookPostDto.setLink("Http://my.aamaadmiparty.org");
+		plannedFacebookPostDto.setName("Ravi Sharma");
+		plannedFacebookPostDto.setCaption("My Love");
+		plannedFacebookPostDto.setDescription("I am testing Something");
+		plannedFacebookPostDto.setPicture("https://lh4.googleusercontent.com/-A_b0YHzjJiw/U13jIQ_ta9I/AAAAAAAAQcA/Lx92KoXtscU/s912/27-Apr-2014.png");
+		String facebookPostExternalId = null;
+		if(plannedFacebookPostDto.getPostType().equalsIgnoreCase(PlannedFacebookPostDto.LINK_TYPE)){
+			if(StringUtil.isEmpty(plannedFacebookPostDto.getPicture())){
+				FacebookLink facebookLink = new FacebookLink(plannedFacebookPostDto.getLink(), plannedFacebookPostDto.getName(), plannedFacebookPostDto.getCaption(), plannedFacebookPostDto.getDescription());
+				facebookPostExternalId = facebook.feedOperations().postLink(plannedFacebookPostDto.getMessage(), facebookLink);
+			}else{
+				MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+				map.set("link", plannedFacebookPostDto.getLink());
+				map.set("name", plannedFacebookPostDto.getName());
+				map.set("caption", plannedFacebookPostDto.getCaption());
+				map.set("description", plannedFacebookPostDto.getDescription());
+				map.set("message", plannedFacebookPostDto.getMessage());
+				map.set("access_token", "CAAHXYzhpziIBAOkP5FTERnOQRXGV3GmGmzVxSZAfgkBj7NGuP6G0pEZCLug5ZBQLyUiRP7Lyuz3YPpdcyCFDljdv8G3DQHUIx2V4U2eOoJkdw3BrFdSXly8aZAqMChwP6T13okTAkbQEx9W2OZCxScSZBbTLEPtMdjGmkGPF95WQijjpscII5w");
+				map.add("picture", plannedFacebookPostDto.getPicture());
+				facebookPostExternalId = facebook.publish("me", "feed", map);
+			}
+		}
+		if(plannedFacebookPostDto.getPostType().equalsIgnoreCase(PlannedFacebookPostDto.PHOTO_TYPE)){
+			Resource photo = new FileSystemResource(plannedFacebookPostDto.getPicture());
+			facebookPostExternalId = facebook.mediaOperations().postPhoto(photo, plannedFacebookPostDto.getMessage());
+		}
+		if(plannedFacebookPostDto.getPostType().equalsIgnoreCase(PlannedFacebookPostDto.TEXT_TYPE)){
+			facebookPostExternalId = facebook.feedOperations().updateStatus(plannedFacebookPostDto.getMessage());
+		}
+		System.out.println("Facebook Post created " + facebookPostExternalId);
 	}
 	@Override
 	public Boolean call() throws Exception {

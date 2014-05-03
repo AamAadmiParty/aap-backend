@@ -1,6 +1,7 @@
 package com.next.aap.web.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import com.next.aap.web.cache.LocationCacheDbImpl;
 import com.next.aap.web.cache.NewsItemCacheImpl;
 import com.next.aap.web.cache.PollItemCacheImpl;
 import com.next.aap.web.cache.VideoItemCacheImpl;
+import com.next.aap.web.cache.dto.PollStatsDto;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.CandidateDto;
@@ -35,6 +37,7 @@ import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
+import com.next.aap.web.dto.PollAnswerDto;
 import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.UserDto;
@@ -109,6 +112,13 @@ public class AppBaseController extends BaseController{
 				mv.getModel().put("donationCampaignInfo", donationCampaignInfo);
 			}
 		}
+	}
+	protected String getUserPollQuestion(Long userId, Long pollQuestionId){
+			String key = CacheKeyService.createUserPollVoteKey(userId, pollQuestionId);
+			logger.info("Key = "+ key);
+			String answerId = cacheService.getData(key, String.class);
+			logger.info("answerId = "+ answerId);
+			return answerId;
 	}
 	protected DonationCampaignInfo getCandidateDonationInfo(CandidateDto candidateDto){
 		if(candidateDto != null){
@@ -305,6 +315,7 @@ public class AppBaseController extends BaseController{
 		}else{
 			mv.getModel().put("admin", false);
 		}
+		mv.getModel().put("currentUrl", httpServletRequest.getRequestURI());
 		
 	}
 	protected void addErrorInModel(ModelAndView mv, String errorMessage){
@@ -355,5 +366,56 @@ public class AppBaseController extends BaseController{
 		mv.getModel().put(variableName, pcs);
 	}
 	
+	protected void addPollIntoModel(Long pollId, ModelAndView mv){
+		PollQuestionDto pollQuestion = pollItemCacheImpl.getCacheItemById(pollId);
+		mv.getModel().put("poll", pollQuestion);
+	}
+	
+	protected PollStatsDto getPollStats(Long pollQuestionId){
+		String pollKey = CacheKeyService.createPollVoteKey(pollQuestionId);
+		return cacheService.getData(pollKey, PollStatsDto.class);
+	}
+	protected void addPollChartToModel(Long userId, Long pollQuestionId, ModelAndView mv){
+		PollStatsDto pollStats = getPollStats(pollQuestionId);
+		if(pollStats == null){
+			pollStats = new PollStatsDto();
+		}
+		PollQuestionDto pollQuestionDto = pollItemCacheImpl.getCacheItemById(pollQuestionId);
+		List<String> voteMap = new ArrayList<>();
+		if(pollQuestionDto != null){
+			
+			voteMap.add(createEntry("Answer", "'Total Votes'"));
+			for(PollAnswerDto oneAnswer:pollQuestionDto.getAnswers()){
+				Long voteCount = pollStats.getAnswerCounts(oneAnswer.getId());
+				if(voteCount == null){
+					voteCount = 0L;
+				}
+				voteMap.add(createEntry(oneAnswer.getContent(), ""+voteCount));
+			}
+		}
+		
+		mv.getModel().put("chartData", voteMap.toString());
+		
+		String userAnswer = cacheService.getData(CacheKeyService.createUserPollVoteKey(userId, pollQuestionId), String.class);
+		if(userAnswer != null){
+			for(PollAnswerDto oneAnswer:pollQuestionDto.getAnswers()){
+				if(userAnswer.equals(String.valueOf(oneAnswer.getId()))){
+					mv.getModel().put("userAnswer", oneAnswer.getContentWithoutHtml());
+				}
+			}
+		}
+	}
+	private static String createEntry(String key, String value){
+		return "['"+key+"', "+value+"]";
+	}
+	public static void main(String args[]){
+		List<String> voteMap = new ArrayList<>();
+		voteMap.add(createEntry("Answer", "'Total Votes'"));
+		voteMap.add(createEntry("First Answer", ""+10));
+		voteMap.add(createEntry("Second Answer", ""+20));
+		voteMap.add(createEntry("Third Answer", ""+30));
+		
+		System.out.println(voteMap.toString());
+	}
 	
 }

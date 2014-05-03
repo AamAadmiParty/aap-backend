@@ -322,7 +322,7 @@ public interface AapService {
 	
 	VideoDto getVideoById(Long videoId);
 	
-	String savePollVote(Long userId, Long questionId, Long answerId);
+	String savePollVote(Long userId, Long questionId, Long answerId, boolean async);
 	
 	void updatePollVoteAnswerTotalCount(Long answerId, Long existingAnswerId);
 	

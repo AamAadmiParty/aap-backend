@@ -52,6 +52,8 @@ public class Video {
 	private String description;//description of video
 	@Column(name = "utube_video_id")
 	private String youtubeVideoId;
+	@Column(name = "channel_id")
+	private String channelId;
 
 	@Column(name = "global_allowed")
 	private boolean global;//Whether this News is available global or not
@@ -255,5 +257,11 @@ public class Video {
 	}
 	public void setCountryRegions(List<CountryRegion> countryRegions) {
 		this.countryRegions = countryRegions;
+	}
+	public String getChannelId() {
+		return channelId;
+	}
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
 	}
 }

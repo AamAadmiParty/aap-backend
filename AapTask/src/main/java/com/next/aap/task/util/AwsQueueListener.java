@@ -30,6 +30,9 @@ public abstract class AwsQueueListener {
 		this(Regions.US_WEST_2, queueName, acccessKey, secretKey, deleteMessageOnFail);
 	}
 
+	public AwsQueueListener(String regions, String queueName, String accessKey, String secretKey,boolean deleteMessageOnFail) {
+		this(Regions.valueOf(regions), queueName, accessKey, secretKey, deleteMessageOnFail);
+	}
 	public AwsQueueListener(Regions regions, String queueName, String accessKey, String secretKey,boolean deleteMessageOnFail) {
 		this.queueName = queueName;
 		this.deleteMessageOnFail = deleteMessageOnFail;
@@ -41,7 +44,6 @@ public abstract class AwsQueueListener {
 		stateListenerThread();
 
 	}
-
 	public abstract void onQueueMessage(String jsonMessage);
 
 	private void stateListenerThread() {

@@ -18,6 +18,7 @@ public class PollQuestionDto {
 	private Date publishDate;
 	private Date dateCreated;
 	private String contentWithoutHtml;
+	private String urlId;
 
 	public Long getId() {
 		return id;
@@ -96,6 +97,12 @@ public class PollQuestionDto {
 	}
 	public void setContentWithoutHtml(String contentWithoutHtml) {
 		this.contentWithoutHtml = contentWithoutHtml;
+	}
+	public String getUrlId() {
+		return urlId;
+	}
+	public void setUrlId(String urlId) {
+		this.urlId = urlId;
 	}
 
 	

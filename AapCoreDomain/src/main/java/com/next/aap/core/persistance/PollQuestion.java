@@ -50,6 +50,8 @@ public class PollQuestion {
 	private String webUrl;// Web url link for this news, which will be shared by share intent
 	@Column(name = "original_url", length=1024)
 	private String originalUrl;// Web url link for this news, which will be shared by share intent
+	@Column(name = "url_id", length=128)
+	private String urlId;// Web url link for this news, which will be shared by share intent
 	@Column(name = "valid_till_date")
 	private Date validTillDate;//Publish date of this item
 	@Column(name = "publish_date")
@@ -318,6 +320,14 @@ public class PollQuestion {
 
 	public void setRejectionReason(String rejectionReason) {
 		this.rejectionReason = rejectionReason;
+	}
+
+	public String getUrlId() {
+		return urlId;
+	}
+
+	public void setUrlId(String urlId) {
+		this.urlId = urlId;
 	}
 	
 	

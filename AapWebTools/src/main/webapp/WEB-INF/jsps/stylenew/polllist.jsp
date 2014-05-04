@@ -7,7 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party, India</title>
+<title>Polls - Aam Aadmi Party, India</title>
 <jsp:include page="includes.jsp" />
 </head>
 <body>
@@ -27,58 +27,25 @@
 		<!--articleCategory-tablist-->
 		<ul>
 			<li><a href="${contextPath}/index.html"><img src="<c:out value='${staticDirectory}'/>/images/news-icon.png" border="0" align="absmiddle" /> News</a></li>
-			<li><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
-					Videos</li>
+			<li><a href="${contextPath}/videos.html"><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
+					Videos</a></li>
 			<li><a href="${contextPath}/blogs.html"><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" />
 					Blogs</a></li>
-			<li><a href="${contextPath}/polls.html"><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" />
-					Polls</a></li>
+			<li><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
+			Polls</li>
 		</ul>
 	</div>
 	<!--articleCategory-tablist-->
 
-	<c:forEach items="${videoItems.items}" var="oneNews">
+	<c:forEach items="${pollItems.items}" var="oneNews">
 
 		<div class="divvideoarticle">
 			<!--divarticle-->
 			<h1>
-				<a href="${contextPath}/content/video/${oneNews.id}">
-				<c:out value="${oneNews.title}" />
-				<!-- 
-				<c:if test="${fn:length(oneNews.title) gt 47}">
-						<c:out value="${fn:substring(oneNews.title, 0, 47)}" />
-					</c:if> <c:if test="${fn:length(oneNews.title) le 47}">
-						<c:out value="${oneNews.title}" />
-					</c:if>
- 				-->
+				<a href="${contextPath}/content/poll/${oneNews.urlId}.html">
+				<c:out value="${oneNews.contentWithoutHtml}" />
 				</a>
 			</h1>
-			<div class="img">
-				<!--img-->
-				<img src='<c:out value="${oneNews.imageUrl}" />' width="245" height="145" border="0" />
-				<div class="author">
-					<p>10 Min Ago</p>
-					<p>
-						By <span>Arvind</span>
-					</p>
-					<p class="orange">NATIONAL</p>
-				</div>
-			</div>
-			<!--img-->
-			<c:if test="${fn:length(oneNews.description) gt 500}">
-				<p>
-					<c:out value="${fn:substring(oneNews.description, 0, 500)}" escapeXml="false" />
-					... <a href="${contextPath}/content/video/${oneNews.id}">Watch Now</a>
-				</p>
-			</c:if>
-			<c:if test="${fn:length(oneNews.description) le 500}">
-				<p>
-					<c:out value="${oneNews.description}" escapeXml="false" />
-					<a href="${contextPath}/content/video/${oneNews.id}">Watch Now</a>
-				</p>
-			</c:if>
-
-
 		</div>
 		<!--divarticle-->
 	</c:forEach>

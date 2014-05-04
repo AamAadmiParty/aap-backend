@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
@@ -250,6 +251,56 @@ public class AppBaseController extends BaseController{
 		
 	}
 	
+	protected void addPollsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
+		long livingAcId = 0;
+		long votingAcId = 0;
+		long livingPcId = 0;
+		long votingPcId = 0;
+		long nriCountryId = 0;
+		long nriCountryRegionId = 0;
+		long nriCountryRegionAreaId = 0;
+		
+		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
+		if(loggedInUser != null){
+			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
+				livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
+			}
+			if(loggedInUser.getAssemblyConstituencyVotingId() != null){
+				votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
+			}
+			if(loggedInUser.getParliamentConstituencyLivingId() != null){
+				livingPcId = loggedInUser.getParliamentConstituencyLivingId();
+			}
+			if(loggedInUser.getParliamentConstituencyVotingId() != null){
+				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
+			}
+			if(loggedInUser.getNriCountryId() != null){
+				nriCountryId = loggedInUser.getNriCountryId();
+			}
+			if(loggedInUser.getNriCountryRegionId() != null){
+				nriCountryRegionId = loggedInUser.getNriCountryRegionId();
+			}
+			if(loggedInUser.getNriCountryRegionAreaId() != null){
+				nriCountryRegionAreaId = loggedInUser.getNriCountryRegionAreaId();
+			}
+		}else{
+			//get it from Cookies
+			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
+			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
+			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
+			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
+			nriCountryId = CookieUtil.getUserNriCountryIdCookie(httpServletRequest);
+			nriCountryRegionId = CookieUtil.getUserNriCountryRegionIdCookie(httpServletRequest);
+			nriCountryRegionAreaId = CookieUtil.getUserNriCountryRegionAreaIdCookie(httpServletRequest);
+		}
+		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
+		ItemList<PollQuestionDto> pollItems = pollItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, 
+				nriCountryId, nriCountryRegionId, pageNumber);
+		mv.getModel().put("pollItems", pollItems);
+		mv.getModel().put("pageNumber", pageNumber);
+		
+	}
+	
 	protected void addBlogsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
 		long livingAcId = 0;
 		long votingAcId = 0;
@@ -366,9 +417,16 @@ public class AppBaseController extends BaseController{
 		mv.getModel().put(variableName, pcs);
 	}
 	
-	protected void addPollIntoModel(Long pollId, ModelAndView mv){
-		PollQuestionDto pollQuestion = pollItemCacheImpl.getCacheItemById(pollId);
+	protected PollQuestionDto addPollIntoModel(String pollId, ModelAndView mv){
+		PollQuestionDto pollQuestion = null;
+		if(NumberUtils.isNumber(pollId)){
+			pollQuestion = pollItemCacheImpl.getCacheItemById(Long.parseLong(pollId));
+		}else{
+			pollQuestion = pollItemCacheImpl.getPollQuestionByUrlId(pollId);
+		}
+		
 		mv.getModel().put("poll", pollQuestion);
+		return pollQuestion;
 	}
 	
 	protected PollStatsDto getPollStats(Long pollQuestionId){

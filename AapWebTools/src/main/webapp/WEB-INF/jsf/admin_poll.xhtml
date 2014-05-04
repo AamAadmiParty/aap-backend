@@ -99,12 +99,15 @@
 							</p:editor>
 						</p:panelGrid>
 						<br></br>
+						<h:outputText id="urlForPoll" value="http://my.aamaadmiparty.org/content/poll/#{pollAdminBean.selectedPollQuestion.urlId}.html" />
+						<h:outputText id="urlForPoll2" value="" />
+						<br></br>
 						<p:outputPanel id="answerPanel">
 							<p:outputPanel rendered="#{!pollAdminBean.showAnswerList}">
 								<p:inputTextarea rows="5" cols="50" counter="counter" maxlength="140" counterTemplate="{0} characters remaining." value="#{pollAdminBean.selectedAnswer.content}">
 								</p:inputTextarea>
 								<br></br>
-								<h:outputText id="counter" />
+								<h:outputText id="counter"  />
 								<br></br>
 								<p:commandButton id="addAnswer" value="Add Answer" update=":adminPollQuestionForm" actionListener="#{pollAdminBean.addPollQuestionAnswer}" styleClass="ui-priority-primary">
 								</p:commandButton>

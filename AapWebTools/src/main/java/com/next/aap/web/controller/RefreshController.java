@@ -62,8 +62,8 @@ public class RefreshController extends AppBaseController {
 	@ResponseBody
 	public String refreshPolls(ModelAndView mv,
 			HttpServletRequest httpServletRequest) {
-		blogItemCacheImpl.refreshFullCache();
-		return "blog downloaded";
+		pollItemCacheImpl.refreshFullCache();
+		return "poll downloaded";
 	}
 	@RequestMapping(value = "/aaps/event", method = RequestMethod.GET)
 	@ResponseBody

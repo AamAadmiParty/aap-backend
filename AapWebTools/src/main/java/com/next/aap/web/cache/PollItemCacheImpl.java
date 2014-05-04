@@ -2,6 +2,7 @@ package com.next.aap.web.cache;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,6 +25,8 @@ public class PollItemCacheImpl extends BasItemCacheImpl<PollQuestionDto>  {
 	@Autowired
 	private AapService aapService;
 	
+	private Map<String, PollQuestionDto> pollsByUrlId = new HashMap<String, PollQuestionDto>();
+	
 	@PostConstruct
 	public void init(){
 		refreshFullCache();
@@ -31,10 +34,15 @@ public class PollItemCacheImpl extends BasItemCacheImpl<PollQuestionDto>  {
 	
 	@Override
 	public void refreshFullCache() {
+		
 		List<PollQuestionDto> allPollQuestionDtos = aapService.getAllPublishedPolls();
+		pollsByUrlId.clear();
 		logger.info("Total PollQuestion : " + allPollQuestionDtos.size());
 		for(PollQuestionDto onePollQuestionDto:allPollQuestionDtos){
 			addCacheItem(DEFAULT_LANGUAGE, onePollQuestionDto, onePollQuestionDto.getId(), onePollQuestionDto.isGlobal());
+			if(onePollQuestionDto.getUrlId() != null){
+				pollsByUrlId.put(onePollQuestionDto.getUrlId().toLowerCase(), onePollQuestionDto);
+			}
 		}
 		Map<Long, List<Long>> pollQuestionItemMap = aapService.getPollQuestionItemsOfAllAc();
 		for(Entry<Long, List<Long>> oneEntry:pollQuestionItemMap.entrySet()){
@@ -151,6 +159,12 @@ public class PollItemCacheImpl extends BasItemCacheImpl<PollQuestionDto>  {
 		return null;
 	}
 
+	public PollQuestionDto getPollQuestionByUrlId(String urlId){
+		urlId = urlId.toLowerCase();
+		System.out.println("urlId="+urlId);
+		System.out.println("pollsByUrlId="+pollsByUrlId);
+		return pollsByUrlId.get(urlId);
+	}
 	
 
 }

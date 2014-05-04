@@ -31,6 +31,8 @@
 			<li><a href="${contextPath}/videos.html"><img src="<c:out value='${staticDirectory}'/>/images/video-blue-icon.png" border="0" align="absmiddle" />
 					Videos</a></li>
 			<li><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" /> Blogs</li>
+			<li><a href="${contextPath}/polls.html"><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" />
+					Polls</a></li>
 		</ul>
 	</div>
 	<!--articleCategory-tablist-->

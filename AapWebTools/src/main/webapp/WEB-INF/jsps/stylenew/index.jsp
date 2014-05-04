@@ -31,6 +31,8 @@
 					Videos</a></li>
 			<li><a href="${contextPath}/blogs.html"><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" />
 					Blogs</a></li>
+			<li><a href="${contextPath}/polls.html"><img src="<c:out value='${staticDirectory}'/>/images/blog-blue-icon.png" border="0" align="absmiddle" />
+					Polls</a></li>
 		</ul>
 	</div>
 	<!--articleCategory-tablist-->

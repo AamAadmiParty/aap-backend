@@ -3279,6 +3279,14 @@ public class AapServiceImpl implements AapService, Serializable {
 			pollQuestion = new PollQuestion();
 			pollQuestion.setDateCreated(new Date());
 			pollQuestion.setContentStatus(ContentStatus.Pending);
+			String contentWithoutHtml = removeHtml(pollQuestionDto.getContent().trim());
+			contentWithoutHtml = contentWithoutHtml.replaceAll(" ", "_");
+			contentWithoutHtml = contentWithoutHtml.replaceAll("\n", "_");
+			contentWithoutHtml = contentWithoutHtml.toLowerCase();
+			if(contentWithoutHtml.length() > 64){
+				contentWithoutHtml = contentWithoutHtml.substring(0, 63);
+			}
+			pollQuestion.setUrlId(contentWithoutHtml);
 		}
 		pollQuestion.setContent(pollQuestionDto.getContent());
 		pollQuestion.setDateModified(new Date());
@@ -3361,6 +3369,11 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return convertPollQuestion(pollQuestion);
 	}
+	private String removeHtml(String data){
+		data = data.replaceAll("\\<[^>]*>", "");
+		data = data.replaceAll("&nbsp;", "");
+		return data;
+	}
 
 	private PollQuestionDto convertPollQuestion(PollQuestion pollQuestion) {
 		if (pollQuestion == null) {
@@ -3368,7 +3381,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		PollQuestionDto pollQuestionDto = new PollQuestionDto();
 		BeanUtils.copyProperties(pollQuestion, pollQuestionDto);
-		String contentWithoutHtml = pollQuestion.getContent().replaceAll("\\<[^>]*>", "");
+		String contentWithoutHtml = removeHtml(pollQuestion.getContent());
 		pollQuestionDto.setContentWithoutHtml(contentWithoutHtml);
 		
 		pollQuestionDto.setAnswers(convertPollAnswers(pollQuestion.getPollAnswers()));
@@ -3432,7 +3445,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		PollAnswerDto pollAnswerDto = new PollAnswerDto();
 		BeanUtils.copyProperties(pollAnswer, pollAnswerDto);
-		String contentWithoutHtml = pollAnswer.getContent().replaceAll("\\<[^>]*>", "");
+		String contentWithoutHtml = removeHtml(pollAnswer.getContent());
 		pollAnswerDto.setContentWithoutHtml(contentWithoutHtml);
 
 		return pollAnswerDto;

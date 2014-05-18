@@ -147,7 +147,7 @@ margin-left: 10px;
                     <!--formwrapper-->
                     <c:if test="${!userAlreadyPolled}">
                     <form method="post">
-                        <input type="hidden" name="question" id="1" value="1" />
+                        <input type="hidden" name="question" id="${poll.id}" value="${poll.id}" />
 
                     	<c:forEach items="${poll.answers}" var="oneAnswer">
                         <div  class="form-row">
@@ -163,7 +163,7 @@ margin-left: 10px;
 		                        <input name="poll" type="submit" class="button disabled " value="Cast Your Vote" disabled="disabled" />
 								</c:if>
 								<c:if test="${!empty loggedInUser}">
-								<input name="poll" type="submit" class="button" value="Cast Your Vote" disabled="disabled" />
+								<input name="poll" type="submit" class="button" value="Cast Your Vote" />
 								</c:if>
 								
                         </div>
@@ -176,7 +176,7 @@ margin-left: 10px;
 					</c:if>
                 </div>
                 
-                <div class="fb-comments" data-href="http://my.aamaadmiparty.org/content/poll/1" data-width="900" data-numposts="5" data-colorscheme="light"></div>
+                <div class="fb-comments" data-href="http://my.aamaadmiparty.org${currentUrl}" data-width="900" data-numposts="20" data-colorscheme="light"></div>
                 <!--loginwithinnerholder-->
             </div>
             <!--loginwithholder-->

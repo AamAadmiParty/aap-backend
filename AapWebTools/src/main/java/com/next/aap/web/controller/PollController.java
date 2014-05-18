@@ -32,29 +32,33 @@ public class PollController extends AppBaseController {
 		
 		PollQuestionDto pollQuestion = addPollIntoModel(pollId, mv);
 		
-		boolean userAlreadyPolled = false;
-		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
-		if(loggedInUser != null){
-			//Check if this user has already polled
+		if(pollQuestion != null){
+			boolean userAlreadyPolled = false;
+			UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 			
-			String cookieValue = CookieUtil.getUserPollCookie(httpServletRequest, loggedInUser.getId(), pollQuestion.getId());
-			System.out.println("cookieValue = "+ cookieValue);
-			if(cookieValue == null){
-				String answerFromNoSql = getUserPollQuestion(loggedInUser.getId(), pollQuestion.getId());
-				if(answerFromNoSql != null){
-					System.out.println("answerFromNoSql = "+ answerFromNoSql);
+			if(loggedInUser != null){
+				//Check if this user has already polled
+				
+				String cookieValue = CookieUtil.getUserPollCookie(httpServletRequest, loggedInUser.getId(), pollQuestion.getId());
+				System.out.println("cookieValue = "+ cookieValue);
+				if(cookieValue == null){
+					String answerFromNoSql = getUserPollQuestion(loggedInUser.getId(), pollQuestion.getId());
+					if(answerFromNoSql != null){
+						System.out.println("answerFromNoSql = "+ answerFromNoSql);
+						userAlreadyPolled = true;
+					}
+				}else{
 					userAlreadyPolled = true;
 				}
-			}else{
-				userAlreadyPolled = true;
+				
 			}
-			
+			mv.getModel().put("userAlreadyPolled", userAlreadyPolled);
+			if(userAlreadyPolled){
+				// then get result and add google chart url
+				addPollChartToModel(loggedInUser.getId(), pollQuestion.getId(), mv);
+			}
 		}
-		mv.getModel().put("userAlreadyPolled", userAlreadyPolled);
-		if(userAlreadyPolled){
-			// then get result and add google chart url
-			addPollChartToModel(loggedInUser.getId(), pollQuestion.getId(), mv);
-		}
+		
 		return mv;
 	}
 

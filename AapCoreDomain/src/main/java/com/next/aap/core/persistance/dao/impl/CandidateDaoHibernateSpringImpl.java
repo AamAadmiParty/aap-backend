@@ -28,7 +28,7 @@ public class CandidateDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Cand
 
 	@Override
 	public Candidate getCandidateById(Long id) {
-		return (Candidate)getObjectById(Candidate.class, id);
+		return getObjectById(Candidate.class, id);
 	}
 
 	@Override
@@ -55,12 +55,22 @@ public class CandidateDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Cand
 	}
 
 	@Override
-	public Candidate getCandidateByPcId(Long pcId) {
+    public Candidate getCandidateByPcIdAndElectionId(Long pcId, Long electionId) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("parliamentConstituencyId", pcId);
-		String query = "from Candidate where parliamentConstituencyId = :parliamentConstituencyId";
+        params.put("electionId", electionId);
+        String query = "from Candidate where parliamentConstituencyId = :parliamentConstituencyId and electionId = :electionId";
 		return  executeQueryGetObject(query, params);
 	}
+
+    @Override
+    public Candidate getCandidateByAcIdAndElectionId(Long acId, Long electionId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("assemblyConstituencyId", acId);
+        params.put("electionId", electionId);
+        String query = "from Candidate where assemblyConstituencyId = :assemblyConstituencyId and electionId = :electionId";
+        return executeQueryGetObject(query, params);
+    }
 
 	@Override
 	public Candidate getCandidateByExtPcId(String pcIdExt) {
@@ -69,5 +79,13 @@ public class CandidateDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Cand
 		String query = "from Candidate where pcIdExt = :pcIdExt";
 		return  executeQueryGetObject(query, params);
 	}
+
+    @Override
+    public List<Candidate> getAllCandidatesByElectionId(Long electionId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("electionId", electionId);
+        String query = "from Candidate where electionId = :electionId";
+        return executeQueryGetList(query, params);
+    }
 
 }

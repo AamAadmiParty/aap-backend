@@ -70,7 +70,8 @@ public class LocationCacheDbImpl {
 			}
 			Runnable task = new Runnable() {
 				
-				public void run() {
+				@Override
+                public void run() {
 					refreshCache();
 				}
 			};
@@ -108,21 +109,29 @@ public class LocationCacheDbImpl {
 			List<AssemblyConstituencyDto> allStateAssemblyConstituencies = new ArrayList<AssemblyConstituencyDto>();
 			List<ParliamentConstituencyDto> parliamentConstituencyDtos;
 			for(StateDto oneStateDto:allDbStates){
+                if (oneStateDto.getId().equals(12L)) {
+                    logger.warn("Loading Delhi State");
+                }
 				allDStatesMapById.put(oneStateDto.getId(), oneStateDto);
-				allStateAssemblyConstituencies.clear();
+                allStateAssemblyConstituencies = aapService.getAllAssemblyConstituenciesOfState(oneStateDto.getId());
 				allDistricts = aapService.getAllDistrictOfState(oneStateDto.getId());
 				localStateToDistrictMap.put(oneStateDto.getId(), allDistricts);
 				//Create Assembly COnstituency Cache
 				for(DistrictDto oneDistrictDto:allDistricts){
 					allDbDistrictMapById.put(oneDistrictDto.getId(), oneDistrictDto);
-					allAssemblyConstituencies = aapService.getAllAssemblyConstituenciesOfDistrict(oneDistrictDto.getId());
-					allStateAssemblyConstituencies.addAll(allAssemblyConstituencies);
+                    allAssemblyConstituencies = aapService.getAllAssemblyConstituenciesOfDistrict(oneDistrictDto.getId());
 					localDistrictToAcMap.put(oneDistrictDto.getId(), allAssemblyConstituencies);
 					for(AssemblyConstituencyDto oneAc:allAssemblyConstituencies){
 						allDbAssemblyConstituencyMapById.put(oneAc.getId(), oneAc);
+                        if (oneStateDto.getId().equals(12L)) {
+                            logger.warn("     oneAc - {}", oneAc);
+                        }
 					}
 					
 				}
+                if (oneStateDto.getId().equals(12L)) {
+                    logger.warn(" *** allStateAssemblyConstituencies - {}", allStateAssemblyConstituencies);
+                }
 				localStateToAcMap.put(oneStateDto.getId(), allStateAssemblyConstituencies);
 				
 				parliamentConstituencyDtos = aapService.getAllParliamentConstituenciesOfState(oneStateDto.getId());
@@ -185,7 +194,7 @@ public class LocationCacheDbImpl {
 	public List<StateDto> getAllStates() {
 		return allStates;
 	}
-	
+
 	public StateDto getStateById(Long stateId) {
 		return allStatesMapById.get(stateId);
 	}
@@ -216,6 +225,9 @@ public class LocationCacheDbImpl {
 	 * @see com.next.aap.server.cache.db.LocaltionCache#getAllAssemblyConstituenciesOfState(java.lang.Long)
 	 */
 	public List<AssemblyConstituencyDto> getAllAssemblyConstituenciesOfState(Long stateId) {
+        System.out.println("Getting All AC of State " + stateId);
+        System.out.println("All State Ids are " + stateToAcMap.keySet());
+        System.out.println("All ACs are " + stateToAcMap.get(stateId));
 		return stateToAcMap.get(stateId);
 	}
 	public List<ParliamentConstituencyDto> getAllParliamentConstituenciesOfState(Long stateId) {

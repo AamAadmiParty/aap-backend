@@ -16,6 +16,13 @@
 			<h:form id="adminCandidateForm" enctype="multipart/form-data">
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView" rendered="#{adminCandidateBean.showList}">
+					    <h:outputLabel value="Election*" />
+                         <p:selectOneMenu  value="#{adminCandidateBean.selectedElectionId}" effect="fold" editable="false">
+                             <f:selectItem itemLabel="Select Election" itemValue="0" />
+                             <f:selectItems value="#{adminCandidateBean.elections}" var="oneElection" itemLabel="#{oneElection.title}" itemValue="#{oneElection.id}" />
+                             <p:ajax event="change" update=":adminCandidateForm:mainPanel" listener="#{adminCandidateBean.handleElectionChange}" />
+                         </p:selectOneMenu>
+                         
 						<p:commandButton value="Create Candidate" actionListener="#{adminCandidateBean.createCandidate}" update=":adminCandidateForm:mainPanel">
 						</p:commandButton>
 						<p:dataTable id="listOfBlog" var="oneCandidate" value="#{adminCandidateBean.candidates}" emptyMessage="No Candidates">
@@ -77,20 +84,37 @@
 					<p:outputPanel id="formView" rendered="#{!adminCandidateBean.showList}">
 						<h:panelGrid id="candidateDetails" columns="1">
 							<h:panelGrid columns="2" styleClass="topAlignPanelColumns">
-								<h:outputLabel value="State*" />
+		                        <h:outputLabel value="Candidate Type" />
+		                         <p:selectOneMenu  value="#{adminCandidateBean.candidate.candidateType}" effect="fold" editable="false">
+		                             <f:selectItem itemLabel="Select Candidate Type" itemValue="" />
+		                             <f:selectItem itemLabel="MLA" itemValue="MLA" />
+		                             <f:selectItem itemLabel="MP" itemValue="MP" />
+		                             <p:ajax event="change" update=":adminCandidateForm:mainPanel" listener="#{adminCandidateBean.handleCandidateTypeChange}" />
+		                         </p:selectOneMenu>
+							
+							
+								<h:outputLabel value="State*"  />
 								<p:selectOneMenu  value="#{adminCandidateBean.candidate.stateId}" effect="fold" editable="false">
 									<f:selectItem itemLabel="Select State" itemValue="0" />
 									<f:selectItems value="#{adminCandidateBean.stateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
 									<p:ajax event="change" update=":adminCandidateForm:mainPanel" listener="#{adminCandidateBean.handleStateChange}" />
 								</p:selectOneMenu>
-								<h:outputLabel value="Parliament Constituency*" />
+								<h:outputLabel value="Parliament Constituency*" rendered="#{adminCandidateBean.showPc}" />
 								<p:selectOneMenu disabled="#{!adminCandidateBean.enablePcBox}" value="#{adminCandidateBean.candidate.parliamentConstituencyId}"
-									effect="fold" editable="false">
+									effect="fold" editable="false" rendered="#{adminCandidateBean.showPc}">
 									<f:selectItem itemLabel="Select Parliament Constituency" itemValue="0" />
 									<f:selectItems value="#{adminCandidateBean.pcList}" var="oneParliamentConstituency" itemLabel="#{oneParliamentConstituency.name}"
 										itemValue="#{oneParliamentConstituency.id}" />
 									<p:ajax event="change" update=":adminCandidateForm:mainPanel" listener="#{adminCandidateBean.handlePcChange}" />
 								</p:selectOneMenu>
+								<h:outputLabel value="Assembly Constituency*" rendered="#{adminCandidateBean.showAc}" />
+                                <p:selectOneMenu disabled="#{!adminCandidateBean.enableAcBox}" value="#{adminCandidateBean.candidate.assemblyConstituencyId}"
+                                    effect="fold" editable="false" rendered="#{adminCandidateBean.showAc}" >
+                                    <f:selectItem itemLabel="Select Assembly Constituency" itemValue="0" />
+                                    <f:selectItems value="#{adminCandidateBean.acList}" var="oneAssemblyConstituency" itemLabel="#{oneAssemblyConstituency.name}"
+                                        itemValue="#{oneAssemblyConstituency.id}" />
+                                    <p:ajax event="change" update=":adminCandidateForm:mainPanel" listener="#{adminCandidateBean.handleAcChange}" />
+                                </p:selectOneMenu>
 								<h:outputLabel value="Profile Pic" />
 								 <!-- <p:fileUpload value="#{adminCandidateBean.profilePicFile}" mode="simple"-->
 								 <p:outputPanel>
@@ -116,7 +140,7 @@
 								<h:panelGrid columns="4">
 									<h:outputLabel value="http://my.aamaadmiparty.org/candidate/" />
 									<p:inputText disabled="#{!adminCandidateBean.formEditable}" value="#{adminCandidateBean.candidate.urlTextPart1}" />
-									<h:outputLabel value="/" />
+									<h:outputLabel value="#{adminCandidateBean.urlMidPart}" />
 									<p:inputText disabled="#{!adminCandidateBean.formEditable}" value="#{adminCandidateBean.candidate.urlTextPart2}" />
 								</h:panelGrid>
 

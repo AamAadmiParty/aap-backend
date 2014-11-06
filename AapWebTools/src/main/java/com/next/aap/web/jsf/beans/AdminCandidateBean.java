@@ -1,17 +1,13 @@
 package com.next.aap.web.jsf.beans;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -39,7 +35,9 @@ import com.next.aap.core.util.MyaapInUtil;
 import com.next.aap.web.cache.CandidateCacheImpl;
 import com.next.aap.web.cache.LocationCacheDbImpl;
 import com.next.aap.web.dto.AppPermission;
+import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.CandidateDto;
+import com.next.aap.web.dto.ElectionDto;
 import com.next.aap.web.dto.LocationCampaignDto;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.ParliamentConstituencyDto;
@@ -63,9 +61,16 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 	
 	List<CandidateDto> candidates;
 
+    List<ElectionDto> elections;
+
 	private boolean showList = true;
+    private boolean showPc = false;
+    private boolean showAc = false;
 	private boolean enablePcBox = false;
+    private boolean enableAcBox = false;
 	private boolean formEditable = false;
+    private String urlMidPart = "";
+    private Long selectedElectionId;
 	
 	private String baseUrl = "http://my.aamaadmiparty.org";
 	private String baseDonationUrl="https://donate.aamaadmiparty.org?utm_source=myaap&utm_medium=web&utm_term=donate-url&utm_content=donation&utm_campaign=candidate";
@@ -192,20 +197,45 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 			candidate.setLongitude(defaultLongitude);
 			candidate.setDepth(defaultDepth);
 			
+            elections = aapService.getAllElections();
 			stateList = locationCacheDbImpl.getAllStates();
 			
-			refreshCandidates();
+            // refreshCandidates();
 		} catch (Exception ex) {
 			sendErrorMessageToJsfScreen(ex);
 		}
 
 	}
+
+    public void handleElectionChange(AjaxBehaviorEvent event) {
+        candidate.setElectionId(selectedElectionId);
+        refreshCandidates();
+    }
+
+    public void handleCandidateTypeChange(AjaxBehaviorEvent event) {
+        showPc = false;
+        showAc = false;
+
+        urlMidPart = "/";
+        if ("MLA".equalsIgnoreCase(candidate.getCandidateType())) {
+            showAc = true;
+            formEditable = true;
+            urlMidPart = "/ac/";
+        } else if ("MP".equalsIgnoreCase(candidate.getCandidateType())) {
+            showPc = true;
+            formEditable = true;
+        } else {
+            formEditable = false;
+        }
+    }
 	public void handleStateChange(AjaxBehaviorEvent event) {
 		try {
 			if (candidate.getStateId() == null || candidate.getStateId() <= 0) {
 				enablePcBox = false;
+                enableAcBox = false;
 			} else {
 				enablePcBox = true;
+                enableAcBox = true;
 			}
 			formEditable = false;
 		} catch (Exception e) {
@@ -223,13 +253,15 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 				formEditable = false;
 			} else {
 				formEditable = true;
-				CandidateDto existingCandidate = aapService.getCandidateByPcId(candidate.getParliamentConstituencyId());
+                CandidateDto existingCandidate = aapService.getCandidateByPcIdAndElectionId(candidate.getParliamentConstituencyId(), candidate.getElectionId());
 				if(existingCandidate != null){
 					candidate = existingCandidate;
 				}else{
 					CandidateDto selectedCandidate = candidate;
 					candidate = new CandidateDto();
 					candidate.setStateId(selectedCandidate.getStateId());
+                    candidate.setCandidateType(selectedCandidate.getCandidateType());
+                    candidate.setElectionId(selectedElectionId);
 					candidate.setParliamentConstituencyId(selectedCandidate.getParliamentConstituencyId());
 					candidate.setDepth(defaultDepth);
 					StateDto selectedState = locationCacheDbImpl.getStateById(candidate.getStateId());
@@ -261,6 +293,54 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 			e.printStackTrace();
 		}
 	}	
+
+    public void handleAcChange(AjaxBehaviorEvent event) {
+        try {
+            if (candidate.getAssemblyConstituencyId() == null || candidate.getAssemblyConstituencyId() <= 0) {
+                formEditable = false;
+            } else {
+                formEditable = true;
+                CandidateDto existingCandidate = aapService.getCandidateByAcIdAndElectionId(candidate.getAssemblyConstituencyId(), candidate.getElectionId());
+                if (existingCandidate != null) {
+                    candidate = existingCandidate;
+                } else {
+                    CandidateDto selectedCandidate = candidate;
+                    candidate = new CandidateDto();
+                    candidate.setStateId(selectedCandidate.getStateId());
+                    candidate.setAssemblyConstituencyId(selectedCandidate.getAssemblyConstituencyId());
+                    candidate.setDepth(defaultDepth);
+                    candidate.setElectionId(selectedElectionId);
+                    candidate.setCandidateType(selectedCandidate.getCandidateType());
+                    StateDto selectedState = locationCacheDbImpl.getStateById(candidate.getStateId());
+                    if (selectedState != null) {
+                        String selectedStateName = selectedState.getName();
+                        selectedStateName = selectedStateName.toLowerCase();
+                        selectedStateName = selectedStateName.replaceAll(" ", "");
+                        selectedStateName = selectedStateName.replaceAll("&", "");
+                        selectedStateName = selectedStateName.replaceAll("\\(sc\\)", "");
+                        selectedStateName = selectedStateName.replaceAll("\\(st\\)", "");
+                        candidate.setUrlTextPart1(selectedStateName);
+                    }
+
+                    AssemblyConstituencyDto selectedAc = locationCacheDbImpl.getAssemblyConstituencyById(candidate.getAssemblyConstituencyId());
+                    if (selectedAc != null) {
+                        String selectedAcName = selectedAc.getName();
+                        selectedAcName = selectedAcName.replaceAll(" ", "");
+                        selectedAcName = selectedAcName.toLowerCase();
+                        selectedAcName = selectedAcName.replaceAll("&", "");
+                        selectedAcName = selectedAcName.replaceAll("\\(sc\\)", "");
+                        selectedAcName = selectedAcName.replaceAll("\\(st\\)", "");
+                        candidate.setUrlTextPart2(selectedAcName);
+                        candidate.setLandingPageUrlId(selectedAcName);
+                        candidate.setDonatePageUrlId("donate4" + selectedAcName);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 	public List<StateDto> getStateList(){
 		return stateList;
 	}
@@ -274,6 +354,13 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 		}
 		return locationCacheDbImpl.getAllParliamentConstituenciesOfState(candidate.getStateId());
 	}
+
+    public List<AssemblyConstituencyDto> getAcList() {
+        if (candidate == null || candidate.getStateId() == null || candidate.getStateId() <= 0) {
+            return new ArrayList<>();
+        }
+        return locationCacheDbImpl.getAllAssemblyConstituenciesOfState(candidate.getStateId());
+    }
 	public LoginAccountDto getLoginAccounts() {
 		return getLoggedInAccountsFromSesion();
 	}
@@ -287,6 +374,14 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 		candidate.setLattitude(defaultLattitude);
 		candidate.setLongitude(defaultLongitude);
 		candidate.setDepth(defaultDepth);
+        candidate.setElectionId(selectedElectionId);
+        // Hard code logic for now
+        if (selectedElectionId == 1) {
+            candidate.setCandidateType("MP");
+        }
+        if (selectedElectionId == 2) {
+            candidate.setCandidateType("MLA");
+        }
 		showList = false;
 	}
 	public void cancel(ActionEvent actionEvent) {
@@ -327,9 +422,19 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 				}
 			}
 			
-			if (StringUtil.isEmpty(candidate.getPcIdExt())) {
-				sendErrorMessageToJsfScreen("Please enter the Parliament Constituency Number(provided by .net team)");
-			}
+            if (StringUtil.isEmpty(candidate.getCandidateType())) {
+                sendErrorMessageToJsfScreen("Please select candidate Type");
+            }
+            if ("MP".equalsIgnoreCase(candidate.getCandidateType())) {
+                if (StringUtil.isEmpty(candidate.getPcIdExt())) {
+                    sendErrorMessageToJsfScreen("Please enter the Parliament Constituency Number(provided by .net team)");
+                }
+            }
+            if ("MLA".equalsIgnoreCase(candidate.getCandidateType())) {
+                if (StringUtil.isEmpty(candidate.getAcIdExt())) {
+                    sendErrorMessageToJsfScreen("Please enter the Parliament Constituency Number(provided by .net team)");
+                }
+            }
 			if (StringUtil.isEmpty(candidate.getStateIdExt())) {
 				sendErrorMessageToJsfScreen("Please enter the State Identifier i.e HR,MH etc(provided by .net team)");
 			}
@@ -344,7 +449,12 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 				sendErrorMessageToJsfScreen("Please select a parliament Constituency");
 			}
 			if (isValidInput()) {
-				LocationCampaignDto locationCampaign = aapService.getDefaultPcLocationCampaign(candidate.getParliamentConstituencyId());
+				LocationCampaignDto locationCampaign = null;
+				if ("MP".equalsIgnoreCase(candidate.getCandidateType())) {
+				    locationCampaign = aapService.getDefaultPcLocationCampaign(candidate.getParliamentConstituencyId());
+                } else {
+                    locationCampaign = aapService.getDefaultAcLocationCampaign(candidate.getAssemblyConstituencyId());
+	            }
 				String campaignId = "temp";
 				if(locationCampaign != null){
 					campaignId = locationCampaign.getCampaignId();
@@ -385,12 +495,16 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 	}
 
 	private void refreshCandidates() {
-		try {
-			candidates = aapService.getCandidates(512, 0);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        if (candidate.getElectionId() == null || candidate.getElectionId() <= 0) {
+            candidates = new ArrayList<>();
+        } else {
+            try {
+                candidates = aapService.getAllCandidatesOfElection(candidate.getElectionId());
+            } catch (AppException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 	public void onMarkerDrag(MarkerDragEvent markerDragEvent) {
 		marker = markerDragEvent.getMarker();
@@ -488,5 +602,53 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 	public void setAwsImageUploadUtil(AwsImageUploadUtil awsImageUploadUtil) {
 		this.awsImageUploadUtil = awsImageUploadUtil;
 	}
-	
+
+    public List<ElectionDto> getElections() {
+        return elections;
+    }
+
+    public void setElections(List<ElectionDto> elections) {
+        this.elections = elections;
+    }
+
+    public boolean isShowPc() {
+        return showPc;
+    }
+
+    public void setShowPc(boolean showPc) {
+        this.showPc = showPc;
+    }
+
+    public boolean isShowAc() {
+        return showAc;
+    }
+
+    public void setShowAc(boolean showAc) {
+        this.showAc = showAc;
+    }
+
+    public boolean isEnableAcBox() {
+        return enableAcBox;
+    }
+
+    public void setEnableAcBox(boolean enableAcBox) {
+        this.enableAcBox = enableAcBox;
+    }
+
+    public String getUrlMidPart() {
+        return urlMidPart;
+    }
+
+    public void setUrlMidPart(String urlMidPart) {
+        this.urlMidPart = urlMidPart;
+    }
+
+    public Long getSelectedElectionId() {
+        return selectedElectionId;
+    }
+
+    public void setSelectedElectionId(Long selectedElectionId) {
+        this.selectedElectionId = selectedElectionId;
+    }
+
 }

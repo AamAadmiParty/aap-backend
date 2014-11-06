@@ -15,6 +15,7 @@ public class CandidateDto {
 	private String content;//content of news which can be html or plain text
 	private String stateIdExt;
 	private String pcIdExt;
+    private String acIdExt;
 	private String landingPageUrlId;
 	private String donatePageUrlId;
 	private double lattitude;
@@ -35,6 +36,10 @@ public class CandidateDto {
 	private String locationCampaignId;
 	private String imageUrl64;
 	private String imageUrl32;
+    private String candidateType;
+    private Long assemblyConstituencyId;
+    private String acName;
+    private Long electionId;
 
 
 	public Long getId() {
@@ -217,16 +222,56 @@ public class CandidateDto {
 	public void setImageUrl32(String imageUrl32) {
 		this.imageUrl32 = imageUrl32;
 	}
-	@Override
-	public String toString() {
-		return "CandidateDto [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId
-				+ ", modifierId=" + modifierId + ", name=" + name + ", content=" + content + ", stateIdExt=" + stateIdExt + ", pcIdExt=" + pcIdExt
-				+ ", landingPageUrlId=" + landingPageUrlId + ", donatePageUrlId=" + donatePageUrlId + ", lattitude=" + lattitude + ", longitude=" + longitude
-				+ ", depth=" + depth + ", stateId=" + stateId + ", parliamentConstituencyId=" + parliamentConstituencyId + ", imageUrl=" + imageUrl
-				+ ", stateName=" + stateName + ", pcName=" + pcName + ", candidateFbPageId=" + candidateFbPageId + ", twitterId=" + twitterId
-				+ ", urlTextPart1=" + urlTextPart1 + ", urlTextPart2=" + urlTextPart2 + ", landingPageSmallUrl=" + landingPageSmallUrl
-				+ ", landingPageFullUrl=" + landingPageFullUrl + ", donationPageFullUrl=" + donationPageFullUrl + "]";
-	}
+
+    public String getAcIdExt() {
+        return acIdExt;
+    }
+
+    public void setAcIdExt(String acIdExt) {
+        this.acIdExt = acIdExt;
+    }
+
+    public String getCandidateType() {
+        return candidateType;
+    }
+
+    public void setCandidateType(String candidateType) {
+        this.candidateType = candidateType;
+    }
+
+    public Long getAssemblyConstituencyId() {
+        return assemblyConstituencyId;
+    }
+
+    public void setAssemblyConstituencyId(Long assemblyConstituencyId) {
+        this.assemblyConstituencyId = assemblyConstituencyId;
+    }
+
+    public String getAcName() {
+        return acName;
+    }
+
+    public void setAcName(String acName) {
+        this.acName = acName;
+    }
+
+    public Long getElectionId() {
+        return electionId;
+    }
+
+    public void setElectionId(Long electionId) {
+        this.electionId = electionId;
+    }
+    @Override
+    public String toString() {
+        return "CandidateDto [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + ", name="
+                + name + ", content=" + content + ", stateIdExt=" + stateIdExt + ", pcIdExt=" + pcIdExt + ", acIdExt=" + acIdExt + ", landingPageUrlId=" + landingPageUrlId + ", donatePageUrlId="
+                + donatePageUrlId + ", lattitude=" + lattitude + ", longitude=" + longitude + ", depth=" + depth + ", stateId=" + stateId + ", parliamentConstituencyId=" + parliamentConstituencyId
+                + ", imageUrl=" + imageUrl + ", stateName=" + stateName + ", pcName=" + pcName + ", candidateFbPageId=" + candidateFbPageId + ", twitterId=" + twitterId + ", urlTextPart1="
+                + urlTextPart1 + ", urlTextPart2=" + urlTextPart2 + ", landingPageSmallUrl=" + landingPageSmallUrl + ", landingPageFullUrl=" + landingPageFullUrl + ", donationPageFullUrl="
+                + donationPageFullUrl + ", locationCampaignId=" + locationCampaignId + ", imageUrl64=" + imageUrl64 + ", imageUrl32=" + imageUrl32 + ", candidateType=" + candidateType
+                + ", assemblyConstituencyId=" + assemblyConstituencyId + ", acName=" + acName + "]";
+    }
 	
 	
 	

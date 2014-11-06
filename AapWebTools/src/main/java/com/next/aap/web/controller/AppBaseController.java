@@ -1,7 +1,6 @@
 package com.next.aap.web.controller;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -107,9 +106,9 @@ public class AppBaseController extends BaseController{
 		if(candidateDto != null){
 			if(!StringUtil.isEmpty(candidateDto.getLocationCampaignId())){
 				String key = CacheKeyService.createLocationCampaignKey(candidateDto.getLocationCampaignId());
-				logger.info("Key = "+ key);
+                // logger.info("Key = "+ key);
 				DonationCampaignInfo donationCampaignInfo = cacheService.getData(key, DonationCampaignInfo.class);
-				logger.info("donationCampaignInfo = "+ donationCampaignInfo);
+                // logger.info("donationCampaignInfo = "+ donationCampaignInfo);
 				mv.getModel().put("donationCampaignInfo", donationCampaignInfo);
 			}
 		}

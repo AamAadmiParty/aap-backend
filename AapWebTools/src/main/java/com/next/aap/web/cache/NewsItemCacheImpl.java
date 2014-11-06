@@ -32,7 +32,7 @@ public class NewsItemCacheImpl extends BasItemCacheImpl<NewsDto>  {
 	@Override
 	public void refreshFullCache() {
 		List<NewsDto> allNewsDtos = aapService.getAllPublishedNews();
-		logger.info("Total News : " + allNewsDtos.size());
+        logger.info("Total News : " + allNewsDtos.size());
 		for(NewsDto oneNewsDto:allNewsDtos){
 			addCacheItem(DEFAULT_LANGUAGE, oneNewsDto, oneNewsDto.getId(), oneNewsDto.isGlobal());
 		}

@@ -40,7 +40,7 @@ public class LoginController extends BaseController {
 			logger.info("will redirect to twitter and then "+redirectUrlAfterLogin);
 		}
 		if(rv == null){
-			rv = new RedirectView(httpServletRequest.getContextPath()+"/signin");
+            rv = new RedirectView(httpServletRequest.getContextPath() + "/signin?" + REDIRECT_URL_PARAM_ID + "=" + redirectUrlAfterLogin);
 			logger.info("will redirect to default signin");
 		}
 		mv.setView(rv);
@@ -68,7 +68,10 @@ public class LoginController extends BaseController {
 			HttpServletRequest httpServletRequest) {
 		addGenericValuesInModel(httpServletRequest, mv);
 		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
+        String redirectUrlAfterLogin = getRedirectUrlForRedirectionAfterLogin(httpServletRequest);
+        String loginParams = REDIRECT_URL_PARAM_ID + "=" + redirectUrlAfterLogin;
 		mv.getModel().put("loginAccounts", loginAccountDto);
+        mv.getModel().put("loginParams", loginParams);
 		mv.setViewName(design+"/login");
 		return mv;
 	}

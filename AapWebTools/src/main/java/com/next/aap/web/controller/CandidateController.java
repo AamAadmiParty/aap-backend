@@ -34,6 +34,20 @@ public class CandidateController extends AppBaseController {
 		mv.setViewName(design+"/candidate");
 		return mv;
 	}
+
+    @RequestMapping(value = "/candidate/{urlPart1}/ac/{urlPart2}.html", method = RequestMethod.GET)
+    public ModelAndView acCandidatePage(ModelAndView mv, HttpServletRequest httpServletRequest, @PathVariable String urlPart1, @PathVariable String urlPart2) {
+
+        addGenericValuesInModel(httpServletRequest, mv);
+        CandidateDto candidateDto = candidateCacheImpl.getAcCandidate(urlPart1, urlPart2);
+        mv.getModel().put("candidate", candidateDto);
+        addCandidateDonationInfo(candidateDto, mv);
+        mv.getModel().put("PageTitle",
+                candidateDto.getName() + " : Vidhansabha/Assembly Candiate from " + candidateDto.getStateName() + " - " + candidateDto.getAcName()
+                        + " of Aam Aadmi Party for Delhi Assembly Election 2015");
+        mv.setViewName(design + "/candidate");
+        return mv;
+    }
 	@RequestMapping(value = "/candidate/{stateName}.html", method = RequestMethod.GET)
 	public ModelAndView showStateCandidates(ModelAndView mv,HttpServletRequest httpServletRequest,
 			@PathVariable String stateName) {
@@ -52,6 +66,24 @@ public class CandidateController extends AppBaseController {
 
 		return mv;
 	}
+
+    @RequestMapping(value = "/candidate/election/{electionId}.html", method = RequestMethod.GET)
+    public ModelAndView showElectionCandidate(ModelAndView mv, HttpServletRequest httpServletRequest, @PathVariable Long electionId) {
+
+        addGenericValuesInModel(httpServletRequest, mv);
+        Set<CandidateDto> allCandidates = candidateCacheImpl.getCandidatesOfElection(electionId);
+        List<CandidateWithDonation> candidates = addCandidateWithDonationInfoInModel(allCandidates);
+        mv.getModel().put("candidates", candidates);
+        String view = httpServletRequest.getParameter("type");
+        if (view != null && view.equalsIgnoreCase("map")) {
+            mv.setViewName(design + "/candidatemap");
+        } else {
+            mv.setViewName(design + "/candidatelist");
+        }
+        mv.getModel().put("PageTitle", "Lokasabha Candiate of Aam Aadmi Party for Delhi Election 2015");
+
+        return mv;
+    }
 	protected List<CandidateWithDonation> addCandidateWithDonationInfoInModel(Collection<CandidateDto> candidates){
 		List<CandidateWithDonation> returnDonations = new ArrayList<>(candidates.size());
 		for(CandidateDto oneCandidate:candidates){

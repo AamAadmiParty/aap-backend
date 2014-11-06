@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
-@Table(name="candidates")
+@Table(name = "candidates")
 public class Candidate {
 
 	@Id
@@ -46,6 +46,9 @@ public class Candidate {
 	@Column(name = "pc_id_ext")
 	private String pcIdExt;
 	
+    @Column(name = "ac_id_ext")
+    private String acIdExt;
+
 	@Column(name = "candidate_fb_page_id")
 	private String candidateFbPageId;
 	
@@ -109,7 +112,25 @@ public class Candidate {
 	@Column(name = "pc_name")
 	private String pcName;
 	
-	public Long getId() {
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "ac_id")
+    private AssemblyConstituency assemblyConstituency;
+    @Column(name = "ac_id", insertable = false, updatable = false)
+    private Long assemblyConstituencyId;
+    @Column(name = "ac_name")
+    private String acName;
+
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinColumn(name = "election_id")
+    private Election election;
+    @Column(name = "election_id", insertable = false, updatable = false)
+    private Long electionId;
+
+    @Column(name = "candidate_type", nullable = false)
+    private String candidateType;
+
+
+    public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
@@ -301,7 +322,58 @@ public class Candidate {
 	public void setImageUrl32(String imageUrl32) {
 		this.imageUrl32 = imageUrl32;
 	}
-	
+
+    public String getAcIdExt() {
+        return acIdExt;
+    }
+
+    public void setAcIdExt(String acIdExt) {
+        this.acIdExt = acIdExt;
+    }
+
+    public AssemblyConstituency getAssemblyConstituency() {
+        return assemblyConstituency;
+    }
+
+    public void setAssemblyConstituency(AssemblyConstituency assemblyConstituency) {
+        this.assemblyConstituency = assemblyConstituency;
+    }
+
+    public Long getAssemblyConstituencyId() {
+        return assemblyConstituencyId;
+    }
+
+    public void setAssemblyConstituencyId(Long assemblyConstituencyId) {
+        this.assemblyConstituencyId = assemblyConstituencyId;
+    }
+
+    public String getAcName() {
+        return acName;
+    }
+
+    public void setAcName(String acName) {
+        this.acName = acName;
+    }
+    public Election getElection() {
+        return election;
+    }
+    public void setElection(Election election) {
+        this.election = election;
+    }
+    public Long getElectionId() {
+        return electionId;
+    }
+    public void setElectionId(Long electionId) {
+        this.electionId = electionId;
+    }
+
+    public String getCandidateType() {
+        return candidateType;
+    }
+
+    public void setCandidateType(String candidateType) {
+        this.candidateType = candidateType;
+    }
 	
 	
 }

@@ -36,6 +36,7 @@ import org.springframework.social.google.api.Google;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import au.com.bytecode.opencsv.CSVReader;
 
@@ -63,6 +64,7 @@ import com.next.aap.core.persistance.DistrictRole;
 import com.next.aap.core.persistance.Donation;
 import com.next.aap.core.persistance.DonationCampaign;
 import com.next.aap.core.persistance.DonationDump;
+import com.next.aap.core.persistance.Election;
 import com.next.aap.core.persistance.Email;
 import com.next.aap.core.persistance.Email.ConfirmationType;
 import com.next.aap.core.persistance.Event;
@@ -117,6 +119,7 @@ import com.next.aap.core.persistance.dao.DistrictRoleDao;
 import com.next.aap.core.persistance.dao.DonationCampaignDao;
 import com.next.aap.core.persistance.dao.DonationDao;
 import com.next.aap.core.persistance.dao.DonationDumpDao;
+import com.next.aap.core.persistance.dao.ElectionDao;
 import com.next.aap.core.persistance.dao.EmailDao;
 import com.next.aap.core.persistance.dao.EventDao;
 import com.next.aap.core.persistance.dao.FacebookAccountDao;
@@ -172,6 +175,7 @@ import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.DonationCampaignDto;
 import com.next.aap.web.dto.DonationCampaignDto.CampaignType;
 import com.next.aap.web.dto.DonationDto;
+import com.next.aap.web.dto.ElectionDto;
 import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.FacebookAccountDto;
@@ -321,6 +325,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private EventDao eventDao;
 	@Autowired
 	private CandidateDao candidateDao;
+    @Autowired
+    private ElectionDao electionDao;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -6348,16 +6354,41 @@ public class AapServiceImpl implements AapService, Serializable {
 		if (candidateDto.getId() != null && candidateDto.getId() > 0) {
 			candidate = candidateDao.getCandidateById(candidateDto.getId());
 		}
-		if (candidateDto.getParliamentConstituencyId() == null || candidateDto.getParliamentConstituencyId() <= 0) {
-			throw new AppException("Please select a Parliament Constituency");
-		}
-		if (candidate == null) {
-			candidate = candidateDao.getCandidateByPcId(candidateDto.getParliamentConstituencyId());
-		}
+
+        if (candidateDto.getElectionId() == null || candidateDto.getElectionId() <= 0) {
+            throw new AppException("Please select an Election");
+        }
+        
+        Election election = electionDao.getElectionById(candidateDto.getElectionId());
+        if (election == null) {
+            throw new AppException("No such election found [id=" + candidateDto.getElectionId() + "]");
+        }
+
+        if (StringUtils.isEmpty(candidateDto.getCandidateType())) {
+            throw new AppException("Please select Candidate Type, i.e. MLA/MP");
+        }
+        if ("MP".equalsIgnoreCase(candidateDto.getCandidateType())) {
+            if (candidateDto.getParliamentConstituencyId() == null || candidateDto.getParliamentConstituencyId() <= 0) {
+                throw new AppException("Please select a Parliament Constituency");
+            }
+            if (candidate == null) {
+                candidate = candidateDao.getCandidateByPcIdAndElectionId(candidateDto.getParliamentConstituencyId(), candidateDto.getElectionId());
+            }
+        }
+        if ("MLA".equalsIgnoreCase(candidateDto.getCandidateType())) {
+            if (candidateDto.getAssemblyConstituencyId() == null || candidateDto.getAssemblyConstituencyId() <= 0) {
+                throw new AppException("Please select a Assembly Constituency");
+            }
+            if (candidate == null) {
+                candidate = candidateDao.getCandidateByAcIdAndElectionId(candidateDto.getParliamentConstituencyId(), candidateDto.getElectionId());
+            }
+        }
 		if (candidate == null) {
 			candidate = new Candidate();
 			candidate.setDateCreated(new Date());
 		}
+        candidate.setElection(election);
+        candidate.setCandidateType(candidateDto.getCandidateType());
 		candidate.setContent(candidateDto.getContent());
 		candidate.setDateModified(new Date());
 		if (candidate.getId() == null || candidate.getId() <= 0) {
@@ -6384,11 +6415,21 @@ public class AapServiceImpl implements AapService, Serializable {
 		candidate.setImageUrl64(candidateDto.getImageUrl64());
 		candidate.setImageUrl32(candidateDto.getImageUrl32());
 
-		ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(candidateDto.getParliamentConstituencyId());
-		candidate.setParliamentConstituency(parliamentConstituency);
-		candidate.setPcName(parliamentConstituency.getName());
-		candidate.setState(parliamentConstituency.getState());
-		candidate.setStateName(parliamentConstituency.getState().getName());
+        if ("MP".equalsIgnoreCase(candidateDto.getCandidateType())) {
+            ParliamentConstituency parliamentConstituency = parliamentConstituencyDao.getParliamentConstituencyById(candidateDto.getParliamentConstituencyId());
+            candidate.setParliamentConstituency(parliamentConstituency);
+            candidate.setPcName(parliamentConstituency.getName());
+            candidate.setState(parliamentConstituency.getState());
+            candidate.setStateName(parliamentConstituency.getState().getName());
+        }
+        if ("MLA".equalsIgnoreCase(candidateDto.getCandidateType())) {
+            AssemblyConstituency assemblyConstituency = assemblyConstituencyDao.getAssemblyConstituencyById(candidateDto.getAssemblyConstituencyId());
+            candidate.setAssemblyConstituency(assemblyConstituency);
+            candidate.setAcName(assemblyConstituency.getName());
+            candidate.setState(assemblyConstituency.getDistrict().getState());
+            candidate.setStateName(assemblyConstituency.getDistrict().getState().getName());
+        }
+
 		candidate = candidateDao.saveCandidate(candidate);
 		return convertCandidate(candidate);
 	}
@@ -6422,10 +6463,19 @@ public class AapServiceImpl implements AapService, Serializable {
 
 	@Override
 	@Transactional
-	public CandidateDto getCandidateByPcId(Long pcId) throws AppException {
-		Candidate candidate = candidateDao.getCandidateByPcId(pcId);
+    public CandidateDto getCandidateByPcIdAndElectionId(Long pcId, Long electionId) throws AppException {
+        logger.info("Getting Candidate by PcId : {} and electionId : {}", pcId, electionId);
+        Candidate candidate = candidateDao.getCandidateByPcIdAndElectionId(pcId, electionId);
 		return convertCandidate(candidate);
 	}
+
+    @Override
+    @Transactional
+    public CandidateDto getCandidateByAcIdAndElectionId(Long acId, Long electionId) throws AppException {
+        logger.info("Getting Candidate by AcId : {} and electionId : {}", acId, electionId);
+        Candidate candidate = candidateDao.getCandidateByAcIdAndElectionId(acId, electionId);
+        return convertCandidate(candidate);
+    }
 
 	@Override
 	@Transactional
@@ -6509,5 +6559,58 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return getUserDonations(email.getUserId());
 	}
+
+    @Override
+    @Transactional
+    public ElectionDto saveElection(ElectionDto electionDto) throws AppException {
+        Election election = null;
+        if (electionDto.getId() != null && electionDto.getId() > 0) {
+            election = electionDao.getElectionById(electionDto.getId());
+            if (election == null) {
+                throw new AppException("Election does not exist [id=" + electionDto.getId() + "]");
+            }
+        }
+        if (election == null) {
+            election = new Election();
+            election.setDateCreated(new Date());
+        }
+        BeanUtils.copyProperties(electionDto, election);
+        election.setDateModified(new Date());
+        election = electionDao.saveElection(election);
+
+        electionDto.setId(election.getId());
+        return electionDto;
+    }
+
+    @Override
+    @Transactional
+    public List<ElectionDto> getAllElections() throws AppException {
+        List<Election> elections = electionDao.getAllElections();
+        return convertElections(elections);
+    }
+
+    private ElectionDto convertElection(Election election) {
+        ElectionDto electionDto = new ElectionDto();
+        BeanUtils.copyProperties(election, electionDto);
+        return electionDto;
+    }
+
+    private List<ElectionDto> convertElections(Collection<Election> elections) {
+        List<ElectionDto> electionDtos = new ArrayList<>();
+        if (elections == null) {
+            return electionDtos;
+        }
+        for (Election oneElection : elections) {
+            electionDtos.add(convertElection(oneElection));
+        }
+        return electionDtos;
+    }
+
+    @Override
+    @Transactional
+    public List<CandidateDto> getAllCandidatesOfElection(Long electionId) throws AppException {
+        List<Candidate> candidates = candidateDao.getAllCandidatesByElectionId(electionId);
+        return convertCandidates(candidates);
+    }
 
 }

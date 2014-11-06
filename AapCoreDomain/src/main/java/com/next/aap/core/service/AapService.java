@@ -25,6 +25,7 @@ import com.next.aap.web.dto.CountryRegionDto;
 import com.next.aap.web.dto.DistrictDto;
 import com.next.aap.web.dto.DonationCampaignDto;
 import com.next.aap.web.dto.DonationDto;
+import com.next.aap.web.dto.ElectionDto;
 import com.next.aap.web.dto.EmailUserDto;
 import com.next.aap.web.dto.EventDto;
 import com.next.aap.web.dto.FacebookAccountDto;
@@ -493,11 +494,19 @@ public interface AapService {
 	
 	List<CandidateDto> getCandidates(int pageSize, int pageNumber) throws AppException;
 	
-	CandidateDto getCandidateByPcId(Long pcId) throws AppException;
+    List<CandidateDto> getAllCandidatesOfElection(Long electionId) throws AppException;
+
+    CandidateDto getCandidateByPcIdAndElectionId(Long pcId, Long electionId) throws AppException;
+
+    CandidateDto getCandidateByAcIdAndElectionId(Long acId, Long electionId) throws AppException;
 	
 	void updateAllLocationCampaignInCache() throws AppException;
 	
 	UserDto getUserByid(Long userId) throws AppException;
 	
 	void updateLocationCampaignDetailInMemcache(String oneLocationCampaignId);
+
+    ElectionDto saveElection(ElectionDto electionDto) throws AppException;
+
+    List<ElectionDto> getAllElections() throws AppException;
 }

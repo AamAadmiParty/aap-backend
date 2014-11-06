@@ -81,7 +81,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 	@Override
 	public ItemList<ItemType> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
 			long livingCountryRegionId, int pageNumber) {
-		logger.info("Getting Items for livingAcId="+livingAcId+",votingAcId="+votingAcId+",livingPcId="+livingPcId+",votingPcId"+votingPcId+
+        logger.debug("Getting Items for livingAcId=" + livingAcId + ",votingAcId=" + votingAcId + ",livingPcId=" + livingPcId + ",votingPcId" + votingPcId +
 				",livingCountryId="+livingCountryId +",livingCountryRegionId="+livingCountryRegionId+",pageNumber="+pageNumber);
 		return getItemsFromCache(lang, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId, pageNumber, pageSize);
 	}

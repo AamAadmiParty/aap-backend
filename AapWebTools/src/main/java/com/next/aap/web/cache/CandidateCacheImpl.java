@@ -37,8 +37,10 @@ public class CandidateCacheImpl {
 	Map<String, CandidateDto> candidateMap = new HashMap<>();
 	List<CandidateDto> allCandidates = new ArrayList<>();
 	Map<Long, CandidateDto> candidateMapByPcId = new HashMap<>();
+    Map<Long, CandidateDto> candidateMapByAcId = new HashMap<>();
 	
 	Map<String, Set<CandidateDto>> candidateMapByStateName = new HashMap<>();
+    Map<Long, Set<CandidateDto>> candidateMapByElectionId = new HashMap<>();
 	
 	
 	public void refreshCache(){
@@ -46,12 +48,21 @@ public class CandidateCacheImpl {
 			allCandidates = aapService.getCandidates(600, 0);
 			Map<String, CandidateDto> localCandidateMap = new HashMap<String, CandidateDto>(allCandidates.size());
 			Map<String, Set<CandidateDto>> localCandidateMapByStateName = new HashMap<>();
+            Map<Long, Set<CandidateDto>> localCandidateMapByElectionId = new HashMap<>();
 			Set<CandidateDto> candidateSetForState;
+            Set<CandidateDto> candidateSetForElection;
 			for(CandidateDto oneCandidate:allCandidates){
-				candidateMapByPcId.put(oneCandidate.getParliamentConstituencyId(), oneCandidate);
-				localCandidateMap.put(createKey(oneCandidate.getUrlTextPart1().toLowerCase(), oneCandidate.getUrlTextPart2().toLowerCase()), oneCandidate);
-				candidateSetForState = getSortedSetOfCandidateOfState(localCandidateMapByStateName, oneCandidate.getStateName());
-				candidateSetForState.add(oneCandidate);
+                if ("MP".equalsIgnoreCase(oneCandidate.getCandidateType())) {
+                    candidateMapByPcId.put(oneCandidate.getParliamentConstituencyId(), oneCandidate);
+                    localCandidateMap.put(createKey(oneCandidate.getUrlTextPart1().toLowerCase(), oneCandidate.getUrlTextPart2().toLowerCase()), oneCandidate);
+                } else {
+                    candidateMapByAcId.put(oneCandidate.getParliamentConstituencyId(), oneCandidate);
+                    localCandidateMap.put(createAcKey(oneCandidate.getUrlTextPart1().toLowerCase(), oneCandidate.getUrlTextPart2().toLowerCase()), oneCandidate);
+                }
+                candidateSetForState = getSortedSetOfCandidateOfState(localCandidateMapByStateName, oneCandidate.getStateName());
+                candidateSetForElection = getSortedSetOfCandidateOfElection(localCandidateMapByElectionId, oneCandidate.getElectionId());
+                candidateSetForState.add(oneCandidate);
+                candidateSetForElection.add(oneCandidate);
 				
 				if(StringUtil.isEmpty(oneCandidate.getCandidateFbPageId())){
 					oneCandidate.setCandidateFbPageId("AamAadmiParty");
@@ -87,13 +98,39 @@ public class CandidateCacheImpl {
 		return sortedSet;
 		
 	}
+	
+	private Set<CandidateDto> getSortedSetOfCandidateOfElection(Map<Long, Set<CandidateDto>> localCandidateMapByElectionId, Long  electionId){
+        Set<CandidateDto> sortedSet = localCandidateMapByElectionId.get(electionId);
+        if(sortedSet == null){
+            sortedSet = new TreeSet<>(new Comparator<CandidateDto>() {
+                @Override
+                public int compare(CandidateDto o1, CandidateDto o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+            localCandidateMapByElectionId.put(electionId, sortedSet);
+        }
+        return sortedSet;
+        
+    }
+	
+
 	public CandidateDto getCandidate(String urlPart1, String urlPart2){
 		String key = createKey(urlPart1, urlPart2);
 		return candidateMap.get(key);
 	}
+
+    public CandidateDto getAcCandidate(String urlPart1, String urlPart2) {
+        String key = createAcKey(urlPart1, urlPart2);
+        return candidateMap.get(key);
+    }
 	public Set<CandidateDto> getCandidatesOfState(String stateName){
 		return getSortedSetOfCandidateOfState(candidateMapByStateName, stateName);
 	}
+
+    public Set<CandidateDto> getCandidatesOfElection(Long electionId) {
+        return getSortedSetOfCandidateOfElection(candidateMapByElectionId, electionId);
+    }
 	public List<CandidateDto> getAllCandidates(){
 		return allCandidates;
 	}
@@ -130,5 +167,9 @@ public class CandidateCacheImpl {
 	private String createKey(String urlPart1, String urlPart2){
 		return urlPart1 +"_" +urlPart2;
 	}
+
+    private String createAcKey(String urlPart1, String urlPart2) {
+        return urlPart1 + "_AC_" + urlPart2;
+    }
 
 }

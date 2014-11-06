@@ -23,6 +23,7 @@
 		<mapping class="com.next.aap.core.persistance.DistrictRole" />
 		<mapping class="com.next.aap.core.persistance.Donation" />
 		<mapping class="com.next.aap.core.persistance.DonationCampaign" />
+		<mapping class="com.next.aap.core.persistance.Election" />
 		<mapping class="com.next.aap.core.persistance.Email" />
 		<mapping class="com.next.aap.core.persistance.Event" />
 		<mapping class="com.next.aap.core.persistance.FacebookAccount" />

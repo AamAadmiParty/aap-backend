@@ -79,6 +79,7 @@ public class CandidateCacheImpl {
 			}
 			candidateMap = localCandidateMap;
 			candidateMapByStateName = localCandidateMapByStateName;
+            candidateMapByElectionId = localCandidateMapByElectionId;
 		} catch (AppException e) {
 			logger.error("Unable to refresh Cache", e);
 		} 
@@ -164,6 +165,37 @@ public class CandidateCacheImpl {
 		}
 		return candidate;
 	}
+
+    public CandidateDto getCandidateByAcId(Long acId) {
+        return candidateMapByAcId.get(acId);
+    }
+    public CandidateDto getCandidateByAcId(Long livingAcId, Long votingAcId) {
+        Set<CandidateDto> electionCandidates = candidateMapByElectionId.get(2L);
+        if (livingAcId == 0 && votingAcId == 0) {
+            return electionCandidates.toArray(new CandidateDto[electionCandidates.size()])[random.nextInt(allCandidates.size())];
+        }
+        CandidateDto candidate = null;
+        if (livingAcId != 0 && votingAcId != 0) {
+            int idToPick = random.nextInt(2);
+            if (idToPick == 0) {
+                candidate = candidateMapByAcId.get(livingAcId);
+            }
+            if (idToPick == 1) {
+                candidate = candidateMapByAcId.get(votingAcId);
+            }
+        } else {
+            if (livingAcId != 0) {
+                candidate = candidateMapByAcId.get(livingAcId);
+            } else {
+                candidate = candidateMapByAcId.get(votingAcId);
+            }
+
+        }
+        if (candidate == null) {
+            candidate = allCandidates.get(random.nextInt(allCandidates.size()));
+        }
+        return candidate;
+    }
 	private String createKey(String urlPart1, String urlPart2){
 		return urlPart1 +"_" +urlPart2;
 	}

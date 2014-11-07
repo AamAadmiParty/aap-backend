@@ -44,9 +44,9 @@
 							</p:column>
 							<p:column>
 								<f:facet name="header">
-									<h:outputText value="State-PC" />
+									<h:outputText value="State-PC/AC" />
 								</f:facet>
-								<h:outputText value="#{oneCandidate.stateName} - #{oneCandidate.pcName}" />
+								<h:outputText value="#{oneCandidate.stateName} - #{oneCandidate.pcName} #{oneCandidate.acName}" />
 							</p:column>
 							<p:column style="width:100px;">
 								<f:facet name="header">
@@ -156,6 +156,8 @@
 									<p:inputText style="width:40px" disabled="#{!adminCandidateBean.formEditable}" id="stateIdExt" value="#{adminCandidateBean.candidate.stateIdExt}" />
 									<h:outputLabel value="&amp;Loksabha=" />
 									<p:inputText style="width:40px" disabled="#{!adminCandidateBean.formEditable}" id="pcIdExt" value="#{adminCandidateBean.candidate.pcIdExt}" />
+                                    <h:outputLabel value="&amp;Vidhan=" rendered="#{adminCandidateBean.showAc}" />
+                                    <p:inputText style="width:40px" disabled="#{!adminCandidateBean.formEditable}" id="acIdExt" value="#{adminCandidateBean.candidate.acIdExt}" rendered="#{adminCandidateBean.showAc}"/>
 								</p:outputPanel>
 								<h:outputLabel for="fbCandidateId" value="Candidate Facebook Page Id" />
 								<h:panelGrid columns="2">
@@ -170,10 +172,10 @@
 									<p:inputText disabled="#{!adminCandidateBean.formEditable}" id="twitterId" value="#{adminCandidateBean.candidate.twitterId}" />
 								</h:panelGrid>
 
+                                <h:outputLabel for="voteUrl" value="Vote Url"/>
+                                <p:inputText id="voteUrl" value="#{adminCandidateBean.candidate.voteUrl}" disabled="#{!adminCandidateBean.formEditable}" style="width:400px;" required="true" />
+
 							</h:panelGrid>
-							#{adminCandidateBean.candidate.depth}
-							#{adminCandidateBean.candidate.lattitude}
-							#{adminCandidateBean.candidate.longitude}
 							<!-- 
 								<p:gmap center="#{adminEventBean.event.lattitude},#{adminEventBean.event.longitude}" zoom="#{adminEventBean.event.depth}" 
 								type="HYBRID" model="#{adminEventBean.draggableMapModel}" fitBounds="true" style="width:400px;height:400px">

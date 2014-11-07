@@ -6402,6 +6402,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			candidate.setPcIdExt(candidateDto.getPcIdExt());
 			candidate.setStateIdExt(candidateDto.getStateIdExt());
 		}
+        candidate.setVoteUrl(candidateDto.getVoteUrl());
 		candidate.setLocationCampaignId(candidateDto.getLocationCampaignId());
 		candidate.setName(candidateDto.getName());
 		candidate.setCandidateFbPageId(candidateDto.getCandidateFbPageId());

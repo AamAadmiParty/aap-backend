@@ -264,6 +264,8 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
                     candidate.setElectionId(selectedElectionId);
 					candidate.setParliamentConstituencyId(selectedCandidate.getParliamentConstituencyId());
 					candidate.setDepth(defaultDepth);
+                    candidate.setVoteUrl(selectedCandidate.getVoteUrl());
+                    candidate.setTwitterId(selectedCandidate.getTwitterId());
 					StateDto selectedState = locationCacheDbImpl.getStateById(candidate.getStateId());
 					if(selectedState != null){
 						String selectedStateName = selectedState.getName();
@@ -311,6 +313,8 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
                     candidate.setDepth(defaultDepth);
                     candidate.setElectionId(selectedElectionId);
                     candidate.setCandidateType(selectedCandidate.getCandidateType());
+                    candidate.setVoteUrl(selectedCandidate.getVoteUrl());
+                    candidate.setTwitterId(selectedCandidate.getTwitterId());
                     StateDto selectedState = locationCacheDbImpl.getStateById(candidate.getStateId());
                     if (selectedState != null) {
                         String selectedStateName = selectedState.getName();
@@ -376,13 +380,18 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 		candidate.setDepth(defaultDepth);
         candidate.setElectionId(selectedElectionId);
         // Hard code logic for now
+        updateUi();
+    }
+
+    private void updateUi() {
         if (selectedElectionId == 1) {
             candidate.setCandidateType("MP");
         }
         if (selectedElectionId == 2) {
             candidate.setCandidateType("MLA");
         }
-		showList = false;
+        showList = false;
+        handleCandidateTypeChange(null);
 	}
 	public void cancel(ActionEvent actionEvent) {
 		showList = true;
@@ -429,10 +438,16 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
                 if (StringUtil.isEmpty(candidate.getPcIdExt())) {
                     sendErrorMessageToJsfScreen("Please enter the Parliament Constituency Number(provided by .net team)");
                 }
+                if (candidate.getParliamentConstituencyId() == null) {
+                    sendErrorMessageToJsfScreen("Please select a parliament Constituency");
+                }
             }
             if ("MLA".equalsIgnoreCase(candidate.getCandidateType())) {
                 if (StringUtil.isEmpty(candidate.getAcIdExt())) {
-                    sendErrorMessageToJsfScreen("Please enter the Parliament Constituency Number(provided by .net team)");
+                    sendErrorMessageToJsfScreen("Please enter the Assembly Constituency Number(provided by .net team)");
+                }
+                if (candidate.getAssemblyConstituencyId() == null) {
+                    sendErrorMessageToJsfScreen("Please select a Assembly Constituency");
                 }
             }
 			if (StringUtil.isEmpty(candidate.getStateIdExt())) {
@@ -442,12 +457,9 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 				sendErrorMessageToJsfScreen("Please enter the targeturl part 1(Usually state name)");
 			}
 			if (StringUtil.isEmpty(candidate.getUrlTextPart2())) {
-				sendErrorMessageToJsfScreen("Please enter the targeturl part 1(Usually loksabha name)");
+                sendErrorMessageToJsfScreen("Please enter the targeturl part 1(Usually loksabha or vishansabha name)");
 			}
 			
-			if (candidate.getParliamentConstituencyId() == null) {
-				sendErrorMessageToJsfScreen("Please select a parliament Constituency");
-			}
 			if (isValidInput()) {
 				LocationCampaignDto locationCampaign = null;
 				if ("MP".equalsIgnoreCase(candidate.getCandidateType())) {
@@ -461,12 +473,23 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 					candidate.setLocationCampaignId(campaignId);
 				}
 				if(candidate.getId() == null || candidate.getId() <= 0){
-					String donationPageFullUrl = baseDonationUrl +"&State=" +candidate.getStateIdExt()+"&Loksabha="+candidate.getPcIdExt() +"&cid=lcid="+campaignId;
+                    String donationPageFullUrl;
+                    if ("MP".equalsIgnoreCase(candidate.getCandidateType())) {
+                        donationPageFullUrl = baseDonationUrl + "&State=" + candidate.getStateIdExt() + "&Loksabha=" + candidate.getPcIdExt() + "&cid=lcid=" + campaignId;
+                    } else {
+                        donationPageFullUrl = baseDonationUrl + "&State=" + candidate.getStateIdExt() + "&Loksabha=" + candidate.getPcIdExt() + "&Vidhan=" + candidate.getAcIdExt() + "&cid=lcid="
+                                + campaignId;
+                    }
+
 					myaapInUtil.createShortUrl(donationPageFullUrl, candidate.getDonatePageUrlId());
 					candidate.setDonationPageFullUrl(donationPageFullUrl);
 					candidate.setLandingPageSmallUrl("http://myaap.in/"+candidate.getLandingPageUrlId());
-					
-					String landingPageFullUrl = baseUrl +"/candidate/"+candidate.getUrlTextPart1()+"/"+candidate.getUrlTextPart2()+".html";
+                    String landingPageFullUrl;
+                    if ("MP".equalsIgnoreCase(candidate.getCandidateType())) {
+                        landingPageFullUrl = baseUrl +"/candidate/"+candidate.getUrlTextPart1()+"/"+candidate.getUrlTextPart2()+".html";
+                    } else {
+                        landingPageFullUrl = baseUrl + "/candidate/" + candidate.getUrlTextPart1() + "/ac/" + candidate.getUrlTextPart2() + ".html";
+                    }
 					myaapInUtil.createShortUrl(landingPageFullUrl, candidate.getLandingPageUrlId());
 					candidate.setLandingPageFullUrl(landingPageFullUrl);
 
@@ -525,6 +548,8 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 		marker.setLatlng(coord1);
 		showList = false;
 		formEditable = true;
+        selectedElectionId = candidate.getElectionId();
+        updateUi();
 	}
 
 	public MapModel getDraggableMapModel() {

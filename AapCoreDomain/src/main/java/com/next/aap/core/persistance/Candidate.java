@@ -129,6 +129,8 @@ public class Candidate {
     @Column(name = "candidate_type", nullable = false)
     private String candidateType;
 
+    @Column(name = "vote_url")
+    private String voteUrl;
 
     public Long getId() {
 		return id;
@@ -373,6 +375,14 @@ public class Candidate {
 
     public void setCandidateType(String candidateType) {
         this.candidateType = candidateType;
+    }
+
+    public String getVoteUrl() {
+        return voteUrl;
+    }
+
+    public void setVoteUrl(String voteUrl) {
+        this.voteUrl = voteUrl;
     }
 	
 	

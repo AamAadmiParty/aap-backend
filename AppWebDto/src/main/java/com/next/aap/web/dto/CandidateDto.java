@@ -40,7 +40,7 @@ public class CandidateDto {
     private Long assemblyConstituencyId;
     private String acName;
     private Long electionId;
-
+    private String voteUrl;
 
 	public Long getId() {
 		return id;
@@ -261,6 +261,14 @@ public class CandidateDto {
 
     public void setElectionId(Long electionId) {
         this.electionId = electionId;
+    }
+
+    public String getVoteUrl() {
+        return voteUrl;
+    }
+
+    public void setVoteUrl(String voteUrl) {
+        this.voteUrl = voteUrl;
     }
     @Override
     public String toString() {

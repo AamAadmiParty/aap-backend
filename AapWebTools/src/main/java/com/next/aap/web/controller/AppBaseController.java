@@ -102,6 +102,35 @@ public class AppBaseController extends BaseController{
 		
 		
 	}
+
+    protected void addUserAcCandidateInModel(HttpServletRequest httpServletRequest, ModelAndView mv) {
+        Long acId = getLongPramater(httpServletRequest, "pcId", 0);
+        if (acId <= 0) {
+            UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
+            long livingAcId = 0;
+            long votingAcId = 0;
+            if (loggedInUser != null) {
+                // get user's location candidate
+                if (loggedInUser.getAssemblyConstituencyLivingId() != null) {
+                    livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
+                }
+                if (loggedInUser.getAssemblyConstituencyVotingId() != null) {
+                    votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
+                }
+            } else {
+                livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
+                votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
+            }
+            CandidateDto candidateDto = candidateCacheImpl.getCandidateByAcId(livingAcId, votingAcId);
+            mv.getModel().put("candidate", candidateDto);
+            addCandidateDonationInfo(candidateDto, mv);
+        } else {
+            CandidateDto candidateDto = candidateCacheImpl.getCandidateByAcId(acId);
+            mv.getModel().put("candidate", candidateDto);
+            addCandidateDonationInfo(candidateDto, mv);
+        }
+
+    }
 	protected void addCandidateDonationInfo(CandidateDto candidateDto, ModelAndView mv){
 		if(candidateDto != null){
 			if(!StringUtil.isEmpty(candidateDto.getLocationCampaignId())){

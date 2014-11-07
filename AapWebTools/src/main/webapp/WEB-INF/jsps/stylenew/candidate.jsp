@@ -12,7 +12,7 @@
 
 <!--Facebook Tags -->
 <meta name="description"
-	content="Donate to aam aadmi party candidate ${candidate.name} from ${candidate.pcName} - ${candidate.stateName} to help them fight election against corrupts  and now you can generate donation certificates online" />
+	content="Donate to aam aadmi party candidate ${candidate.name} from ${candidate.pcName} ${candidate.acName} - ${candidate.stateName} to help them fight election against corrupts  and now you can generate donation certificates online" />
 <c:if test="${empty candidate.imageUrl }">
 	<meta name="og:image" property="og:image" content="https://lh4.googleusercontent.com/-4kGDOBFxpMY/UfCwashxxkI/AAAAAAAANNw/DCk6O5jwX_E/w1064-h822-no/donations03.jpg" />
 	<meta name="og:image" property="og:image" content="https://lh5.googleusercontent.com/-v9IxH4yKots/UeEjk0Xf-9I/AAAAAAAAMR0/xbaXkSqNHug/w987-h822-no/donations01.jpg" />
@@ -27,7 +27,7 @@
 <meta name="og:site_name" property="og:site_name" content="my.aamaadmiparty.org" />
 <meta name="og:type" property="og:type" content="blog" />
 <meta name="og:description" property="og:description"
-	content="Donate to aam aadmi party candidate ${candidate.name} from ${candidate.pcName} - ${candidate.stateName} to help them fight election against corrupts  and now you can generate donation certificates online" />
+	content="Donate to aam aadmi party candidate ${candidate.name} from ${candidate.pcName} ${candidate.acName} - ${candidate.stateName} to help them fight election against corrupts  and now you can generate donation certificates online" />
 
 <script>
 	$(function() {
@@ -140,14 +140,16 @@
 								<c:out value="${candidate.name}" />
 							</h1>
 							<h3>State : ${candidate.stateName}</h3>
-							<h3>Loksabha : ${candidate.pcName}</h3>
+							<h3>Loksabha/Vidhansabha : ${candidate.pcName} ${candidate.acName}</h3>
 							<div id="success" class="languagetab">
 								<table border="0" cellpadding="0" cellspacing="0">
 									<tbody>
+									   <%-- 
 										<tr>
 											<th width="200">Total Money Required</th>
 											<td width="200">Rs 70,00,000(EC Limit)</td>
 										</tr>
+										--%>
 										<tr>
 											<th width="200">Total Transactions</th>
 											<td width="200">${donationCampaignInfo.ttxn}</td>
@@ -194,7 +196,7 @@
 						<c:forEach var="oneDonation" items="${donationCampaignInfo.dns}">
 							<tr>
 								<td><% out.println(i++); %></td>
-								<td><a href="my.aamaadmiparty.org/donationcertifcates.html?txnid=${oneDonation.did}"><c:out value="${oneDonation.did}" /></a></td>
+								<td><a href="http://my.aamaadmiparty.org/donationcertifcates.html?txnid=${oneDonation.did}"><c:out value="${oneDonation.did}" /></a></td>
 								<td><c:out value="${oneDonation.name}" /></td>
 								<td><fmt:formatDate value="${oneDonation.dt}" pattern="dd-MMM-yyyy HH:mm:ss" /></td>
 								<td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2"  value="${oneDonation.amt}" /></td>

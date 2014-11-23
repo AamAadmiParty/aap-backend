@@ -81,6 +81,14 @@ public class CandidateDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Cand
 	}
 
     @Override
+    public Candidate getCandidateByExtAcId(String acIdExt) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("acIdExt", acIdExt);
+        String query = "from Candidate where acIdExt = :acIdExt";
+        return executeQueryGetObject(query, params);
+    }
+
+    @Override
     public List<Candidate> getAllCandidatesByElectionId(Long electionId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("electionId", electionId);

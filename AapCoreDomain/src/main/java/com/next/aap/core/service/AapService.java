@@ -151,6 +151,8 @@ public interface AapService {
 	
 	PlannedTweetDto savePlannedTweet(PlannedTweetDto plannedTweetDto);
 	
+    PlannedTweetDto getPlannedTweetByTweetId(Long tweetId) throws AppException;
+
 	PlannedTweetDto updatePlannedTweetStatus(Long plannedTweetId, PlannedPostStatus status, String message, int totalSuccessTweet,
 			int totalFailedTweet);
 	
@@ -170,6 +172,8 @@ public interface AapService {
 	
 	List<TwitterAccountDto> getAllTwitterAccountsForVoiceOfAap(PostLocationType locationType, Long locationId);
 	
+    List<TwitterAccountDto> getAllTwitterAccountsForVoiceOfAap(PostLocationType locationType, Long locationId, Long startId, int totalRequired);
+
 	NewsDto saveNews(NewsDto newsDto, List<ContentTweetDto> contentTweetDtos, PostLocationType locationType, Long locationId);
 	
 	NewsDto publishNews(Long newsId);
@@ -509,4 +513,6 @@ public interface AapService {
     ElectionDto saveElection(ElectionDto electionDto) throws AppException;
 
     List<ElectionDto> getAllElections() throws AppException;
+
+    String blockTwitterAccountForTwitter(String screenName) throws AppException;
 }

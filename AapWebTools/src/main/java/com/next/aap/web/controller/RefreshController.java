@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.next.aap.core.exception.AppException;
+
 @Controller
 public class RefreshController extends AppBaseController {
 	
@@ -81,6 +83,22 @@ public class RefreshController extends AppBaseController {
 		return "all downloaded";
 	}
 	
+    @RequestMapping(value = "/aaps/voa/tw", method = RequestMethod.GET)
+    @ResponseBody
+    public String blockTwitterAccountOnVoa(ModelAndView mv, HttpServletRequest httpServletRequest) {
+        String screenName = httpServletRequest.getParameter("screen_name");
+        if (screenName == null || screenName.trim().equals("")) {
+            return "Please provide screen_name parameter";
+        }
+        try {
+            return aapService.blockTwitterAccountForTwitter(screenName);
+        } catch (AppException e) {
+            e.printStackTrace();
+            return "Unable to block, Exception occured " + e.getMessage();
+
+        }
+
+    }
 	
 	
 	

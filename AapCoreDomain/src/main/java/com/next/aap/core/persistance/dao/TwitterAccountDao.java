@@ -33,4 +33,20 @@ public interface TwitterAccountDao {
 	public abstract List<TwitterAccount> getCountryRegionTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId);
 	
 	public abstract List<TwitterAccount> getCountryRegionAreaTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId);
+
+    public abstract List<TwitterAccount> getAllTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long afterId, int total);
+
+    public abstract List<TwitterAccount> getStateTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long stateId, Long afterId, int total);
+
+    public abstract List<TwitterAccount> getDistrictTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long district, Long afterId, int total);
+
+    public abstract List<TwitterAccount> getAcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long acId, Long afterId, int total);
+
+    public abstract List<TwitterAccount> getPcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId, Long afterId, int total);
+
+    public abstract List<TwitterAccount> getCountryTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId, Long afterId, int total);
+
+    public abstract List<TwitterAccount> getCountryRegionTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId, Long afterId, int total);
+
+    public abstract List<TwitterAccount> getCountryRegionAreaTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId, Long afterId, int total);
 }

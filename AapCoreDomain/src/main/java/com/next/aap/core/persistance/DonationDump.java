@@ -93,6 +93,8 @@ public class DonationDump {
 	private String donateToDistrict;
 	@Column(name = "DonateToLokSabha")
 	private String donateToLoksabha;
+    @Column(name = "DonateToVidhan")
+    private String donateToVidhan;
 
 	public Long getId() {
 		return id;
@@ -322,7 +324,16 @@ public class DonationDump {
 	public void setDonateToLoksabha(String donateToLoksabha) {
 		this.donateToLoksabha = donateToLoksabha;
 	}
-	@Override
+
+    public String getDonateToVidhan() {
+        return donateToVidhan;
+    }
+
+    public void setDonateToVidhan(String donateToVidhan) {
+        this.donateToVidhan = donateToVidhan;
+    }
+
+    @Override
 	public String toString() {
 		return "DonationDump [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId
 				+ ", modifierId=" + modifierId + ", donorId=" + donorId + ", merchantReferenceNumber=" + merchantReferenceNumber + ", transactionId="

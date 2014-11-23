@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +73,7 @@ public class DailyDonationImageTask implements Runnable {
 	// http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
 	// http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	// ss mm hh dd
-	//@Scheduled(cron = "0 45 06 * * *")
+    @Scheduled(cron = "0 00 06 * * *")
 	public void downloadImageAndPostToFacebook() {
 		logger.info(new Date().toString());
 		logger.info("Starting Scheduled task");
@@ -109,7 +107,7 @@ public class DailyDonationImageTask implements Runnable {
 
 			try {
 				fileOutputStream = new FileOutputStream(filePath);
-				DduUtil.createTemplate02DDU(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
+                DduUtil.createDelhiDialogueTemplateDegreeImage(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
 
 				fileOutputStream.close();
 				logger.info("File created");

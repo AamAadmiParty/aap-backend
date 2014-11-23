@@ -40,6 +40,8 @@ http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 	
 	<task:executor id="twitterTimeLinePostThreadPool" pool-size="5-25" queue-capacity="100000"/>
 	
+	<task:executor id="parallelTweetThreadPool" pool-size="2" queue-capacity="100000"/>
+	
 	
 	
 </beans>

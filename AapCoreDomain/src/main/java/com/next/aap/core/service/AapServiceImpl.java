@@ -2296,6 +2296,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		plannedTweet.setLocationId(plannedTweetDto.getLocationId());
 		plannedTweet.setTweetId(plannedTweetDto.getTweetId());
 		plannedTweet.setTweetType(plannedTweetDto.getTweetType());
+        plannedTweet.setTotalRequired(plannedTweetDto.getTotalRequired());
 
 		plannedTweet = plannedTweetDao.savePlannedTweet(plannedTweet);
 
@@ -2424,6 +2425,39 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		return convertTwitterAccounts(twitterAccounts);
 	}
+
+    @Override
+    @Transactional
+    public List<TwitterAccountDto> getAllTwitterAccountsForVoiceOfAap(PostLocationType locationType, Long locationId, Long afterId, int totalRequired) {
+        List<TwitterAccount> twitterAccounts = null;
+        switch (locationType) {
+        case Global:
+            twitterAccounts = twitterAccountDao.getAllTwitterAccountsForVoiceOfAapToPublishOnTimeLine(afterId, totalRequired);
+            break;
+        case STATE:
+            twitterAccounts = twitterAccountDao.getStateTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId, afterId, totalRequired);
+            break;
+        case DISTRICT:
+            twitterAccounts = twitterAccountDao.getDistrictTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId, afterId, totalRequired);
+            break;
+        case AC:
+            twitterAccounts = twitterAccountDao.getAcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId, afterId, totalRequired);
+            break;
+        case PC:
+            twitterAccounts = twitterAccountDao.getPcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId, afterId, totalRequired);
+            break;
+        case COUNTRY:
+            twitterAccounts = twitterAccountDao.getCountryTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId, afterId, totalRequired);
+            break;
+        case REGION:
+            twitterAccounts = twitterAccountDao.getCountryRegionTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId, afterId, totalRequired);
+            break;
+        case AREA:
+            twitterAccounts = twitterAccountDao.getCountryRegionAreaTwitterAccountsForVoiceOfAapToPublishOnTimeLine(locationId, afterId, totalRequired);
+            break;
+        }
+        return convertTwitterAccounts(twitterAccounts);
+    }
 
 	@Override
 	@Transactional
@@ -4333,29 +4367,46 @@ public class AapServiceImpl implements AapService, Serializable {
 		return emailUserDtos;
 	}
 
+    private void updateDonationLoksabhVidhansabhaLocationCampaigns(Donation donation) {
+        try {
+            // Covert .net System's Loksabha to myaap system location campaign,
+            // in case location campaign Id not provided
+            logger.info("checking if donation is for loksabha : {}, or vidhansabha {}", donation.getDonateToLoksabha(), donation.getDonateToVidhansabha());
+            logger.info("Lcid {}", donation.getLcid());
+            if (!StringUtil.isEmpty(donation.getDonateToVidhansabha()) && !"0".equals(donation.getDonateToVidhansabha())) {
+                Candidate candidate = candidateDao.getCandidateByExtAcId(donation.getDonateToVidhansabha());
+                if (candidate != null) {
+                    logger.info("Found a candidate so donation can be added to its location campaign");
+                    String locationCampaignId = candidate.getLocationCampaignId();
+                    if (!StringUtil.isEmpty(donation.getLcid())) {
+                        logger.warn("Overriding Candidate location campaign Id from " + donation.getLcid() + " to " + locationCampaignId);
+                    }
+                    donation.setLcid(locationCampaignId);
+                }
+            } else {
+                if (!StringUtil.isEmpty(donation.getDonateToLoksabha()) && !"0".equals(donation.getDonateToLoksabha())) {
+                    Candidate candidate = candidateDao.getCandidateByExtPcId(donation.getDonateToLoksabha());
+                    if (candidate != null) {
+                        logger.info("Found a candidate so donation can be added to its location campaign");
+                        String locationCampaignId = candidate.getLocationCampaignId();
+                        if (!StringUtil.isEmpty(donation.getLcid())) {
+                            logger.warn("Overriding Candidate location campaign Id from " + donation.getLcid() + " to " + locationCampaignId);
+                        }
+                        donation.setLcid(locationCampaignId);
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+            logger.error("Unable to tranlate Loksabah", ex);
+        }
+    }
 	private void updateDonationCampaigns(Donation donation){
 		try {
 			logger.info("Updating Global Campaigns");
 			updateGlobalCampaigns(donation);
 			logger.info("Updating Location Campaigns");
-
-			try{
-			//Covert .net System's Loksabha to myaap system location campaign, in case location campaign Id not provided
-			logger.info("checking if donation is for loksabha : " + donation.getDonateToLoksabha()+", "+donation.getLcid());
-			if (!StringUtil.isEmpty(donation.getDonateToLoksabha()) && !"0".equals(donation.getDonateToLoksabha())) {
-				Candidate candidate = candidateDao.getCandidateByExtPcId(donation.getDonateToLoksabha());
-				if (candidate != null) {
-					logger.info("Found a candidate so donation can be added to its location campaign");
-					String locationCampaignId = candidate.getLocationCampaignId();
-					if(!StringUtil.isEmpty(donation.getLcid())){
-						logger.warn("Overriding Candidate location campaign Id from "+ donation.getLcid() +" to "+ locationCampaignId);
-					}
-					donation.setLcid(locationCampaignId);
-				}
-			}
-			}catch(Exception ex){
-				logger.error("Unable to tranlate Loksabah",ex);
-			}
+            updateDonationLoksabhVidhansabhaLocationCampaigns(donation);
 
 			updateLocationCampaigns(donation);
 			logger.info("Updating User Campaigns");
@@ -4590,6 +4641,7 @@ public class AapServiceImpl implements AapService, Serializable {
 				donation.setDonateToDistrict(oneDonation.getDonateToDistrict());
 				donation.setDonateToLoksabha(oneDonation.getDonateToLoksabha());
 				donation.setDonateToState(oneDonation.getDonateToState());
+                donation.setDonateToVidhansabha(oneDonation.getDonateToVidhan());
 
 				donation = donationDao.saveDonation(donation);
 			} else {
@@ -5283,17 +5335,31 @@ public class AapServiceImpl implements AapService, Serializable {
 				donation.setDonateToDistrict(donationDump.getDonateToDistrict());
 
 				donationDao.updateDonationPgStatus(donationDump);
-				if(!StringUtil.isEmpty(donationDump.getDonateToLoksabha()) && !"0".equals(donationDump.getDonateToLoksabha())){
-					logger.info("Updating Loksabha campaign detail");
-					Candidate candidate = candidateDao.getCandidateByExtPcId(donationDump.getDonateToLoksabha());
-					if(candidate != null){
-						LocationCampaign oneLocationCampaign = locationCampaignDao.getDefaultLocationCampaignByPcId(candidate.getParliamentConstituencyId());
-						if(oneLocationCampaign != null){
-							donation.setLcid(oneLocationCampaign.getCampaignId());
-							updateLocationCampaignDetailInMemcache(oneLocationCampaign);
-						}
-					}
-				}
+
+                if (!StringUtil.isEmpty(donationDump.getDonateToVidhan()) && !"0".equals(donationDump.getDonateToVidhan())) {
+                    logger.info("Updating Vidhansabha campaign detail");
+                    Candidate candidate = candidateDao.getCandidateByExtAcId(donationDump.getDonateToVidhan());
+                    if (candidate != null) {
+                        LocationCampaign oneLocationCampaign = locationCampaignDao.getDefaultLocationCampaignByAcId(candidate.getAssemblyConstituencyId());
+                        if (oneLocationCampaign != null) {
+                            donation.setLcid(oneLocationCampaign.getCampaignId());
+                            updateLocationCampaignDetailInMemcache(oneLocationCampaign);
+                        }
+                    }
+                } else {
+                    if (!StringUtil.isEmpty(donationDump.getDonateToLoksabha()) && !"0".equals(donationDump.getDonateToLoksabha())) {
+                        logger.info("Updating Loksabha campaign detail");
+                        Candidate candidate = candidateDao.getCandidateByExtPcId(donationDump.getDonateToLoksabha());
+                        if (candidate != null) {
+                            LocationCampaign oneLocationCampaign = locationCampaignDao.getDefaultLocationCampaignByPcId(candidate.getParliamentConstituencyId());
+                            if (oneLocationCampaign != null) {
+                                donation.setLcid(oneLocationCampaign.getCampaignId());
+                                updateLocationCampaignDetailInMemcache(oneLocationCampaign);
+                            }
+                        }
+                    }
+
+                }
 				donation = donationDao.saveDonation(donation);
 			}
 			
@@ -6401,6 +6467,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			candidate.setUrlTextPart2(candidateDto.getUrlTextPart2());
 			candidate.setPcIdExt(candidateDto.getPcIdExt());
 			candidate.setStateIdExt(candidateDto.getStateIdExt());
+            candidate.setAcIdExt(candidateDto.getAcIdExt());
 		}
         candidate.setVoteUrl(candidateDto.getVoteUrl());
 		candidate.setLocationCampaignId(candidateDto.getLocationCampaignId());
@@ -6612,6 +6679,26 @@ public class AapServiceImpl implements AapService, Serializable {
     public List<CandidateDto> getAllCandidatesOfElection(Long electionId) throws AppException {
         List<Candidate> candidates = candidateDao.getAllCandidatesByElectionId(electionId);
         return convertCandidates(candidates);
+    }
+
+    @Override
+    @Transactional
+    public String blockTwitterAccountForTwitter(String screenName) throws AppException {
+        TwitterAccount twitterAccount = twitterAccountDao.getTwitterAccountByHandle(screenName);
+        if (twitterAccount == null) {
+            return "No Such twitter account [" + screenName + "] exists in our System";
+        }
+        twitterAccount.getUser().setAllowTweets(false);
+        return "Twitter Account [" + screenName + "] updated succesfully";
+    }
+
+    @Override
+    @Transactional
+    public PlannedTweetDto getPlannedTweetByTweetId(Long tweetId) throws AppException {
+        logger.info("getPlannedTweetByTweetId - " + tweetId);
+        PlannedTweet plannedTweet = plannedTweetDao.getPlannedTweetByTweetId(tweetId);
+        logger.info("plannedTweet - " + plannedTweet);
+        return convertPlannedTweet(plannedTweet);
     }
 
 }

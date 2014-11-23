@@ -100,9 +100,11 @@ public class TwitterAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring
 	}
 
 	@Override
-	public TwitterAccount getTwitterAccountByHandle(String userName) {
-		// TODO Auto-generated method stub
-		return null;
+    public TwitterAccount getTwitterAccountByHandle(String screenName) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("screenNameCap", "@" + screenName.toUpperCase());
+        TwitterAccount twitterAccount = executeQueryGetObject("from TwitterAccount where screenNameCap = :screenNameCap", params);
+        return twitterAccount;
 	}
 
 	@Override
@@ -182,4 +184,96 @@ public class TwitterAccountDaoHibernateSpringImpl extends BaseDaoHibernateSpring
 		List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where user.nriCountryRegionAreaId = :nriCountryRegionAreaId and user.allowTweets = :allowTweets", params);
 		return list;
 	}
+
+    @Override
+    public List<TwitterAccount> getAllTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long afterId, int total) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("allowTweets", true);
+        params.put("afterId", afterId);
+        List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where id > :afterId and user.allowTweets = :allowTweets order by id asc", params, total);
+        return list;
+    }
+
+    @Override
+    public List<TwitterAccount> getStateTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long stateId, Long afterId, int total) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("allowTweets", true);
+        params.put("stateId", stateId);
+        params.put("afterId", afterId);
+        List<TwitterAccount> list = executeQueryGetList(
+                "from TwitterAccount where id > :afterId and (user.stateLivingId = :stateId or user.stateVotingId = :stateId) and user.allowTweets = :allowTweets order by id asc", params, total);
+        return list;
+    }
+
+    @Override
+    public List<TwitterAccount> getDistrictTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long districtId, Long afterId, int total) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("allowTweets", true);
+        params.put("districtId", districtId);
+        params.put("afterId", afterId);
+        List<TwitterAccount> list = executeQueryGetList(
+                "from TwitterAccount where id > :afterId and (user.districtLivingId = :districtId or user.districtVotingId = :districtId) and user.allowTweets = :allowTweets  order by id asc",
+                params, total);
+        return list;
+    }
+
+    @Override
+    public List<TwitterAccount> getAcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long acId, Long afterId, int total) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("allowTweets", true);
+        params.put("acId", acId);
+        params.put("afterId", afterId);
+        List<TwitterAccount> list = executeQueryGetList(
+                "from TwitterAccount where id > :afterId and (user.assemblyConstituencyLivingId = :acId or user.assemblyConstituencyVotingId = :acId) and user.allowTweets = :allowTweets order by id asc",
+                params,
+                total);
+        return list;
+    }
+
+    @Override
+    public List<TwitterAccount> getPcTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long pcId, Long afterId, int total) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("allowTweets", true);
+        params.put("pcId", pcId);
+        params.put("afterId", afterId);
+        List<TwitterAccount> list = executeQueryGetList(
+                "from TwitterAccount where id > :afterId and (user.parliamentConstituencyLivingId = :pcId or user.parliamentConstituencyVotingId = :pcId) and user.allowTweets = :allowTweets order by id asc",
+                params,
+                total);
+        return list;
+    }
+
+    @Override
+    public List<TwitterAccount> getCountryTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long nriCountryId, Long afterId, int total) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("allowTweets", true);
+        params.put("nriCountryId", nriCountryId);
+        params.put("afterId", afterId);
+        List<TwitterAccount> list = executeQueryGetList("from TwitterAccount where id > :afterId and user.nriCountryId = :nriCountryId and user.allowTweets = :allowTweets order by id asc", params,
+                total);
+        return list;
+    }
+
+    @Override
+    public List<TwitterAccount> getCountryRegionTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long nriCountryRegionId, Long afterId, int total) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("allowTweets", true);
+        params.put("nriCountryRegionId", nriCountryRegionId);
+        params.put("afterId", afterId);
+        List<TwitterAccount> list = executeQueryGetList(
+                "from TwitterAccount where id > :afterId and user.nriCountryRegionId = :nriCountryRegionId and user.allowTweets = :allowTweets order by id asc", params, total);
+        return list;
+    }
+
+    @Override
+    public List<TwitterAccount> getCountryRegionAreaTwitterAccountsForVoiceOfAapToPublishOnTimeLine(Long nriCountryRegionAreaId, Long afterId, int total) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("allowTweets", true);
+        params.put("nriCountryRegionAreaId", nriCountryRegionAreaId);
+        params.put("afterId", afterId);
+        List<TwitterAccount> list = executeQueryGetList(
+                "from TwitterAccount where id > :afterId and user.nriCountryRegionAreaId = :nriCountryRegionAreaId and user.allowTweets = :allowTweets order by id asc",
+                params, total);
+        return list;
+    }
 }

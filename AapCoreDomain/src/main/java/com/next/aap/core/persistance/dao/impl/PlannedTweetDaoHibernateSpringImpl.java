@@ -85,5 +85,13 @@ public class PlannedTweetDaoHibernateSpringImpl extends BaseDaoHibernateSpring<P
 		}
 		return list.get(0);
 	}
+
+    @Override
+    public PlannedTweet getPlannedTweetByTweetId(Long tweetId) {
+        Map<String, Object> params = new TreeMap<String, Object>();
+        params.put("tweetId", tweetId);
+        PlannedTweet plannedTweet = executeQueryGetObject("from PlannedTweet where tweetId = :tweetId", params);
+        return plannedTweet;
+    }
 	
 }

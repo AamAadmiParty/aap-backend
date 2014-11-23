@@ -3,13 +3,10 @@ package com.next.aap.task.donation;
 import java.util.Date;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.amazonaws.regions.Regions;
 import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.core.persistance.DonationDump;
 import com.next.aap.core.service.AapService;
@@ -87,6 +84,11 @@ public class ReceiveDonationListener extends AwsQueueListener{
 			donationDump.setDonateToState(donationJsonObject.getString("DonateToState"));
 			donationDump.setDonateToDistrict(donationJsonObject.getString("DonateToDistrict"));
 			donationDump.setDonateToLoksabha(donationJsonObject.getString("DonateToLokSabha"));
+            try {
+                donationDump.setDonateToVidhan(donationJsonObject.getString("DonateToVidhanSabha"));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 			
 			logger.info("Saving Donation Dump : "+donationDump);
 			aapService.saveDonationDump(donationDump);

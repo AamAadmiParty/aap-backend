@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
-import java.util.Calendar;
 
 import javax.imageio.ImageIO;
 
@@ -47,7 +46,7 @@ public class DduUtil {
 			String message = "Have you paid your EMI for better future?";
 			String monthTarget = "70000000";
 
-			createTemplate02DDU(bufferedOutputStream, date, dayDonation, monthDonation, monthTarget);
+            createDelhiDialogueTemplateDegreeImage(bufferedOutputStream, date, dayDonation, monthDonation, monthTarget);
 			bufferedOutputStream.close();
 
 		}
@@ -263,6 +262,81 @@ public class DduUtil {
 		
 		ImageIO.write(image, "png", outputStream);
 	}
+
+    public static void createDelhiDialogueTemplateDegreeImage(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget) throws IOException {
+        String templateFileName = "ddu/dd/degree.jpg";
+        createDelhiDialogueTemplateImage(outputStream, date, dayDonation, monthDonation, monthTarget, templateFileName);
+    }
+    public static void createDelhiDialogueTemplateImage(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget, String templateFileName)
+            throws IOException {
+        float dateFontSize = 55.0f;
+        float amountFontSize = 70.0f;
+        BufferedImage image = null;
+
+        try {
+
+            InputStream in = DduUtil.class.getClassLoader().getResourceAsStream(templateFileName);
+            image = ImageIO.read(in);
+
+        } catch (IOException e) {
+
+        }
+
+        Graphics2D graphics = image.createGraphics();
+
+        // Font font = new Font("Microsoft Sans Serif", Font.BOLD, fontSize);
+        Font font = graphics.getFont();
+        /*
+        try {
+            double monthDonationInt = Double.parseDouble(monthDonation);
+            double monthTargetInt = Double.parseDouble(monthTarget);
+            int percent = (int) ((monthDonationInt / monthTargetInt) * 100);
+            String message = "Have achieved " + percent + "%, together we can do 100%";
+
+            font = font.deriveFont(30.0f);
+            graphics.setColor(Color.RED);
+            graphics.setFont(font);
+            graphics.drawChars(message.toCharArray(), 0, message.length(), 1300, 970);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        */
+        // graphics.drawChars(monthDonation.toCharArray(), 0,
+        // monthDonation.length(), 1400, 550);
+
+        // graphics.setColor(Color.RED);
+        dayDonation = RsFormatter.formatAmount(dayDonation);
+        monthDonation = RsFormatter.formatAmount(monthDonation);
+        font = font.deriveFont(dateFontSize);
+        font = font.deriveFont(Font.BOLD);
+        graphics.setFont(font);
+        graphics.setColor(Color.decode("#663300"));
+        graphics.drawChars(date.toCharArray(), 0, date.length(), 1500, 330);
+
+        font = font.deriveFont(amountFontSize);
+        graphics.setFont(font);
+
+        monthTarget = RsFormatter.formatAmount(monthTarget);
+
+        graphics.setColor(Color.DARK_GRAY);
+        graphics.drawChars(dayDonation.toCharArray(), 0, dayDonation.length(), 1398, 518);
+        graphics.drawChars(monthDonation.toCharArray(), 0, monthDonation.length(), 1398, 698);
+        // graphics.drawChars(monthTarget.toCharArray(), 0,
+        // monthTarget.length(), 1398, 908);
+
+        graphics.setColor(Color.decode("#663300"));
+        graphics.drawChars(dayDonation.toCharArray(), 0, dayDonation.length(), 1400, 520);
+        graphics.drawChars(monthDonation.toCharArray(), 0, monthDonation.length(), 1400, 700);
+        // graphics.drawChars(monthTarget.toCharArray(), 0,
+        // monthTarget.length(), 1400, 910);
+
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, ImageUtil.class.getClassLoader().getResourceAsStream("fonts/ALGER.TTF"));
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        }
+        ImageIO.write(image, "png", outputStream);
+    }
 
 	private static void drawCharInRectangle(Graphics2D graphics, Font font, int startX, int startY, float width, String message) {
 		AttributedString styledText = new AttributedString(message);

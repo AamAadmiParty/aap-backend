@@ -103,7 +103,7 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 
 	private static double defaultLattitude = 23.934102635197338;
 	private static double defaultLongitude = 78.310546875;
-	private static int defaultDepth = 8;
+    private static int defaultDepth = 10;
 
 	public AdminCandidateBean() {
 		super(AppPermission.ADMIN_CANDIDATE_PC, "/admin/candidate");

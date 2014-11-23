@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.persistence.Column;
-
 import org.springframework.stereotype.Component;
 
 import com.next.aap.core.persistance.Donation;
@@ -295,15 +293,16 @@ public class DonationDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Donat
 		params.put("donateToDistrict", donationDump.getDonateToDistrict());
 		params.put("donateToLoksabha", donationDump.getDonateToLoksabha());
 		params.put("donateToState", donationDump.getDonateToState());
+        params.put("donateToVidhansabha", donationDump.getDonateToVidhan());
 
 		executeSqlQueryUpdate("INSERT INTO donation_dump" +
 				"(Donor_Id,Merchant_Reference_No,Transaction_Id,Name,Gender,Age,Mobile,Email,Country_Id,State_Id,District_Id,Address," +
 				"Payment_Gateway_Used,Payment_Gateway,Donation_Date,Donor_IP,Amount,Utm_Source,Utm_Medium,Utm_Term,Utm_Content," +
-				"Utm_Campaign,PGErrorMsg,cid,PGErrorDetail,Remarks,status,status_message,DonateToState,DonateToDistrict,DonateToLokSabha)" +
+ "Utm_Campaign,PGErrorMsg,cid,PGErrorDetail,Remarks,status,status_message,DonateToState,DonateToDistrict,DonateToLokSabha,DonateToVidhansabha)" +
 				"VALUES" +
 				"(:Donor_Id,:Merchant_Reference_No,:Transaction_Id,:Name,:Gender,:Age,:Mobile,:Email,:Country_Id,:State_Id,:District_Id,:Address," +
 				":Payment_Gateway_Used,:Payment_Gateway,:Donation_Date,:Donor_IP,:Amount,:Utm_Source,:Utm_Medium,:Utm_Term,:Utm_Content," +
-				":Utm_Campaign,:PGErrorMsg,:cid,:PGErrorDetail,:Remarks,:status,:status_message, :donateToState, :donateToDistrict, :donateToLoksabha)", params);
+ ":Utm_Campaign,:PGErrorMsg,:cid,:PGErrorDetail,:Remarks,:status,:status_message, :donateToState, :donateToDistrict, :donateToLoksabha, :donateToVidhansabha)", params);
 		
 		return donationDump;
 	}

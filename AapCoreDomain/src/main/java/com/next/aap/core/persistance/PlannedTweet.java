@@ -47,7 +47,10 @@ public class PlannedTweet {
 	@Column(name = "message", length = 140)
 	private String message;
 
-	@Column(name = "posting_time")
+    @Column(name = "total_required")
+    private Integer totalRequired;
+
+    @Column(name = "posting_time")
 	private Date postingTime;
 
 	@Column(name = "status", nullable = false)
@@ -204,5 +207,21 @@ public class PlannedTweet {
 	public void setTotalFailedTweets(int totalFailedTweets) {
 		this.totalFailedTweets = totalFailedTweets;
 	}
+
+    public Integer getTotalRequired() {
+        return totalRequired;
+    }
+
+    public void setTotalRequired(Integer totalRequired) {
+        this.totalRequired = totalRequired;
+    }
+
+    @Override
+    public String toString() {
+        return "PlannedTweet [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId
+                + ", tweetType=" + tweetType + ", tweetId=" + tweetId + ", picture=" + picture + ", message=" + message + ", totalRequired=" + totalRequired + ", postingTime=" + postingTime
+                + ", status=" + status + ", locationType=" + locationType + ", locationId=" + locationId + ", errorMessage=" + errorMessage + ", totalSuccessTweets=" + totalSuccessTweets
+                + ", totalFailedTweets=" + totalFailedTweets + "]";
+    }
 
 }

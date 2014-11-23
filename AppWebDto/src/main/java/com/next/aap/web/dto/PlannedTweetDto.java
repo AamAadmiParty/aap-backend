@@ -21,6 +21,7 @@ public class PlannedTweetDto implements Serializable{
 	private String errorMessage;
 	private int totalSuccessTweets;
 	private int totalFailedTweets;
+    private Integer totalRequired;
 
 	public Long getId() {
 		return id;
@@ -94,7 +95,16 @@ public class PlannedTweetDto implements Serializable{
 	public void setTotalFailedTweets(int totalFailedTweets) {
 		this.totalFailedTweets = totalFailedTweets;
 	}
-	@Override
+
+    public Integer getTotalRequired() {
+        return totalRequired;
+    }
+
+    public void setTotalRequired(Integer totalRequired) {
+        this.totalRequired = totalRequired;
+    }
+
+    @Override
 	public String toString() {
 		return "PlannedTweetDto [id=" + id + ", tweetType=" + tweetType + ", picture=" + picture + ", message=" + message + ", postingTime=" + postingTime
 				+ ", tweetId=" + tweetId + ", status=" + status + ", locationType=" + locationType + ", locationId=" + locationId + ", errorMessage="

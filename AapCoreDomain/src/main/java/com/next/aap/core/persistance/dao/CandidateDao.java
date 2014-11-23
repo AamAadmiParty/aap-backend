@@ -18,6 +18,8 @@ public interface CandidateDao {
 
 	public abstract Candidate getCandidateByExtPcId(String pcId);
 	
+    public abstract Candidate getCandidateByExtAcId(String acId);
+
 	public abstract List<Candidate> getAllCandidates(int totalItems, int pageNumber);
 	
 	public abstract List<Candidate> getAllCandidates();

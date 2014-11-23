@@ -101,6 +101,8 @@ public class Donation {
 	private String donateToDistrict;
 	@Column(name = "donate_to_loksabha")
 	private String donateToLoksabha;
+    @Column(name = "donate_to_vidhansabha")
+    private String donateToVidhansabha;
 
 	
 	public Long getId() {
@@ -331,6 +333,14 @@ public class Donation {
 	public void setDonateToLoksabha(String donateToLoksabha) {
 		this.donateToLoksabha = donateToLoksabha;
 	}
+
+    public String getDonateToVidhansabha() {
+        return donateToVidhansabha;
+    }
+
+    public void setDonateToVidhansabha(String donateToVidhansabha) {
+        this.donateToVidhansabha = donateToVidhansabha;
+    }
 
 	
 	

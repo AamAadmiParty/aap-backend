@@ -91,6 +91,10 @@ public class DailyDonationImageTask implements Runnable {
 			if (donationForYesterday == null) {
 				donationForYesterday = 10.0;
 			}
+            if (donationForYesterday < 200000.00) {
+                logger.warn("Not Sharing DDU as Donations are less then 2 lakhs");
+                return;
+            }
 			String dayDonation = donationForYesterday.toString();
 
 			Double donationForMonth = aapService.getMonthDonation(yesterday.getTime());

@@ -36,7 +36,7 @@ public class BadgeImageGenerator {
 		// monthDonation, highestDonationOfTheDay, highestDonor, message);
 		//InputStream in = new FileInputStream("D:\\tmp\\raj\\image01.jpg");//
 		//InputStream in = new FileInputStream("/Users/ravi/Desktop/image01.jpg");
-		createImageTemplate07(bufferedOutputStream, "30001", "Ravi Sharma","02 SEP 2013","CCS00FF00123");
+        createImageTemplate01(bufferedOutputStream, "30001", "Ravi Sharma", "02 SEP 2013", "CCS00FF00123");
 		bufferedOutputStream.close();
 		//createImageForAllFont();
 	}
@@ -93,6 +93,14 @@ public class BadgeImageGenerator {
 			graphics.drawChars(transactionId.toCharArray(), 0, transactionId.length(), transactionX, 50);
 			date = "Date : "+date;
 			graphics.drawChars(date.toCharArray(), 0, date.length(), dateX, 50);
+
+            font = font.deriveFont(60.0f);
+            font = font.deriveFont(Font.BOLD);
+            graphics.setFont(font);
+            graphics.setColor(Color.BLACK);
+
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 80, 50);
+
 			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -145,6 +153,14 @@ public class BadgeImageGenerator {
 			graphics.drawChars(transactionId.toCharArray(), 0, transactionId.length(), transactionX, 150);
 			date = "Date : "+date;
 			graphics.drawChars(date.toCharArray(), 0, date.length(), dateX, 180);
+
+            font = font.deriveFont(28.0f);
+            font = font.deriveFont(Font.BOLD);
+            graphics.setFont(font);
+            graphics.setColor(Color.BLACK);
+
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 80, 450);
+
 			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,7 +200,17 @@ public class BadgeImageGenerator {
 			graphics.setFont(font);
 			graphics.drawChars(date.toCharArray(), 0, date.length(), dateX, 1330);
 			graphics.drawChars(transactionId.toCharArray(), 0, transactionId.length(), transactionX, 1420);
-			ImageIO.write(templateImage, "png", outputStream);
+
+            font = font.deriveFont(54.0f);
+            font = font.deriveFont(Font.BOLD);
+            graphics.setFont(font);
+            graphics.setColor(Color.white);
+
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 50, 50);
+
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 1460, 50);
+
+            ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -223,6 +249,13 @@ public class BadgeImageGenerator {
 			graphics.setFont(font);
 			graphics.drawChars(date.toCharArray(), 0, date.length(), dateX, 1250);
 			graphics.drawChars(transactionId.toCharArray(), 0, transactionId.length(), transactionX, 1345);
+
+            font = font.deriveFont(54.0f);
+            font = font.deriveFont(Font.BOLD);
+            graphics.setFont(font);
+
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 200, 1150);
+
 			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -263,6 +296,12 @@ public class BadgeImageGenerator {
 			graphics.setFont(font);
 			graphics.drawChars(date.toCharArray(), 0, date.length(), dateX, 40);
 			graphics.drawChars(transactionId.toCharArray(), 0, transactionId.length(), transactionX, 40);
+
+            font = font.deriveFont(40.0f);
+            graphics.setFont(font);
+
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 20, 40);
+
 			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -276,8 +315,8 @@ public class BadgeImageGenerator {
 		//int fontCount = 49;
 		String color ="#990033";
 		int amountX = 690;
-		int transactionX = 150;
-		int dateX = 400;
+        int transactionX = 50;
+        int dateX = 630;
 		int centreX = 422;
 		try {
 			InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
@@ -304,6 +343,16 @@ public class BadgeImageGenerator {
 			graphics.setFont(font);
 			graphics.drawChars(date.toCharArray(), 0, date.length(), dateX, 40);
 			graphics.drawChars(transactionId.toCharArray(), 0, transactionId.length(), transactionX, 40);
+
+
+            // Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 70);
+            font = font.deriveFont(28.0f);
+            graphics.setFont(font);
+
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 280, 40);
+            font = font.deriveFont(36.0f);
+            graphics.setFont(font);
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 270, 590);
 			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -344,6 +393,14 @@ public class BadgeImageGenerator {
 			graphics.setFont(font);
 			graphics.drawChars(date.toCharArray(), 0, date.length(), dateX, 630);
 			graphics.drawChars(transactionId.toCharArray(), 0, transactionId.length(), transactionX, 630);
+
+            font = font.deriveFont(24.0f);
+            font = font.deriveFont(Font.BOLD);
+            graphics.setFont(font);
+            graphics.setColor(Color.WHITE);
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), 5, 600);
+            graphics.drawChars("#iFundHonestPolitics".toCharArray(), 0, "#iFundHonestPolitics".length(), dateX - 50, 600);
+
 			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();

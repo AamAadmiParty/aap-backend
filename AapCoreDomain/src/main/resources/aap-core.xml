@@ -59,7 +59,7 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
 				<prop key="hibernate.cache.use_second_level_cache">false</prop>
 				<!-- <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
 				<prop key="hibernate.cache.region.factory_class" >org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>

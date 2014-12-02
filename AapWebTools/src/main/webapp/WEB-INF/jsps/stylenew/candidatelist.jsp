@@ -58,7 +58,7 @@ body {
 			<div class="loginwithinnerholder">
 				<h1>${PageTitle}</h1>
 				<!--loginwithinnerholder-->
-				<h2><a href="${contextPath}/candidates.html?type=map">Map View</a></h2>
+				<h2><a href="${contextPath}/candidate/election/${electionId}.html?type=map">Map View</a></h2>
 				<div id="list" class="languagetab">
 					List of AAP candidates for the LokSabha is given below. Locate your constituency, click on the candidate or constituency to view the full details
 					<% int count = 1; %>

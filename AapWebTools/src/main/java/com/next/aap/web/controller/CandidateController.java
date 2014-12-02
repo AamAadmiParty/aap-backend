@@ -56,6 +56,7 @@ public class CandidateController extends AppBaseController {
 		Set<CandidateDto> allCandidates = candidateCacheImpl.getCandidatesOfState(stateName);
 		List<CandidateWithDonation> candidates = addCandidateWithDonationInfoInModel(allCandidates);
 		mv.getModel().put("candidates", candidates);
+        mv.getModel().put("electionId", 1);
 		String view = httpServletRequest.getParameter("type");
 		if(view != null && view.equalsIgnoreCase("map")){
 			mv.setViewName(design+"/candidatemap");	
@@ -74,9 +75,19 @@ public class CandidateController extends AppBaseController {
         Set<CandidateDto> allCandidates = candidateCacheImpl.getCandidatesOfElection(electionId);
         List<CandidateWithDonation> candidates = addCandidateWithDonationInfoInModel(allCandidates);
         mv.getModel().put("candidates", candidates);
+        mv.getModel().put("electionId", electionId);
         String view = httpServletRequest.getParameter("type");
         if (view != null && view.equalsIgnoreCase("map")) {
             mv.setViewName(design + "/candidatemap");
+            if (electionId == 1) {
+                mv.getModel().put("lat", "23.934102635197338");
+                mv.getModel().put("lng", "78.310546875");
+                mv.getModel().put("zoom", "5");
+            } else {
+                mv.getModel().put("lat", "28.5890399");
+                mv.getModel().put("lng", "77.245964");
+                mv.getModel().put("zoom", "10");
+            }
         } else {
             mv.setViewName(design + "/candidatelist");
         }

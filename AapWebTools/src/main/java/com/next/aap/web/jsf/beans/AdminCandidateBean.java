@@ -101,8 +101,8 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 
 	Marker marker;
 
-	private static double defaultLattitude = 23.934102635197338;
-	private static double defaultLongitude = 78.310546875;
+    private static double defaultLattitude = 28.5890399;
+    private static double defaultLongitude = 77.245964;
     private static int defaultDepth = 10;
 
 	public AdminCandidateBean() {
@@ -497,7 +497,9 @@ public class AdminCandidateBean extends BaseAdminJsfBean {
 				candidate.setLongitude(marker.getLatlng().getLng());
 				candidate.setLattitude(marker.getLatlng().getLat());
 
+                logger.info("Content = " + candidate.getContent());
 				candidate = aapService.saveCandidate(candidate);
+                logger.info("After Save Content = " + candidate.getContent());
 				sendInfoMessageToJsfScreen("Candidate saved succesfully");
 				showList = true;
 				refreshCandidates();

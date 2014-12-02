@@ -6453,6 +6453,7 @@ public class AapServiceImpl implements AapService, Serializable {
 			candidate = new Candidate();
 			candidate.setDateCreated(new Date());
 		}
+        logger.info("Content = " + candidateDto.getContent());
         candidate.setElection(election);
         candidate.setCandidateType(candidateDto.getCandidateType());
 		candidate.setContent(candidateDto.getContent());
@@ -6508,6 +6509,9 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		CandidateDto candidateDto = new CandidateDto();
 		BeanUtils.copyProperties(candidate, candidateDto);
+        if (candidateDto.getElectionId() == null && candidate.getElection() != null) {
+            candidateDto.setElectionId(candidate.getElection().getId());
+        }
 		return candidateDto;
 	}
 

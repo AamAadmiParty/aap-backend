@@ -48,8 +48,8 @@ body {
 	;
 	function initialize() {
 		var mapOptions = {
-			center : new google.maps.LatLng(23.934102635197338, 78.310546875),
-			zoom : 5
+			center : new google.maps.LatLng(${lat}, ${lng}),
+			zoom : ${zoom}
 		};
 		var map = new google.maps.Map(document.getElementById("map-canvas"),
 				mapOptions);

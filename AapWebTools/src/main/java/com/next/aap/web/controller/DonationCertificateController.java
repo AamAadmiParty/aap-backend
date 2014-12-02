@@ -1,9 +1,9 @@
 package com.next.aap.web.controller;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,7 +57,16 @@ public class DonationCertificateController extends AppBaseController {
 		return mv;
 	}
 
-	@RequestMapping(value = "/dc/{template}.html", method = RequestMethod.GET)
+    Random random = new Random();
+    @RequestMapping(value = "/dc.html", method = RequestMethod.GET)
+    public ModelAndView donationPageForMainSite(HttpServletRequest httpServletRequest, HttpServletResponse response, ModelAndView modelAndView) throws IOException {
+        int templateNumber = 1 + random.nextInt(7);
+        ModelAndView mv = viewTemplatePage(httpServletRequest, response, modelAndView, "template0" + templateNumber);
+        mv.setViewName(design + "/dcaap");
+        return mv;
+    }
+
+    @RequestMapping(value = "/dc/{template}.html", method = RequestMethod.GET)
 	public ModelAndView viewTemplatePage(HttpServletRequest httpServletRequest, HttpServletResponse response, ModelAndView modelAndView,
 			@PathVariable String template) throws IOException {
 		String txnId = httpServletRequest.getParameter("txnid");

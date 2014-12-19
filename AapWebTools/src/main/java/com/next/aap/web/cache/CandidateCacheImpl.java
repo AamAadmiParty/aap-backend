@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
@@ -45,24 +46,37 @@ public class CandidateCacheImpl {
 	
 	public void refreshCache(){
 		try {
-			allCandidates = aapService.getCandidates(600, 0);
+            allCandidates = aapService.getCandidates(800, 0);
+            logger.info("Total Candidate From Database = " + allCandidates.size());
 			Map<String, CandidateDto> localCandidateMap = new HashMap<String, CandidateDto>(allCandidates.size());
 			Map<String, Set<CandidateDto>> localCandidateMapByStateName = new HashMap<>();
             Map<Long, Set<CandidateDto>> localCandidateMapByElectionId = new HashMap<>();
 			Set<CandidateDto> candidateSetForState;
             Set<CandidateDto> candidateSetForElection;
+            candidateMapByPcId.clear();
+            candidateMapByAcId.clear();
 			for(CandidateDto oneCandidate:allCandidates){
+                if (oneCandidate.getCandidateType().equalsIgnoreCase("MLA")) {
+                    logger.info("   oneCandidate = " + oneCandidate.getId() + " , " + oneCandidate.getName() + ", " + oneCandidate.getCandidateType() + ", " + oneCandidate.getElectionId());
+                }
+
                 if ("MP".equalsIgnoreCase(oneCandidate.getCandidateType())) {
                     candidateMapByPcId.put(oneCandidate.getParliamentConstituencyId(), oneCandidate);
                     localCandidateMap.put(createKey(oneCandidate.getUrlTextPart1().toLowerCase(), oneCandidate.getUrlTextPart2().toLowerCase()), oneCandidate);
                 } else {
-                    candidateMapByAcId.put(oneCandidate.getParliamentConstituencyId(), oneCandidate);
+                    candidateMapByAcId.put(oneCandidate.getAssemblyConstituencyId(), oneCandidate);
                     localCandidateMap.put(createAcKey(oneCandidate.getUrlTextPart1().toLowerCase(), oneCandidate.getUrlTextPart2().toLowerCase()), oneCandidate);
                 }
                 candidateSetForState = getSortedSetOfCandidateOfState(localCandidateMapByStateName, oneCandidate.getStateName());
                 candidateSetForElection = getSortedSetOfCandidateOfElection(localCandidateMapByElectionId, oneCandidate.getElectionId());
-                candidateSetForState.add(oneCandidate);
+                if ("MP".equalsIgnoreCase(oneCandidate.getCandidateType())) {
+                    candidateSetForState.add(oneCandidate);
+                }
+                if (oneCandidate.getCandidateType().equalsIgnoreCase("MLA")) {
+                    logger.info("   Adding oneCandidate = " + oneCandidate.getId() + " , " + oneCandidate.getName() + ", " + oneCandidate.getCandidateType() + ", " + oneCandidate.getElectionId());
+                }
                 candidateSetForElection.add(oneCandidate);
+                logger.info("   Total Candidate = " + candidateSetForElection.size() + " for elction Id " + oneCandidate.getElectionId());
 				
 				if(StringUtil.isEmpty(oneCandidate.getCandidateFbPageId())){
 					oneCandidate.setCandidateFbPageId("AamAadmiParty");
@@ -80,6 +94,7 @@ public class CandidateCacheImpl {
 			candidateMap = localCandidateMap;
 			candidateMapByStateName = localCandidateMapByStateName;
             candidateMapByElectionId = localCandidateMapByElectionId;
+            printCandidateMapByElectionId();
 		} catch (AppException e) {
 			logger.error("Unable to refresh Cache", e);
 		} 
@@ -103,6 +118,7 @@ public class CandidateCacheImpl {
 	private Set<CandidateDto> getSortedSetOfCandidateOfElection(Map<Long, Set<CandidateDto>> localCandidateMapByElectionId, Long  electionId){
         Set<CandidateDto> sortedSet = localCandidateMapByElectionId.get(electionId);
         if(sortedSet == null){
+            logger.info("   Creating new Set for Election Id  = " + electionId);
             sortedSet = new TreeSet<>(new Comparator<CandidateDto>() {
                 @Override
                 public int compare(CandidateDto o1, CandidateDto o2) {
@@ -129,7 +145,19 @@ public class CandidateCacheImpl {
 		return getSortedSetOfCandidateOfState(candidateMapByStateName, stateName);
 	}
 
+    private void printCandidateMapByElectionId() {
+        for (Entry<Long, Set<CandidateDto>> oneEntry : candidateMapByElectionId.entrySet()) {
+            logger.info("ElectionId : " + oneEntry.getKey());
+            if (oneEntry.getKey().equals(2L)) {
+                for (CandidateDto oneCandidateDto : oneEntry.getValue()) {
+                    logger.info("      Candidate : " + oneCandidateDto.getName() + " , " + oneCandidateDto.getAcName());
+                }
+            }
+        }
+    }
+
     public Set<CandidateDto> getCandidatesOfElection(Long electionId) {
+        printCandidateMapByElectionId();
         return getSortedSetOfCandidateOfElection(candidateMapByElectionId, electionId);
     }
 	public List<CandidateDto> getAllCandidates(){

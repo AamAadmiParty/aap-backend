@@ -11,12 +11,10 @@ import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -141,6 +139,9 @@ public class DonationBadgeImageTask implements Callable<Boolean> {
 			case template07:
 				BadgeImageGenerator.createImageTemplate07(fileOutputStream, amount, donationDto.getDonorName(), donationDate, donationDto.getTransactionId());
 				break;
+            case template08:
+                BadgeImageGenerator.createImageTemplate08(fileOutputStream, amount, donationDto.getDonorName(), donationDate, donationDto.getTransactionId());
+                break;
 			default:
 				BadgeImageGenerator.createImageTemplate03(fileOutputStream, amount, donationDto.getDonorName(), donationDate, donationDto.getTransactionId());
 				break;

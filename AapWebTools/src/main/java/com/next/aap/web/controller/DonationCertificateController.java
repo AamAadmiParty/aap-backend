@@ -60,8 +60,10 @@ public class DonationCertificateController extends AppBaseController {
     Random random = new Random();
     @RequestMapping(value = "/dc.html", method = RequestMethod.GET)
     public ModelAndView donationPageForMainSite(HttpServletRequest httpServletRequest, HttpServletResponse response, ModelAndView modelAndView) throws IOException {
-        int templateNumber = 1 + random.nextInt(7);
+        int templateNumber = 1 + random.nextInt(8);
+        String hideOtherTemplates = httpServletRequest.getParameter("hide");
         ModelAndView mv = viewTemplatePage(httpServletRequest, response, modelAndView, "template0" + templateNumber);
+        mv.getModel().put("hideOtherTemplates", hideOtherTemplates);
         mv.setViewName(design + "/dcaap");
         return mv;
     }
@@ -92,6 +94,7 @@ public class DonationCertificateController extends AppBaseController {
 		modelAndView.getModel().put("ImageKey", imageKey);
 		modelAndView.getModel().put("template", template);
 		modelAndView.getModel().put("httpImagePath", httpImagePath);
+        modelAndView.getModel().put("txnId", txnId);
 		
 		StringBuilder sb = new StringBuilder("http://");
 		URL url = new URL(httpServletRequest.getRequestURL().toString());
@@ -103,6 +106,7 @@ public class DonationCertificateController extends AppBaseController {
 		sb.append(httpServletRequest.getContextPath());
 		sb.append("/dc/images/" + imageKey + ".jpg");
 		modelAndView.getModel().put("imageurl", sb.toString());
+        modelAndView.getModel().put("donation", donation);
 		addGenericValuesInModel(httpServletRequest, modelAndView);
 		modelAndView.setViewName(design+"/donationcertificateshare");
 		return modelAndView;

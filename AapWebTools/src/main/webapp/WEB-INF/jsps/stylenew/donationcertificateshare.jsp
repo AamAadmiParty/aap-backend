@@ -116,7 +116,14 @@
 <script type="text/javascript">
   document.getElementById("shareonfb").onclick = callFbMethod;
 </script>
-
+<div id='invtrflfloatbtn'></div>
+<script>
+var invite_referrals = window.invite_referrals || {}; (function() {
+        invite_referrals.auth = { bid_e : 'D22655DE90FB47CC49FB29B55B7C6E4A', bid : '659', t : '420', email : '${donation.donorEmail}',userParams : {'fname': '${donation.donorName}'}, userCustomParams :{'shareImg':'http://my.aamaadmiparty.org${contextPath}/dc/images/<c:out value='${ImageSource}' />'}};
+var script = document.createElement('script');script.async = true;
+script.src = (document.location.protocol == 'https:' ? "//d11yp7khhhspcr.cloudfront.net" : "//cdn.invitereferrals.com") + '/js/invite-referrals-1.0.js';
+var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBefore(script, entry); })();
+</script>
 
 	<jsp:include page="footer.jsp" />
 

@@ -58,6 +58,10 @@
 						<tr>
 							<td><a href="${contextPath}/dc/template07.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
 									src="https://lh6.googleusercontent.com/-rDFFI6sP8do/UvGz3Mtgb4I/AAAAAAAAPZ0/yZxsuNoAMw8/s720/donations07.jpg" /></a></td>
+									
+                            <td><a href="${contextPath}/dc/template08.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+                                    src="https://lh3.googleusercontent.com/-48BhfX_Gjfg/VIKjN6X13LI/AAAAAAAASWI/JfTcubcoxXM/w483-h604-no/teamplate08.jpg" /></a></td>
+									
 						</tr>
 					</table>
 				</c:if>

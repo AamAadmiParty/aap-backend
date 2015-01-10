@@ -60,7 +60,7 @@ public class DonationCertificateController extends AppBaseController {
     Random random = new Random();
     @RequestMapping(value = "/dc.html", method = RequestMethod.GET)
     public ModelAndView donationPageForMainSite(HttpServletRequest httpServletRequest, HttpServletResponse response, ModelAndView modelAndView) throws IOException {
-        int templateNumber = 1 + random.nextInt(8);
+        int templateNumber = 1 + random.nextInt(9);
         String hideOtherTemplates = httpServletRequest.getParameter("hide");
         ModelAndView mv = viewTemplatePage(httpServletRequest, response, modelAndView, "template0" + templateNumber);
         mv.getModel().put("hideOtherTemplates", hideOtherTemplates);

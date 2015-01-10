@@ -9,86 +9,20 @@
 <head>
 <title>Aam Aadmi Party, India</title>
 <jsp:include page="includes.jsp" />
+<div id='invtrflfloatbtn'></div>
 <script>
-	$(function() {
-		$("#tabs").tabs();
-	});
-</script>
-</head>
-<body>
-<div id="fb-root"></div>
-<script>
-  window.fbAsyncInit = function() {
-    // init the FB JS SDK
-    FB.init({
-    	appId      : '175121315982296',
-      //channelUrl : './channel.html', // Channel file for x-domain comms
-      status     : true,                                 // Check Facebook Login status
-      xfbml      : true                                  // Look for social plugins on the page
-    });
+var invite_referrals = window.invite_referrals || {}; (function() {
+        invite_referrals.auth = { bid_e : 'D22655DE90FB47CC49FB29B55B7C6E4A', bid : '659', t : '420', email : '${donation.donorEmail}',userParams : {'fname': '${donation.donorName}'}, userCustomParams :{'shareImg':'http://my.aamaadmiparty.org${contextPath}/dc/images/<c:out value='${ImageSource}' />'}};
+var script = document.createElement('script');script.async = true;
+script.src = (document.location.protocol == 'https:' ? "//d11yp7khhhspcr.cloudfront.net" : "//cdn.invitereferrals.com") + '/js/invite-referrals-1.0.js';
+var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBefore(script, entry); })();
 
-    // Additional initialization code such as adding Event Listeners goes here
-  };
-
-  // Load the SDK asynchronously
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/all.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-  
-  function callFbMethod(){
-	  ga('send', 'event', 'donation_certificate', 'facebook_share', '${template}', 1);
-	  /*
-	  FB.ui(
-			  {
-			    method: 'me/photos',
-			    name: 'The Facebook SDK for Javascript',
-			    caption: 'Bringing Facebook to the desktop and mobile web',
-			    description: (
-			       'A small JavaScript library that allows you to harness ' +
-			       'the power of Facebook, bringing the user\'s identity, ' +
-			       'social graph and distribution power to your site.'
-			    ),
-			    picture: 'https://lh6.googleusercontent.com/-Izqer-qmsz8/UcIKSuEUnbI/AAAAAAAAL1Q/OH1MOf7fuHI/w850-h315-no/covertemplate02.png',
-			  },
-			  function(response) {
-			    if (response && response.post_id) {
-			      alert('Post was published.');
-			    } else {
-			      alert('Post was not published.');
-			    }
-			  }
-			);
-	  */
-	  
-	  FB.login(function(response) {
-		    if (response.authResponse) {
-		        // login success, then post a photo
-		        FB.api('/me/photos',
-		               'post',
-		               {
-		                   message: '',
-		                   url: "<c:out value='${imageurl}' />"
-		               },
-		               function(response) {
-		                 console.log(response);
-		                 if (!response || response.error) {
-		                     console.log('failed');
-		                     alert('Unable to post on facebook '+JSON.stringify(response, null, 4));
-		                 } else {
-		                     console.log('success');
-		                     alert('Posted on facebook, Now you can sign in and view your all donations.');
-		                 }
-		               }
-		        );
-		    }
-		}, {scope: 'publish_stream'});
-  }
-  
+function invitereferrals_113(){
+    var params = { bid: 659, cid: 113 };
+    invite_referrals.widget.inlineBtn(params);
+}
 </script>
+
 	<jsp:include page="header.jsp" />
 
 	<jsp:include page="topscroller.jsp" />
@@ -103,8 +37,7 @@
 				<img src="${contextPath}/dc/images/<c:out value='${ImageSource}' />"
 								style="max-width: 800px; max-height: 800px;" />
 								<br></br>
-								<a id="shareonfb" href="#"><img
-							src="https://s3.amazonaws.com/myaap/images/facebookshare.png" /> </a>
+<a id="shareonfb" onclick="invitereferrals_113()" href="#"><img src="https://s3.amazonaws.com/myaap/images/facebookshare.png" />
 
 			</div>
 			<!--loginwithinnerholder-->
@@ -112,18 +45,6 @@
 		<!--loginwithholder-->
 	</div>
 	<!--contentarea-->
-
-<script type="text/javascript">
-  document.getElementById("shareonfb").onclick = callFbMethod;
-</script>
-<div id='invtrflfloatbtn'></div>
-<script>
-var invite_referrals = window.invite_referrals || {}; (function() {
-        invite_referrals.auth = { bid_e : 'D22655DE90FB47CC49FB29B55B7C6E4A', bid : '659', t : '420', email : '${donation.donorEmail}',userParams : {'fname': '${donation.donorName}'}, userCustomParams :{'shareImg':'http://my.aamaadmiparty.org${contextPath}/dc/images/<c:out value='${ImageSource}' />'}};
-var script = document.createElement('script');script.async = true;
-script.src = (document.location.protocol == 'https:' ? "//d11yp7khhhspcr.cloudfront.net" : "//cdn.invitereferrals.com") + '/js/invite-referrals-1.0.js';
-var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBefore(script, entry); })();
-</script>
 
 	<jsp:include page="footer.jsp" />
 

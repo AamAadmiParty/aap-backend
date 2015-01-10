@@ -6509,7 +6509,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		CandidateDto candidateDto = new CandidateDto();
 		BeanUtils.copyProperties(candidate, candidateDto);
-        if (candidateDto.getElectionId() == null && candidate.getElection() != null) {
+        if (candidate.getElection() != null) {
             candidateDto.setElectionId(candidate.getElection().getId());
         }
 		return candidateDto;

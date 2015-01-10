@@ -10,7 +10,17 @@
 <title>${PageTitle}</title>
 <jsp:include page="includes.jsp" />
 
-<meta name="description" content="Meet Aam Aadmi Party candidate for Loksabha election 2014" />
+<c:if test="${electionId eq 1 }">
+<meta name="description" content="Meet Aam Aadmi Party candidates for loksabha elections 2014" />
+<meta name="og:title" property="og:title" content="Aam Aadmi party candidates for Loksabha Eletions 2014" />
+<meta name="og:description" property="og:description" content="Meet Aam Aadmi Party candidates for loksabha elections 2014" />
+</c:if>
+<c:if test="${electionId eq 2 }">
+<meta name="description" content="Meet Aam Aadmi Party candidates for Delhi Vidhansbah elections 2015" />
+<meta name="og:title" property="og:title" content="Aam Aadmi party candidates for Delhi Vidhansabha Eletions 2015" />
+<meta name="og:description" property="og:description" content="Aam Aadmi party candidates for Delhi Vidhansabha Eletions 2015" />
+
+</c:if>
 <meta name="og:image" property="og:image" content="https://s3.amazonaws.com/myaap/test/candidate/profile/leaders.jpg" />
 
 <c:forEach items="${candidates}" var="oneCandidate">
@@ -18,11 +28,9 @@
 		<meta name="og:image" property="og:image" content="${oneCandidate.imageUrl}" />
 	</c:if>
 </c:forEach>
-<meta name="og:title" property="og:title" content="Aam Aadmi party candidates for Loksabha Eletions 2014" />
-<meta name="og:url" property="og:url" content="http://my.aamaadmiparty.org/candidates.html" />
+<meta name="og:url" property="og:url" content="http://my.aamaadmiparty.org/candidate/election/${electionId}.html" />
 <meta name="og:site_name" property="og:site_name" content="my.aamaadmiparty.org" />
 <meta name="og:type" property="og:type" content="blog" />
-<meta name="og:description" property="og:description" content="Meet Aam Aadmi Party candidates for loksabha elections 2014" />
 
 
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -95,10 +103,22 @@ body {
 			<!--loginwithholder-->
 			<div class="loginwithinnerholder">
 				<!--loginwithinnerholder-->
-				<h1>${PageTitle}</h1>
-				<h2><a href="${contextPath}/candidates.html">List View</a></h2>
+				<c:if test="${electionId eq 1 }">
+<h1>Meet Aam Aadmi Party candidates for loksabha elections 2014</h1>
+</c:if>
+<c:if test="${electionId eq 2 }">
+<h1>Aam Aadmi party candidates for Delhi Vidhansabha Eletions 2015</h1>
+
+</c:if>
+
+				<h2><a href="./${electionId}.html">List View</a></h2>
 				<div id="map">
-				List of AAP candidates for the LokSabha is given below. Locate your constituency, click on the candidate or constituency to view the full details
+<c:if test="${electionId eq 1 }">
+List of AAP candidates for the LokSabha is given below. Locate your constituency, click on the candidate or constituency to view the full details
+</c:if>
+<c:if test="${electionId eq 2 }">
+List of AAP candidates for the VidhanSabha is given below. Locate your constituency, click on the candidate or constituency to view the full details
+</c:if>
 					<div id="map-canvas" style="width: 920px; height: 900px; border: 1px solid;" />
 				</div>
 			<!--loginwithinnerholder-->

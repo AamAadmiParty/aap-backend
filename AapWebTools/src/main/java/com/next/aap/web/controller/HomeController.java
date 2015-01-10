@@ -17,7 +17,7 @@ public class HomeController extends AppBaseController {
 			addGenericValuesInModel(httpServletRequest, mv);
 			mv.setViewName(design+"/index");
 			addNewsInModel(httpServletRequest, mv);
-			addUserPcCandidateInModel(httpServletRequest, mv);
+            addUserAcCandidateInModel(httpServletRequest, mv);
 			
 		}catch(Exception ex){
 			logger.error("Unable to Generate Main Page",ex);

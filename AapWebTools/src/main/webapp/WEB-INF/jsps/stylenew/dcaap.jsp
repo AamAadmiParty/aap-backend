@@ -18,71 +18,26 @@ var invite_referrals = window.invite_referrals || {}; (function() {
 var script = document.createElement('script');script.async = true;
 script.src = (document.location.protocol == 'https:' ? "//d11yp7khhhspcr.cloudfront.net" : "//cdn.invitereferrals.com") + '/js/invite-referrals-1.0.js';
 var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBefore(script, entry); })();
+
+function invitereferrals_113(){
+    var params = { bid: 659, cid: 113 };
+    invite_referrals.widget.inlineBtn(params);
+}
 </script>
-<img style="position:absolute; visibility:hidden" src="http://www.ref-r.com/campaign/t1/settings?bid_e=D22655DE90FB47CC49FB29B55B7C6E4A&bid=659&t=420&orderID=${txnId}&email=${donation.donorEmail}&purchaseValue=${donation.amount}" />
+<img style="position:absolute; visibility:hidden" src="http://www.ref-r.com/campaign/t1/settings?bid_e=D22655DE90FB47CC49FB29B55B7C6E4A&bid=659&t=420&orderID=${txnId}&email=${donation.donorEmail}&purchaseValue=${donation.amount}&fname=${donation.donorName}" />
 
-
-
-	<div id="fb-root"></div>
-	<script>
-  window.fbAsyncInit = function() {
-    // init the FB JS SDK
-    FB.init({
-    	appId      : '175121315982296',
-      //channelUrl : './channel.html', // Channel file for x-domain comms
-      status     : true,                                 // Check Facebook Login status
-      xfbml      : true                                  // Look for social plugins on the page
-    });
-
-    // Additional initialization code such as adding Event Listeners goes here
-  };
-
-  // Load the SDK asynchronously
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/all.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-  
-  function callFbMethod(){
-	  ga('send', 'event', 'donation_certificate', 'facebook_share', '${template}', 1);
-	  
-	  FB.login(function(response) {
-		    if (response.authResponse) {
-		        // login success, then post a photo
-		        FB.api('/me/photos',
-		               'post',
-		               {
-		                   message: '',
-		                   url: "<c:out value='${imageurl}' />"
-		               },
-		               function(response) {
-		                 console.log(response);
-		                 if (!response || response.error) {
-		                     console.log('failed');
-		                     alert('Unable to post on facebook '+JSON.stringify(response, null, 4));
-		                 } else {
-		                     console.log('success');
-		                     alert('Posted on facebook, Now you can sign in at http://my.aamaadmiparty.org and view your all donations.');
-		                 }
-		               }
-		        );
-		    }
-		}, {scope: 'publish_stream'});
-  }
-  
-</script>
 
 	<div class="contentarea">
 		<!--contentarea-->
 		<div class="loginwithholder">
 			<!--loginwithholder-->
 			<div class="loginwithinnerholder" style="min-height=300px;">
+			<!-- 
 				<img src="${contextPath}/dc/images/<c:out value='${ImageSource}' />" style="max-width: 800px; max-height: 800px;" />
 				<br></br> <a id="shareonfb" href="#"><img src="https://s3.amazonaws.com/myaap/images/facebookshare.png" /> </a>
-
+                -->
+                <a id="shareonfb" onclick="invitereferrals_113()" href="#"><img src="https://s3.amazonaws.com/myaap/images/facebookshare.png" />
+                
 			</div>
 			<c:if test="${empty hideOtherTemplates }">
 				<h3>Select Other Styles</h3>

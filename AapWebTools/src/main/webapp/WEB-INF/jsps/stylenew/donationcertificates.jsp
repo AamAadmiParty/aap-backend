@@ -61,6 +61,9 @@
 									
                             <td><a href="${contextPath}/dc/template08.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
                                     src="https://lh3.googleusercontent.com/-48BhfX_Gjfg/VIKjN6X13LI/AAAAAAAASWI/JfTcubcoxXM/w483-h604-no/teamplate08.jpg" /></a></td>
+								
+                            <td><a href="${contextPath}/dc/template09.html?txnid=${donation.transactionId}"><img style="width: 300px; height: 200px;"
+                                    src="https://lh4.googleusercontent.com/-YjVQYub1LGg/VKft_5Az7OI/AAAAAAAAS6k/GmiRUIJDWOw/w713-h606-no/donations09.jpg" /></a></td>
 									
 						</tr>
 					</table>

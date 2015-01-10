@@ -91,7 +91,11 @@ public class CandidateController extends AppBaseController {
         } else {
             mv.setViewName(design + "/candidatelist");
         }
-        mv.getModel().put("PageTitle", "Lokasabha Candiate of Aam Aadmi Party for Delhi Election 2015");
+        if (electionId == 1) {
+            mv.getModel().put("PageTitle", "Loksabha Candiate of Aam Aadmi Party for General Election 2014");
+        } else {
+            mv.getModel().put("PageTitle", "Vidhansabha Candiate of Aam Aadmi Party for Delhi Election 2015");
+        }
 
         return mv;
     }
@@ -134,7 +138,7 @@ public class CandidateController extends AppBaseController {
 	public ModelAndView showRandonAapCandidate(ModelAndView mv,HttpServletRequest httpServletRequest) {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
-		addUserPcCandidateInModel(httpServletRequest, mv);
+        addUserAcCandidateInModel(httpServletRequest, mv);
 		String param = httpServletRequest.getParameter("wide");
 		if(param != null && param.equals("1")){
 			mv.setViewName(design+"/candidatewidgetwide");	

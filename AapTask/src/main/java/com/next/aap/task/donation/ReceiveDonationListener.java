@@ -57,7 +57,7 @@ public class ReceiveDonationListener extends AwsQueueListener{
 			donationDump.setDateModified(new Date());
 			donationDump.setDonationDate(donationJsonObject.getString("DonationDate"));
 			donationDump.setDonorAddress(donationJsonObject.getString("Address"));
-			donationDump.setDonorAge(donationJsonObject.getInt("Age"));
+            donationDump.setDonorAge(getIntValue(donationJsonObject, "Age"));
 			donationDump.setDonorCountryId(donationJsonObject.getString("Country_id"));
 			donationDump.setDonorDistrictId(donationJsonObject.getString("District_id"));
 			donationDump.setDonorEmail(donationJsonObject.getString("Email"));
@@ -100,6 +100,15 @@ public class ReceiveDonationListener extends AwsQueueListener{
 		
 		
 	}
+
+    private int getIntValue(JSONObject jsonObject, String propertyName) {
+        try {
+            return jsonObject.getInt(propertyName);
+        } catch (Exception ex) {
+
+        }
+        return 0;
+    }
 	
 
 }

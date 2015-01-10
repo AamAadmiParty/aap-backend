@@ -280,6 +280,31 @@ public class CandidateDto {
                 + donationPageFullUrl + ", locationCampaignId=" + locationCampaignId + ", imageUrl64=" + imageUrl64 + ", imageUrl32=" + imageUrl32 + ", candidateType=" + candidateType
                 + ", assemblyConstituencyId=" + assemblyConstituencyId + ", acName=" + acName + "]";
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CandidateDto other = (CandidateDto) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
 	
 	
 	

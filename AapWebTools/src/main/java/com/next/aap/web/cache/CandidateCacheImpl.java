@@ -122,7 +122,19 @@ public class CandidateCacheImpl {
             sortedSet = new TreeSet<>(new Comparator<CandidateDto>() {
                 @Override
                 public int compare(CandidateDto o1, CandidateDto o2) {
-                    return o1.getName().compareTo(o2.getName());
+                    int compareResult = -1;
+                    if (o1.getCandidateType().equalsIgnoreCase("MLA")) {
+                        compareResult = o1.getAcName().compareTo(o2.getAcName());
+                        if (compareResult == 0) {
+                            return -1;
+                        }
+                    } else {
+                        compareResult = o1.getPcName().compareTo(o2.getPcName());
+                        if (compareResult == 0) {
+                            return -1;
+                        }
+                    }
+                    return compareResult;
                 }
             });
             localCandidateMapByElectionId.put(electionId, sortedSet);
@@ -148,7 +160,7 @@ public class CandidateCacheImpl {
     private void printCandidateMapByElectionId() {
         for (Entry<Long, Set<CandidateDto>> oneEntry : candidateMapByElectionId.entrySet()) {
             logger.info("ElectionId : " + oneEntry.getKey());
-            if (oneEntry.getKey().equals(2L)) {
+            if (((Long) 2L).equals(oneEntry.getKey())) {
                 for (CandidateDto oneCandidateDto : oneEntry.getValue()) {
                     logger.info("      Candidate : " + oneCandidateDto.getName() + " , " + oneCandidateDto.getAcName());
                 }

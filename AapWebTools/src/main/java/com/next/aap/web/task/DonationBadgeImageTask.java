@@ -142,8 +142,11 @@ public class DonationBadgeImageTask implements Callable<Boolean> {
             case template08:
                 BadgeImageGenerator.createImageTemplate08(fileOutputStream, amount, donationDto.getDonorName(), donationDate, donationDto.getTransactionId());
                 break;
+            case template09:
+                BadgeImageGenerator.createImageTemplate09(fileOutputStream, amount, donationDto.getDonorName(), donationDate, donationDto.getTransactionId());
+                break;
 			default:
-				BadgeImageGenerator.createImageTemplate03(fileOutputStream, amount, donationDto.getDonorName(), donationDate, donationDto.getTransactionId());
+                BadgeImageGenerator.createImageTemplate09(fileOutputStream, amount, donationDto.getDonorName(), donationDate, donationDto.getTransactionId());
 				break;
 			}
 			fileOutputStream.close();

@@ -104,7 +104,7 @@ public class PollController extends AppBaseController {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		addPollsInModel(httpServletRequest, mv);
-		addUserPcCandidateInModel(httpServletRequest, mv);
+        addUserAcCandidateInModel(httpServletRequest, mv);
 		mv.setViewName(design+"/polllist");
 		return mv;
 	}

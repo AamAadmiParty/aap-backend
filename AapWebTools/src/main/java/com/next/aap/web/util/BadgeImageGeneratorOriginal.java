@@ -14,11 +14,11 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
-public class BadgeImageGenerator {
+public class BadgeImageGeneratorOriginal {
 
 	public static void main(String[] args) throws Exception {
 		//File outputfile = new File("d:\\tmp\\savedother.png");
-        File outputfile = new File("/Users/ravi/Desktop/savedother.png");
+		File outputfile = new File("/Users/ravi/Desktop/savedother.png");
 		BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
 				new FileOutputStream(outputfile));
 		String date = "12-Jun-2013";
@@ -36,7 +36,7 @@ public class BadgeImageGenerator {
 		// monthDonation, highestDonationOfTheDay, highestDonor, message);
 		//InputStream in = new FileInputStream("D:\\tmp\\raj\\image01.jpg");//
 		//InputStream in = new FileInputStream("/Users/ravi/Desktop/image01.jpg");
-        createImageTemplate09(bufferedOutputStream, "200001", "Yogeshwari Ravi Sharma1", "02 SEP 2013", "CCS00FF00123");
+        createImageTemplate09(bufferedOutputStream, "30001", "Yogeshwari Ravi Sharma", "02 SEP 2013", "CCS00FF00123");
 		bufferedOutputStream.close();
 		//createImageForAllFont();
 	}
@@ -61,17 +61,17 @@ public class BadgeImageGenerator {
 			String transactionId){
 		//createImageForAllFont();
 		BufferedImage templateImage = null;
-        String templateName = "dctemplate/donations01.jpg";
+		String templateName = "dctemplate/donations01.jpg";
 		String color ="#FF0033";
 		int amountX = 1220;
 		int transactionX = 995;
 		int dateX = 1670;
 		int centreX = 1324;
 		try {
-			InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+			InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
 			templateImage = ImageIO.read(templateInputStream);
 			Graphics2D graphics = templateImage.createGraphics();
-			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
+			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
 			font = font.deriveFont(150.0f);
 			//Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 120);
 			
@@ -101,7 +101,7 @@ public class BadgeImageGenerator {
 
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), 80, 50);
 
-            ImageIO.write(templateImage, "jpg", outputStream);
+			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -117,10 +117,10 @@ public class BadgeImageGenerator {
 		int dateX = 1400;
 		int centreX = 930;
 		try {
-			InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+			InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
 			templateImage = ImageIO.read(templateInputStream);
 			Graphics2D graphics = templateImage.createGraphics();
-			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
+			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
 			if(donorName.length() >= 26){
 				font = font.deriveFont(80.0f);	
 			}else if(donorName.length() >= 20){
@@ -161,7 +161,7 @@ public class BadgeImageGenerator {
 
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), 80, 450);
 
-            ImageIO.write(templateImage, "jpg", outputStream);
+			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -178,11 +178,11 @@ public class BadgeImageGenerator {
 		int transactionX = 480;
 		int dateX = 480;
 		try {
-			InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+			InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
 			templateImage = ImageIO.read(templateInputStream);
 			Graphics2D graphics = templateImage.createGraphics();
 			
-			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
+			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
 			font = font.deriveFont(90.0f);
 			//Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 70);
 			
@@ -210,7 +210,7 @@ public class BadgeImageGenerator {
 
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), 1460, 50);
 
-            ImageIO.write(templateImage, "jpg", outputStream);
+            ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -227,11 +227,11 @@ public class BadgeImageGenerator {
 		int dateX = 450;
 		int centreX = 1550;
 		try {
-			InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+			InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
 			templateImage = ImageIO.read(templateInputStream);
 			Graphics2D graphics = templateImage.createGraphics();
 			
-			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
+			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
 			font = font.deriveFont(90.0f);
 			//Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 70);
 			
@@ -256,7 +256,7 @@ public class BadgeImageGenerator {
 
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), 200, 1150);
 
-            ImageIO.write(templateImage, "jpg", outputStream);
+			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -272,11 +272,11 @@ public class BadgeImageGenerator {
 		int dateX = 1100;
 		int centreX = 852;
 		try {
-			InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+			InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
 			templateImage = ImageIO.read(templateInputStream);
 			Graphics2D graphics = templateImage.createGraphics();
 			
-			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
+			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/BRUSHSCI.TTF"));
 			font = font.deriveFont(90.0f);
 			//Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 70);
 			
@@ -302,7 +302,7 @@ public class BadgeImageGenerator {
 
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), 20, 40);
 
-            ImageIO.write(templateImage, "jpg", outputStream);
+			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -319,11 +319,11 @@ public class BadgeImageGenerator {
         int dateX = 630;
 		int centreX = 422;
 		try {
-			InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+			InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
 			templateImage = ImageIO.read(templateInputStream);
 			Graphics2D graphics = templateImage.createGraphics();
 			
-			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/ALGER.TTF"));
+			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/ALGER.TTF"));
 			font = font.deriveFont(36.0f);
 			//Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 70);
 			
@@ -353,7 +353,7 @@ public class BadgeImageGenerator {
             font = font.deriveFont(36.0f);
             graphics.setFont(font);
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), 270, 590);
-            ImageIO.write(templateImage, "jpg", outputStream);
+			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -369,11 +369,11 @@ public class BadgeImageGenerator {
 		int dateX = 730;
 		int centreX = 480;
 		try {
-			InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+			InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
 			templateImage = ImageIO.read(templateInputStream);
 			Graphics2D graphics = templateImage.createGraphics();
 			
-			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/NexaBold.otf"));
+			Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/NexaBold.otf"));
 			font = font.deriveFont(36.0f);
 			//Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 70);
 			
@@ -401,7 +401,7 @@ public class BadgeImageGenerator {
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), 5, 600);
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), dateX - 50, 600);
 
-            ImageIO.write(templateImage, "jpg", outputStream);
+			ImageIO.write(templateImage, "png", outputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -417,11 +417,11 @@ public class BadgeImageGenerator {
         int dateX = 100;
         int centreX = 1412;
         try {
-            InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+            InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
             templateImage = ImageIO.read(templateInputStream);
             Graphics2D graphics = templateImage.createGraphics();
 
-            Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/RageItalic.ttf"));
+            Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/RageItalic.ttf"));
             // Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/NexaBold.otf"));
             font = font.deriveFont(172.0f);
             // Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 70);
@@ -451,7 +451,7 @@ public class BadgeImageGenerator {
             x = centreX - fm.stringWidth("#iFundHonestParty") / 2;
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), x, 3100);
 
-            ImageIO.write(templateImage, "jpg", outputStream);
+            ImageIO.write(templateImage, "png", outputStream);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -467,11 +467,11 @@ public class BadgeImageGenerator {
         int dateX = 100;
         int centreX = 512;
         try {
-            InputStream templateInputStream = BadgeImageGenerator.class.getClassLoader().getResourceAsStream(templateName);
+            InputStream templateInputStream = BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream(templateName);
             templateImage = ImageIO.read(templateInputStream);
             Graphics2D graphics = templateImage.createGraphics();
 
-            Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/RageItalic.ttf"));
+            Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGeneratorOriginal.class.getClassLoader().getResourceAsStream("fonts/RageItalic.ttf"));
             // Font font = Font.createFont(Font.TRUETYPE_FONT, BadgeImageGenerator.class.getClassLoader().getResourceAsStream("fonts/NexaBold.otf"));
             font = font.deriveFont(50.0f);
             // Font font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[fontCount], Font.PLAIN, 70);
@@ -482,27 +482,26 @@ public class BadgeImageGenerator {
             FontMetrics fm = graphics.getFontMetrics();
             int x = centreX - fm.stringWidth(donorName) / 2;
 
-            graphics.drawChars(donorName.toCharArray(), 0, donorName.length(), x, 420);
+            graphics.drawChars(donorName.toCharArray(), 0, donorName.length(), x, 410);
             // graphics.setColor(Color.decode("#FFFFFF"));
             // amountX = centreX - fm.stringWidth(donationAmount) / 2;
             graphics.drawChars(donationAmount.toCharArray(), 0, donationAmount.length(), amountX, 520);
             graphics.setColor(Color.RED);
 
             font = new Font(GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames()[0], Font.PLAIN, 20);
-            font = font.deriveFont(24.0f);
+            font = font.deriveFont(32.0f);
             graphics.setFont(font);
             graphics.drawChars(date.toCharArray(), 0, date.length(), dateX, 750);
             graphics.drawChars(transactionId.toCharArray(), 0, transactionId.length(), transactionX, 750);
 
-            /*
             font = font.deriveFont(32.0f);
             font = font.deriveFont(Font.BOLD);
             graphics.setColor(Color.WHITE);
             graphics.setFont(font);
             x = 10;
             graphics.drawChars("#iFundHonestParty".toCharArray(), 0, "#iFundHonestParty".length(), x, 70);
-            */
-            ImageIO.write(templateImage, "jpg", outputStream);
+
+            ImageIO.write(templateImage, "png", outputStream);
         } catch (Exception e) {
             e.printStackTrace();
         }

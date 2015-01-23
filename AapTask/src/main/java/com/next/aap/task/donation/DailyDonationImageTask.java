@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Component;
@@ -73,7 +72,7 @@ public class DailyDonationImageTask implements Runnable {
 	// http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
 	// http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	// ss mm hh dd
-    @Scheduled(cron = "0 00 06 * * *")
+    // @Scheduled(cron = "0 00 06 * * *")
 	public void downloadImageAndPostToFacebook() {
 		logger.info(new Date().toString());
 		logger.info("Starting Scheduled task");

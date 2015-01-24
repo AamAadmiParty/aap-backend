@@ -104,7 +104,7 @@ public class AppBaseController extends BaseController{
 	}
 
     protected void addUserAcCandidateInModel(HttpServletRequest httpServletRequest, ModelAndView mv) {
-        Long acId = getLongPramater(httpServletRequest, "pcId", 0);
+        Long acId = getLongPramater(httpServletRequest, "acId", 0);
         if (acId <= 0) {
             UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
             long livingAcId = 0;

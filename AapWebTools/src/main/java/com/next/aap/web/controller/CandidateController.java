@@ -89,7 +89,12 @@ public class CandidateController extends AppBaseController {
                 mv.getModel().put("zoom", "10");
             }
         } else {
-            mv.setViewName(design + "/candidatelist");
+            if (httpServletRequest.getParameter("dev") != null) {
+                mv.setViewName(design + "/candidatelistnew");
+            } else {
+                mv.setViewName(design + "/candidatelistnew");
+            }
+
         }
         if (electionId == 1) {
             mv.getModel().put("PageTitle", "Loksabha Candiate of Aam Aadmi Party for General Election 2014");

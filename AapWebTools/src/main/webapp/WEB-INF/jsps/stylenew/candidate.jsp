@@ -72,19 +72,18 @@
 </script>
 
 
-<link rel="stylesheet" type="text/css" href="<c:out value='${staticDirectory}'/>/assets/css/style.css" />
-<link rel="stylesheet" type="text/css" href="<c:out value='${staticDirectory}'/>/assets/css/style2.css" />
-<link type="text/css" href="pika/bottom.css" rel="stylesheet" />
+<link type="text/css" href="<c:out value='${staticDirectory}'/>/pika/bottom.css" rel="stylesheet" />
 
 
-<script type="text/javascript" src=" https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
         <script type="text/javascript" src="<c:out value='${staticDirectory}'/>/pika/jquery.jcarousel.min.js"></script>
         <script type="text/javascript" src="<c:out value='${staticDirectory}'/>/pika/jquery.pikachoose.min.js"></script>
         <script type="text/javascript" src="<c:out value='${staticDirectory}'/>/pika/jquery.touchwipe.min.js"></script>
         <script language="javascript">
             $(document).ready(
                 function (){
+                if($("#pikame").length > 0){
                     $("#pikame").PikaChoose({carousel:true,carouselOptions:{wrap:'circular'}});
+					}
                 });
         </script>
 

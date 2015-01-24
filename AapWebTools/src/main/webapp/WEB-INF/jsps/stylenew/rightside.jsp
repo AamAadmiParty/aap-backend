@@ -6,25 +6,31 @@
 <script>
 	$(function() {
 
-		$('#globalDonationButtonOnRight').click(function() {
-			ga('send', 'event', 'donation', 'myaap-rightpanel', '${candidate.name}', 1);
-			window.location.href = '${candidate.donationPageFullUrl}';
-			return false;
-		});
-		$('#candidate1').click(function() {
-			ga('send', 'event', 'candidate', 'myaap-rightpanel', '${candidate.name}', 1);
-			return true;
-		});
-		$('#candidate2').click(function() {
-			ga('send', 'event', 'candidate', 'myaap-rightpanel', '${candidate.name}', 1);
-			return true;
-		});
-		
+		$('#globalDonationButtonOnRight').click(
+				function() {
+					ga('send', 'event', 'donation', 'myaap-rightpanel',
+							'${candidate.name}', 1);
+					window.location.href = '${candidate.donationPageFullUrl}';
+					return false;
+				});
+		$('#candidate1').click(
+				function() {
+					ga('send', 'event', 'candidate', 'myaap-rightpanel',
+							'${candidate.name}', 1);
+					return true;
+				});
+		$('#candidate2').click(
+				function() {
+					ga('send', 'event', 'candidate', 'myaap-rightpanel',
+							'${candidate.name}', 1);
+					return true;
+				});
+
 	});
 </script>
 <div class="rhsarea">
-		<!--rhsarea-->
-		<c:if test="${empty loggedInUser}">
+	<!--rhsarea-->
+	<c:if test="${empty loggedInUser}">
 		<div class="joincommunity">
 			<!--joincommunity-->
 			<a href="${contextPath}/login"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
@@ -35,27 +41,30 @@
 				<li>And lots more...</li>
 			</ul>
 		</div>
-		</c:if>
-		<c:if test="${!empty candidate}">
+	</c:if>
+	<c:if test="${!empty candidate}">
 		<div class="aap-performance">
-			<a href="${candidate.landingPageFullUrl}" id="candidate1">
-			<img src="<c:out value='${candidate.imageUrl}'/>" style="width:280px; min-width:280px;" border="0" />
+			<a href="${candidate.landingPageFullUrl}" id="candidate1"> <img src="<c:out value='${candidate.imageUrl}'/>"
+				style="width: 280px; min-width: 280px;" border="0" />
 			</a>
 			<div id="success" class="languagetab">
-			<table border="0" cellpadding="0" cellspacing="0">
-				<tbody>
-					<tr>	
-						<th width="200">Name</th>
-						<td width="200"><c:out value='${candidate.name}'/></td>
-					</tr>
-					<tr>	
-						<th width="200">Loksabha</th>
-						<td width="200"><c:out value='${candidate.pcName}'/> - <c:out value='${candidate.stateName}'/></td>
-					</tr>
-					<tr>
-						<th width="200">Total Money Required</th>
-						<td width="200">Rs 40,00,000</td>
-					</tr>
+				<table border="0" cellpadding="0" cellspacing="0">
+					<tbody>
+						<tr>
+							<th width="200">Name</th>
+							<td width="200"><c:out value='${candidate.name}' /></td>
+						</tr>
+						<tr>
+							<th width="200">Constituency</th>
+							<td width="200"><c:out value='${candidate.acName}' />
+								<c:out value='${candidate.pcName}' /> - <c:out value='${candidate.stateName}' /></td>
+						</tr>
+						<!--
+                                        <tr>
+                                                <th width="200">Total Money Required</th>
+                                                <td width="200">Rs 40,00,000</td>
+                                        </tr>
+
 					<tr>
 						<th width="200">Total Transactions</th>
 						<td width="200">${donationCampaignInfo.ttxn}</td>
@@ -75,7 +84,7 @@
 		</div>
 		</c:if>
 		<!--joincommunity-->
-		<%--
+						<%--
 		<div class="aap-performance">
 			<!--aap-performance-->
 			<img src="<c:out value='${staticDirectory}'/>/images/aap-performance.jpg" border="0" />
@@ -93,22 +102,39 @@
 		</div>
 		<!--aap-performance-->
 		 --%>
-		<div class="facebookWidget">
-			<!--facebookWidget-->
-			<iframe src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FAamAadmiParty&amp;width=728&amp;height=590&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;show_border=true&amp;header=true" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:322px; height:530px;" allowTransparency="true"></iframe>
-		</div>
-		<!--facebookWidget-->
-		<div class="twitterWidget">
-			<!--twitterWidget-->
-			<a class="twitter-timeline" href="https://twitter.com/AamAadmiParty" data-widget-id="339326037013958656">Tweets by @AamAadmiParty</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+						<div class="facebookWidget">
+							<!--facebookWidget-->
+							<iframe
+								src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FAamAadmiParty&amp;width=728&amp;height=590&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;show_border=true&amp;header=true"
+								scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 322px; height: 530px;"
+								allowTransparency="true"></iframe>
+						</div>
+						<!--facebookWidget-->
+						<div class="twitterWidget">
+							<!--twitterWidget-->
+							<a class="twitter-timeline" href="https://twitter.com/AamAadmiParty" data-widget-id="339326037013958656">Tweets
+								by @AamAadmiParty</a>
+							<script>
+								!function(d, s, id) {
+									var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+											.test(d.location) ? 'http'
+											: 'https';
+									if (!d.getElementById(id)) {
+										js = d.createElement(s);
+										js.id = id;
+										js.src = p
+												+ "://platform.twitter.com/widgets.js";
+										fjs.parentNode.insertBefore(js, fjs);
+									}
+								}(document, "script", "twitter-wjs");
+							</script>
 
 
-		</div>
-		<!--twitterWidget-->
+						</div>
+						<!--twitterWidget-->
 
-		<div class="clear"></div>
-		<%--
+						<div class="clear"></div>
+						<%--
 		<div class="trending">
 			<!--trending-->
 			<img src="<c:out value='${staticDirectory}'/>/images/trending.jpg" border="0" />
@@ -154,6 +180,6 @@
 
 		</div>
 		 --%>
-		<!--trending-->
-	</div>
-	<!--rhsarea-->
+						<!--trending-->
+			</div>
+			<!--rhsarea-->

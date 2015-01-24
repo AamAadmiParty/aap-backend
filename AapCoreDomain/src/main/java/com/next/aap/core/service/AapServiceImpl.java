@@ -6509,6 +6509,15 @@ public class AapServiceImpl implements AapService, Serializable {
 		}
 		CandidateDto candidateDto = new CandidateDto();
 		BeanUtils.copyProperties(candidate, candidateDto);
+        if (candidate.getContent() == null) {
+            candidateDto.setContentSummary("Coming Soon");
+        } else {
+            String contentWithOutHtml = candidate.getContent().replaceAll("\\<[^>]*>", "");
+            if (contentWithOutHtml.length() > 100) {
+                contentWithOutHtml = contentWithOutHtml.substring(0, 100) + " ...";
+            }
+            candidateDto.setContentSummary(contentWithOutHtml);
+        }
         if (candidate.getElection() != null) {
             candidateDto.setElectionId(candidate.getElection().getId());
         }

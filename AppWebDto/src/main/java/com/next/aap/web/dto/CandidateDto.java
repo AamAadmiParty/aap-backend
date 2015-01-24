@@ -13,6 +13,7 @@ public class CandidateDto {
 
 	private String name;
 	private String content;//content of news which can be html or plain text
+    private String contentSummary;// content of news which can be html or plain text
 	private String stateIdExt;
 	private String pcIdExt;
     private String acIdExt;
@@ -269,6 +270,14 @@ public class CandidateDto {
 
     public void setVoteUrl(String voteUrl) {
         this.voteUrl = voteUrl;
+    }
+
+    public String getContentSummary() {
+        return contentSummary;
+    }
+
+    public void setContentSummary(String contentSummary) {
+        this.contentSummary = contentSummary;
     }
     @Override
     public String toString() {

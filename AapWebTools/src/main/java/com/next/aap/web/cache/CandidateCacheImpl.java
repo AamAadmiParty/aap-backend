@@ -212,7 +212,7 @@ public class CandidateCacheImpl {
     public CandidateDto getCandidateByAcId(Long livingAcId, Long votingAcId) {
         Set<CandidateDto> electionCandidates = candidateMapByElectionId.get(2L);
         if (livingAcId == 0 && votingAcId == 0) {
-            return electionCandidates.toArray(new CandidateDto[electionCandidates.size()])[random.nextInt(allCandidates.size())];
+            return electionCandidates.toArray(new CandidateDto[electionCandidates.size()])[random.nextInt(electionCandidates.size())];
         }
         CandidateDto candidate = null;
         if (livingAcId != 0 && votingAcId != 0) {
@@ -232,7 +232,7 @@ public class CandidateCacheImpl {
 
         }
         if (candidate == null) {
-            candidate = allCandidates.get(random.nextInt(allCandidates.size()));
+            candidate = electionCandidates.toArray(new CandidateDto[electionCandidates.size()])[random.nextInt(electionCandidates.size())];
         }
         return candidate;
     }

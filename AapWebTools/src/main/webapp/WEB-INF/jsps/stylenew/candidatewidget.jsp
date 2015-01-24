@@ -40,9 +40,11 @@
 			<div class="aap-performance">
 				*You can donate for below candidate by clicking here and can show your support.
 				<div class="blockdiv">
-					<a name="globalDonationButtonOnRight" id="globalDonationButtonOnRight" href="${candidate.donationPageFullUrl}" target=_new ><input value="" type="button" class="donatebtnbig" /></a>
+					<a name="globalDonationButtonOnRight" id="globalDonationButtonOnRight" href="${candidate.donationPageFullUrl}"
+						target=_new><input value="" type="button" class="donatebtnbig" /></a>
 				</div>
-				<a target=_new href="${candidate.landingPageFullUrl}" id="candidate1"> <img src="<c:out value='${candidate.imageUrl}'/>" style="width: 280px; min-width: 280px;" border="0" />
+				<a target=_new href="${candidate.landingPageFullUrl}" id="candidate1"> <img
+					src="<c:out value='${candidate.imageUrl}'/>" style="width: 280px; min-width: 280px;" border="0" />
 				</a>
 				<div id="success" class="languagetab">
 					<table border="0" cellpadding="0" cellspacing="0">
@@ -52,13 +54,16 @@
 								<td width="200"><c:out value='${candidate.name}' /></td>
 							</tr>
 							<tr>
-								<th width="200">Loksabha</th>
-								<td width="200"><c:out value='${candidate.pcName}' /> - <c:out value='${candidate.stateName}' /></td>
+								<th width="200">Constituency</th>
+								<td width="200"><c:out value='${candidate.acName}' />
+									<c:out value='${candidate.pcName}' /> - <c:out value='${candidate.stateName}' /></td>
 							</tr>
-							<tr>
-								<th width="200">Total Money Required</th>
-								<td width="200">Rs 70,00,000</td>
-							</tr>
+							<!--
+                                                        <tr>
+                                                                <th width="200">Total Money Required</th>
+                                                                <td width="200">Rs 70,00,000</td>
+                                                        </tr>
+-->
 							<tr>
 								<th width="200">Total Transactions</th>
 								<td width="200">${donationCampaignInfo.ttxn}</td>

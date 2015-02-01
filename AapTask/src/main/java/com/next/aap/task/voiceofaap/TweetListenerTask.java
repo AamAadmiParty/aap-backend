@@ -64,7 +64,8 @@ public class TweetListenerTask extends BaseSocialTask{
                 plannedTweetDto.setLocationType(PostLocationType.Global);
                 plannedTweetDto.setStatus(PlannedPostStatus.PENDING);
                 plannedTweetDto.setTweetType("Retweet");
-                plannedTweetDto.setTotalRequired(50);
+                plannedTweetDto.setTotalRequired(200);
+                logger.info("Setting total Required Tweets to 200");
                 plannedTweetDto.setTweetId(oneTweet.getId());
                 plannedTweetDto.setPostingTime(postingTime.getTime());
                 plannedTweetDto = aapService.savePlannedTweet(plannedTweetDto);

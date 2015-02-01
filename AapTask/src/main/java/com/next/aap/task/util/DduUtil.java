@@ -46,7 +46,7 @@ public class DduUtil {
 			String message = "Have you paid your EMI for better future?";
 			String monthTarget = "70000000";
 
-            createDelhiDialogueTemplateDegreeImage(bufferedOutputStream, date, dayDonation, monthDonation, monthTarget);
+            createDelhiDialogueTemplateWifiImage(bufferedOutputStream, date, dayDonation, monthDonation, monthTarget);
 			bufferedOutputStream.close();
 
 		}
@@ -265,6 +265,21 @@ public class DduUtil {
 
     public static void createDelhiDialogueTemplateDegreeImage(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget) throws IOException {
         String templateFileName = "ddu/dd/degree.jpg";
+        createDelhiDialogueTemplateImage(outputStream, date, dayDonation, monthDonation, monthTarget, templateFileName);
+    }
+
+    public static void createDelhiDialogueTemplateAllImage(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget) throws IOException {
+        String templateFileName = "ddu/dd/all.jpg";
+        createDelhiDialogueTemplateImage(outputStream, date, dayDonation, monthDonation, monthTarget, templateFileName);
+    }
+
+    public static void createDelhiDialogueTemplateIncomeImage(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget) throws IOException {
+        String templateFileName = "ddu/dd/income.jpg";
+        createDelhiDialogueTemplateImage(outputStream, date, dayDonation, monthDonation, monthTarget, templateFileName);
+    }
+
+    public static void createDelhiDialogueTemplateWifiImage(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget) throws IOException {
+        String templateFileName = "ddu/dd/wifi.jpg";
         createDelhiDialogueTemplateImage(outputStream, date, dayDonation, monthDonation, monthTarget, templateFileName);
     }
     public static void createDelhiDialogueTemplateImage(OutputStream outputStream, String date, String dayDonation, String monthDonation, String monthTarget, String templateFileName)

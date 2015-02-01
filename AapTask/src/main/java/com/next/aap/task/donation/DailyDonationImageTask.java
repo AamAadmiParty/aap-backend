@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
 import org.springframework.stereotype.Component;
@@ -72,7 +73,7 @@ public class DailyDonationImageTask implements Runnable {
 	// http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
 	// http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	// ss mm hh dd
-    // @Scheduled(cron = "0 00 06 * * *")
+    @Scheduled(cron = "0 00 06 * * *")
 	public void downloadImageAndPostToFacebook() {
 		logger.info(new Date().toString());
 		logger.info("Starting Scheduled task");
@@ -110,7 +111,27 @@ public class DailyDonationImageTask implements Runnable {
 
 			try {
 				fileOutputStream = new FileOutputStream(filePath);
-                DduUtil.createDelhiDialogueTemplateDegreeImage(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
+                Calendar calendar = Calendar.getInstance();
+                int currentDate = calendar.get(Calendar.DAY_OF_MONTH);
+                int imageStayles = currentDate % 4;
+                switch (imageStayles) {
+                case 0:
+                    DduUtil.createDelhiDialogueTemplateDegreeImage(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
+                    break;
+                case 1:
+                    DduUtil.createDelhiDialogueTemplateAllImage(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
+                    break;
+                case 2:
+                    DduUtil.createDelhiDialogueTemplateIncomeImage(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
+                    break;
+                case 3:
+                    DduUtil.createDelhiDialogueTemplateWifiImage(fileOutputStream, fullDateStringDDMMMYYYY, dayDonation, monthDonation, "100000000");
+                    break;
+
+                default:
+                    break;
+                }
+
 
 				fileOutputStream.close();
 				logger.info("File created");

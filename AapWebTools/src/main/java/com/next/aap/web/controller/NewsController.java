@@ -16,8 +16,8 @@ public class NewsController extends AppBaseController {
 		
 		addGenericValuesInModel(httpServletRequest, mv);
 		addSingleNewsInModel(httpServletRequest, mv, newsId);
-        // addUserAcCandidateInModel(httpServletRequest, mv);
-
+        //addUserAcCandidateInModel(httpServletRequest, mv);
+        mv.setViewName(design + "/news");
 		return mv;
 		
 	}

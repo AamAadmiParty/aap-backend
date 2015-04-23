@@ -99,12 +99,15 @@ public class VoiceOfAapTwitterAdminBean extends BaseAdminJsfBean {
 				return;
 			}
 			try{
+			    //TODO Uncoment and fix it.. API version changed for twitter cleint
+			    /*
 				Twitter twitter = new TwitterTemplate();
 				String tweetJson = twitter.restOperations().getForObject("https://api.twitter.com/1/statuses/oembed.json?maxwidth=550&id="+selectedPlannedTweet.getTweetId(), String.class);
 				Gson gson = new Gson();
 				JsonObject jsonObject = gson.fromJson(tweetJson, JsonObject.class);
 				
 				tweetPreview = jsonObject.get("html").getAsString();
+				*/
 				
 			}catch(Exception ex){
 				sendErrorMessageToJsfScreen("Unable to find tweet");

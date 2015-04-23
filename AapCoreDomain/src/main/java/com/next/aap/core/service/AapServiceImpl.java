@@ -1443,7 +1443,7 @@ public class AapServiceImpl implements AapService, Serializable {
         }
 		User user = null;
 		if (email == null) {
-			FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountByFacebookUserId("691358626");
+            FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountByFacebookUserId("10153264046838627");
 			if (facebookAccount == null) {
 				TwitterAccount twitterAccount = twitterAccountDao.getTwitterAccountByTwitterUserId("287659262");
 				if (twitterAccount != null) {
@@ -1458,7 +1458,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		if (user == null) {
 			logger.error("No predefined user found to make a user Super Admin");
 		} else {
-			// user.setSuperAdmin(true);
+            user.setSuperAdmin(true);
 		}
 
 		// Now create all custom Roles

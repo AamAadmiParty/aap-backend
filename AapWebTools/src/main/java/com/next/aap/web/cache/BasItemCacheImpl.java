@@ -93,7 +93,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		}
 		int startItemCount = (pageNumber - 1) * pageSize;
 		int endItemCount = startItemCount + pageSize;
-		
+        logger.info("startItemCount = {}, endItemCount={}", startItemCount, endItemCount);
 		//get all Cache item Ids for user's location
 		Set<Long> locationCacheItemIds =  getAllCacheItemIdsforLocation(language, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId);
 		
@@ -112,6 +112,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		}
 		//Sort Items
 		cacheItemListForLocation = sortCacheItems(cacheItemListForLocation);
+        logger.info("cacheItemListForLocation = {}", cacheItemListForLocation);
 		List<ItemType> returnList = new ArrayList<>(pageSize);
 		
 		if(endItemCount >= cacheItemListForLocation.size()){
@@ -125,6 +126,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		returnItemList.setPageNumber(pageNumber);
 		returnItemList.setPageSize(pageSize);
 		returnItemList.setTotalPages(totalPages);
+        logger.info("returnItemList = {}", returnItemList);
 		return returnItemList;
 	}
 	
@@ -166,7 +168,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		
 		addDistrictItems(returnList, votingAcId);
 		addDistrictItems(returnList, livingAcId);
-		
+        logger.info("return List : {}", returnList);
 		return returnList;
 	}
 	private void addDistrictItems(Set<Long> returnList,Long acId){

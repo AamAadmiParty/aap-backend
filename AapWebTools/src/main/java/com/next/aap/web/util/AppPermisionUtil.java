@@ -15,6 +15,7 @@ public class AppPermisionUtil {
 	@PostConstruct
 	public void init(){
 		
+        System.out.println("Creating All PErmissions and Roles");
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {

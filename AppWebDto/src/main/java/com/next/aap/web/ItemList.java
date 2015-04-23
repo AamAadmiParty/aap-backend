@@ -36,4 +36,9 @@ public class ItemList<T> {
 		this.totalPages = totalPages;
 	}
 
+    @Override
+    public String toString() {
+        return "ItemList [items=" + items + ", pageNumber=" + pageNumber + ", pageSize=" + pageSize + ", totalPages=" + totalPages + "]";
+    }
+
 }

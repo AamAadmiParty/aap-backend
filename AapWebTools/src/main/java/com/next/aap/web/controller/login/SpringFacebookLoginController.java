@@ -50,9 +50,10 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 		OAuth2Parameters params = new OAuth2Parameters();
         String serverName = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName();
         if (httpServletRequest.getServerPort() > 80) {
-            serverName = serverName + ":" + serverName;
+            serverName = serverName + ":" + httpServletRequest.getServerPort();
         }
         facebookRedirectUrl = serverName + "/login/facebooksuccess";
+        logger.info("facebookRedirectUrl : {}", facebookRedirectUrl);
 		params.setRedirectUri(facebookRedirectUrl);
 		params.setScope(appPermissions);
 		String authorizeUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, params);

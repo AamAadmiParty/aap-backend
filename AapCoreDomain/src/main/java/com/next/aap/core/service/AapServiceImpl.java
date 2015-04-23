@@ -1437,7 +1437,10 @@ public class AapServiceImpl implements AapService, Serializable {
 
 		// assign super admin role to Ravi's account
 
-		Email email = emailDao.getEmailByEmail("ping2ravi@gmail.com");
+        Email email = emailDao.getEmailByEmail("ping2ravi@yahoo.com");
+        if (email == null) {
+            email = emailDao.getEmailByEmail("ping2ravi@gmail.com");
+        }
 		User user = null;
 		if (email == null) {
 			FacebookAccount facebookAccount = facebookAccountDao.getFacebookAccountByFacebookUserId("691358626");

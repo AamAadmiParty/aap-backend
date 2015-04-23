@@ -116,7 +116,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		List<ItemType> returnList = new ArrayList<>(pageSize);
 		
 		if(endItemCount >= cacheItemListForLocation.size()){
-			endItemCount = cacheItemListForLocation.size() - 1;
+            endItemCount = cacheItemListForLocation.size();
 		}
 
 		for(int i=startItemCount;i<endItemCount;i++){

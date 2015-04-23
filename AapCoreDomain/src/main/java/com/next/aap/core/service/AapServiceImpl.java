@@ -5333,7 +5333,8 @@ public class AapServiceImpl implements AapService, Serializable {
 				donation.setDonateToState(donationDump.getDonateToState());
 				donation.setDonateToLoksabha(donationDump.getDonateToLoksabha());
 				donation.setDonateToDistrict(donationDump.getDonateToDistrict());
-
+                donation.setDonorName(donationDump.getDonorName());
+                donation.setTransactionId(donationDump.getTransactionId());
 				donationDao.updateDonationPgStatus(donationDump);
 
                 if (!StringUtil.isEmpty(donationDump.getDonateToVidhan()) && !"0".equals(donationDump.getDonateToVidhan())) {

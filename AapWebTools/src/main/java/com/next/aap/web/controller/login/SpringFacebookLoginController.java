@@ -48,7 +48,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 
 		OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
 		OAuth2Parameters params = new OAuth2Parameters();
-        String serverName = httpServletRequest.getServerName();
+        String serverName = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName();
         if (httpServletRequest.getServerPort() > 80) {
             serverName = serverName + ":" + serverName;
         }

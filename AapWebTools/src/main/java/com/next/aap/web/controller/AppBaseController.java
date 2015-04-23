@@ -104,6 +104,7 @@ public class AppBaseController extends BaseController{
 	}
 
     protected void addUserAcCandidateInModel(HttpServletRequest httpServletRequest, ModelAndView mv) {
+        /*
         Long acId = getLongPramater(httpServletRequest, "acId", 0);
         if (acId <= 0) {
             UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
@@ -129,6 +130,7 @@ public class AppBaseController extends BaseController{
             mv.getModel().put("candidate", candidateDto);
             addCandidateDonationInfo(candidateDto, mv);
         }
+        */
 
     }
 	protected void addCandidateDonationInfo(CandidateDto candidateDto, ModelAndView mv){

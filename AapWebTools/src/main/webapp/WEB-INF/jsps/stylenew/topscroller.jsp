@@ -25,7 +25,7 @@
 		<div class="donatetabe">
 			<!--donatetabe-->
 			<ul>
-				<li><a href="http://donate.aamaadmiparty.org">Donate</a></li>
+				<li><a href="#">Donate</a></li>
 				<!-- <li><a href="#">Register</a></li> -->
 			</ul>
 		</div>

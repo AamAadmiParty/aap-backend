@@ -37,7 +37,6 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 	@Value("${voa_facebook_app_secret}")
 	private String voiceOfAapAppSecret;
 
-	@Value("${server_domain_and_context}/login/voa/facebooksuccess")
 	private String facebookRedirectUrl;
 
 	
@@ -69,7 +68,13 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 
 		OAuth2Operations oauthOperations = facebookConnectionFactory.getOAuthOperations();
 		OAuth2Parameters params = new OAuth2Parameters();
-		params.setRedirectUri(facebookRedirectUrl);
+
+        String serverName = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName();
+        if (httpServletRequest.getServerPort() > 80) {
+            serverName = serverName + ":" + httpServletRequest.getServerPort();
+        }
+        facebookRedirectUrl = serverName + "/login/facebooksuccess";
+        params.setRedirectUri(facebookRedirectUrl);
 		params.setScope(appPermissions);
 		String authorizeUrl = oauthOperations.buildAuthorizeUrl(GrantType.AUTHORIZATION_CODE, params);
 		

@@ -216,7 +216,7 @@ public class AapServiceImpl implements AapService, Serializable {
 	private static final long serialVersionUID = 1L;
 	private final String donationUrl = "https://donate.aamaadmiparty.org/?utm_source=myaap&utm_medium=web&utm_term=donate-purl&utm_content=donation&utm_campaign=affliation&cid=";
 	private final String urlShortnerUrl = "http://myaap.in/yourls-api.php?format=json&username=arvind&password=4delhi&action=shorturl&url=";
-	private final String missingImageUrl = "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign/images/aap-article.jpg";
+    private final String missingImageUrl = "https://s3-us-west-2.amazonaws.com/swaraj/prod/images/missing.jpg";
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired

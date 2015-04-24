@@ -19,7 +19,6 @@ import com.google.gdata.util.common.base.StringUtil;
 import com.next.aap.cache.CacheKeyService;
 import com.next.aap.cache.beans.DonationCampaignInfo;
 import com.next.aap.web.controller.bean.DonationBean;
-import com.next.aap.web.dto.UserDto;
 
 @Controller
 public class DonationController extends AppBaseController {
@@ -39,7 +38,7 @@ public class DonationController extends AppBaseController {
 		mv = new ModelAndView(design + "/donation", "donation", new DonationBean());
 		addGenericValuesInModel(httpServletRequest, mv);
 		addIndianStatesIntoModel(mv);
-		mv.getModel().put("staticDirectory", "https://s3.amazonaws.com/myaap");
+        mv.getModel().put("staticDirectory", staticDirectory);
 		return mv;
 	}
 	
@@ -50,7 +49,7 @@ public class DonationController extends AppBaseController {
 		mv = new ModelAndView(design + "/donation", "donation", new DonationBean());
 		addGenericValuesInModel(httpServletRequest, mv);
 		addIndianStatesIntoModel(mv);
-		mv.getModel().put("staticDirectory", "https://s3.amazonaws.com/myaap");
+        mv.getModel().put("staticDirectory", staticDirectory);
 		return mv;
 	}
 	

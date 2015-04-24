@@ -105,15 +105,15 @@
 						<div class="facebookWidget">
 							<!--facebookWidget-->
 							<iframe
-								src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FAamAadmiParty&amp;width=728&amp;height=590&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;show_border=true&amp;header=true"
+								src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FSwaraj.Samwad&amp;width=728&amp;height=590&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;show_border=true&amp;header=true"
 								scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 322px; height: 530px;"
 								allowTransparency="true"></iframe>
 						</div>
 						<!--facebookWidget-->
 						<div class="twitterWidget">
 							<!--twitterWidget-->
-							<a class="twitter-timeline" href="https://twitter.com/AamAadmiParty" data-widget-id="339326037013958656">Tweets
-								by @AamAadmiParty</a>
+							<a class="twitter-timeline" href="https://twitter.com/swaraj_abhiyan" data-widget-id="591375821736120321">Tweets
+								by @swaraj_abhiyan</a>
 							<script>
 								!function(d, s, id) {
 									var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/

@@ -385,7 +385,7 @@ public class AppBaseController extends BaseController{
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
 		mv.getModel().put("loggedInUser", loggedInUser);
 		//mv.getModel().put("staticDirectory", "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign");
-		mv.getModel().put("staticDirectory", "https://s3.amazonaws.com/myaap");
+        mv.getModel().put("staticDirectory", staticDirectory);
 		
 		mv.getModel().put("contextPath", httpServletRequest.getContextPath());
 		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);

@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -25,6 +26,9 @@ public class BaseController {
 	public static final String SESSION_USER_PERMISSIONS_PARAM = "SESSION_USER_PERMISSIONS_PARAM";
 	
 	public static final String PARAM_PAGE_NUMBER = "page";
+
+    @Value("${s3_base_http_path_dc}/${s3_bucket_name_for_static_content}/${s3_base_dir_for_static_content}")
+    protected String staticDirectory;
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	

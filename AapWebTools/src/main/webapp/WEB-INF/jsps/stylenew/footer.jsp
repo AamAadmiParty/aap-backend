@@ -12,13 +12,12 @@
 			<!--footerrow-->
 			<h2>Donation Links</h2>
 			<ul>
-				<li><a href="https://donate.aamaadmiparty.org/">Donate Online</a></li>
-				<li><a href="http://www.aamaadmiparty.org/donate-by-chequedemand-draft">Donate - By Cheque/Demand Draft</a></li>
-				<li><a href="http://www.aamaadmiparty.org/donation-policies">Donation Policies</a></li>
-				<li><a href="http://www.aamaadmiparty.org/donation-list">List of Donors</a></li>
-				<li><a href="http://www.aamaadmiparty.org/donation-faq">Donation FAQs</a></li>
-				<li><a href="http://aamaadmiparty.org/income%20expenditure%20details">Income & Expenditure Statements</a></li>
-				<li><a href="http://ifuelswaraj.org/">I Fuel Swaraj</a></li>
+				<li><a href="#">Donate Online</a></li>
+				<li><a href="#">Donate - By Cheque/Demand Draft</a></li>
+				<li><a href="#">Donation Policies</a></li>
+				<li><a href="#">List of Donors</a></li>
+				<li><a href="#">Donation FAQs</a></li>
+				<li><a href="#">Income & Expenditure Statements</a></li>
 			</ul>
 		</div>
 		<!--footerrow-->
@@ -27,10 +26,9 @@
 			<!--footerrow-->
 			<h2>Media</h2>
 			<ul>
-				<li><a href="http://aapkikranti.com/">Aap Ki Kranti</a></li>
-				<li><a href="http://aamaadmiparty.wordpress.com/">Publicity Material</a></li>
-				<li><a href="http://www.aamaadmiparty.org/official-spokespersons">Official Spokespersons</a></li>
-				<li><a href="http://www.aamaadmiparty.org/video-gallery">Videos</a></li>
+				<li><a href="#">Publicity Material</a></li>
+				<li><a href="#">Official Spokespersons</a></li>
+				<li><a href="#">Videos</a></li>
 			</ul>
 		</div>
 		<!--footerrow-->
@@ -39,10 +37,9 @@
 			<!--footerrow-->
 			<h2>Contact Us</h2>
 			<ul>
-				<li><a href="http://www.aamaadmiparty.org/contact-us">Party Offices</a></li>
-				<li><a href="http://nri.aamaadmiparty.org/">NRI Site</a></li>
-				<li><a href="http://ifuelswaraj.org/leaders.php">"I Fuel Swaraj" Contacts</a></li>
-				<li><a href="http://www.aamaadmiparty.org/privacy-policy">Privacy Policy</a></li>
+				<li><a href="#">Party Offices</a></li>
+				<li><a href="#">NRI Site</a></li>
+				<li><a href="#">Privacy Policy</a></li>
 			</ul>
 		</div>
 		<!--footerrow-->
@@ -59,15 +56,15 @@
 			<!--conectleft-->
 			<ul>
 				<li class="h3">Connect with us on</li>
-				<li><a href="https://www.facebook.com/AamAadmiParty"><img src="<c:out value='${staticDirectory}'/>/images/facebooklogo.png" border="0" align="absmiddle" /></a></li>
-				<li><a href="https://twitter.com/AamAadmiParty"><img src="<c:out value='${staticDirectory}'/>/images/twitterlogo.png" border="0" align="absmiddle" /></a></li>
-				<li><a href="https://www.youtube.com/user/indiACor2010"><img src="<c:out value='${staticDirectory}'/>/images/youtubeicon.png" border="0" align="absmiddle" /></a></li>
+				<li><a href="https://www.facebook.com/swaraj.samwad"><img src="<c:out value='${staticDirectory}'/>/images/facebooklogo.png" border="0" align="absmiddle" /></a></li>
+				<li><a href="https://twitter.com/swaraj_abhiyan"><img src="<c:out value='${staticDirectory}'/>/images/twitterlogo.png" border="0" align="absmiddle" /></a></li>
+				<li><a href="#"><img src="<c:out value='${staticDirectory}'/>/images/youtubeicon.png" border="0" align="absmiddle" /></a></li>
 			</ul>
 		</div>
 		<!--conectleft-->
 		<div class="copyright">
 			<!--copyright-->
-			© Aam Aadmi Party. All Rights Reserved, Developed by <a href="http://my.aamaadmiparty.org/ripple/ravi.html">Ravi Sharma</a>
+			© Swaraj Abhiyan. All Rights Reserved, Developed by <a href="#">Ravi Sharma</a>
 		</div>
 		<!--copyright-->
 	</div>

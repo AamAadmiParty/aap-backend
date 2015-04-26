@@ -94,6 +94,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 			Date userCreationDate = loggedInUser.getDateCreated();
 			if(userCreationDate != null && !redirectUrl.contains("/poll/")){
 				//and if user created in last 3-4 days then forward user to Voice of AAP Page
+			    /*
 				Calendar calendar = Calendar.getInstance();
 				calendar.add(Calendar.DATE, 30);
 				if(!userCreationDate.after(calendar.getTime()))
@@ -102,6 +103,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 						redirectUrl = httpServletRequest.getContextPath()+"/voa.html";
 					}
 				}
+				*/
 			}
 			RedirectView rv = new RedirectView(redirectUrl);
 			logger.info("url= {}", redirectUrl);

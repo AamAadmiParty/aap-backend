@@ -28,13 +28,17 @@ public class TrendingBean extends BaseJsfBean {
 	private boolean initialized = false;
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	//@URLAction(onPostback=false)
-	@PostConstruct
+    @PostConstruct
 	public void init() {
-		if(!initialized){
-			ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, 0,0,0,0);
-			trendingNewsItems = newsItems.getItems();
-			initialized = true;
-		}
+        try {
+            if (!initialized) {
+                ItemList<NewsDto> newsItems = aapDataCacheDbImpl.getNewsDtos(AapDataCacheDbImpl.DEFAULT_LANGUAGE, 0, 0, 0, 0);
+                trendingNewsItems = newsItems.getItems();
+                initialized = true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 	}
 
 	public AapDataCache getAapDataCacheDbImpl() {

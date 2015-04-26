@@ -14,9 +14,9 @@
 <meta name="description"
 	content="Tell us what you think on '${poll.contentWithoutHtml}'" />
 	<meta name="og:image" property="og:image" content="http://s3-eu-west-1.amazonaws.com/nusdigital/image/images/221/original/tell%20us%20what%20you%20think%20button.png" />
-	<meta name="og:title" property="og:title" content="AAP Polls, raise your voice" />
+	<meta name="og:title" property="og:title" content="Swaraj Abhiyan Polls, raise your voice" />
 	<meta name="og:url" property="og:url" content="${candidate.landingPageFullUrl}" />
-	<meta name="og:site_name" property="og:site_name" content="my.aamaadmiparty.org" />
+	<meta name="og:site_name" property="og:site_name" content="swarajabhiyan.org" />
 	<meta name="og:type" property="og:type" content="blog" />
 	<meta name="og:description" property="og:description"
 	content="Tell us what you think on '${poll.contentWithoutHtml}'" />

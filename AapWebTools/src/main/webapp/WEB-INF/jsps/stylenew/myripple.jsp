@@ -82,7 +82,7 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 						</c:if>
 					</ul>
 					<div id="setting">
-						<div class="editprofile">Start your own personalized donation campaign for AAP</div>
+						<div class="editprofile">Start your own personalized donation campaign for Swaraj Abhiyan</div>
 						<br />
 						<div class="formwrapper">
 							<!--formwrapper-->
@@ -144,7 +144,7 @@ var entry = document.getElementsByTagName('script')[0];entry.parentNode.insertBe
 								<div class="blockdiv">
 									<label>Description</label>
 									<textarea rows="" cols="" name="description" id="description" class="textarea"
-									title="Message to your friends, why you are supporting AAP and why you want them to donate to AAP"><c:out value='${rippleCampaign.description}'/></textarea>
+									title="Message to your friends, why you are supporting Swaraj Abhiyan and why you want them to donate to Swaraj Abhiyan"><c:out value='${rippleCampaign.description}'/></textarea>
 								</div>
 								
 								<input name="save" type="submit" class="button" value="Save Ripple Campaign" />

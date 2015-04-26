@@ -1,14 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <c:if test="${not empty loggedInUser}">
 	<div class="donatewrapper">
-		<!--donatewrapper-->
 		<div class="donatewrappertab">
-			<!--donatewrappertab-->
 			<ul>
-				<li><a href="${contextPath}/voa.html">Voice of AAP</a></li>
+			<!-- 
+				<li><a href="${contextPath}/voa.html">Swaraj ki Awaz</a></li>
 				<li><a href="${contextPath}/mydonations.html">My Donations</a></li>
 				<li><a href="${contextPath}/profile.html">My Profile</a></li>
 				<li><a href="${contextPath}/ripple.html">My Ripple</a></li>
+				-->
 				<c:if test="${admin}">
 					<li><a href="${contextPath}/admin/home">Admin</a></li>
 				</c:if>
@@ -16,7 +17,7 @@
 		</div>
 	</div>
 </c:if>
-
+ 
 <!--donatewrappertab-->
 
 <!--donatetabwrapper-->

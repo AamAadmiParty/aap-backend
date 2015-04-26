@@ -42,7 +42,7 @@
 				<!--article-leftarea-->
 				<div class="voiceappdiv">
 					<!-- <input name="" type="checkbox" value="" /> -->
-					Voice of AAP
+					Swaraj Ki Avaz
 				</div>
 
 							<div class="voiceapp-inner-div" style="width: 1000px;">
@@ -60,9 +60,9 @@
 										<!--fbgorups-->
 										<ul>
 											<li><c:if test="${postOnTimeLine}">
-													<input name="postOnTimeLine" id="postOnTimeLine" value="true" type="checkbox" checked="checked" title="Yes I would like to spread AAP messages on Facebook to my friends, family and others" />
+													<input name="postOnTimeLine" id="postOnTimeLine" value="true" type="checkbox" checked="checked" title="Yes I would like to spread Swaraj Abhiyan messages on Facebook to my friends, family and others" />
 												</c:if> <c:if test="${!postOnTimeLine}">
-													<input name="postOnTimeLine" id="postOnTimeLine" value="true" type="checkbox" title="Yes I would like to spread AAP messages on Facebook to my friends, family and others" />
+													<input name="postOnTimeLine" id="postOnTimeLine" value="true" type="checkbox" title="Yes I would like to spread Swaraj messages on Facebook to my friends, family and others" />
 												</c:if> Post on My Facebook</li>
 											<!-- 
 								<li class="noborder"><c:if test="${postOnGroup}">
@@ -108,14 +108,11 @@
 							<div class="faqdiv-tab">Frequently Asked Questions</div>
 							<div class="faqwrapper">
 								<div id="accordion">
-									<h3>What is Voice of AAP?</h3>
+									<h3>What is Swaraj Ki Awaz?</h3>
 									<div>
-										Voice of AAp is a social app of aam aadmi party which will use your social account like facebook and twitter to spread AAP related messages, i.e. Daily Donation Update,
-										important messages, tweets etc
+										Swaraj Ki Awaz is a social app which will use your social account like facebook and twitter to spread Swaraj Abhiyan related messages.
 										<ul>
-											<li><b>Post on my Facebook : </b> if you select this option that means we will post various content like Daily Donation Update(Daily) and various other important
-												updates once in a while(i.e. once per week but may be more then once per week at sometimes) on your timeline, so that your friend and any visitor of your profile can
-												view it.</li>
+											<li><b>Post on my Facebook : </b> if you select this option that means we will post various content.</li>
 											<!-- 
 								<li><b>Post on my Facebook groups : </b> if you select this option that means we will post various content like Daily Donation Update(Daily) and various other
 									important updates once in a while(i.e. once per week but may be more then once per week at sometimes) on your various selected groups so that other members of those groups
@@ -126,7 +123,7 @@
 										</ul>
 									</div>
 									<h3>Is my Information secure?</h3>
-									<div>Yes absolutely, we will never share your information with any one outside AAP.</div>
+									<div>Yes absolutely, we will never share your information with any one outside Swaraj Abhiyan.</div>
 									<!-- 
 									<h3>Can I track activities of this app on my accounts?</h3>
 									<div>Yes we want to keep it transparent, so we will show what, where and when we posted on your behalf. You can come back here and view all activity.</div>

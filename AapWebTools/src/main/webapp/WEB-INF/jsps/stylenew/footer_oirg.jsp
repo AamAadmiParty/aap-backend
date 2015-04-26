@@ -10,19 +10,37 @@
 		<!--footercontent-->
 		<div class="footerrow">
 			<!--footerrow-->
-			
+			<h2>Donation Links</h2>
+			<ul>
+				<li><a href="#">Donate Online</a></li>
+				<li><a href="#">Donate - By Cheque/Demand Draft</a></li>
+				<li><a href="#">Donation Policies</a></li>
+				<li><a href="#">List of Donors</a></li>
+				<li><a href="#">Donation FAQs</a></li>
+				<li><a href="#">Income & Expenditure Statements</a></li>
+			</ul>
 		</div>
 		<!--footerrow-->
 
 		<div class="footerrow">
 			<!--footerrow-->
-			
+			<h2>Media</h2>
+			<ul>
+				<li><a href="#">Publicity Material</a></li>
+				<li><a href="#">Official Spokespersons</a></li>
+				<li><a href="#">Videos</a></li>
+			</ul>
 		</div>
 		<!--footerrow-->
 
 		<div class="footerrow">
 			<!--footerrow-->
-			
+			<h2>Contact Us</h2>
+			<ul>
+				<li><a href="#">Party Offices</a></li>
+				<li><a href="#">NRI Site</a></li>
+				<li><a href="#">Privacy Policy</a></li>
+			</ul>
 		</div>
 		<!--footerrow-->
 	</div>

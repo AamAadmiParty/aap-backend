@@ -39,7 +39,7 @@ public class ContactUsBean extends BaseUserJsfBean {
     // @URLActions(actions = { @URLAction(mappingId = "contactUs") })
     @URLAction(onPostback = false)
     public void init() throws Exception {
-        UserDto loggedInUser = getLoggedInUser(true, buildLoginUrl("/contactus"));
+        UserDto loggedInUser = getLoggedInUser(false, buildLoginUrl("/contactus"));
         if (loggedInUser == null) {
         } else {
 

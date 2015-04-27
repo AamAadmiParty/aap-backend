@@ -9,6 +9,13 @@
 <head>
 <title>Swaraj Abhiyan, India</title>
 <jsp:include page="includes.jsp" />
+
+<meta property="og:title" content="Swaraj Abhiyan"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="${currentUrl}"/>
+<meta property="og:image" content="https://s3-us-west-2.amazonaws.com/swaraj/prod/images/missing.png"/>
+<meta property="og:site_name" content="Swaraj Abhiyan, India"/>
+
 </head>
 <body>
 

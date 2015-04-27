@@ -7,8 +7,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Polls - Aam Aadmi Party, India</title>
+<title>Polls - Swaraj Abhiyan, India</title>
 <jsp:include page="includes.jsp" />
+
+<meta property="og:title" content="Swaraj Abhiyan - Participate and vote"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="${currentUrl}"/>
+<meta property="og:image" content="https://s3-us-west-2.amazonaws.com/swaraj/prod/images/missing.png"/>
+<meta property="og:site_name" content="Swaraj Abhiyan, India"/>
 </head>
 <body>
 

@@ -63,7 +63,9 @@
 			</h1>
 			<div class="img">
 				<!--img-->
+				<!-- 
 				<img src='<c:out value="${oneNews.imageUrl}" />' width="200" border="0" />
+				 -->
 				<!-- 
 				<div class="author">
 					<p>10 Min Ago</p>

@@ -7,7 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party, India</title>
+<title>Swaraj Abhiyan, India</title>
 <jsp:include page="includes.jsp" />
 
 </head>
@@ -51,7 +51,8 @@
 				<iframe width="610" height="425" src="http://www.youtube.com/embed/${video.youtubeVideoId}" frameborder="0" ></iframe>
 				
 				<br></br>
-				<div class="g-ytsubscribe" data-channel="${video.channelId}" data-layout="full" data-count="default" data-onytevent="onYtEvent"></div>
+				<div class="g-ytsubscribe" data-channelid="UCYm-AJyEXXAWOrw_qp0XQDw" data-layout="default" data-count="default"></div>
+				<div class="g-ytsubscribe" data-channel="${video.channelId}" data-layout="full" data-count="default" ></div>
 				<br></br>
 				<div class="fb-comments" data-href="http://my.aamaadmiparty.org/content/video/${video.id}" data-width="640" data-numposts="5" data-colorscheme="light"></div>
 				

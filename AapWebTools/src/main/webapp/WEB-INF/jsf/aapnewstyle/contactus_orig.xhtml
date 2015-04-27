@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8" />
+	<meta name="description" content="" />
+	<meta name="author" content="" />
+
+	<ui:include src="htmlhead.xhtml" />
+	<title>#{menuBean.user.name} - Home</title>
+<div id="fb-root"></div>
+</h:head>
+<h:body>
+<script>
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id))
+				return;
+			js = d.createElement(s);
+			js.id = id;
+			js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&amp;appId=1383280855238363";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+		/*
+		$(document).ajaxComplete(function() {
+			try {
+				FB.XFBML.parse();
+			} catch (ex) {
+			}
+		});
+		*/
+	</script>
+	<ui:include src="header.xhtml" />
+	<div class="band mainbody">
+		<div class="container">
+			<!--beginning of left container-->
+			<div class="eleven columns">
+
+				<div class="latest-item-bg"></div>
+				<div class="latest-item-container" style="min-height: 200px;">
+					<div class="latest-content-container" id="news">
+						<div class="title-holder">
+							<span class="title-icon-head-news" id="newsicon"><img src="aapnewstyle/assets/news.png" /></span> <span class="main-article-title" id="news-title"><h5>
+							<a href="#">Contact US</a></h5></span>
+						</div>
+
+						<div class="latest-content-text">
+							<h:form id="contactUsForm">
+
+								<h:panelGrid width="500">
+									<p:messages id="messages" autoUpdate="true" closable="true" />
+									<p:tabView effect="slide" effectDuration="normal">
+
+										<p:tab title="India">
+											<h:panelGrid columns="1" styleClass="topAlignPanelColumns">
+												<h:column>
+													<ui:include src="../common/location.xhtml">
+														<ui:param name="param_Form" value=":contactUsForm" />
+														<ui:param name="param_HeaderMessage" value="Select the place where you live" />
+														<ui:param name="param_PanelId" value="livingLocationPanel" />
+														<ui:param name="param_LocationBean" value="#{contactUsBean.locationBean}" />
+													</ui:include>
+												</h:column>
+
+											</h:panelGrid>
+											<p:commandButton id="showContactInfo" oncomplete="FB.XFBML.parse();" update=":contactUsForm" value="Show Contact Information"
+												actionListener="#{contactUsBean.showContactInformation}" />
+
+											<p:dataTable id="contactInfo" var="oneContact" value="#{contactUsBean.indianOffices}" paginator="true" rows="25" paginatorPosition="bottom"
+												paginatorAlwaysVisible="false" emptyMessage="No Contact Info Found" style="width:500px"
+												paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+												rowsPerPageTemplate="5,10,15">
+
+												<p:column>
+
+													<p:panelGrid columns="2">
+														<f:facet name="header">Contact Information for #{oneContact.locationName} </f:facet>
+														<h:outputText value="Address" />
+														<h:outputText value="#{oneContact.address}" />
+														<h:outputText value="Mobile Number 1" />
+														<h:outputText value="#{oneContact.mobileNumber1}" />
+														<h:outputText value="Mobile Number 2" />
+														<h:outputText value="#{oneContact.mobileNumber2}" />
+														<h:outputText value="Landline Number 1" />
+														<h:outputText value="#{oneContact.landlineNumber1}" />
+														<h:outputText value="Landline Number 2" />
+														<h:outputText value="#{oneContact.landlineNumber2}" />
+														<h:outputText value="Facebook Page" />
+														<p:outputPanel>
+															<div class="fb-like-box" data-href="https://www.facebook.com/#{oneContact.fbPageId}" data-width="350" data-height="200" data-colorscheme="light"
+																data-show-faces="true" data-header="false" data-stream="false" data-show-border="true"></div>
+														</p:outputPanel>
+														<h:outputText value="Facebook Group" />
+														<a href="https://www.facebook.com/groups/#{oneContact.fbGroupId}">https://www.facebook.com/#{oneContact.fbGroupId}</a>
+													</p:panelGrid>
+
+												</p:column>
+											</p:dataTable>
+
+										</p:tab>
+										<p:tab title="Nri">
+											<ui:include src="../common/nri_location.xhtml">
+												<ui:param name="param_Form" value=":contactUsForm" />
+												<ui:param name="param_PanelId" value="nriLocationPanel" />
+												<ui:param name="param_NriLocationBean" value="#{contactUsBean.nriLocationBean}" />
+											</ui:include>
+											<p:commandButton id="saveProfile" update=":contactUsForm" value="Show NRI Contact Information" actionListener="#{contactUsBean.showNriContactInformation}" />
+
+											<p:dataTable id="nriContactInfo" var="oneContact" value="#{contactUsBean.nriOffices}" paginator="true" rows="25" paginatorPosition="bottom"
+												paginatorAlwaysVisible="false" emptyMessage="No Contact Info Found" style="width:500px"
+												paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+												rowsPerPageTemplate="5,10,15">
+												<f:facet name="header">Contact Information</f:facet>
+												<p:column>
+													<h:panelGrid columns="2">
+														<h:outputText value="Address" />
+														<h:outputText value="#{oneContact.address}" />
+														<h:outputText value="Mobile Number 1" />
+														<h:outputText value="#{oneContact.mobileNumber1}" />
+														<h:outputText value="Mobile Number 2" />
+														<h:outputText value="#{oneContact.mobileNumber2}" />
+														<h:outputText value="Landline Number 1" />
+														<h:outputText value="#{oneContact.landlineNumber1}" />
+														<h:outputText value="Landline Number 2" />
+														<h:outputText value="#{oneContact.landlineNumber2}" />
+														<h:outputText value="Facebook Page" />
+														<div class="fb-like-box" data-href="https://www.facebook.com/#{oneContact.fbPageId}" data-width="350" data-height="200" data-colorscheme="light"
+															data-show-faces="true" data-header="false" data-stream="false" data-show-border="true"></div>
+														<h:outputText value="Facebook Group" />
+														<h:outputText value="http://www.facebook.com/groups/#{oneContact.fbGroupId}" />
+													</h:panelGrid>
+
+												</p:column>
+											</p:dataTable>
+										</p:tab>
+									</p:tabView>
+								</h:panelGrid>
+
+							</h:form>
+
+						</div>
+
+					</div>
+					<!--news ends-->
+				</div>
+			</div>
+			<!--end of left container-->
+
+			<!--beginning of right container-->
+			<ui:include src="rightwidget.xhtml" />
+
+
+		</div>
+		<!-- container -->
+	</div>
+	<!--band-->
+
+
+	<ui:include src="footer.xhtml" />
+
+
+</h:body>
+</html>

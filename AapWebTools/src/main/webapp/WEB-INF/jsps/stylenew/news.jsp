@@ -40,7 +40,8 @@
 				</p>
 				<br></br>
 				<br></br>
-				<div class="fb-comments" data-href="http://my.aamaadmiparty.org/content/news/${news.id}" data-width="640" data-numposts="5" data-colorscheme="light"></div>
+				
+				<div class="fb-comments" data-href="${currentUrl}" data-width="640" data-numposts="5" data-colorscheme="light"></div>
 				
 			
 		</div>

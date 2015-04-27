@@ -176,7 +176,7 @@ margin-left: 10px;
 					</c:if>
                 </div>
                 
-                <div class="fb-comments" data-href="http://my.aamaadmiparty.org${currentUrl}" data-width="900" data-numposts="20" data-colorscheme="light"></div>
+                <div class="fb-comments" data-href="${currentUrl}" data-width="900" data-numposts="20" data-colorscheme="light"></div>
                 <!--loginwithinnerholder-->
             </div>
             <!--loginwithholder-->

@@ -22,10 +22,11 @@
 </script>
 <div class="toplinkfull-holder">
 	<!--toplinkfull-holder-->
-	
+	<!-- 
 	<div class="logo">
 		<a href="#"></a>
 	</div>
+	 -->
 	<div class="toplinks">
 		<!--toplinks-->
 		<ul>

@@ -54,7 +54,7 @@ public class ContactUsBean extends BaseUserJsfBean {
 	private void refreshLocationData(UserDto loggedInUser) throws Exception {
 		if (loggedInUser == null) {
 			locationBean.init(null, null, null, null);
-			nriLocationBean.init(false, null, null, null);
+            nriLocationBean.init(true, null, null, null);
 
 		} else {
 			locationBean.init(loggedInUser.getStateLivingId(), loggedInUser.getDistrictLivingId(), loggedInUser.getParliamentConstituencyLivingId(),

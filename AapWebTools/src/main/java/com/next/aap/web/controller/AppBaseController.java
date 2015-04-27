@@ -388,6 +388,7 @@ public class AppBaseController extends BaseController{
         mv.getModel().put("staticDirectory", staticDirectory);
 		
 		mv.getModel().put("contextPath", httpServletRequest.getContextPath());
+
 		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
 		mv.getModel().put("loginAccounts", loginAccountDto);
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion(httpServletRequest);
@@ -396,7 +397,7 @@ public class AppBaseController extends BaseController{
 		}else{
 			mv.getModel().put("admin", false);
 		}
-		mv.getModel().put("currentUrl", httpServletRequest.getRequestURI());
+        mv.getModel().put("currentUrl", httpServletRequest.getRequestURL().toString());
 		
 	}
 	protected void addErrorInModel(ModelAndView mv, String errorMessage){

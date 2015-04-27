@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -52,8 +50,8 @@ public class VideoDownloader{
 	// http://freshgroundjava.blogspot.in/2012/07/spring-scheduled-tasks-cron-expression.html
 	// ss mm hh dd
 	public boolean refreshVideoList() {
-		logger.info("Downloading AAP Videos");
-		String channelIds[] = {"UCguJ7EOi-qn4ygQW4TFeS2A","UCZRtpY_4t1bJ1cafVwpTp_A","UCbau5NLKpsMWIqAXoFL4FhA","LIVEAAP"};
+        logger.info("Downloading Swaraj Samwad Videos");
+        String channelIds[] = { "UCYm-AJyEXXAWOrw_qp0XQDw" };
 		boolean newVideos = false;
 		try{
 			

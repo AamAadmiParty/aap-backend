@@ -12,6 +12,7 @@ body{margin:10px 0 0 0; padding:0px; font-size:12px; font-family:Arial, Helvetic
 .toplinks ul li a:hover{ color:#000;}
 .home{background:url(../images/iconhome.jpg) no-repeat top center; margin:0px; padding:20px 0;}
 .about{background:url(../images/iconabout.jpg) no-repeat top center; margin:0px; padding:0;}
+.about{background:url(../images/iconabout.jpg) no-repeat top center; margin:0px; padding:0;}
 .event{background:url(../images/iconevents.jpg) no-repeat top center; margin:0px; padding:0;}
 .livetv{background:url(../images/iconlivetv.jpg) no-repeat top center; margin:0px; padding:0;}
 .contact{background:url(../images/iconcontact.jpg) no-repeat top center; margin:0px; padding:0;}

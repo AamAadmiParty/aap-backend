@@ -28,8 +28,9 @@
 			<ul>
 			     <!-- 
 				<li><a href="#">Donate</a></li>
-				 -->
 				<li><a href="${contextPath}/login?v4d_redirect_url=/profile.html">Join US</a></li>
+				 -->
+				
 				<!-- <li><a href="#">Register</a></li> -->
 			</ul>
 		</div>
@@ -44,8 +45,9 @@
 	   <!-- 
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-green.jpg" alt="" border="0"></li>
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-kumar.jpg" alt="" border="0"></li>
-		 -->
 		<li><img src="<c:out value='${staticDirectory}'/>/images/slider-pink.jpg" alt="" border="0"></li>
+		 -->
+		
 		<!-- 
 		<li> <img src="<c:out value='${staticDirectory}'/>/images/slider-red.jpg" alt="" border="0"></li>
 		 -->

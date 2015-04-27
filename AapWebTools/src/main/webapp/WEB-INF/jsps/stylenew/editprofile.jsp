@@ -411,11 +411,12 @@ $(function(){
 					</c:if>
 					
 					<c:if test="${!loggedInUser.member}">
-
+                        <!-- 
 						<div class="partymemberdiv">
 							<form:checkbox path="member" />
 							I want to be Party Member
 						</div>
+						 -->
 						<!-- 
 						<div id="language-tabs">
 							<ul>

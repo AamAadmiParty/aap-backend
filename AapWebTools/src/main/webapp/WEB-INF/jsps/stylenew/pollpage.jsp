@@ -7,7 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>${poll.contentWithoutHtml} - Tell Us what you think, Aam Aadmi Party, India</title>
+<title>${poll.contentWithoutHtml} - Tell Us what you think, Swaraj Abhiyan, India</title>
 
 
 <!--Facebook Tags -->

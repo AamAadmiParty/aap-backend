@@ -7,7 +7,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party, India</title>
+<title>Swaraj Abhiyan, India</title>
 <jsp:include page="includes.jsp" />
 <script>
 	$(function() {
@@ -76,8 +76,8 @@
 					<div id="map" class="languagetab">
 						<div id="map-canvas" style="width:900px;height:600px;border:1px solid;" />
 					</div>
-					<div id="listevent" class="languagetab">
-						<table>
+					<div id="listevent" class="languagetab" style="width:900px;height:600px;border:1px solid;">
+						<table >
 							<thead>
 								<tr>
 									<th style="border: 1px solid;">Date</th>

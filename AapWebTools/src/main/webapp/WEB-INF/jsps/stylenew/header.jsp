@@ -35,7 +35,7 @@
 			<li><a class="contact" href="${contextPath}/candidate/election/2.html">Candidates</a></li>
 			 -->
 			<li><a class="about" href="#" target="_new">About Us</a></li>
-			<li><a class="event" href="#" target="_new">Events</a></li>
+			<li><a class="event" href="/events.html" target="_new">Events</a></li>
 			<li><a class="livetv" href="#" target="_new">Live TV</a></li>
 			<li><a class="contact" href="/contactus" target="_new">Contact Us</a></li>
 			 

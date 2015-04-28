@@ -159,7 +159,7 @@ margin-left: 10px;
 						
                         <div class="poll-submit">
                         	<c:if test="${empty loggedInUser}">
-		                        <span><i>*</i> please <a href="/login?aap_redirect_url=${currentUrl}">Sign In</a> to vote</span>
+		                        <span><i>*</i> please <a href="/login?sa_redirect_url=${currentUrl}">Sign In</a> to vote</span>
 		                        <input name="poll" type="submit" class="button disabled " value="Cast Your Vote" disabled="disabled" />
 								</c:if>
 								<c:if test="${!empty loggedInUser}">

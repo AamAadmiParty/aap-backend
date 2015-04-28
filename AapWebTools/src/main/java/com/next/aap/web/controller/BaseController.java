@@ -15,7 +15,7 @@ import com.next.aap.web.dto.UserRolePermissionDto;
 
 public class BaseController {
 
-	public static final String REDIRECT_URL_PARAM_ID = "aap_redirect_url";
+    public static final String REDIRECT_URL_PARAM_ID = "sa_redirect_url";
 	
 	public static final String FINAL_REDIRECT_URL_PARAM_ID = "fru";
 	

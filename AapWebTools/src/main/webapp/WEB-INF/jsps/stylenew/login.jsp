@@ -40,7 +40,7 @@
 									</a>
 								</c:forEach></li>
 						</c:if>
-						
+						<!-- 
 						<c:if test="${empty loginAccounts.twitterAccounts}">
 							<li><a href="${contextPath}/login/twitter"><img src="<c:out value='${staticDirectory}'/>/images/login-twitter.png" border="0" /> </a></li>
 						</c:if>
@@ -50,7 +50,7 @@
 									</a>
 								</c:forEach></li>
 						</c:if>
-
+                        -->
 						
 					</c:if>
 

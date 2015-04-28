@@ -399,6 +399,7 @@ $(function(){
 							<form:options items="${votingAcs}" itemValue="id" itemLabel="name" />
 						</form:select>
 					</div>
+					<!-- 
 					<c:if test="${loggedInUser.member}">
 						<div class="blockdiv">
 							<label>Membership Number</label> <label><c:out value="${loggedInUser.membershipNumber}" /> <c:if test="${!empty loggedInUser.legacyMembershipNumber}">
@@ -409,7 +410,7 @@ $(function(){
 							<label>Membership Status</label> <label><c:out value="${loggedInUser.membershipStatus}" /> </label>
 						</div>
 					</c:if>
-					
+					-->
 					<c:if test="${!loggedInUser.member}">
                         <!-- 
 						<div class="partymemberdiv">

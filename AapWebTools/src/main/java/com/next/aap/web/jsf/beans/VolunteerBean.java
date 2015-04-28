@@ -26,7 +26,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 @Scope("prototype")
 //@Scope("session")
 @ViewScoped
-@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
+@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/volunteer", viewId = "/WEB-INF/jsf/common/volunteer.xhtml")
 @URLBeanName("volunteerBean")
 public class VolunteerBean extends BaseJsfBean {
 

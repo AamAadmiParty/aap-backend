@@ -19,13 +19,14 @@ import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.VolunteerDto;
 import com.next.aap.web.jsf.beans.model.InterestGroupDtoModel;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
+import com.ocpsoft.pretty.faces.annotation.URLMapping;
 
 
 @Component
 @Scope("prototype")
 //@Scope("session")
 @ViewScoped
-//@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
+@URLMapping(id = "userProfileBean", beanName = "userProfileBean", pattern = "/profile", viewId = "/WEB-INF/jsf/userprofile.xhtml")
 @URLBeanName("volunteerBean")
 public class VolunteerBean extends BaseJsfBean {
 

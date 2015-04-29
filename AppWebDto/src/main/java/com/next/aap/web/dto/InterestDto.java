@@ -8,6 +8,7 @@ public class InterestDto implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String description;
+    private boolean selected;
 	public Long getId() {
 		return id;
 	}
@@ -20,4 +21,12 @@ public class InterestDto implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }

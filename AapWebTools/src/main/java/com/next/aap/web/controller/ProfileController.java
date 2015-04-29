@@ -59,21 +59,28 @@ public class ProfileController extends AppBaseController {
         try {
             List<InterestGroupDto> interestGroups = aapService.getAllVolunterInterests();
             mv.getModel().put("interestGroups", interestGroups);
-            Map<Long, Boolean> selectedInterestMap = new HashMap<Long, Boolean>();
+            Map<Long, InterestDto> selectedInterestMap = new HashMap<Long, InterestDto>();
+            for (InterestGroupDto oneInterestGroupDto : interestGroups) {
+                for (InterestDto oneInterestDto : oneInterestGroupDto.getInterestDtos()) {
+                    selectedInterestMap.put(oneInterestDto.getId(), oneInterestDto);
+                }
+            }
             VolunteerDto selectedVolunteer = null;
             if (user != null) {
                 selectedVolunteer = aapService.getVolunteerDataForUser(user.getId());
                 List<InterestDto> userInterests = aapService.getuserInterests(user.getId());
                 if (userInterests != null && userInterests.size() > 0) {
                     for (InterestDto oneInterestDto : userInterests) {
-                        selectedInterestMap.put(oneInterestDto.getId(), true);
+                        //selectedInterestMap.put(oneInterestDto.getId(), true);
+                        if (selectedInterestMap.containsKey(oneInterestDto.getId())) {
+                            oneInterestDto.setSelected(true);
+                        }
                     }
                 }
             }
             if (selectedVolunteer == null) {
                 selectedVolunteer = new VolunteerDto();
             }
-            selectedVolunteer.setSelectedInterestMap(selectedInterestMap);
             user.setVolunteerDto(selectedVolunteer);
         } catch (Exception ex) {
             ex.printStackTrace();

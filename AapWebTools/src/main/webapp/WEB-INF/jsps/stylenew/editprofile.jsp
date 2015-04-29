@@ -600,7 +600,7 @@
 					<!--partymembertab-->
 					<input name="" type="submit" class="button" value="Save Profile" />
 
-
+                    <form:input path="volunteerDto.education" class="textbox" title="Enter Education" />
 					<c:forEach items="${interestGroups}" var="oneInterestGroup">
 						<div class="editprofile">${oneInterestGroup.description}</div>
 						<div class="blockdiv">
@@ -609,8 +609,9 @@
 									<tbody>
 										<tr>
 											<td>${oneInterest.description}</td>
-											<td><input type="checkbox" name="vehicle"
-												value="user.volunteerDto.selectedInterestMap[${oneInterest.id}]" /></td>
+											<td>
+											<form:checkbox path="oneInterest.selected" title="Enter Education" />
+											</td>
 										</tr>
 									</tbody>
 								</table>

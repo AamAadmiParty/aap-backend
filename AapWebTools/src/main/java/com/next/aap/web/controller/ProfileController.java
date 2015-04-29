@@ -244,6 +244,7 @@ public class ProfileController extends AppBaseController {
                 selectedVolunteer.setUserId(loggedInUserUser.getId());
                 selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
                 user.setVolunteerDto(selectedVolunteer);
+                user.setId(editingUser.getId());
                 System.out.println("Volunteer Saved");
             } catch (Exception ex) {
                 ex.printStackTrace();

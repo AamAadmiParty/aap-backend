@@ -60,10 +60,13 @@ public class ProfileController extends AppBaseController {
     private void loadVolunteerDetails(ModelAndView mv, UserDto user) {
         try {
             VolunteerDto selectedVolunteer = null;
+            System.out.println("Loading Volunteer Details of User " + user.getId());
             Set<Long> selectedInterestMap = new HashSet<Long>();
             if (user != null) {
                 selectedVolunteer = aapService.getVolunteerDataForUser(user.getId());
+                System.out.println("selectedVolunteer :  " + selectedVolunteer);
                 List<InterestDto> userInterests = aapService.getuserInterests(user.getId());
+                System.out.println("userInterests :  " + userInterests);
                 if (userInterests != null && userInterests.size() > 0) {
                     for (InterestDto oneInterestDto : userInterests) {
                         System.out.println("Adding : " + oneInterestDto.getId());

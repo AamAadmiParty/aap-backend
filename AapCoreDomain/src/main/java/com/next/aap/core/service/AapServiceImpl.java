@@ -1017,6 +1017,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		StateDto oneStateDto = new StateDto();
 		oneStateDto.setId(oneState.getId());
 		oneStateDto.setName(oneState.getName());
+        oneStateDto.setSubDomainName(oneState.getSubDomainName());
 		oneStateDto.setDistrictDataAvailable(oneState.getDistrictDataAvailable());
 		return oneStateDto;
 	}

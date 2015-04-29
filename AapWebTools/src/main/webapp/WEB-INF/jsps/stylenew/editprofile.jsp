@@ -604,7 +604,7 @@
 					<c:forEach items="${interestGroups}" var="oneInterestGroup">
 						<div class="editprofile">${oneInterestGroup.description}</div>
 						<div class="blockdiv">
-							<c:forEach items="${oneInterestGroup.data}" var="oneInterest">
+							<c:forEach items="${oneInterestGroup.interestDtos}" var="oneInterest">
 								<table>
 									<tbody>
 										<tr>

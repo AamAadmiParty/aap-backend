@@ -1,7 +1,6 @@
 package com.next.aap.web.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,6 @@ import com.next.aap.web.dto.InterestDto;
 import com.next.aap.web.dto.InterestGroupDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.VolunteerDto;
-import com.next.aap.web.jsf.beans.model.InterestGroupDtoModel;
 import com.next.aap.web.util.ContentDonwloadUtil;
 
 @Controller
@@ -60,13 +58,7 @@ public class ProfileController extends AppBaseController {
     private void loadVolunteerDetails(ModelAndView mv, UserDto user) {
         try {
             List<InterestGroupDto> interestGroups = aapService.getAllVolunterInterests();
-            List<InterestGroupDtoModel> interestGroupDtoModels = new ArrayList<>();
-            if (interestGroups != null && !interestGroups.isEmpty()) {
-                for (InterestGroupDto oneInterestGroupDto : interestGroups) {
-                    interestGroupDtoModels.add(new InterestGroupDtoModel(oneInterestGroupDto));
-                }
-            }
-            mv.getModel().put("interestGroups", interestGroupDtoModels);
+            mv.getModel().put("interestGroups", interestGroups);
             Map<Long, Boolean> selectedInterestMap = new HashMap<Long, Boolean>();
             VolunteerDto selectedVolunteer = null;
             if (user != null) {

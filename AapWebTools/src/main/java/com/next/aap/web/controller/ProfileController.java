@@ -116,6 +116,7 @@ public class ProfileController extends AppBaseController {
             if (user.getNriCountryRegionId() != null && user.getNriCountryRegionId() > 0) {
                 addNriCountryRegionAreasIntoModel(mv, user.getNriCountryRegionId());
             }
+            System.out.println("loadVolunteerDetails");
             loadVolunteerDetails(mv, user);
             addGenericValuesInModel(httpServletRequest, mv);
         } catch (Exception ex) {
@@ -240,13 +241,13 @@ public class ProfileController extends AppBaseController {
                 selectedVolunteer.setUserId(loggedInUserUser.getId());
                 selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
                 user.setVolunteerDto(selectedVolunteer);
-
+                System.out.println("Volunteer Saved");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 addErrorInModel(mv, ex.getMessage());
             }
         }
-
+        System.out.println("Preparing Page");
         mv = preparePage(httpServletRequest, user, mv);
         return mv;
     }

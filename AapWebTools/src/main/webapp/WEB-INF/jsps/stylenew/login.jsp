@@ -25,10 +25,13 @@
 			<!--loginwithholder-->
 			<div class="loginwithinnerholder">
 				<!--loginwithinnerholder-->
+				<h3>Please Login Via Facebook to Register</h3>
 				<ul>
 					<c:if test="${empty loggedInUser}">
 						<li><a href="${contextPath}/login/facebook?${loginParams}"><img src="<c:out value='${staticDirectory}'/>/images/loginFB.png" border="0" /></a></li>
+						<!-- 
 						<li><a href="${contextPath}/login/twitter?${loginParams}"><img src="<c:out value='${staticDirectory}'/>/images/login-twitter.png" border="0" /> </a></li>
+						 -->
 					</c:if>
 					<c:if test="${!empty loggedInUser}">
 						<c:if test="${empty loginAccounts.facebookAccounts}">

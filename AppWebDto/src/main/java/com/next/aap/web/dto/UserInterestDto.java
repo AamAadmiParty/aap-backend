@@ -6,9 +6,13 @@ public class UserInterestDto extends InterestDto {
 
     private boolean selected;
 
-    public UserInterestDto(InterestDto interestDto) {
+    public UserInterestDto() {
+    }
+
+    public UserInterestDto(InterestDto interestDto, boolean selected) {
         super.setDescription(interestDto.getDescription());
         super.setId(interestDto.getId());
+        this.selected = selected;
     }
 
     public boolean isSelected() {

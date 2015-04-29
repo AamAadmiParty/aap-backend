@@ -610,7 +610,13 @@
 										<tr>
 											<td>${oneInterest.description}</td>
 											<td>
-											<input type="checkbox" name="userInterestDtos[${status.index}].selected" value="${oneInterest.selected}" title="Enter Education" />
+											<c:if test="${oneInterest.selected}">
+											<input type="checkbox" name="userInterestDtos[${status.index}].selected" checked="checked" title="Enter Education" />
+											</c:if>
+											<c:if test="${!oneInterest.selected}">
+                                            <input type="checkbox" name="userInterestDtos[${status.index}].selected"  title="Enter Education" />
+                                            </c:if>
+											
 											</td>
 										</tr>
 									</tbody>

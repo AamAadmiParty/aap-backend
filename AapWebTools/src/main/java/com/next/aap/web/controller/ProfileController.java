@@ -3,9 +3,9 @@ package com.next.aap.web.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,32 +59,29 @@ public class ProfileController extends AppBaseController {
 
     private void loadVolunteerDetails(ModelAndView mv, UserDto user) {
         try {
-            List<InterestGroupDto> interestGroups = aapService.getAllVolunterInterests();
-            mv.getModel().put("interestGroups", interestGroups);
-            Map<Long, InterestDto> selectedInterestMap = new HashMap<Long, InterestDto>();
-            for (InterestGroupDto oneInterestGroupDto : interestGroups) {
-                for (InterestDto oneInterestDto : oneInterestGroupDto.getInterestDtos()) {
-                    selectedInterestMap.put(oneInterestDto.getId(), oneInterestDto);
-                }
-            }
-            List<UserInterestDto> userInterestDtos = new ArrayList<UserInterestDto>();
             VolunteerDto selectedVolunteer = null;
+            Set<Long> selectedInterestMap = new HashSet<Long>();
             if (user != null) {
                 selectedVolunteer = aapService.getVolunteerDataForUser(user.getId());
                 List<InterestDto> userInterests = aapService.getuserInterests(user.getId());
                 if (userInterests != null && userInterests.size() > 0) {
                     for (InterestDto oneInterestDto : userInterests) {
-                        System.out.println("Checking : " + oneInterestDto.getId());
-                        //selectedInterestMap.put(oneInterestDto.getId(), true);
-                        UserInterestDto oneUserInterestDto = new UserInterestDto(oneInterestDto);
-                        if (selectedInterestMap.containsKey(oneInterestDto.getId())) {
-                            oneUserInterestDto.setSelected(true);
-                            System.out.println("   Found : " + oneInterestDto.getId());
-                        }
-                        userInterestDtos.add(oneUserInterestDto);
+                        System.out.println("Adding : " + oneInterestDto.getId());
+                        selectedInterestMap.add(oneInterestDto.getId());
                     }
                 }
             }
+
+            List<InterestGroupDto> interestGroups = aapService.getAllVolunterInterests();
+            mv.getModel().put("interestGroups", interestGroups);
+            List<UserInterestDto> userInterestDtos = new ArrayList<UserInterestDto>();
+            for (InterestGroupDto oneInterestGroupDto : interestGroups) {
+                for (InterestDto oneInterestDto : oneInterestGroupDto.getInterestDtos()) {
+                    userInterestDtos.add(new UserInterestDto(oneInterestDto, selectedInterestMap.contains(oneInterestDto.getId())));
+                }
+            }
+
+
             if (selectedVolunteer == null) {
                 selectedVolunteer = new VolunteerDto();
             }

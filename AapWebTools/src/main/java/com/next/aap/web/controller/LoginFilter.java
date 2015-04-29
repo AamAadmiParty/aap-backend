@@ -26,7 +26,8 @@ public class LoginFilter implements Filter{
         
 		UserDto user = BaseController.getLoggedInUserFromSesion(request);
 		if(user == null){
-			request.getRequestDispatcher("/login").forward(request, res);
+            String redirectUrl = request.getServletPath();
+            request.getRequestDispatcher("/login?" + BaseController.REDIRECT_URL_PARAM_ID + "=" + redirectUrl).forward(request, res);
 	        return;
 		}
         chain.doFilter(req, res);

@@ -392,6 +392,7 @@
 			<!--form-leftarea-->
 			<div class="divarticle">
 				<h1>Be a part of the change. Volunteer for the Swaraj Abhiyan</h1>
+				<h3>Yor profile has been saved succesfully.</h3>
 			</div>
 			<br />
 			<div class="formwrapper">

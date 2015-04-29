@@ -600,28 +600,39 @@
 					<!--partymembertab-->
 					<input name="" type="submit" class="button" value="Save Profile" />
 
-                    <form:input path="volunteerDto.education" class="textbox" title="Enter Education" />
+                    <c:set var="count" scope="session" value="${0}"/>
+
 					<c:forEach items="${interestGroups}" var="oneInterestGroup">
 						<div class="editprofile">${oneInterestGroup.description}</div>
 						<div class="blockdiv">
+						<% int colCount = 0; %>
+						<table>
+                                    <tbody>
+                                        <tr>
 							<c:forEach items="${oneInterestGroup.interestDtos}" varStatus="status" var="oneInterest">
-								<table>
-									<tbody>
-										<tr>
-											<td>${oneInterest.description}</td>
+								            <% 
+                                            if(colCount % 3 == 0){
+                                                out.println("</tr>");
+                                            }
+                                            %>
 											<td>
-											<c:if test="${oneInterest.selected}">
-											<input type="checkbox" name="userInterestDtos[${status.index}].selected" checked="checked" title="Enter Education" />
-											</c:if>
-											<c:if test="${!oneInterest.selected}">
-                                            <input type="checkbox" name="userInterestDtos[${status.index}].selected"  title="Enter Education" />
-                                            </c:if>
-											
+											<form:checkbox path="userInterestDtos[${count}].selected" />${oneInterest.description}       
+                                        <c:set var="count" scope="session" value="${count + 1}"/>
 											</td>
-										</tr>
-									</tbody>
-								</table>
+											<% colCount++;
+											if(colCount % 3 == 0){
+											    out.println("</tr>");
+											}
+											%>
+										
 							</c:forEach>
+							<% colCount++;
+	                             if(colCount % 3 != 0){
+	                                 out.println("</tr>");
+	                             }
+                             %>
+                                    </tbody>
+                                </table>
 						</div>
 					</c:forEach>
 				</form:form>

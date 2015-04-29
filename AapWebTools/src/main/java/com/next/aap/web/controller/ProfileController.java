@@ -125,6 +125,12 @@ public class ProfileController extends AppBaseController {
 
     private void printVolunteerDetail(UserDto user) {
         System.out.println("Volunteer : " + user.getVolunteerDto());
+        System.out.println("Total : " + user.getUserInterestDtos().size());
+        for (UserInterestDto oneUserInterestDto : user.getUserInterestDtos()) {
+            if (oneUserInterestDto.isSelected()) {
+                System.out.println("selected : " + oneUserInterestDto.getId() + " , " + oneUserInterestDto.getDescription());
+            }
+        }
     }
 
 	@RequestMapping(value = "/profile.html", method = RequestMethod.POST)

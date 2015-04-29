@@ -604,13 +604,13 @@
 					<c:forEach items="${interestGroups}" var="oneInterestGroup">
 						<div class="editprofile">${oneInterestGroup.description}</div>
 						<div class="blockdiv">
-							<c:forEach items="${oneInterestGroup.interestDtos}" var="oneInterest">
+							<c:forEach items="${oneInterestGroup.interestDtos}" varStatus="status" var="oneInterest">
 								<table>
 									<tbody>
 										<tr>
 											<td>${oneInterest.description}</td>
 											<td>
-											<form:checkbox path="oneInterest.selected" title="Enter Education" />
+											<input type="checkbox" name="interestDtos[${status.index}].selected" value="${oneInterest.selected}" title="Enter Education" />
 											</td>
 										</tr>
 									</tbody>

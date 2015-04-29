@@ -1,6 +1,7 @@
 package com.next.aap.web.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.next.aap.web.controller.validators.UserProfileValidator;
 import com.next.aap.web.dto.InterestDto;
 import com.next.aap.web.dto.InterestGroupDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.UserInterestDto;
 import com.next.aap.web.dto.VolunteerDto;
 import com.next.aap.web.util.ContentDonwloadUtil;
 
@@ -65,22 +67,27 @@ public class ProfileController extends AppBaseController {
                     selectedInterestMap.put(oneInterestDto.getId(), oneInterestDto);
                 }
             }
+            List<UserInterestDto> userInterestDtos = new ArrayList<UserInterestDto>();
             VolunteerDto selectedVolunteer = null;
             if (user != null) {
                 selectedVolunteer = aapService.getVolunteerDataForUser(user.getId());
                 List<InterestDto> userInterests = aapService.getuserInterests(user.getId());
                 if (userInterests != null && userInterests.size() > 0) {
                     for (InterestDto oneInterestDto : userInterests) {
+                        System.out.println("Checking : " + oneInterestDto.getId());
                         //selectedInterestMap.put(oneInterestDto.getId(), true);
+                        UserInterestDto oneUserInterestDto = new UserInterestDto(oneInterestDto);
                         if (selectedInterestMap.containsKey(oneInterestDto.getId())) {
-                            oneInterestDto.setSelected(true);
+                            oneUserInterestDto.setSelected(true);
                         }
+                        userInterestDtos.add(oneUserInterestDto);
                     }
                 }
             }
             if (selectedVolunteer == null) {
                 selectedVolunteer = new VolunteerDto();
             }
+            selectedVolunteer.setUserInterestDtos(userInterestDtos);
             user.setVolunteerDto(selectedVolunteer);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -118,7 +125,7 @@ public class ProfileController extends AppBaseController {
 	}
 
     private void printVolunteerDetail(UserDto user) {
-        System.out.println(user.getVolunteerDto());
+        System.out.println("Volunteer : " + user.getVolunteerDto());
     }
 
 	@RequestMapping(value = "/profile.html", method = RequestMethod.POST)

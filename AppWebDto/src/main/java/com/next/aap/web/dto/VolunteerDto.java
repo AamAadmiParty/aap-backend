@@ -1,7 +1,7 @@
 package com.next.aap.web.dto;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.List;
 
 
 public class VolunteerDto implements Serializable{
@@ -20,7 +20,7 @@ public class VolunteerDto implements Serializable{
 	
 	private Long userId;
 
-    private Map<Long, Boolean> selectedInterestMap;
+    List<UserInterestDto> userInterestDtos;
 
 	public Long getId() {
 		return id;
@@ -110,19 +110,19 @@ public class VolunteerDto implements Serializable{
 		this.userId = userId;
 	}
 
-    public Map<Long, Boolean> getSelectedInterestMap() {
-        return selectedInterestMap;
+    public List<UserInterestDto> getUserInterestDtos() {
+        return userInterestDtos;
     }
 
-    public void setSelectedInterestMap(Map<Long, Boolean> selectedInterestMap) {
-        this.selectedInterestMap = selectedInterestMap;
+    public void setUserInterestDtos(List<UserInterestDto> userInterestDtos) {
+        this.userInterestDtos = userInterestDtos;
     }
 
     @Override
     public String toString() {
         return "VolunteerDto [id=" + id + ", education=" + education + ", professionalBackground=" + professionalBackground + ", domainExpertise=" + domainExpertise + ", offences=" + offences
                 + ", emergencyContactName=" + emergencyContactName + ", emergencyContactRelation=" + emergencyContactRelation + ", emergencyContactNo=" + emergencyContactNo + ", infoRecordedBy="
-                + infoRecordedBy + ", infoRecordedAt=" + infoRecordedAt + ", userId=" + userId + ", selectedInterestMap=" + selectedInterestMap + "]";
+                + infoRecordedBy + ", infoRecordedAt=" + infoRecordedAt + ", userId=" + userId + ", userInterestDtos=" + userInterestDtos + "]";
     }
 	
 

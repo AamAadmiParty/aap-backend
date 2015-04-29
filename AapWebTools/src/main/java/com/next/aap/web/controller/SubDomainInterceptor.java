@@ -20,7 +20,7 @@ public class SubDomainInterceptor implements HandlerInterceptor {
         System.out.println("Domain name " + request.getServerName());
         StateDto state = locationCache.getStatesByDomain(request.getServerName().toLowerCase());
         System.out.println("state : " + state);
-        return false;
+        return true;
     }
 
     @Override

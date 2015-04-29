@@ -7,158 +7,289 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Aam Aadmi Party, India </title>
+<title>Aam Aadmi Party, India</title>
 <jsp:include page="includes.jsp" />
 
 <script>
-$(function(){
-	$("select#stateLivingId").change(function(){
-		  $('#districtLivingId').prop('disabled', true);
-		  $('#parliamentConstituencyLivingId').prop('disabled', true);
-		  $('#assemblyConstituencyLivingId').prop('disabled', true);
-		  $.ajax({
-			  type: "GET",
-			  url: "${pageContext.request.contextPath}/json/district/"+$(this).val(),
-			  data: { name: "John", location: "Boston" }
-			})
-			  .done(function( msg ) {
-				  var options = '<option value="0">Select District</option>';
-			      for (var i = 0; i < msg.length; i++) {
-			        options += '<option value="' + msg[i].id + '">' + msg[i].name + '</option>';
-			      }
-			      $("select#districtLivingId").html(options);
-			      $("select#assemblyConstituencyLivingId").html('<option value="0">Select Assembly Constituency</option>');
-			      $('#districtLivingId').prop('disabled', false);
-			  }).fail(function(jqXHR, textStatus, errorThrown) {
-				    alert( "error "+errorThrown );
-			  });
-		  $.ajax({
-			  type: "GET",
-			  url: "${pageContext.request.contextPath}/json/pc/"+$(this).val(),
-			  data: { }
-			})
-			  .done(function( msg ) {
-				  var options = '<option value="0">Select Parliament Constituency</option>';
-			      for (var i = 0; i < msg.length; i++) {
-			        options += '<option value="' + msg[i].id + '">' + msg[i].name + '</option>';
-			      }
-			      $("select#parliamentConstituencyLivingId").html(options);
-			      $('#parliamentConstituencyLivingId').prop('disabled', false);
-			  }).fail(function(jqXHR, textStatus, errorThrown) {
-				    alert( "error "+errorThrown );
-			  });
-	  });
-	$("select#districtLivingId").change(function(){
-		  $('#assemblyConstituencyLivingId').prop('disabled', true);
-		  $.ajax({
-			  type: "GET",
-			  url: "${pageContext.request.contextPath}/json/ac/"+$(this).val(),
-			  data: { name: "John", location: "Boston" }
-			})
-			  .done(function( msg ) {
-				  var options = '<option value="0">Select Assembly Constituency</option>';
-			      for (var i = 0; i < msg.length; i++) {
-			        options += '<option value="' + msg[i].id + '">' + msg[i].name + '</option>';
-			      }
-			      $("select#assemblyConstituencyLivingId").html(options);
-			      $('#assemblyConstituencyLivingId').prop('disabled', false);
-			  }).fail(function(jqXHR, textStatus, errorThrown) {
-				    alert( "error "+errorThrown );
-			  });
-	  });
-	$("select#stateVotingId").change(function(){
-		  $('#districtVotingId').prop('disabled', true);
-		  $('#parliamentConstituencyVotingId').prop('disabled', true);
-		  $('#assemblyConstituencyVotingId').prop('disabled', true);
-		  $.ajax({
-			  type: "GET",
-			  url: "${pageContext.request.contextPath}/json/district/"+$(this).val(),
-			  data: { name: "John", location: "Boston" }
-			})
-			  .done(function( msg ) {
-				  var options = '<option value="0">Select District</option>';
-			      for (var i = 0; i < msg.length; i++) {
-			        options += '<option value="' + msg[i].id + '">' + msg[i].name + '</option>';
-			      }
-			      $("select#districtVotingId").html(options);
-			      $("select#assemblyConstituencyVotingId").html('<option value="0">Select Assembly Constituency</option>');
-			      $('#districtVotingId').prop('disabled', false);
-			  }).fail(function(jqXHR, textStatus, errorThrown) {
-				    alert( "error "+errorThrown );
-			  });
-		  $.ajax({
-			  type: "GET",
-			  url: "${pageContext.request.contextPath}/json/pc/"+$(this).val(),
-			  data: { }
-			})
-			  .done(function( msg ) {
-				  var options = '<option value="0">Select Parliament Constituency</option>';
-			      for (var i = 0; i < msg.length; i++) {
-			        options += '<option value="' + msg[i].id + '">' + msg[i].name + '</option>';
-			      }
-			      $("select#parliamentConstituencyVotingId").html(options);
-			      $('#parliamentConstituencyVotingId').prop('disabled', false);
-			  }).fail(function(jqXHR, textStatus, errorThrown) {
-				    alert( "error "+errorThrown );
-			  });
-	  });
-	$("select#districtVotingId").change(function(){
-		  $('#assemblyConstituencyVotingId').prop('disabled', true);
-		  $.ajax({
-			  type: "GET",
-			  url: "${pageContext.request.contextPath}/json/ac/"+$(this).val(),
-			  data: { name: "John", location: "Boston" }
-			})
-			  .done(function( msg ) {
-				  var options = '<option value="0">Select Assembly Constituency</option>';
-			      for (var i = 0; i < msg.length; i++) {
-			        options += '<option value="' + msg[i].id + '">' + msg[i].name + '</option>';
-			      }
-			      $("select#assemblyConstituencyVotingId").html(options);
-			      $('#assemblyConstituencyVotingId').prop('disabled', false);
-			  }).fail(function(jqXHR, textStatus, errorThrown) {
-				    alert( "error "+errorThrown );
-			  });
-	  });
-	  $("select#nriCountryId").change(function(){
-		  $('#nriCountryRegionId').prop('disabled', true);
-		  $('#nriCountryRegionAreaId').prop('disabled', true);
-		  $.ajax({
-			  type: "GET",
-			  url: "${pageContext.request.contextPath}/json/region/"+$(this).val(),
-			  data: { name: "John", location: "Boston" }
-			})
-			  .done(function( msg ) {
-				  var options = '<option value="0">Select Region</option>';
-			      for (var i = 0; i < msg.length; i++) {
-			        options += '<option value="' + msg[i].id + '">' + msg[i].name + '</option>';
-			      }
-			      $("select#nriCountryRegionId").html(options);
-			      $("select#nriCountryRegionAreaId").html('<option value="0">Select Area</option>');
-			      $('#nriCountryRegionId').prop('disabled', false);
-			  }).fail(function(jqXHR, textStatus, errorThrown) {
-				    alert( "error "+errorThrown );
-			  });
-	  });
+	$(function() {
+		$("select#stateLivingId")
+				.change(
+						function() {
+							$('#districtLivingId').prop('disabled', true);
+							$('#parliamentConstituencyLivingId').prop(
+									'disabled', true);
+							$('#assemblyConstituencyLivingId').prop('disabled',
+									true);
+							$
+									.ajax(
+											{
+												type : "GET",
+												url : "${pageContext.request.contextPath}/json/district/"
+														+ $(this).val(),
+												data : {
+													name : "John",
+													location : "Boston"
+												}
+											})
+									.done(
+											function(msg) {
+												var options = '<option value="0">Select District</option>';
+												for (var i = 0; i < msg.length; i++) {
+													options += '<option value="' + msg[i].id + '">'
+															+ msg[i].name
+															+ '</option>';
+												}
+												$("select#districtLivingId")
+														.html(options);
+												$(
+														"select#assemblyConstituencyLivingId")
+														.html(
+																'<option value="0">Select Assembly Constituency</option>');
+												$('#districtLivingId').prop(
+														'disabled', false);
+											}).fail(
+											function(jqXHR, textStatus,
+													errorThrown) {
+												alert("error " + errorThrown);
+											});
+							$
+									.ajax(
+											{
+												type : "GET",
+												url : "${pageContext.request.contextPath}/json/pc/"
+														+ $(this).val(),
+												data : {}
+											})
+									.done(
+											function(msg) {
+												var options = '<option value="0">Select Parliament Constituency</option>';
+												for (var i = 0; i < msg.length; i++) {
+													options += '<option value="' + msg[i].id + '">'
+															+ msg[i].name
+															+ '</option>';
+												}
+												$(
+														"select#parliamentConstituencyLivingId")
+														.html(options);
+												$(
+														'#parliamentConstituencyLivingId')
+														.prop('disabled', false);
+											}).fail(
+											function(jqXHR, textStatus,
+													errorThrown) {
+												alert("error " + errorThrown);
+											});
+						});
+		$("select#districtLivingId")
+				.change(
+						function() {
+							$('#assemblyConstituencyLivingId').prop('disabled',
+									true);
+							$
+									.ajax(
+											{
+												type : "GET",
+												url : "${pageContext.request.contextPath}/json/ac/"
+														+ $(this).val(),
+												data : {
+													name : "John",
+													location : "Boston"
+												}
+											})
+									.done(
+											function(msg) {
+												var options = '<option value="0">Select Assembly Constituency</option>';
+												for (var i = 0; i < msg.length; i++) {
+													options += '<option value="' + msg[i].id + '">'
+															+ msg[i].name
+															+ '</option>';
+												}
+												$(
+														"select#assemblyConstituencyLivingId")
+														.html(options);
+												$(
+														'#assemblyConstituencyLivingId')
+														.prop('disabled', false);
+											}).fail(
+											function(jqXHR, textStatus,
+													errorThrown) {
+												alert("error " + errorThrown);
+											});
+						});
+		$("select#stateVotingId")
+				.change(
+						function() {
+							$('#districtVotingId').prop('disabled', true);
+							$('#parliamentConstituencyVotingId').prop(
+									'disabled', true);
+							$('#assemblyConstituencyVotingId').prop('disabled',
+									true);
+							$
+									.ajax(
+											{
+												type : "GET",
+												url : "${pageContext.request.contextPath}/json/district/"
+														+ $(this).val(),
+												data : {
+													name : "John",
+													location : "Boston"
+												}
+											})
+									.done(
+											function(msg) {
+												var options = '<option value="0">Select District</option>';
+												for (var i = 0; i < msg.length; i++) {
+													options += '<option value="' + msg[i].id + '">'
+															+ msg[i].name
+															+ '</option>';
+												}
+												$("select#districtVotingId")
+														.html(options);
+												$(
+														"select#assemblyConstituencyVotingId")
+														.html(
+																'<option value="0">Select Assembly Constituency</option>');
+												$('#districtVotingId').prop(
+														'disabled', false);
+											}).fail(
+											function(jqXHR, textStatus,
+													errorThrown) {
+												alert("error " + errorThrown);
+											});
+							$
+									.ajax(
+											{
+												type : "GET",
+												url : "${pageContext.request.contextPath}/json/pc/"
+														+ $(this).val(),
+												data : {}
+											})
+									.done(
+											function(msg) {
+												var options = '<option value="0">Select Parliament Constituency</option>';
+												for (var i = 0; i < msg.length; i++) {
+													options += '<option value="' + msg[i].id + '">'
+															+ msg[i].name
+															+ '</option>';
+												}
+												$(
+														"select#parliamentConstituencyVotingId")
+														.html(options);
+												$(
+														'#parliamentConstituencyVotingId')
+														.prop('disabled', false);
+											}).fail(
+											function(jqXHR, textStatus,
+													errorThrown) {
+												alert("error " + errorThrown);
+											});
+						});
+		$("select#districtVotingId")
+				.change(
+						function() {
+							$('#assemblyConstituencyVotingId').prop('disabled',
+									true);
+							$
+									.ajax(
+											{
+												type : "GET",
+												url : "${pageContext.request.contextPath}/json/ac/"
+														+ $(this).val(),
+												data : {
+													name : "John",
+													location : "Boston"
+												}
+											})
+									.done(
+											function(msg) {
+												var options = '<option value="0">Select Assembly Constituency</option>';
+												for (var i = 0; i < msg.length; i++) {
+													options += '<option value="' + msg[i].id + '">'
+															+ msg[i].name
+															+ '</option>';
+												}
+												$(
+														"select#assemblyConstituencyVotingId")
+														.html(options);
+												$(
+														'#assemblyConstituencyVotingId')
+														.prop('disabled', false);
+											}).fail(
+											function(jqXHR, textStatus,
+													errorThrown) {
+												alert("error " + errorThrown);
+											});
+						});
+		$("select#nriCountryId")
+				.change(
+						function() {
+							$('#nriCountryRegionId').prop('disabled', true);
+							$('#nriCountryRegionAreaId').prop('disabled', true);
+							$
+									.ajax(
+											{
+												type : "GET",
+												url : "${pageContext.request.contextPath}/json/region/"
+														+ $(this).val(),
+												data : {
+													name : "John",
+													location : "Boston"
+												}
+											})
+									.done(
+											function(msg) {
+												var options = '<option value="0">Select Region</option>';
+												for (var i = 0; i < msg.length; i++) {
+													options += '<option value="' + msg[i].id + '">'
+															+ msg[i].name
+															+ '</option>';
+												}
+												$("select#nriCountryRegionId")
+														.html(options);
+												$(
+														"select#nriCountryRegionAreaId")
+														.html(
+																'<option value="0">Select Area</option>');
+												$('#nriCountryRegionId').prop(
+														'disabled', false);
+											}).fail(
+											function(jqXHR, textStatus,
+													errorThrown) {
+												alert("error " + errorThrown);
+											});
+						});
 
-	  $("select#nriCountryRegionId").change(function(){
-		  $('#nriCountryRegionAreaId').prop('disabled', true);
-		  $.ajax({
-			  type: "GET",
-			  url: "${pageContext.request.contextPath}/json/regionarea/"+$(this).val(),
-			  data: {}
-			})
-			  .done(function( msg ) {
-				  var options = '<option value="0">Select Area</option>';
-			      for (var i = 0; i < msg.length; i++) {
-			        options += '<option value="' + msg[i].id + '">' + msg[i].name + '</option>';
-			      }
-			      $("select#nriCountryRegionAreaId").html(options);
-			      $('#nriCountryRegionAreaId').prop('disabled', false);
-			  }).fail(function(jqXHR, textStatus, errorThrown) {
-				    alert( "error "+errorThrown );
-			  });
-	  });
+		$("select#nriCountryRegionId")
+				.change(
+						function() {
+							$('#nriCountryRegionAreaId').prop('disabled', true);
+							$
+									.ajax(
+											{
+												type : "GET",
+												url : "${pageContext.request.contextPath}/json/regionarea/"
+														+ $(this).val(),
+												data : {}
+											})
+									.done(
+											function(msg) {
+												var options = '<option value="0">Select Area</option>';
+												for (var i = 0; i < msg.length; i++) {
+													options += '<option value="' + msg[i].id + '">'
+															+ msg[i].name
+															+ '</option>';
+												}
+												$(
+														"select#nriCountryRegionAreaId")
+														.html(options);
+												$('#nriCountryRegionAreaId')
+														.prop('disabled', false);
+											}).fail(
+											function(jqXHR, textStatus,
+													errorThrown) {
+												alert("error " + errorThrown);
+											});
+						});
 	});
 	$(function() {
 		$("#language-tabs").tabs();
@@ -173,15 +304,14 @@ $(function(){
 		$("#dateOfBirth").datepicker("option", "autoSize", "true");
 	});
 	$(document).ready(function() {
-		if('${loggedInUser.nri}' == 'true'){
+		if ('${loggedInUser.nri}' == 'true') {
 			$('#indianLocationDiv').hide();
 			$('#nriDiv').show();
-		}else{
+		} else {
 			$('#nriDiv').hide();
 			$('#indianLocationDiv').show();
 		}
-		
-		
+
 		$('#nri1').click(function() {
 			if ($('#nri1').prop('checked')) {
 				$('#nriDiv').show();
@@ -202,36 +332,38 @@ $(function(){
 		});
 	});
 	$(function() {
-	    $( document ).tooltip({
-	        // place tooltip on the right edge
-	        position: {my: "left top+1", at: "right top"},
-	        //tooltipClass: "tooltip",
-	        // a little tweaking of the position
-	        //offset: [-2, 10],
-	   
-	        // use the built-in fadeIn/fadeOut effect
-	        effect: "fade",
-	   
-	        // custom opacity setting
-	        opacity: 0.7
-	   
-	        });
-	  });
+		$(document).tooltip({
+			// place tooltip on the right edge
+			position : {
+				my : "left top+1",
+				at : "right top"
+			},
+			//tooltipClass: "tooltip",
+			// a little tweaking of the position
+			//offset: [-2, 10],
+
+			// use the built-in fadeIn/fadeOut effect
+			effect : "fade",
+
+			// custom opacity setting
+			opacity : 0.7
+
+		});
+	});
 </script>
 <style type="text/css">
 .tooltip {
-    background-color:#000;
-    border:1px solid #fff;
-    padding:10px 15px;
-    width:200px;
-    display:none;
-    color:#fff;
-    text-align:left;
-    font-size:12px;
- 
-    /* outline radius for mozilla/firefox only */
-    -moz-box-shadow:0 0 10px #000;
-    -webkit-box-shadow:0 0 10px #000;
+	background-color: #000;
+	border: 1px solid #fff;
+	padding: 10px 15px;
+	width: 200px;
+	display: none;
+	color: #fff;
+	text-align: left;
+	font-size: 12px;
+	/* outline radius for mozilla/firefox only */
+	-moz-box-shadow: 0 0 10px #000;
+	-webkit-box-shadow: 0 0 10px #000;
 }
 </style>
 </head>
@@ -244,7 +376,9 @@ $(function(){
 	<div class="contentarea">
 		<div class="form-leftarea">
 			<!--form-leftarea-->
-			<div class="divarticle"><h1>Be a part of the change. Volunteer for the Aam Aadmi Party</h1></div>
+			<div class="divarticle">
+				<h1>Be a part of the change. Volunteer for the Aam Aadmi Party</h1>
+			</div>
 			<br />
 			<div class="formwrapper">
 				<!--formwrapper-->
@@ -258,7 +392,7 @@ $(function(){
 
 					<div class="blockdiv">
 						<label>Voter ID</label>
-						<form:input path="voterId" class="textbox" title="Please Enter Your Voter ID"/>
+						<form:input path="voterId" class="textbox" title="Please Enter Your Voter ID" />
 					</div>
 
 					<div class="blockdiv">
@@ -272,33 +406,33 @@ $(function(){
 
 					<div class="blockdiv">
 						<label>Passport Number</label>
-						<form:input path="passportNumber" class="textbox" title="Enter your passport number, compulsory for NRIs"/>
+						<form:input path="passportNumber" class="textbox" title="Enter your passport number, compulsory for NRIs" />
 					</div>
 
 					<div class="blockdiv">
 						<label>Mobile</label>
-						<form:input path="mobileNumber" class="textbox" title="Enter your indian mobile number, 10 digits only"/>
+						<form:input path="mobileNumber" class="textbox" title="Enter your indian mobile number, 10 digits only" />
 					</div>
 
 					<div class="blockdiv">
 						<label>Date of Birth(dd/mm/yyyy)</label>
-						<form:input path="dateOfBirth" class="textbox" title="Your date of Birth, i.e. 18/09/1981 dd/mm/yyyy"/>
+						<form:input path="dateOfBirth" class="textbox" title="Your date of Birth, i.e. 18/09/1981 dd/mm/yyyy" />
 					</div>
 
 					<div class="blockdiv">
 						<label>Father's Name</label>
-						<form:input path="fatherName" class="textbox" title="Enter your father's name"/>
+						<form:input path="fatherName" class="textbox" title="Enter your father's name" />
 					</div>
 
 					<div class="blockdiv">
 						<label>Mother's Name</label>
-						<form:input path="motherName" class="textbox" title="Enter Your mother's name"/>
+						<form:input path="motherName" class="textbox" title="Enter Your mother's name" />
 					</div>
 
 
 					<div class="blockdiv">
 						<label>I am NRI</label>
-						<form:checkbox path="nri" class="textbox" title="Select if you are currently living outside India"/>
+						<form:checkbox path="nri" class="textbox" title="Select if you are currently living outside India" />
 					</div>
 					<div id="nriDiv">
 						<div class="editprofile">NRI Living Location</div>
@@ -312,8 +446,9 @@ $(function(){
 
 						<div class="blockdiv">
 							<label>Region/State</label>
-							<form:select path="nriCountryRegionId" disabled="${empty loggedInUser.nriCountryRegionId or loggedInUser.nriCountryRegionId le 0 }"
-							title="Select your country region">
+							<form:select path="nriCountryRegionId"
+								disabled="${empty loggedInUser.nriCountryRegionId or loggedInUser.nriCountryRegionId le 0 }"
+								title="Select your country region">
 								<form:option value="0" label="Select Region" />
 								<form:options items="${nriCountryRegions}" itemValue="id" itemLabel="name" />
 							</form:select>
@@ -321,8 +456,9 @@ $(function(){
 
 						<div class="blockdiv">
 							<label>Area/City</label>
-							<form:select path="nriCountryRegionAreaId" disabled="${empty loggedInUser.nriCountryRegionAreaId or loggedInUser.nriCountryRegionAreaId le 0 }"
-							title="Select your country region area">
+							<form:select path="nriCountryRegionAreaId"
+								disabled="${empty loggedInUser.nriCountryRegionAreaId or loggedInUser.nriCountryRegionAreaId le 0 }"
+								title="Select your country region area">
 								<form:option value="0" label="Select Area" />
 								<form:options items="${nriCountryRegionAreas}" itemValue="id" itemLabel="name" />
 							</form:select>
@@ -330,7 +466,7 @@ $(function(){
 
 						<div class="blockdiv">
 							<label>Mobile</label>
-							<form:input path="nriMobileNumber" class="textbox" title="Enter you outside india mobile number"/>
+							<form:input path="nriMobileNumber" class="textbox" title="Enter you outside india mobile number" />
 						</div>
 					</div>
 					<div id="indianLocationDiv">
@@ -344,24 +480,27 @@ $(function(){
 						</div>
 						<div class="blockdiv">
 							<label>District</label>
-							<form:select path="districtLivingId" disabled="${empty loggedInUser.districtLivingId or loggedInUser.districtLivingId le 0 }"
-							title="Choose District where you live currently">
+							<form:select path="districtLivingId"
+								disabled="${empty loggedInUser.districtLivingId or loggedInUser.districtLivingId le 0 }"
+								title="Choose District where you live currently">
 								<form:option value="0" label="Select District" />
 								<form:options items="${livingDistricts}" itemValue="id" itemLabel="name" />
 							</form:select>
 						</div>
 						<div class="blockdiv">
 							<label>Parliament Constituency</label>
-							<form:select path="parliamentConstituencyLivingId" disabled="${empty loggedInUser.parliamentConstituencyLivingId or loggedInUser.parliamentConstituencyLivingId le 0 }"
-							title="Choose Parliament Constituency where you live currently">
+							<form:select path="parliamentConstituencyLivingId"
+								disabled="${empty loggedInUser.parliamentConstituencyLivingId or loggedInUser.parliamentConstituencyLivingId le 0 }"
+								title="Choose Parliament Constituency where you live currently">
 								<form:option value="0" label="Select Parliament Constituency" />
 								<form:options items="${livingPcs}" itemValue="id" itemLabel="name" />
 							</form:select>
 						</div>
 						<div class="blockdiv">
 							<label>Assembly Constituency</label>
-							<form:select path="assemblyConstituencyLivingId" disabled="${empty loggedInUser.assemblyConstituencyLivingId or loggedInUser.assemblyConstituencyLivingId le 0 }"
-							title="Choose Assembly Constituency where you live currently">
+							<form:select path="assemblyConstituencyLivingId"
+								disabled="${empty loggedInUser.assemblyConstituencyLivingId or loggedInUser.assemblyConstituencyLivingId le 0 }"
+								title="Choose Assembly Constituency where you live currently">
 								<form:option value="0" label="Select Assembly Constituency" />
 								<form:options items="${livingAcs}" itemValue="id" itemLabel="name" />
 							</form:select>
@@ -377,24 +516,27 @@ $(function(){
 					</div>
 					<div class="blockdiv">
 						<label>District</label>
-						<form:select path="districtVotingId" disabled="${empty loggedInUser.districtVotingId or loggedInUser.districtVotingId le 0 }"
-						title="Choose District where you registered as Voter or your indian address District">
+						<form:select path="districtVotingId"
+							disabled="${empty loggedInUser.districtVotingId or loggedInUser.districtVotingId le 0 }"
+							title="Choose District where you registered as Voter or your indian address District">
 							<form:option value="0" label="Select District" />
 							<form:options items="${votingDistricts}" itemValue="id" itemLabel="name" />
 						</form:select>
 					</div>
 					<div class="blockdiv">
 						<label>Parliament Constituency</label>
-						<form:select path="parliamentConstituencyVotingId" disabled="${empty loggedInUser.parliamentConstituencyVotingId or loggedInUser.parliamentConstituencyVotingId le 0 }"
-						title="Choose Parliament Constituency where you registered as Voter or your indian address Parliament Constituency">
+						<form:select path="parliamentConstituencyVotingId"
+							disabled="${empty loggedInUser.parliamentConstituencyVotingId or loggedInUser.parliamentConstituencyVotingId le 0 }"
+							title="Choose Parliament Constituency where you registered as Voter or your indian address Parliament Constituency">
 							<form:option value="0" label="Select Parliament Constituency" />
 							<form:options items="${votingPcs}" itemValue="id" itemLabel="name" />
 						</form:select>
 					</div>
 					<div class="blockdiv">
 						<label>Assembly Constituency</label>
-						<form:select path="assemblyConstituencyVotingId" disabled="${empty loggedInUser.assemblyConstituencyVotingId or loggedInUser.assemblyConstituencyVotingId le 0 }"
-						title="Choose Assembly Constituency where you registered as Voter or your indian address Assembly Constituency">
+						<form:select path="assemblyConstituencyVotingId"
+							disabled="${empty loggedInUser.assemblyConstituencyVotingId or loggedInUser.assemblyConstituencyVotingId le 0 }"
+							title="Choose Assembly Constituency where you registered as Voter or your indian address Assembly Constituency">
 							<form:option value="0" label="Select Assembly Constituency" />
 							<form:options items="${votingAcs}" itemValue="id" itemLabel="name" />
 						</form:select>
@@ -412,7 +554,7 @@ $(function(){
 					</c:if>
 					-->
 					<c:if test="${!loggedInUser.member}">
-                        <!-- 
+						<!-- 
 						<div class="partymemberdiv">
 							<form:checkbox path="member" />
 							I want to be Party Member
@@ -459,10 +601,23 @@ $(function(){
 						</div>
 						-->
 					</c:if>
-					 
+
 					<!--partymembertab-->
 					<!--partymembertab-->
 					<input name="" type="submit" class="button" value="Save Profile" />
+
+
+					<c:forEach items="${interestGroups}" var="oneInterest" varstatus="status">
+						<table>
+							<tbody>
+								<tr>
+									<td>${oneInterest.description}</td>
+									<td><input type="checkbox" name="vehicle" value="user.volunteerDto.selectedInterestMap[${oneInterest.id}]" /></td>
+								</tr>
+
+							</tbody>
+						</table>
+					</c:forEach>
 				</form:form>
 			</div>
 			<!--formwrapper-->
@@ -474,7 +629,7 @@ $(function(){
 
 
 
-		<jsp:include page="footer.jsp" />
+	<jsp:include page="footer.jsp" />
 
 </body>
 </html>

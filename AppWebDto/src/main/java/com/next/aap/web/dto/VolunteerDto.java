@@ -1,6 +1,7 @@
 package com.next.aap.web.dto;
 
 import java.io.Serializable;
+import java.util.Map;
 
 
 public class VolunteerDto implements Serializable{
@@ -18,6 +19,8 @@ public class VolunteerDto implements Serializable{
 	private String infoRecordedAt;
 	
 	private Long userId;
+
+    private Map<Long, Boolean> selectedInterestMap;
 
 	public Long getId() {
 		return id;
@@ -106,6 +109,21 @@ public class VolunteerDto implements Serializable{
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+
+    public Map<Long, Boolean> getSelectedInterestMap() {
+        return selectedInterestMap;
+    }
+
+    public void setSelectedInterestMap(Map<Long, Boolean> selectedInterestMap) {
+        this.selectedInterestMap = selectedInterestMap;
+    }
+
+    @Override
+    public String toString() {
+        return "VolunteerDto [id=" + id + ", education=" + education + ", professionalBackground=" + professionalBackground + ", domainExpertise=" + domainExpertise + ", offences=" + offences
+                + ", emergencyContactName=" + emergencyContactName + ", emergencyContactRelation=" + emergencyContactRelation + ", emergencyContactNo=" + emergencyContactNo + ", infoRecordedBy="
+                + infoRecordedBy + ", infoRecordedAt=" + infoRecordedAt + ", userId=" + userId + ", selectedInterestMap=" + selectedInterestMap + "]";
+    }
 	
 
 	

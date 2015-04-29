@@ -44,6 +44,8 @@ public class UserDto implements Serializable{
 	private Date dateCreated;
 	private Date dateModified;
 
+    private VolunteerDto volunteerDto;
+
 
 	public Long getId() {
 		return id;
@@ -343,7 +345,15 @@ public class UserDto implements Serializable{
 		this.dateModified = dateModified;
 	}
 
-	@Override
+    public VolunteerDto getVolunteerDto() {
+        return volunteerDto;
+    }
+
+    public void setVolunteerDto(VolunteerDto volunteerDto) {
+        this.volunteerDto = volunteerDto;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

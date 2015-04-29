@@ -1,7 +1,11 @@
 package com.next.aap.web.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,9 +22,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gdata.util.common.base.StringUtil;
-import com.next.aap.core.exception.AppException;
 import com.next.aap.web.controller.validators.UserProfileValidator;
+import com.next.aap.web.dto.InterestDto;
+import com.next.aap.web.dto.InterestGroupDto;
 import com.next.aap.web.dto.UserDto;
+import com.next.aap.web.dto.VolunteerDto;
+import com.next.aap.web.jsf.beans.model.InterestGroupDtoModel;
 import com.next.aap.web.util.ContentDonwloadUtil;
 
 @Controller
@@ -43,10 +50,44 @@ public class ProfileController extends AppBaseController {
 	@RequestMapping(value = "/profile.html", method = RequestMethod.GET)
 	public ModelAndView getAllCountries(ModelAndView mv, HttpServletRequest httpServletRequest) {
 		UserDto user = getLoggedInUserFromSesion(httpServletRequest);
+
 		mv = new ModelAndView(design + "/editprofile", "user", user);
 		mv = preparePage(httpServletRequest, user, mv);
+
 		return mv;
 	}
+
+    private void loadVolunteerDetails(ModelAndView mv, UserDto user) {
+        try {
+            List<InterestGroupDto> interestGroups = aapService.getAllVolunterInterests();
+            List<InterestGroupDtoModel> interestGroupDtoModels = new ArrayList<>();
+            if (interestGroups != null && !interestGroups.isEmpty()) {
+                for (InterestGroupDto oneInterestGroupDto : interestGroups) {
+                    interestGroupDtoModels.add(new InterestGroupDtoModel(oneInterestGroupDto));
+                }
+            }
+            mv.getModel().put("interestGroups", interestGroupDtoModels);
+            Map<Long, Boolean> selectedInterestMap = new HashMap<Long, Boolean>();
+            VolunteerDto selectedVolunteer = null;
+            if (user != null) {
+                selectedVolunteer = aapService.getVolunteerDataForUser(user.getId());
+                List<InterestDto> userInterests = aapService.getuserInterests(user.getId());
+                if (userInterests != null && userInterests.size() > 0) {
+                    for (InterestDto oneInterestDto : userInterests) {
+                        selectedInterestMap.put(oneInterestDto.getId(), true);
+                    }
+                }
+            }
+            if (selectedVolunteer == null) {
+                selectedVolunteer = new VolunteerDto();
+            }
+            selectedVolunteer.setSelectedInterestMap(selectedInterestMap);
+            user.setVolunteerDto(selectedVolunteer);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
 
 	private ModelAndView preparePage(HttpServletRequest httpServletRequest, UserDto user, ModelAndView mv) {
 		
@@ -72,12 +113,18 @@ public class ProfileController extends AppBaseController {
 		if (user.getNriCountryRegionId() != null && user.getNriCountryRegionId() > 0) {
 			addNriCountryRegionAreasIntoModel(mv, user.getNriCountryRegionId());
 		}
+        loadVolunteerDetails(mv, user);
 		addGenericValuesInModel(httpServletRequest, mv);
 		return mv;
 	}
 
+    private void printVolunteerDetail(UserDto user) {
+        System.out.println(user.getVolunteerDto());
+    }
+
 	@RequestMapping(value = "/profile.html", method = RequestMethod.POST)
 	public ModelAndView saveUserProfile(@ModelAttribute("user") UserDto user, BindingResult result, ModelAndView mv, HttpServletRequest httpServletRequest) {
+        printVolunteerDetail(user);
 		mv = new ModelAndView(design + "/editprofile", "user", user);
 		if (result.hasErrors()) {
 			System.out.println("Has Errors " +result);

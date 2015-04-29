@@ -79,6 +79,7 @@ public class ProfileController extends AppBaseController {
                         UserInterestDto oneUserInterestDto = new UserInterestDto(oneInterestDto);
                         if (selectedInterestMap.containsKey(oneInterestDto.getId())) {
                             oneUserInterestDto.setSelected(true);
+                            System.out.println("   Found : " + oneInterestDto.getId());
                         }
                         userInterestDtos.add(oneUserInterestDto);
                     }
@@ -89,6 +90,7 @@ public class ProfileController extends AppBaseController {
             }
             selectedVolunteer.setUserInterestDtos(userInterestDtos);
             user.setVolunteerDto(selectedVolunteer);
+            user.setUserInterestDtos(userInterestDtos);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

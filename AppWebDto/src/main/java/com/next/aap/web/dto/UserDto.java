@@ -2,6 +2,7 @@ package com.next.aap.web.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class UserDto implements Serializable{
 
@@ -351,6 +352,16 @@ public class UserDto implements Serializable{
 
     public void setVolunteerDto(VolunteerDto volunteerDto) {
         this.volunteerDto = volunteerDto;
+    }
+
+    List<UserInterestDto> userInterestDtos;
+
+    public List<UserInterestDto> getUserInterestDtos() {
+        return userInterestDtos;
+    }
+
+    public void setUserInterestDtos(List<UserInterestDto> userInterestDtos) {
+        this.userInterestDtos = userInterestDtos;
     }
 
     @Override

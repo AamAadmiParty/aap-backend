@@ -610,7 +610,7 @@
 										<tr>
 											<td>${oneInterest.description}</td>
 											<td>
-											<input type="checkbox" name="interestDtos[${status.index}].selected" value="${oneInterest.selected}" title="Enter Education" />
+											<input type="checkbox" name="userInterestDtos[${status.index}].selected" value="${oneInterest.selected}" title="Enter Education" />
 											</td>
 										</tr>
 									</tbody>

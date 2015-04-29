@@ -1277,7 +1277,12 @@ public class AapServiceImpl implements AapService, Serializable {
 				if (onePhone == null) {
 					onePhone = userPhones.get(0);
 				}
-				onePhone.setCountryCode(user.getNriCountry().getIsdCode());
+                if (user.getNriCountry() == null) {
+                    onePhone.setCountryCode("91");
+                } else {
+                    onePhone.setCountryCode(user.getNriCountry().getIsdCode());
+                }
+
 				onePhone.setPhoneNumber(mobileNumber);
 				onePhone.setPhoneType(phoneType);
 				onePhone.setUser(user);

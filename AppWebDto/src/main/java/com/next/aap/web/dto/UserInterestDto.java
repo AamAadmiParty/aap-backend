@@ -10,8 +10,7 @@ public class UserInterestDto extends InterestDto {
     }
 
     public UserInterestDto(InterestDto interestDto, boolean selected) {
-        super.setDescription(interestDto.getDescription());
-        super.setId(interestDto.getId());
+        super(interestDto.getId(), interestDto.getDescription());
         this.selected = selected;
     }
 

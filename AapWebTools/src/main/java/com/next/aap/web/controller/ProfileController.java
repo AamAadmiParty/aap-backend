@@ -174,6 +174,9 @@ public class ProfileController extends AppBaseController {
 		editingUser.setStateLivingId(user.getStateLivingId());
 		editingUser.setStateVotingId(user.getStateVotingId());
 		editingUser.setVoterId(user.getVoterId());
+        editingUser.setVolunteer(user.isVolunteer());
+        editingUser.setVolunteerDto(user.getVolunteerDto());
+        editingUser.setUserInterestDtos(user.getUserInterestDtos());
 		
 		if(!editingUser.isNri()){
 			if (editingUser.getStateLivingId() == null || editingUser.getStateLivingId() == 0) {
@@ -220,6 +223,21 @@ public class ProfileController extends AppBaseController {
 			try {
 				System.out.println("saving User " + editingUser);
 				editingUser = aapService.saveUser(editingUser);
+
+                if (editingUser.isVolunteer()) {
+                    List<Long> selectedInterests = new ArrayList<Long>();
+                    for (UserInterestDto oneInterestDto : user.getUserInterestDtos()) {
+                        if (oneInterestDto.isSelected()) {
+                            selectedInterests.add(oneInterestDto.getId());
+                        }
+                    }
+                    VolunteerDto selectedVolunteer = editingUser.getVolunteerDto();
+                    selectedVolunteer.setInfoRecordedAt("Self Service Portal");
+                    selectedVolunteer.setInfoRecordedBy("Self");
+                    selectedVolunteer.setUserId(loggedInUserUser.getId());
+                    selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
+                }
+
 			} catch (Exception ex) {
 				addErrorInModel(mv, ex.getMessage());
 			}

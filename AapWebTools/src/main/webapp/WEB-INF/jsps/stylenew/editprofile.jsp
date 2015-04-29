@@ -600,7 +600,7 @@
 					<!--partymembertab-->
 					<input name="" type="submit" class="button" value="Save Profile" />
 
-                    <c:set var="count" scope="session" value="${0}"/>
+                    <c:set var="count" scope="session" value="0"/>
 
 					<c:forEach items="${interestGroups}" var="oneInterestGroup">
 						<div class="editprofile">${oneInterestGroup.description}</div>
@@ -608,11 +608,10 @@
 						<% int colCount = 0; %>
 						<table>
                                     <tbody>
-                                        <tr>
 							<c:forEach items="${oneInterestGroup.interestDtos}" varStatus="status" var="oneInterest">
 								            <% 
                                             if(colCount % 3 == 0){
-                                                out.println("</tr>");
+                                                out.println("<tr>");
                                             }
                                             %>
 											<td>

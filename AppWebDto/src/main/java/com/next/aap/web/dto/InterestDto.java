@@ -8,7 +8,18 @@ public class InterestDto implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String description;
-	public Long getId() {
+
+    public InterestDto() {
+        super();
+    }
+
+    public InterestDto(Long id, String description) {
+        super();
+        this.id = id;
+        this.description = description;
+    }
+
+    public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {

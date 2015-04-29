@@ -398,6 +398,7 @@ public class AppBaseController extends BaseController{
 			mv.getModel().put("admin", false);
 		}
         mv.getModel().put("currentUrl", httpServletRequest.getRequestURL().toString());
+        mv.getModel().put("states", locationCacheDbImpl.getAllStates());
 		
 	}
 	protected void addErrorInModel(ModelAndView mv, String errorMessage){

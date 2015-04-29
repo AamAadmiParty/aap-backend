@@ -312,7 +312,7 @@
 			$('#indianLocationDiv').show();
 		}
 		if ('${loggedInUser.volunteer}' == 'true') {
-            $('#indianLocationDiv').hide();
+            $('#volunteerDiv').show();
         } else {
             $('#volunteerDiv').hide();
         }

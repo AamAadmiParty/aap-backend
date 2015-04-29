@@ -253,6 +253,7 @@ public class ProfileController extends AppBaseController {
         }
         System.out.println("Preparing Page");
         mv = new ModelAndView(design + "/editprofileconfirmation");
+        mv = preparePage(httpServletRequest, editingUser, mv);
         return mv;
     }
 

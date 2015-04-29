@@ -323,6 +323,15 @@
 			}
 
 		});
+		$('#volunteer').click(function() {
+            if ($('#volunteer').prop('checked')) {
+                $('#volunteerDiv').show();
+            } else {
+                $('#volunteerDiv').hide();
+            }
+
+        });
+        
 		$('#member1').click(function() {
 			if ($('#member1').prop('checked')) {
 				$('#language-tabs').show();
@@ -598,44 +607,48 @@
 
 					<!--partymembertab-->
 					<!--partymembertab-->
-					<input name="" type="submit" class="button" value="Save Profile" />
-
+					
+                    <div id="volunteerDiv">
                     <c:set var="count" scope="session" value="0"/>
 
-					<c:forEach items="${interestGroups}" var="oneInterestGroup">
-						<div class="editprofile">${oneInterestGroup.description}</div>
-						<div class="blockdiv">
-						<% int colCount = 0; %>
-						<table>
+                    <c:forEach items="${interestGroups}" var="oneInterestGroup">
+                        <div class="editprofile">${oneInterestGroup.description}</div>
+                        <div class="blockdiv">
+                        <% int colCount = 0; %>
+                        <table>
                                     <tbody>
-							<c:forEach items="${oneInterestGroup.interestDtos}" varStatus="status" var="oneInterest">
-								            <% 
+                            <c:forEach items="${oneInterestGroup.interestDtos}" varStatus="status" var="oneInterest">
+                                            <% 
                                             if(colCount % 3 == 0){
                                                 out.println("<tr>");
                                             }
                                             %>
-											<td>
-											<form:hidden path="userInterestDtos[${count}].description" />
-											<form:hidden path="userInterestDtos[${count}].id" />
-											<form:checkbox path="userInterestDtos[${count}].selected" />${oneInterest.description}       
+                                            <td>
+                                            <form:hidden path="userInterestDtos[${count}].description" />
+                                            <form:hidden path="userInterestDtos[${count}].id" />
+                                            <form:checkbox path="userInterestDtos[${count}].selected" />${oneInterest.description}       
                                         <c:set var="count" scope="session" value="${count + 1}"/>
-											</td>
-											<% colCount++;
-											if(colCount % 3 == 0){
-											    out.println("</tr>");
-											}
-											%>
-										
-							</c:forEach>
-							<% colCount++;
-	                             if(colCount % 3 != 0){
-	                                 out.println("</tr>");
-	                             }
+                                            </td>
+                                            <% colCount++;
+                                            if(colCount % 3 == 0){
+                                                out.println("</tr>");
+                                            }
+                                            %>
+                                        
+                            </c:forEach>
+                            <% colCount++;
+                                 if(colCount % 3 != 0){
+                                     out.println("</tr>");
+                                 }
                              %>
                                     </tbody>
                                 </table>
-						</div>
-					</c:forEach>
+                        </div>
+                    </c:forEach>
+                    </div>
+                    
+                    <input name="" type="submit" class="button" value="Save Profile" />
+                    
 				</form:form>
 			</div>
 			<!--formwrapper-->

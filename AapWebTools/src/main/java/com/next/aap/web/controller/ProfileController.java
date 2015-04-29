@@ -235,6 +235,7 @@ public class ProfileController extends AppBaseController {
                 selectedVolunteer.setInfoRecordedBy("Self");
                 selectedVolunteer.setUserId(loggedInUserUser.getId());
                 selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
+                user.setVolunteerDto(selectedVolunteer);
 
             } catch (Exception ex) {
                 addErrorInModel(mv, ex.getMessage());

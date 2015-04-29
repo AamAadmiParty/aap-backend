@@ -659,6 +659,31 @@
                         <label>Education</label>
                         <form:input path="volunteerDto.education" class="textbox" title="Please Enter Your maximum Education level" />
                     </div>
+                    <div class="blockdiv">
+                        <label>Professional Background</label>
+                        <form:input path="volunteerDto.professionalBackground" class="textbox" title="Please Enter professional Background" />
+                    </div>
+                    <div class="blockdiv">
+                        <label>Domain Expertise</label>
+                        <form:input path="volunteerDto.domainExpertise" class="textbox" title="i.e. IT, Law etc" />
+                    </div>
+                    <div class="blockdiv">
+                        <label>Offences</label>
+                        <form:input path="volunteerDto.offences" class="textbox" title="Any offeces or court cases(pending + Past)" />
+                    </div>
+                    <div class="blockdiv">
+                        <label>Emergency Contact Name</label>
+                        <form:input path="volunteerDto.emergencyContactName" class="textbox" title="A person name who should be contacted in case you are in some accident" />
+                    </div>
+                    <div class="blockdiv">
+                        <label>Emergency Contact Relation</label>
+                        <form:input path="volunteerDto.emergencyContactRelation" class="textbox" title="What is the relation with above person" />
+                    </div>
+                    <div class="blockdiv">
+                        <label>Emergency Contact Number</label>
+                        <form:input path="volunteerDto.emergencyContactNo" class="textbox" title="Emergency Contact No" />
+                    </div>
+                    
                     </div>
                     
                     <input name="" type="submit" class="button" value="Save Profile" />

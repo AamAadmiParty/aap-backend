@@ -83,7 +83,6 @@ public class ProfileController extends AppBaseController {
 
             if (selectedVolunteer == null) {
                 selectedVolunteer = new VolunteerDto();
-                selectedVolunteer.setEducation("B.Tech");
             }
             user.setVolunteerDto(selectedVolunteer);
             user.setUserInterestDtos(userInterestDtos);
@@ -94,31 +93,35 @@ public class ProfileController extends AppBaseController {
     }
 
     private ModelAndView preparePage(HttpServletRequest httpServletRequest, UserDto user, ModelAndView mv) {
+        try {
+            addNriCountriesIntoModel(mv);
+            addIndianStatesIntoModel(mv);
+            if (user.getStateLivingId() != null && user.getStateLivingId() > 0) {
+                addDistrictIntoModel(mv, user.getStateLivingId(), "livingDistricts");
+                addPcIntoModel(mv, user.getStateLivingId(), "livingPcs");
+            }
+            if (user.getStateVotingId() != null && user.getStateVotingId() > 0) {
+                addDistrictIntoModel(mv, user.getStateVotingId(), "votingDistricts");
+                addPcIntoModel(mv, user.getStateVotingId(), "votingPcs");
+            }
+            if (user.getDistrictLivingId() != null && user.getDistrictLivingId() > 0) {
+                addAcIntoModel(mv, user.getDistrictLivingId(), "livingAcs");
+            }
+            if (user.getDistrictVotingId() != null && user.getDistrictVotingId() > 0) {
+                addAcIntoModel(mv, user.getDistrictVotingId(), "votingAcs");
+            }
+            if (user.getNriCountryId() != null && user.getNriCountryId() > 0) {
+                addNriCountryRegionsIntoModel(mv, user.getNriCountryId());
+            }
+            if (user.getNriCountryRegionId() != null && user.getNriCountryRegionId() > 0) {
+                addNriCountryRegionAreasIntoModel(mv, user.getNriCountryRegionId());
+            }
+            loadVolunteerDetails(mv, user);
+            addGenericValuesInModel(httpServletRequest, mv);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-        addNriCountriesIntoModel(mv);
-        addIndianStatesIntoModel(mv);
-        if (user.getStateLivingId() != null && user.getStateLivingId() > 0) {
-            addDistrictIntoModel(mv, user.getStateLivingId(), "livingDistricts");
-            addPcIntoModel(mv, user.getStateLivingId(), "livingPcs");
-        }
-        if (user.getStateVotingId() != null && user.getStateVotingId() > 0) {
-            addDistrictIntoModel(mv, user.getStateVotingId(), "votingDistricts");
-            addPcIntoModel(mv, user.getStateVotingId(), "votingPcs");
-        }
-        if (user.getDistrictLivingId() != null && user.getDistrictLivingId() > 0) {
-            addAcIntoModel(mv, user.getDistrictLivingId(), "livingAcs");
-        }
-        if (user.getDistrictVotingId() != null && user.getDistrictVotingId() > 0) {
-            addAcIntoModel(mv, user.getDistrictVotingId(), "votingAcs");
-        }
-        if (user.getNriCountryId() != null && user.getNriCountryId() > 0) {
-            addNriCountryRegionsIntoModel(mv, user.getNriCountryId());
-        }
-        if (user.getNriCountryRegionId() != null && user.getNriCountryRegionId() > 0) {
-            addNriCountryRegionAreasIntoModel(mv, user.getNriCountryRegionId());
-        }
-        loadVolunteerDetails(mv, user);
-        addGenericValuesInModel(httpServletRequest, mv);
         return mv;
     }
 
@@ -222,6 +225,7 @@ public class ProfileController extends AppBaseController {
             try {
                 System.out.println("saving User " + editingUser);
                 editingUser = aapService.saveUser(editingUser);
+                setLoggedInUserInSesion(httpServletRequest, editingUser);
 
                 System.out.println("saving Volunteer Detail");
                 List<Long> selectedInterests = new ArrayList<Long>();

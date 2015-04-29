@@ -33,29 +33,29 @@ import com.next.aap.web.util.ContentDonwloadUtil;
 @Controller
 public class ProfileController extends AppBaseController {
 
-	@Autowired
-	private ContentDonwloadUtil contentDonwloadUtil;
+    @Autowired
+    private ContentDonwloadUtil contentDonwloadUtil;
 
-	@Autowired
-	private UserProfileValidator userProfileValidator;
+    @Autowired
+    private UserProfileValidator userProfileValidator;
 
-	@InitBinder("user")
-	protected void initBinder(WebDataBinder binder) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
-		binder.registerCustomEditor(Date.class, editor);
-		//binder.setValidator(userProfileValidator);
-	}
+    @InitBinder("user")
+    protected void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
+        binder.registerCustomEditor(Date.class, editor);
+        // binder.setValidator(userProfileValidator);
+    }
 
-	@RequestMapping(value = "/profile.html", method = RequestMethod.GET)
-	public ModelAndView getAllCountries(ModelAndView mv, HttpServletRequest httpServletRequest) {
-		UserDto user = getLoggedInUserFromSesion(httpServletRequest);
+    @RequestMapping(value = "/profile.html", method = RequestMethod.GET)
+    public ModelAndView getAllCountries(ModelAndView mv, HttpServletRequest httpServletRequest) {
+        UserDto user = getLoggedInUserFromSesion(httpServletRequest);
 
-		mv = new ModelAndView(design + "/editprofile", "user", user);
-		mv = preparePage(httpServletRequest, user, mv);
+        mv = new ModelAndView(design + "/editprofile", "user", user);
+        mv = preparePage(httpServletRequest, user, mv);
 
-		return mv;
-	}
+        return mv;
+    }
 
     private void loadVolunteerDetails(ModelAndView mv, UserDto user) {
         try {
@@ -81,7 +81,6 @@ public class ProfileController extends AppBaseController {
                 }
             }
 
-
             if (selectedVolunteer == null) {
                 selectedVolunteer = new VolunteerDto();
             }
@@ -94,34 +93,34 @@ public class ProfileController extends AppBaseController {
 
     }
 
-	private ModelAndView preparePage(HttpServletRequest httpServletRequest, UserDto user, ModelAndView mv) {
-		
-		addNriCountriesIntoModel(mv);
-		addIndianStatesIntoModel(mv);
-		if (user.getStateLivingId() != null && user.getStateLivingId() > 0) {
-			addDistrictIntoModel(mv, user.getStateLivingId(), "livingDistricts");
-			addPcIntoModel(mv, user.getStateLivingId(), "livingPcs");
-		}
-		if (user.getStateVotingId() != null && user.getStateVotingId() > 0) {
-			addDistrictIntoModel(mv, user.getStateVotingId(), "votingDistricts");
-			addPcIntoModel(mv, user.getStateVotingId(), "votingPcs");
-		}
-		if (user.getDistrictLivingId() != null && user.getDistrictLivingId() > 0) {
-			addAcIntoModel(mv, user.getDistrictLivingId(), "livingAcs");
-		}
-		if (user.getDistrictVotingId() != null && user.getDistrictVotingId() > 0) {
-			addAcIntoModel(mv, user.getDistrictVotingId(), "votingAcs");
-		}
-		if (user.getNriCountryId() != null && user.getNriCountryId() > 0) {
-			addNriCountryRegionsIntoModel(mv, user.getNriCountryId());
-		}
-		if (user.getNriCountryRegionId() != null && user.getNriCountryRegionId() > 0) {
-			addNriCountryRegionAreasIntoModel(mv, user.getNriCountryRegionId());
-		}
+    private ModelAndView preparePage(HttpServletRequest httpServletRequest, UserDto user, ModelAndView mv) {
+
+        addNriCountriesIntoModel(mv);
+        addIndianStatesIntoModel(mv);
+        if (user.getStateLivingId() != null && user.getStateLivingId() > 0) {
+            addDistrictIntoModel(mv, user.getStateLivingId(), "livingDistricts");
+            addPcIntoModel(mv, user.getStateLivingId(), "livingPcs");
+        }
+        if (user.getStateVotingId() != null && user.getStateVotingId() > 0) {
+            addDistrictIntoModel(mv, user.getStateVotingId(), "votingDistricts");
+            addPcIntoModel(mv, user.getStateVotingId(), "votingPcs");
+        }
+        if (user.getDistrictLivingId() != null && user.getDistrictLivingId() > 0) {
+            addAcIntoModel(mv, user.getDistrictLivingId(), "livingAcs");
+        }
+        if (user.getDistrictVotingId() != null && user.getDistrictVotingId() > 0) {
+            addAcIntoModel(mv, user.getDistrictVotingId(), "votingAcs");
+        }
+        if (user.getNriCountryId() != null && user.getNriCountryId() > 0) {
+            addNriCountryRegionsIntoModel(mv, user.getNriCountryId());
+        }
+        if (user.getNriCountryRegionId() != null && user.getNriCountryRegionId() > 0) {
+            addNriCountryRegionAreasIntoModel(mv, user.getNriCountryRegionId());
+        }
         loadVolunteerDetails(mv, user);
-		addGenericValuesInModel(httpServletRequest, mv);
-		return mv;
-	}
+        addGenericValuesInModel(httpServletRequest, mv);
+        return mv;
+    }
 
     private void printVolunteerDetail(UserDto user) {
         System.out.println("Volunteer : " + user.getVolunteerDto());
@@ -133,119 +132,117 @@ public class ProfileController extends AppBaseController {
         }
     }
 
-	@RequestMapping(value = "/profile.html", method = RequestMethod.POST)
-	public ModelAndView saveUserProfile(@ModelAttribute("user") UserDto user, BindingResult result, ModelAndView mv, HttpServletRequest httpServletRequest) {
+    @RequestMapping(value = "/profile.html", method = RequestMethod.POST)
+    public ModelAndView saveUserProfile(@ModelAttribute("user") UserDto user, BindingResult result, ModelAndView mv, HttpServletRequest httpServletRequest) {
         printVolunteerDetail(user);
-		mv = new ModelAndView(design + "/editprofile", "user", user);
-		if (result.hasErrors()) {
-			System.out.println("Has Errors " +result);
-			preparePage(httpServletRequest, user, mv);
-			return mv;
-		}
-		System.out.println("No Erros found ["+ user.getName()+","+ httpServletRequest.getParameter("name")+"]");
-		
-		UserDto loggedInUserUser = getLoggedInUserFromSesion(httpServletRequest);
-		UserDto editingUser = new UserDto();
-		BeanUtils.copyProperties(loggedInUserUser, editingUser);
+        mv = new ModelAndView(design + "/editprofile", "user", user);
+        if (result.hasErrors()) {
+            System.out.println("Has Errors " + result);
+            preparePage(httpServletRequest, user, mv);
+            return mv;
+        }
+        System.out.println("No Erros found [" + user.getName() + "," + httpServletRequest.getParameter("name") + "]");
 
-		editingUser.setAddress(user.getAddress());
-		editingUser.setAssemblyConstituencyLivingId(user.getAssemblyConstituencyLivingId());
-		editingUser.setAssemblyConstituencyVotingId(user.getAssemblyConstituencyVotingId());
-		editingUser.setDateOfBirth(user.getDateOfBirth());
-		editingUser.setDistrictLivingId(user.getDistrictLivingId());
-		editingUser.setDistrictVotingId(user.getDistrictVotingId());
-		editingUser.setCountryCode("91");
-		editingUser.setFatherName(user.getFatherName());
-		editingUser.setGender(user.getGender());
-		if(!editingUser.isMember()){
-			editingUser.setMember(user.isMember());	
-		}
-		editingUser.setMobileNumber(user.getMobileNumber());
-		editingUser.setMotherName(user.getMotherName());
-		editingUser.setName(user.getName());
-		editingUser.setNri(user.isNri());
-		editingUser.setNriCountryId(user.getNriCountryId());
-		editingUser.setNriCountryRegionId(user.getNriCountryRegionId());
-		editingUser.setNriCountryRegionAreaId(user.getNriCountryRegionAreaId());
-		editingUser.setNriMobileNumber(user.getMobileNumber());
-		editingUser.setParliamentConstituencyLivingId(user.getParliamentConstituencyLivingId());
-		editingUser.setParliamentConstituencyVotingId(user.getParliamentConstituencyVotingId());
-		editingUser.setPassportNumber(user.getPassportNumber());
-		editingUser.setStateLivingId(user.getStateLivingId());
-		editingUser.setStateVotingId(user.getStateVotingId());
-		editingUser.setVoterId(user.getVoterId());
+        UserDto loggedInUserUser = getLoggedInUserFromSesion(httpServletRequest);
+        UserDto editingUser = new UserDto();
+        BeanUtils.copyProperties(loggedInUserUser, editingUser);
+
+        editingUser.setAddress(user.getAddress());
+        editingUser.setAssemblyConstituencyLivingId(user.getAssemblyConstituencyLivingId());
+        editingUser.setAssemblyConstituencyVotingId(user.getAssemblyConstituencyVotingId());
+        editingUser.setDateOfBirth(user.getDateOfBirth());
+        editingUser.setDistrictLivingId(user.getDistrictLivingId());
+        editingUser.setDistrictVotingId(user.getDistrictVotingId());
+        editingUser.setCountryCode("91");
+        editingUser.setFatherName(user.getFatherName());
+        editingUser.setGender(user.getGender());
+        if (!editingUser.isMember()) {
+            editingUser.setMember(user.isMember());
+        }
+        editingUser.setMobileNumber(user.getMobileNumber());
+        editingUser.setMotherName(user.getMotherName());
+        editingUser.setName(user.getName());
+        editingUser.setNri(user.isNri());
+        editingUser.setNriCountryId(user.getNriCountryId());
+        editingUser.setNriCountryRegionId(user.getNriCountryRegionId());
+        editingUser.setNriCountryRegionAreaId(user.getNriCountryRegionAreaId());
+        editingUser.setNriMobileNumber(user.getMobileNumber());
+        editingUser.setParliamentConstituencyLivingId(user.getParliamentConstituencyLivingId());
+        editingUser.setParliamentConstituencyVotingId(user.getParliamentConstituencyVotingId());
+        editingUser.setPassportNumber(user.getPassportNumber());
+        editingUser.setStateLivingId(user.getStateLivingId());
+        editingUser.setStateVotingId(user.getStateVotingId());
+        editingUser.setVoterId(user.getVoterId());
         editingUser.setVolunteer(user.isVolunteer());
         editingUser.setVolunteerDto(user.getVolunteerDto());
         editingUser.setUserInterestDtos(user.getUserInterestDtos());
-		
-		if(!editingUser.isNri()){
-			if (editingUser.getStateLivingId() == null || editingUser.getStateLivingId() == 0) {
-				addErrorInModel(mv,"Please select State where you are living currently");
-			}
-			if (editingUser.getDistrictLivingId() == null || editingUser.getDistrictLivingId() == 0) {
-				addErrorInModel(mv,"Please select District where you are living currently");
-			}
-			if (editingUser.getAssemblyConstituencyLivingId() == null || editingUser.getAssemblyConstituencyLivingId() == 0) {
-				addErrorInModel(mv,"Please select Assembly Constituency where you are living currently");
-			}
-			if (editingUser.getParliamentConstituencyLivingId() == null || editingUser.getParliamentConstituencyLivingId() == 0) {
-				addErrorInModel(mv,"Please select Parliament Constituency where you are living currently");
-			}
-		}
-		
-		if (editingUser.getStateVotingId() == null || editingUser.getStateVotingId() == 0) {
-			addErrorInModel(mv,"Please select State where you are registered as Voter");
-		}
-		if (editingUser.getDistrictVotingId() == null || editingUser.getDistrictVotingId() == 0) {
-			addErrorInModel(mv,"Please select District where you are registered as Voter");
-		}
-		if (editingUser.getAssemblyConstituencyVotingId() == null || editingUser.getAssemblyConstituencyVotingId() == 0) {
-			addErrorInModel(mv,"Please select Assembly Constituency where you registered as Voter");
-		}
-		if (editingUser.getParliamentConstituencyVotingId() == null || editingUser.getParliamentConstituencyVotingId() == 0) {
-			addErrorInModel(mv,"Please select Parliament Constituency where you registered as Voter");
-		}
-		if (editingUser.isNri() ){
-			if((editingUser.getNriCountryId() == null || editingUser.getNriCountryId() == 0)) {
-				addErrorInModel(mv,"Please select Country where you Live");
-			}
-			if(editingUser.isMember() && StringUtil.isEmpty(editingUser.getPassportNumber())){
-				addErrorInModel(mv,"Please enter passport number. Its Required for NRIs to become member.");
-			}
-		}
-		if (editingUser.getDateOfBirth() == null) {
-			addErrorInModel(mv,"Please enter your Date of Birth");
-		}
-		if (StringUtil.isEmptyOrWhitespace(editingUser.getName())) {
-			addErrorInModel(mv,"Please enter your full name");
-		}
-		if(isValidInput(mv)){
-			try {
-				System.out.println("saving User " + editingUser);
-				editingUser = aapService.saveUser(editingUser);
 
-                if (editingUser.isVolunteer()) {
-                    List<Long> selectedInterests = new ArrayList<Long>();
-                    for (UserInterestDto oneInterestDto : user.getUserInterestDtos()) {
-                        if (oneInterestDto.isSelected()) {
-                            selectedInterests.add(oneInterestDto.getId());
-                        }
+        if (!editingUser.isNri()) {
+            if (editingUser.getStateLivingId() == null || editingUser.getStateLivingId() == 0) {
+                addErrorInModel(mv, "Please select State where you are living currently");
+            }
+            if (editingUser.getDistrictLivingId() == null || editingUser.getDistrictLivingId() == 0) {
+                addErrorInModel(mv, "Please select District where you are living currently");
+            }
+            if (editingUser.getAssemblyConstituencyLivingId() == null || editingUser.getAssemblyConstituencyLivingId() == 0) {
+                addErrorInModel(mv, "Please select Assembly Constituency where you are living currently");
+            }
+            if (editingUser.getParliamentConstituencyLivingId() == null || editingUser.getParliamentConstituencyLivingId() == 0) {
+                addErrorInModel(mv, "Please select Parliament Constituency where you are living currently");
+            }
+        }
+
+        if (editingUser.getStateVotingId() == null || editingUser.getStateVotingId() == 0) {
+            addErrorInModel(mv, "Please select State where you are registered as Voter");
+        }
+        if (editingUser.getDistrictVotingId() == null || editingUser.getDistrictVotingId() == 0) {
+            addErrorInModel(mv, "Please select District where you are registered as Voter");
+        }
+        if (editingUser.getAssemblyConstituencyVotingId() == null || editingUser.getAssemblyConstituencyVotingId() == 0) {
+            addErrorInModel(mv, "Please select Assembly Constituency where you registered as Voter");
+        }
+        if (editingUser.getParliamentConstituencyVotingId() == null || editingUser.getParliamentConstituencyVotingId() == 0) {
+            addErrorInModel(mv, "Please select Parliament Constituency where you registered as Voter");
+        }
+        if (editingUser.isNri()) {
+            if ((editingUser.getNriCountryId() == null || editingUser.getNriCountryId() == 0)) {
+                addErrorInModel(mv, "Please select Country where you Live");
+            }
+            if (editingUser.isMember() && StringUtil.isEmpty(editingUser.getPassportNumber())) {
+                addErrorInModel(mv, "Please enter passport number. Its Required for NRIs to become member.");
+            }
+        }
+        if (editingUser.getDateOfBirth() == null) {
+            addErrorInModel(mv, "Please enter your Date of Birth");
+        }
+        if (StringUtil.isEmptyOrWhitespace(editingUser.getName())) {
+            addErrorInModel(mv, "Please enter your full name");
+        }
+        if (isValidInput(mv)) {
+            try {
+                System.out.println("saving User " + editingUser);
+                editingUser = aapService.saveUser(editingUser);
+
+                System.out.println("saving Volunteer Detail");
+                List<Long> selectedInterests = new ArrayList<Long>();
+                for (UserInterestDto oneInterestDto : user.getUserInterestDtos()) {
+                    if (oneInterestDto.isSelected()) {
+                        selectedInterests.add(oneInterestDto.getId());
                     }
-                    VolunteerDto selectedVolunteer = editingUser.getVolunteerDto();
-                    selectedVolunteer.setInfoRecordedAt("Self Service Portal");
-                    selectedVolunteer.setInfoRecordedBy("Self");
-                    selectedVolunteer.setUserId(loggedInUserUser.getId());
-                    selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
                 }
+                VolunteerDto selectedVolunteer = editingUser.getVolunteerDto();
+                selectedVolunteer.setInfoRecordedAt("Self Service Portal");
+                selectedVolunteer.setInfoRecordedBy("Self");
+                selectedVolunteer.setUserId(loggedInUserUser.getId());
+                selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
 
-			} catch (Exception ex) {
-				addErrorInModel(mv, ex.getMessage());
-			}
-		}
+            } catch (Exception ex) {
+                addErrorInModel(mv, ex.getMessage());
+            }
+        }
 
-		
-		mv = preparePage(httpServletRequest, user, mv);
-		return mv;
-	}
+        mv = preparePage(httpServletRequest, user, mv);
+        return mv;
+    }
 
 }

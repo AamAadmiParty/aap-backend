@@ -615,6 +615,8 @@
                                             }
                                             %>
 											<td>
+											<form:hidden path="userInterestDtos[${count}].description" />
+											<form:hidden path="userInterestDtos[${count}].id" />
 											<form:checkbox path="userInterestDtos[${count}].selected" />${oneInterest.description}       
                                         <c:set var="count" scope="session" value="${count + 1}"/>
 											</td>

@@ -4256,7 +4256,7 @@ public class AapServiceImpl implements AapService, Serializable {
 		volunteer.setProfessionalBackground(volunteerDto.getProfessionalBackground());
 		volunteer.setUser(user);
 		volunteer.setUserId(user.getId());
-
+        System.out.println("Saving Volunteer : " + volunteer);
 		volunteer = volunteerDao.saveVolunteer(volunteer);
 
 		user.setVolunteer(true);

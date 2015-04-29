@@ -238,6 +238,7 @@ public class ProfileController extends AppBaseController {
                 user.setVolunteerDto(selectedVolunteer);
 
             } catch (Exception ex) {
+                ex.printStackTrace();
                 addErrorInModel(mv, ex.getMessage());
             }
         }

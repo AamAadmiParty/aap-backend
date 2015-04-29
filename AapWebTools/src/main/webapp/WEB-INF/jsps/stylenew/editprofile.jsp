@@ -311,6 +311,11 @@
 			$('#nriDiv').hide();
 			$('#indianLocationDiv').show();
 		}
+		if ('${loggedInUser.volunteer}' == 'true') {
+            $('#indianLocationDiv').hide();
+        } else {
+            $('#volunteerDiv').hide();
+        }
 
 		$('#nri1').click(function() {
 			if ($('#nri1').prop('checked')) {
@@ -323,8 +328,8 @@
 			}
 
 		});
-		$('#volunteer').click(function() {
-            if ($('#volunteer').prop('checked')) {
+		$('#volunteer1').click(function() {
+            if ($('#volunteer1').prop('checked')) {
                 $('#volunteerDiv').show();
             } else {
                 $('#volunteerDiv').hide();
@@ -607,7 +612,12 @@
 
 					<!--partymembertab-->
 					<!--partymembertab-->
+					<div class="blockdiv">
+                        <label>I Want to Volunteer</label>
+                        <form:checkbox path="volunteer" class="textbox" title="Select if you are currently living outside India" />
+                    </div>
 					
+                        
                     <div id="volunteerDiv">
                     <c:set var="count" scope="session" value="0"/>
 
@@ -615,7 +625,7 @@
                         <div class="editprofile">${oneInterestGroup.description}</div>
                         <div class="blockdiv">
                         <% int colCount = 0; %>
-                        <table>
+                        <table width="100%" >
                                     <tbody>
                             <c:forEach items="${oneInterestGroup.interestDtos}" varStatus="status" var="oneInterest">
                                             <% 

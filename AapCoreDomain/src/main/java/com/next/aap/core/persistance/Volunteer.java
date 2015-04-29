@@ -182,5 +182,13 @@ public class Volunteer {
 		this.interests = interests;
 	}
 
+    @Override
+    public String toString() {
+        return "Volunteer [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + ", education="
+                + education + ", professionalBackground=" + professionalBackground + ", domainExpertise=" + domainExpertise + ", offences=" + offences + ", emergencyContactName="
+                + emergencyContactName + ", emergencyContactRelation=" + emergencyContactRelation + ", emergencyContactNo=" + emergencyContactNo + ", infoRecordedBy=" + infoRecordedBy
+                + ", infoRecordedAt=" + infoRecordedAt + ", user=" + user + ", userId=" + userId + ", interests=" + interests + "]";
+    }
+
 	
 }

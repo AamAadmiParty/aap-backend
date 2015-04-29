@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.next.aap.core.service.AapService;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
@@ -41,6 +42,7 @@ public class LocationCacheDbImpl {
 
 	private List<StateDto> allStates;
 	private Map<Long,StateDto> allStatesMapById;
+    private Map<String, StateDto> allStatesMapByDomain;
 	private Map<Long, List<DistrictDto>> stateToDistrictMap;
 	private Map<Long,DistrictDto> allDistrictMapById;
 	private Map<Long,AssemblyConstituencyDto> allAssemblyConstituencyMapById;
@@ -86,6 +88,7 @@ public class LocationCacheDbImpl {
 		logger.info("refreshing Location cache");
 		List<StateDto> allDbStates;
 		Map<Long, StateDto> allDStatesMapById;
+		Map<String, StateDto> allDStatesMapByDomain;
 		Map<Long, List<AssemblyConstituencyDto>> localDistrictToAcMap = new HashMap<>();
 		Map<Long, DistrictDto> allDbDistrictMapById = new HashMap<>();
 		Map<Long, List<DistrictDto>> localStateToDistrictMap = new HashMap<>();
@@ -95,6 +98,7 @@ public class LocationCacheDbImpl {
 		Map<Long, ParliamentConstituencyDto> allDbPcMapById = new HashMap<>();
 		
 		allDStatesMapById = new HashMap<>();
+        allDStatesMapByDomain = new HashMap<String, StateDto>();
 		
 		List<CountryDto> allCountriesLocal;
 		Map<Long, List<CountryRegionDto>> allCountryRegionsLocal = new HashMap<>();
@@ -113,6 +117,10 @@ public class LocationCacheDbImpl {
                     logger.warn("Loading Delhi State");
                 }
 				allDStatesMapById.put(oneStateDto.getId(), oneStateDto);
+                if (!StringUtils.isEmpty(oneStateDto.getSubDomainName())) {
+                    allDStatesMapByDomain.put(oneStateDto.getSubDomainName().toLowerCase(), oneStateDto);
+                }
+                allDStatesMapById.put(oneStateDto.getId(), oneStateDto);
                 allStateAssemblyConstituencies = aapService.getAllAssemblyConstituenciesOfState(oneStateDto.getId());
 				allDistricts = aapService.getAllDistrictOfState(oneStateDto.getId());
 				localStateToDistrictMap.put(oneStateDto.getId(), allDistricts);
@@ -166,6 +174,7 @@ public class LocationCacheDbImpl {
 			
 			this.allStates = allDbStates;
 			this.allStatesMapById = allDStatesMapById;
+            this.allStatesMapByDomain = allDStatesMapByDomain;
 			this.stateToDistrictMap = localStateToDistrictMap;
 			this.districtToAcMap = localDistrictToAcMap;
 			this.stateToAcMap = localStateToAcMap;
@@ -245,4 +254,12 @@ public class LocationCacheDbImpl {
 		return allCountryRegionAreas.get(countryRegionId);
 	}
 
+    public Map<String, StateDto> getAllStatesMapByDomain() {
+        return allStatesMapByDomain;
+    }
+    
+    public StateDto getStatesByDomain(String domainName) {
+        return allStatesMapByDomain.get(domainName.toLowerCase());
+    }
+    
 }

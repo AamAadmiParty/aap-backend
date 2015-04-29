@@ -1,7 +1,6 @@
 package com.next.aap.core.persistance;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -46,6 +45,8 @@ public class State {
 	
 	@Column(name = "name", nullable = false, length=256)
 	private String name;
+    @Column(name = "sub_domain_name", nullable = false, length = 32)
+    private String subDomainName;
 	
 	@Column(name = "name_up", nullable = false, length=256)
 	private String nameUp;
@@ -119,7 +120,15 @@ public class State {
 		this.name = name;
 	}
 	
-	public String getNameUp() {
+    public String getSubDomainName() {
+        return subDomainName;
+    }
+
+    public void setSubDomainName(String subDomainName) {
+        this.subDomainName = subDomainName;
+    }
+
+    public String getNameUp() {
 		return nameUp;
 	}
 

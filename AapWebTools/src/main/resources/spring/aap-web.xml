@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:util="http://www.springframework.org/schema/util"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
 	xmlns:task="http://www.springframework.org/schema/task" xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="
 http://www.springframework.org/schema/beans
@@ -23,18 +20,23 @@ http://www.springframework.org/schema/util/spring-util.xsd
 http://www.springframework.org/schema/task
 http://www.springframework.org/schema/task/spring-task-3.1.xsd">
 
-    <import resource="classpath:aap-core.xml" />
-    <mvc:annotation-driven />
+	<import resource="classpath:aap-core.xml" />
+	<mvc:annotation-driven />
 	<context:annotation-config />
-    
+
 	<context:component-scan base-package="com.next.aap.web.jsf.beans" />
-	<context:component-scan base-package="com.next.aap.web.cache" />	
-	<context:component-scan base-package="com.next.aap.web.util" />	
-	
+	<context:component-scan base-package="com.next.aap.web.cache" />
+	<context:component-scan base-package="com.next.aap.web.util" />
+
 	<task:annotation-driven executor="scheduleExecutor" scheduler="taskScheduler" />
 
 	<task:executor id="scheduleExecutor" pool-size="5" />
 
 	<task:scheduler id="taskScheduler" pool-size="10" />
-	
+
+	<mvc:interceptors>
+		<bean class="com.next.aap.web.controller.SubDomainInterceptor" />
+		
+	</mvc:interceptors>
+
 </beans>

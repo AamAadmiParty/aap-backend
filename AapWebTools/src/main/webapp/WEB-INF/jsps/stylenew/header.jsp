@@ -42,16 +42,10 @@
 			 <li>
 			 <select id="stateSiteId" name="stateSiteId" title="Choose State">
                      <option value="0">National</option>
-                     <c:forEach items="states" var="oneState">
+                     <c:forEach items="${states}" var="oneState">
                         <option value="${oneState.id}">${oneState.name}</option>
                      </c:forEach>
 			 </select>
-			 <form:select path="gender" title="Choose Your Gender">
-			 
-                            <form:option value="select"> Select</form:option>
-                            <form:option value="Male">Male</form:option>
-                            <form:option value="Female">Female</form:option>
-                        </form:select>
 			 </li>
 			 
 		</ul>

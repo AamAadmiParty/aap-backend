@@ -7,6 +7,7 @@ public class StateDto implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String name;
+    private String subDomainName;
 	private Boolean districtDataAvailable;
 
 	public Long getId() {
@@ -25,7 +26,15 @@ public class StateDto implements Serializable{
 		this.name = name;
 	}
 
-	public Boolean getDistrictDataAvailable() {
+    public String getSubDomainName() {
+        return subDomainName;
+    }
+
+    public void setSubDomainName(String subDomainName) {
+        this.subDomainName = subDomainName;
+    }
+
+    public Boolean getDistrictDataAvailable() {
 		return districtDataAvailable;
 	}
 

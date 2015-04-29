@@ -571,13 +571,10 @@
 									<ul>
 										<li><c:out value="STEP – 1 –	Complete Your Profile above." /></li>
 										<li><c:out value="STEP – 2 –	You can pay your membership fees of Rs 10 in two ways." /></li>
-										<li><c:out
-												value="STEP - 2a -	Submit the form and pay Rs. 10. online through Credit/Debit Card Or Internet Banking As Membership Fees and become a member.The email confirmation that you receive on making the payment in option is your confirmation of membership.." /></li>
+										<li><c:out value="STEP - 2a -	Submit the form and pay Rs. 10. online through Credit/Debit Card Or Internet Banking As Membership Fees and become a member.The email confirmation that you receive on making the payment in option is your confirmation of membership.." /></li>
 										<li><b><c:out value="or" /></b></li>
-										<li><c:out
-												value="STEP - 2a -	Purchase a Postal Order (PO) of Rs.10/- from your local Post Office (if a single PO is not available you can purchase two Rs.5/- POs or any other combination). In 'PAY TO' write 'Aam Aadmi Party'. Please leave 'AT THE POST OFFICE AT' column blank. You can keep the counterfoil with yourself as acknowledgement." /></li>
-										<li><c:out
-												value="STEP - 2b -	Submit this printout of the membership form along with a postal order of Rs.10/- at the party office of your city OR send the printout and postal order to our national office at -Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
+										<li><c:out value="STEP - 2a -	Purchase a Postal Order (PO) of Rs.10/- from your local Post Office (if a single PO is not available you can purchase two Rs.5/- POs or any other combination). In 'PAY TO' write 'Aam Aadmi Party'. Please leave 'AT THE POST OFFICE AT' column blank. You can keep the counterfoil with yourself as acknowledgement." /></li>
+										<li><c:out value="STEP - 2b -	Submit this printout of the membership form along with a postal order of Rs.10/- at the party office of your city OR send the printout and postal order to our national office at -Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
 									</ul>
 								</p>
 							</div>
@@ -587,13 +584,10 @@
 									<ul>
 										<li><c:out value="चरण - 1 -	नीचे दिए गए फॉर्म में अपना विवरण भरें ।" /></li>
 										<li><c:out value="चरण - 2 -	आप दो तरह से 10 रुपये की अपनी सदस्यता शुल्क का भुगतान कर सकते हैं." /></li>
-										<li><c:out
-												value="चरण - 2a -	फॉर्म को भरकर क्रेडिट कार्ड / डेबिट कार्ड या नेट बैंकिंग के माध्यम से भी ऑनलाइन सदस्यता शुल्क (Membership fee) रु . 10/- का भुगतान कर सकते हैं | पुष्टि ईमेल जो आपको प्राप्त होगी वही आपकी सदस्यता की पुष्टि है |" /></li>
+										<li><c:out value="चरण - 2a -	फॉर्म को भरकर क्रेडिट कार्ड / डेबिट कार्ड या नेट बैंकिंग के माध्यम से भी ऑनलाइन सदस्यता शुल्क (Membership fee) रु . 10/- का भुगतान कर सकते हैं | पुष्टि ईमेल जो आपको प्राप्त होगी वही आपकी सदस्यता की पुष्टि है |" /></li>
 										<li><b><c:out value="या" /></b></li>
-										<li><c:out
-												value="चरण - 2a -	अपने स्थानीय पोस्ट ऑफिस से दस रुपये का पोस्टल आर्डर लेकर (अगर दस रुपये का एक पोस्टल आर्डर न मिले तो आप पांच रुपये के दो या कोई अन्य मोल). अदा करें में 'आम आदमी पार्टी' लिखें. 'पोस्ट ऑफिस पर' की जगह खाली छोड़ दें. आधी जमा पर्ची अपने पास पावती के तौर पर रख लें." /></li>
-										<li><c:out
-												value="चरण - 2b -	इस प्रिंटआउट को रु . 10/- के पोस्टल आर्डर के साथ अपने शहर के पार्टी दफ्तर में जमा करें या पार्टी के केंद्रीय कार्यालय को इस पते पर डाक द्वारा भेजें - Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
+										<li><c:out value="चरण - 2a -	अपने स्थानीय पोस्ट ऑफिस से दस रुपये का पोस्टल आर्डर लेकर (अगर दस रुपये का एक पोस्टल आर्डर न मिले तो आप पांच रुपये के दो या कोई अन्य मोल). अदा करें में 'आम आदमी पार्टी' लिखें. 'पोस्ट ऑफिस पर' की जगह खाली छोड़ दें. आधी जमा पर्ची अपने पास पावती के तौर पर रख लें." /></li>
+										<li><c:out value="चरण - 2b -	इस प्रिंटआउट को रु . 10/- के पोस्टल आर्डर के साथ अपने शहर के पार्टी दफ्तर में जमा करें या पार्टी के केंद्रीय कार्यालय को इस पते पर डाक द्वारा भेजें - Ground floor, A-119, Kaushambi, Ghaziabad, UP, 201010." /></li>
 									</ul>
 								</p>
 							</div>
@@ -607,16 +601,21 @@
 					<input name="" type="submit" class="button" value="Save Profile" />
 
 
-					<c:forEach items="${interestGroups}" var="oneInterest" varstatus="status">
-						<table>
-							<tbody>
-								<tr>
-									<td>${oneInterest.description}</td>
-									<td><input type="checkbox" name="vehicle" value="user.volunteerDto.selectedInterestMap[${oneInterest.id}]" /></td>
-								</tr>
-
-							</tbody>
-						</table>
+					<c:forEach items="${interestGroups}" var="oneInterestGroup">
+						<div class="editprofile">${oneInterestGroup.description}</div>
+						<div class="blockdiv">
+							<c:forEach items="${oneInterestGroup.data}" var="oneInterest">
+								<table>
+									<tbody>
+										<tr>
+											<td>${oneInterest.description}</td>
+											<td><input type="checkbox" name="vehicle"
+												value="user.volunteerDto.selectedInterestMap[${oneInterest.id}]" /></td>
+										</tr>
+									</tbody>
+								</table>
+							</c:forEach>
+						</div>
 					</c:forEach>
 				</form:form>
 			</div>

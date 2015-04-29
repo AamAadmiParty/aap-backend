@@ -655,6 +655,10 @@
                                 </table>
                         </div>
                     </c:forEach>
+                    <div class="blockdiv">
+                        <label>Education</label>
+                        <form:input path="volunteerDto.education" class="textbox" title="Please Enter Your maximum Education level" />
+                    </div>
                     </div>
                     
                     <input name="" type="submit" class="button" value="Save Profile" />

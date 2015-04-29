@@ -1,7 +1,6 @@
 package com.next.aap.web.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 
 public class VolunteerDto implements Serializable{
@@ -19,8 +18,6 @@ public class VolunteerDto implements Serializable{
 	private String infoRecordedAt;
 	
 	private Long userId;
-
-    List<UserInterestDto> userInterestDtos;
 
 	public Long getId() {
 		return id;
@@ -110,19 +107,11 @@ public class VolunteerDto implements Serializable{
 		this.userId = userId;
 	}
 
-    public List<UserInterestDto> getUserInterestDtos() {
-        return userInterestDtos;
-    }
-
-    public void setUserInterestDtos(List<UserInterestDto> userInterestDtos) {
-        this.userInterestDtos = userInterestDtos;
-    }
-
     @Override
     public String toString() {
         return "VolunteerDto [id=" + id + ", education=" + education + ", professionalBackground=" + professionalBackground + ", domainExpertise=" + domainExpertise + ", offences=" + offences
                 + ", emergencyContactName=" + emergencyContactName + ", emergencyContactRelation=" + emergencyContactRelation + ", emergencyContactNo=" + emergencyContactNo + ", infoRecordedBy="
-                + infoRecordedBy + ", infoRecordedAt=" + infoRecordedAt + ", userId=" + userId + ", userInterestDtos=" + userInterestDtos + "]";
+                + infoRecordedBy + ", infoRecordedAt=" + infoRecordedAt + ", userId=" + userId + "]";
     }
 	
 

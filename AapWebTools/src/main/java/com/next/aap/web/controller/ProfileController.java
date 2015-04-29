@@ -83,8 +83,8 @@ public class ProfileController extends AppBaseController {
 
             if (selectedVolunteer == null) {
                 selectedVolunteer = new VolunteerDto();
+                selectedVolunteer.setEducation("B.Tech");
             }
-            selectedVolunteer.setUserInterestDtos(userInterestDtos);
             user.setVolunteerDto(selectedVolunteer);
             user.setUserInterestDtos(userInterestDtos);
         } catch (Exception ex) {
@@ -230,7 +230,7 @@ public class ProfileController extends AppBaseController {
                         selectedInterests.add(oneInterestDto.getId());
                     }
                 }
-                VolunteerDto selectedVolunteer = editingUser.getVolunteerDto();
+                VolunteerDto selectedVolunteer = user.getVolunteerDto();
                 selectedVolunteer.setInfoRecordedAt("Self Service Portal");
                 selectedVolunteer.setInfoRecordedBy("Self");
                 selectedVolunteer.setUserId(loggedInUserUser.getId());

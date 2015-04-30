@@ -27,6 +27,7 @@ public class HomeNewController extends AppBaseJsonController {
 
             addNewsInModel(httpServletRequest, contextJsonObject);
             addUserAcCandidateInModel(httpServletRequest, contextJsonObject);
+            mv.getModel().put("context", contextJsonObject.toString());
 			
 		}catch(Exception ex){
 			logger.error("Unable to Generate Main Page",ex);

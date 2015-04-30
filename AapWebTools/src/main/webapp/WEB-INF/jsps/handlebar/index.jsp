@@ -89,7 +89,7 @@
 
     var template = Handlebars.compile(source);
 
-    var context = {title: "My New Post", body: "This is my first post!"};
+    var context = ${context};
 
     var html    = template(context);
 

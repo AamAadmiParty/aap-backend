@@ -31,7 +31,7 @@ Handlebars.registerHelper('trimString', function(passedString) {
 	   if(passedString.length <= 500){
 	      return passedString;
 	   }
-	    var theString = passedString.substring(0,150);
+	    var theString = passedString.substring(0,500);
 	    return new Handlebars.SafeString(theString)
 	});
 </script>
@@ -150,10 +150,6 @@ Handlebars.registerHelper('trimString', function(passedString) {
 
 </script>
 
-	<jsp:include page="rightside.jsp" />
-
-
-	</div>
 	<!--contentarea-->
 
 	<jsp:include page="footer.jsp" />

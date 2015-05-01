@@ -11,22 +11,21 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.2/handlebars.min.js"></script>
+<meta charset="utf-8" />
+<meta name="google-site-verification" content="szZXs81i9wwYfIVcZy4hDzCKHtxsnuOMoLwfGDhlzdss" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="https://s3-us-west-2.amazonaws.com/swaraj/prod/favicon.ico" />
+<link rel="stylesheet" type="text/css" href="https://s3-us-west-2.amazonaws.com/swaraj/prod/styles/mainstyles.css" />
 
-<jsp:include page="includes.jsp" />
 
 <meta property="og:title" content="Swaraj Abhiyan" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="{{currentUrl}}" />
+<meta property="og:url" content="${currentUrl}" />
 <meta property="og:image" content="https://s3-us-west-2.amazonaws.com/swaraj/prod/images/missing.png" />
 <meta property="og:site_name" content="Swaraj Abhiyan, India" />
 
 </head>
 <body>
-
-	<jsp:include page="header.jsp" />
-
-	<jsp:include page="topscroller.jsp" />
-
 
 	<script id="entry-template" type="text/x-handlebars-template">
 <div class="contentarea">
@@ -48,7 +47,7 @@
     </div>
     <!--articleCategory-tablist-->
 
-    {{#list newsItems.items}}
+    {{#each newsItems.items}}
     
         <div class="divarticle">
             <!--divarticle-->
@@ -64,20 +63,63 @@
                     ...<a href="{{contextPath}}/content/news/{{id}}">Read More</a>
                 </p>
         </div>
-    {{/list}}
+    {{/each}}
 
     </div>
+    <div class="rhsarea">
+        {{#if loggedInUser}}
+            Ravi
+        {{else}}
+            Sharma
+        <div class="joincommunity">
+            <!--joincommunity-->
+            <a href="${contextPath}/profile.html"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
+            <ul>
+                <li>To participate in polls</li>
+                <li>To track your donation network</li>
+                <li>To help spread the word</li>
+                <li>And lots more...</li>
+            </ul>
+        </div>
+        {{/if}}
+        <div class="facebookWidget">
+                            <!--facebookWidget-->
+                            <iframe
+                                src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FSwaraj.Samwad&amp;width=728&amp;height=590&amp;show_faces=true&amp;colorscheme=light&amp;stream=true&amp;show_border=true&amp;header=true"
+                                scrolling="no" frameborder="0" style="border: none; overflow: hidden; width: 322px; height: 530px;"
+                                allowTransparency="true"></iframe>
+                        </div>
+                        <!--facebookWidget-->
+                        <div class="twitterWidget">
+                            <!--twitterWidget-->
+                            <a class="twitter-timeline" href="https://twitter.com/swaraj_abhiyan" data-widget-id="591375821736120321">Tweets
+                                by @swaraj_abhiyan</a>
+                            <script>
+                                !function(d, s, id) {
+                                    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/
+                                            .test(d.location) ? 'http'
+                                            : 'https';
+                                    if (!d.getElementById(id)) {
+                                        js = d.createElement(s);
+                                        js.id = id;
+                                        js.src = p
+                                                + "://platform.twitter.com/widgets.js";
+                                        fjs.parentNode.insertBefore(js, fjs);
+                                    }
+                                }(document, "script", "twitter-wjs");
+                            </script>
+
+
+                        </div>
+                        <!--twitterWidget-->
+
+                        <div class="clear"></div>
+    </div>
+</div>
 </script>
 	<!--article-leftarea-->
 
 	<div id="final"></div>
-
-
-
-
-
-
-
 
 
 

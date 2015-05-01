@@ -17,7 +17,7 @@ public class HomeNewController extends AppBaseJsonController {
 			HttpServletRequest httpServletRequest) {
 		try{
             JsonObject contextJsonObject = new JsonObject();
-            addGenericValuesInModel(httpServletRequest, contextJsonObject);
+            addGenericValuesInModel(httpServletRequest, mv, contextJsonObject);
             System.out.println("Server=[" + httpServletRequest.getServerName() + "]");
             if (httpServletRequest.getServerName().equals("www.swarajabhiyan.org")) {
                 mv.setViewName("handlebar/index");
@@ -28,6 +28,7 @@ public class HomeNewController extends AppBaseJsonController {
             addNewsInModel(httpServletRequest, contextJsonObject);
             addUserAcCandidateInModel(httpServletRequest, contextJsonObject);
             mv.getModel().put("context", contextJsonObject.toString());
+            mv.getModel().put("currentUrl", httpServletRequest.getRequestURL().toString());
 			
 		}catch(Exception ex){
 			logger.error("Unable to Generate Main Page",ex);

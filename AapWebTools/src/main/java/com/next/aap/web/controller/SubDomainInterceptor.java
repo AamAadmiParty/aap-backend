@@ -8,7 +8,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.next.aap.web.cache.LocationCacheDbImpl;
-import com.next.aap.web.dto.StateDto;
 
 
 public class SubDomainInterceptor implements HandlerInterceptor {
@@ -17,9 +16,7 @@ public class SubDomainInterceptor implements HandlerInterceptor {
     private LocationCacheDbImpl locationCache;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("Domain name " + request.getServerName());
-        StateDto state = locationCache.getStatesByDomain(request.getServerName().toLowerCase());
-        System.out.println("state : " + state);
+        // StateDto state = locationCache.getStatesByDomain(request.getServerName().toLowerCase());
         return true;
     }
 

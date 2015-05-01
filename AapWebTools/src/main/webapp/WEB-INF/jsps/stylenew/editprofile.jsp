@@ -634,7 +634,7 @@
                                                 out.println("<tr>");
                                             }
                                             %>
-                                            <td>
+                                            <td width="33%">
                                             <form:hidden path="userInterestDtos[${count}].description" />
                                             <form:hidden path="userInterestDtos[${count}].id" />
                                             <form:checkbox path="userInterestDtos[${count}].selected" />${oneInterest.description}       

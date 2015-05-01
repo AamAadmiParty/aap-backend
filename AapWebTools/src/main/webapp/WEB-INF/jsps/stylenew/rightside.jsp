@@ -59,49 +59,7 @@
 							<td width="200"><c:out value='${candidate.acName}' />
 								<c:out value='${candidate.pcName}' /> - <c:out value='${candidate.stateName}' /></td>
 						</tr>
-						<!--
-                                        <tr>
-                                                <th width="200">Total Money Required</th>
-                                                <td width="200">Rs 40,00,000</td>
-                                        </tr>
-
-					<tr>
-						<th width="200">Total Transactions</th>
-						<td width="200">${donationCampaignInfo.ttxn}</td>
-					</tr>
-					<tr>
-						<th>Total Amount</th>
-						<td>${donationCampaignInfo.tamt}</td>
-					</tr>
-				</tbody>
-			</table>
-			<a href="${candidate.landingPageFullUrl}" id="candidate2">Read more .....</a>
-			</div>
-				*You can donate for above candidate by clicking here and can show your support.
-				<div class="blockdiv">
-					<input name="globalDonationButtonOnRight" id="globalDonationButtonOnRight" value="" type="button" class="donatebtnbig" />
-				</div>
-		</div>
-		</c:if>
-		<!--joincommunity-->
-						<%--
-		<div class="aap-performance">
-			<!--aap-performance-->
-			<img src="<c:out value='${staticDirectory}'/>/images/aap-performance.jpg" border="0" />
-			<form>
-				<ul>
-					<li><input name="" type="radio" value="" /> <label>Excellent</label></li>
-					<li><input name="" type="radio" value="" /> <label>Poor</label></li>
-					<li><input name="" type="radio" value="" /> <label>Below Expectation</label></li>
-					<li><input name="" type="radio" value="" /> <label>As Expected</label></li>
-					<li><input name="" type="radio" value="" /> <label>Above Expectation</label></li>
-					<li><input name="" class="votebutton" type="button" value="Vote" /></li>
-					<li><span class="vote">* Please login to vote</span></li>
-				</ul>
-			</form>
-		</div>
-		<!--aap-performance-->
-		 --%>
+						
 						<div class="facebookWidget">
 							<!--facebookWidget-->
 							<iframe

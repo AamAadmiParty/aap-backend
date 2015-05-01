@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gdata.util.common.base.StringUtil;
 import com.google.gson.Gson;
@@ -390,13 +391,15 @@ public class AppBaseJsonController extends BaseController{
 
 	}
 	
-    protected void addGenericValuesInModel(HttpServletRequest httpServletRequest, JsonObject contextJsonObject) {
+    protected void addGenericValuesInModel(HttpServletRequest httpServletRequest, ModelAndView mv, JsonObject contextJsonObject) {
         contextJsonObject.addProperty("design", design);
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
         contextJsonObject.add("loggedInUser", gson.toJsonTree(loggedInUser));
 		//mv.getModel().put("staticDirectory", "https://s3-us-west-2.amazonaws.com/my.aamaadmiparty.org/01prandesign");
         contextJsonObject.addProperty("staticDirectory", staticDirectory);
+        mv.getModel().put("staticDirectory", staticDirectory);
         contextJsonObject.addProperty("contextPath", httpServletRequest.getContextPath());
+        mv.getModel().put("contextPath", httpServletRequest.getContextPath());
 
 		LoginAccountDto loginAccountDto = getLoggedInAccountsFromSesion(httpServletRequest);
         contextJsonObject.add("loginAccounts", gson.toJsonTree(loginAccountDto));
@@ -407,6 +410,7 @@ public class AppBaseJsonController extends BaseController{
             contextJsonObject.addProperty("admin", false);
 		}
         contextJsonObject.addProperty("currentUrl", httpServletRequest.getRequestURL().toString());
+        mv.getModel().put("currentUrl", httpServletRequest.getRequestURL().toString());
         contextJsonObject.add("states", gson.toJsonTree(locationCacheDbImpl.getAllStates()));
 		
 	}

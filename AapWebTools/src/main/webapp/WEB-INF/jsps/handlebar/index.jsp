@@ -26,6 +26,15 @@
 
 </head>
 <body>
+<script>
+Handlebars.registerHelper('trimString', function(passedString) {
+	   if(passedString.length <= 500){
+	      return passedString;
+	   }
+	    var theString = passedString.substring(0,150);
+	    return new Handlebars.SafeString(theString)
+	});
+</script>
 
 	<script id="entry-template" type="text/x-handlebars-template">
 <div class="contentarea">

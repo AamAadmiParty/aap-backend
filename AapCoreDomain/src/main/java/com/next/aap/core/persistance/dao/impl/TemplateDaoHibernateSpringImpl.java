@@ -2,9 +2,12 @@ package com.next.aap.core.persistance.dao.impl;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import com.next.aap.core.persistance.Template;
 import com.next.aap.core.persistance.dao.TemplateDao;
 
+@Repository
 public class TemplateDaoHibernateSpringImpl extends BaseDaoHibernateSpring<Template> implements TemplateDao {
 
     private static final long serialVersionUID = 1L;

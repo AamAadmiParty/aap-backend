@@ -96,6 +96,7 @@ import com.next.aap.core.persistance.PollQuestion;
 import com.next.aap.core.persistance.Role;
 import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.StateRole;
+import com.next.aap.core.persistance.Template;
 import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
@@ -148,6 +149,7 @@ import com.next.aap.core.persistance.dao.PollQuestionDao;
 import com.next.aap.core.persistance.dao.RoleDao;
 import com.next.aap.core.persistance.dao.StateDao;
 import com.next.aap.core.persistance.dao.StateRoleDao;
+import com.next.aap.core.persistance.dao.TemplateDao;
 import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
@@ -202,6 +204,7 @@ import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.RoleDto;
 import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
+import com.next.aap.web.dto.TemplateDto;
 import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -327,6 +330,8 @@ public class AapServiceImpl implements AapService, Serializable {
 	private CandidateDao candidateDao;
     @Autowired
     private ElectionDao electionDao;
+    @Autowired
+    private TemplateDao templateDao;
 
 	@Value("${voa_facebook_app_id}")
 	private String voiceOfAapAppId;
@@ -6722,6 +6727,24 @@ public class AapServiceImpl implements AapService, Serializable {
         PlannedTweet plannedTweet = plannedTweetDao.getPlannedTweetByTweetId(tweetId);
         logger.info("plannedTweet - " + plannedTweet);
         return convertPlannedTweet(plannedTweet);
+    }
+
+    private TemplateDto convertTemplate(Template template) {
+        TemplateDto templateDto = new TemplateDto();
+        BeanUtils.copyProperties(template, templateDto);
+        templateDto.setStateDto(convertState(template.getState()));
+        return templateDto;
+    }
+    @Override
+    public TemplateDto getGlobalTemplate() throws AppException {
+        Template template = templateDao.getGlobalTemplate();
+        return null;
+    }
+
+    @Override
+    public List<TemplateDto> getStateTemplates() throws AppException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

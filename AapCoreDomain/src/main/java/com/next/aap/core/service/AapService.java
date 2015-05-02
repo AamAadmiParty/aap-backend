@@ -52,6 +52,7 @@ import com.next.aap.web.dto.PostLocationType;
 import com.next.aap.web.dto.RoleDto;
 import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
+import com.next.aap.web.dto.TemplateDto;
 import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -515,4 +516,8 @@ public interface AapService {
     List<ElectionDto> getAllElections() throws AppException;
 
     String blockTwitterAccountForTwitter(String screenName) throws AppException;
+
+    TemplateDto getGlobalTemplate() throws AppException;
+
+    List<TemplateDto> getStateTemplates() throws AppException;
 }

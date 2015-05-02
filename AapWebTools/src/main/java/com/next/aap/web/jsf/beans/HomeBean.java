@@ -21,12 +21,14 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 @ViewScoped
 @ManagedBean
 //@URLMapping(id = "homeBean", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/home.xhtml")
+/*
 @URLMappings(mappings={
 		@URLMapping(id = "homeBean1", beanName="homeBean", pattern = "/orig/home", viewId = "/WEB-INF/jsf/home.xhtml"),
 		@URLMapping(id = "homeBean2", beanName="homeBean", pattern = "/design1/home", viewId = "/WEB-INF/jsf/design1/home.xhtml"),
 		@URLMapping(id = "homeBean3", beanName="homeBean", pattern = "/aapstyle/home", viewId = "/WEB-INF/jsf/aapstyle/home.xhtml"),
 		@URLMapping(id = "homeBean4", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/aapnewstyle/home.xhtml")
 		})
+		*/
 @URLBeanName("homeBean")
 public class HomeBean extends BaseJsfBean {
 

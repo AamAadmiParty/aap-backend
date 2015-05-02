@@ -68,7 +68,7 @@ Handlebars.registerHelper('trimString', function(passedString) {
             <div class="img">
             </div>
                 <p>
-                    {{contentSummary}}
+                    {{trimString contentSummary}}
                     ...<a href="{{contextPath}}/content/news/{{id}}">Read More</a>
                 </p>
         </div>
@@ -77,9 +77,7 @@ Handlebars.registerHelper('trimString', function(passedString) {
     </div>
     <div class="rhsarea">
         {{#if loggedInUser}}
-            Ravi
         {{else}}
-            Sharma
         <div class="joincommunity">
             <!--joincommunity-->
             <a href="${contextPath}/profile.html"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>

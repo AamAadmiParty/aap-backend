@@ -16,9 +16,11 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 @ViewScoped
 @ManagedBean
 //@URLMapping(id = "homeBean", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/home.xhtml")
+/*
 @URLMappings(mappings={
 		@URLMapping(id = "videoBean", beanName="videolistBean", pattern = "/video/#{ videoBean.videoId }", viewId = "/WEB-INF/jsf/aapnewstyle/video.xhtml")
 		})
+		*/
 @URLBeanName("videoBean")
 public class VideoBean extends BaseJsfBean {
 

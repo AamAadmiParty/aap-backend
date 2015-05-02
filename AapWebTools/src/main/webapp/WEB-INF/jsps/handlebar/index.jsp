@@ -26,12 +26,10 @@
 
 </head>
 <body>
- <c:out value="${template}" escapeXml="false"></c:out>
+	<c:out value="${template}" escapeXml="false"></c:out>
 	<!--article-leftarea-->
 
 	<div id="final"></div>
-
-
 
 
 

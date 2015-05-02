@@ -1,4 +1,4 @@
-package com.next.aap.web.controller;
+package com.next.aap.web.controller.handlebar;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.JsonObject;
 
 @Controller
-public class HomeNewController extends AppBaseJsonController {
+public class HomeController extends AppBaseJsonController {
 	
     @RequestMapping(value = "/indexnew.html", method = RequestMethod.GET)
 	public ModelAndView login(ModelAndView mv,

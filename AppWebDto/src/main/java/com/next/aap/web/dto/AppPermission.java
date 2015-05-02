@@ -27,7 +27,17 @@ public enum AppPermission {
 	ADMIN_EMAIL,
 	ADMIN_GLOBAL_CAMPAIGN,
 	ADMIN_EVENT,
-	ADMIN_CANDIDATE_PC
+	ADMIN_CANDIDATE_PC,
+	WEB_ADMIN_DRAFT,
+	WEB_ADMIN
 	;
+	
+	private AppPermission() {
+        // TODO Auto-generated constructor stub
+    }
+	private AppPermission(String name, String description, boolean addStateRoles, boolean addDistrictRoles, boolean addAcRoles, boolean addPcRoles, boolean addCountryRole,
+            boolean addCountryRegionRole, boolean addCuntryRegionAreaRole){
+	    
+	}
 	
 }

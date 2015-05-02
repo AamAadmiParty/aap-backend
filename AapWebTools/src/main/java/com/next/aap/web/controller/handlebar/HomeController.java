@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.JsonObject;
 
-@Controller
+@Controller("handleBarHomeController")
 public class HomeController extends AppBaseJsonController {
 	
     @RequestMapping(value = "/indexnew.html", method = RequestMethod.GET)

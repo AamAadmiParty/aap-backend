@@ -10,7 +10,6 @@ import com.next.aap.web.ItemList;
 import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.cache.AapDataCacheDbImpl;
 import com.next.aap.web.dto.NewsDto;
-import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.UserDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
@@ -21,14 +20,12 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 @ViewScoped
 @ManagedBean
 //@URLMapping(id = "homeBean", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/home.xhtml")
-/*
 @URLMappings(mappings={
-		@URLMapping(id = "homeBean1", beanName="homeBean", pattern = "/orig/home", viewId = "/WEB-INF/jsf/home.xhtml"),
-		@URLMapping(id = "homeBean2", beanName="homeBean", pattern = "/design1/home", viewId = "/WEB-INF/jsf/design1/home.xhtml"),
-		@URLMapping(id = "homeBean3", beanName="homeBean", pattern = "/aapstyle/home", viewId = "/WEB-INF/jsf/aapstyle/home.xhtml"),
-		@URLMapping(id = "homeBean4", beanName="homeBean", pattern = "/home", viewId = "/WEB-INF/jsf/aapnewstyle/home.xhtml")
+ @URLMapping(id = "homeBean1", beanName = "homeBean", pattern = "/orig/homeergere", viewId = "/WEB-INF/jsf/home.xhtml"),
+        @URLMapping(id = "homeBean2", beanName = "homeBean", pattern = "/desiethergn1/home", viewId = "/WEB-INF/jsf/design1/home.xhtml"),
+        @URLMapping(id = "homeBean3", beanName = "homeBean", pattern = "/aaergergepstyle/home", viewId = "/WEB-INF/jsf/aapstyle/home.xhtml"),
+        @URLMapping(id = "homeBean4", beanName = "homeBean", pattern = "/hoergegeme", viewId = "/WEB-INF/jsf/aapnewstyle/home.xhtml")
 		})
-		*/
 @URLBeanName("homeBean")
 public class HomeBean extends BaseJsfBean {
 

@@ -7,9 +7,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.next.aap.core.exception.AppException;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.VolunteerDto;
@@ -22,12 +19,10 @@ import com.ocpsoft.pretty.faces.annotation.URLMappings;
 @ManagedBean
 @ViewScoped
 //@URLMapping(id = "userVolunteerBean", beanName = "userVolunteerBean", pattern = "/volunteer", viewId = "/WEB-INF/jsf/aapstyle/uservolunteerprofile.xhtml")
-/*
 @URLMappings(mappings={
-		@URLMapping(id = "userVolunteerBean1", beanName = "userVolunteerBean", pattern = "/aapstyle/volunteer", viewId = "/WEB-INF/jsf/aapstyle/uservolunteerprofile.xhtml"),
-		@URLMapping(id = "userVolunteerBean2", beanName = "userVolunteerBean", pattern = "/volunteer", viewId = "/WEB-INF/jsf/aapnewstyle/uservolunteerprofile.xhtml")
+        @URLMapping(id = "userVolunteerBean1", beanName = "userVolunteerBean", pattern = "/aapstyleergergerg/volunteer", viewId = "/WEB-INF/jsf/aapstyle/uservolunteerprofile.xhtml"),
+        @URLMapping(id = "userVolunteerBean2", beanName = "userVolunteerBean", pattern = "/volunteerergeregregr", viewId = "/WEB-INF/jsf/aapnewstyle/uservolunteerprofile.xhtml")
 		})
-		*/
 @URLBeanName("userVolunteerBean")
 public class UserVolunteerBean extends BaseUserJsfBean {
 

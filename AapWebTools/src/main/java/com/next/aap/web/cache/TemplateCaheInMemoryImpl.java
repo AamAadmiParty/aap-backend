@@ -62,9 +62,16 @@ public class TemplateCaheInMemoryImpl implements TemplateCache {
 
     }
     @Override
-    public String getStateTemplate(Long stateId, String url) {
-        // TODO Auto-generated method stub
-        return null;
+    public TemplateUrlDto getStateTemplate(Long stateId, String url) {
+        Map<String, TemplateUrlDto> templates = templateCache.get(stateId);
+        if (templates == null) {
+            templates = templateCache.get(0L);
+        }
+        TemplateUrlDto templateUrlDto = null;
+        if (templates != null) {
+            templateUrlDto = templates.get(url);
+        }
+        return templateUrlDto;
     }
 
 }

@@ -18,6 +18,7 @@ public class HomeNewController extends AppBaseJsonController {
 		try{
             JsonObject contextJsonObject = new JsonObject();
             addGenericValuesInModel(httpServletRequest, mv, contextJsonObject);
+            addTemplateInModel(httpServletRequest, mv, "home");
             System.out.println("Server=[" + httpServletRequest.getServerName() + "]");
             if (httpServletRequest.getServerName().equals("www.swarajabhiyan.org")) {
                 mv.setViewName("handlebar/index");

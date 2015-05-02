@@ -1,6 +1,8 @@
 package com.next.aap.web.cache;
 
+import com.next.aap.web.dto.TemplateUrlDto;
+
 public interface TemplateCache {
 
-    String getStateTemplate(Long stateId, String url);
+    TemplateUrlDto getStateTemplate(Long stateId, String url);
 }

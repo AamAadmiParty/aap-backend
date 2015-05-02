@@ -96,5 +96,10 @@ public class TemplateUrlDto {
         this.url = url;
     }
 
+    @Override
+    public String toString() {
+        return "TemplateUrlDto [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId
+                + ", publishedContent=" + publishedContent + ", draftContent=" + draftContent + ", templateId=" + templateId + ", url=" + url + "]";
+    }
 	
 }

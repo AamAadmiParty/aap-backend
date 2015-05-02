@@ -26,6 +26,7 @@ import com.next.aap.web.cache.EventCacheImpl;
 import com.next.aap.web.cache.LocationCacheDbImpl;
 import com.next.aap.web.cache.NewsItemCacheImpl;
 import com.next.aap.web.cache.PollItemCacheImpl;
+import com.next.aap.web.cache.TemplateCache;
 import com.next.aap.web.cache.VideoItemCacheImpl;
 import com.next.aap.web.cache.dto.PollStatsDto;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
@@ -42,6 +43,7 @@ import com.next.aap.web.dto.ParliamentConstituencyDto;
 import com.next.aap.web.dto.PollAnswerDto;
 import com.next.aap.web.dto.PollQuestionDto;
 import com.next.aap.web.dto.StateDto;
+import com.next.aap.web.dto.TemplateUrlDto;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
 import com.next.aap.web.dto.VideoDto;
@@ -74,6 +76,10 @@ public class AppBaseJsonController extends BaseController{
 	protected CacheService cacheService;
 	@Autowired
 	protected CandidateCacheImpl candidateCacheImpl;
+
+    @Autowired
+    protected TemplateCache templateCache;
+
     private Gson gson = new Gson();
 
     protected void addUserPcCandidateInModel(HttpServletRequest httpServletRequest, JsonObject contextJsonObject) {
@@ -390,7 +396,24 @@ public class AppBaseJsonController extends BaseController{
         contextJsonObject.addProperty("pageNumber", pageNumber);
 
 	}
-	
+
+    protected void addTemplateInModel(HttpServletRequest httpServletRequest, ModelAndView mv, String url) {
+        StateDto stateDto = locationCacheDbImpl.getStatesByDomain(httpServletRequest.getServerName());
+        Long stateId = 0L;
+        if (stateDto != null) {
+
+        }
+        TemplateUrlDto templateUrlDto = templateCache.getStateTemplate(stateId, url);
+        System.out.println("templateUrlDto : " + templateUrlDto);
+        if (templateUrlDto != null) {
+            if ("1".equals(httpServletRequest.getParameter("draft"))) {
+                mv.getModel().put("template", templateUrlDto.getDraftContent());
+            } else {
+                mv.getModel().put("template", templateUrlDto.getPublishedContent());
+            }
+        }
+
+    }
     protected void addGenericValuesInModel(HttpServletRequest httpServletRequest, ModelAndView mv, JsonObject contextJsonObject) {
         contextJsonObject.addProperty("design", design);
 		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);

@@ -14,6 +14,7 @@ public class TemplateUrlDto {
     private String publishedContent;
     private String draftContent;
     private Long templateId;
+    private String url;
 
     public Long getId() {
         return id;
@@ -87,6 +88,13 @@ public class TemplateUrlDto {
         this.templateId = templateId;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
 	
 }

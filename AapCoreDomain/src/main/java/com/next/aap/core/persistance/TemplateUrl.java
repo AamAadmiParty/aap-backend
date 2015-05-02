@@ -46,6 +46,9 @@ public class TemplateUrl {
     @Column(name = "template_id", insertable = false, updatable = false)
     private Long templateId;
 
+    @Column(name = "url")
+    private String url;
+
     public Long getId() {
         return id;
     }
@@ -126,6 +129,13 @@ public class TemplateUrl {
         this.templateId = templateId;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
 	
 }

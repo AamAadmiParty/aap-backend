@@ -97,6 +97,7 @@ import com.next.aap.core.persistance.Role;
 import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.StateRole;
 import com.next.aap.core.persistance.Template;
+import com.next.aap.core.persistance.TemplateUrl;
 import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
@@ -205,6 +206,7 @@ import com.next.aap.web.dto.RoleDto;
 import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TemplateDto;
+import com.next.aap.web.dto.TemplateUrlDto;
 import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -6733,18 +6735,49 @@ public class AapServiceImpl implements AapService, Serializable {
         TemplateDto templateDto = new TemplateDto();
         BeanUtils.copyProperties(template, templateDto);
         templateDto.setStateDto(convertState(template.getState()));
+        templateDto.setTemplateUrlDtos(convertTemplateUrls(template.getTemplateUrls()));
         return templateDto;
     }
+
+    private TemplateUrlDto convertTemplateUrl(TemplateUrl templateUrl) {
+        TemplateUrlDto templateUrlDto = new TemplateUrlDto();
+        BeanUtils.copyProperties(templateUrl, templateUrlDto);
+        return templateUrlDto;
+    }
+
+    private List<TemplateUrlDto> convertTemplateUrls(List<TemplateUrl> templateUrls) {
+        if (templateUrls == null) {
+            return null;
+        }
+        List<TemplateUrlDto> templateUrlDtos = new ArrayList<>(templateUrls.size());
+        for (TemplateUrl oneTemplateUrl : templateUrls) {
+            templateUrlDtos.add(convertTemplateUrl(oneTemplateUrl));
+        }
+        return templateUrlDtos;
+    }
+
+    private List<TemplateDto> convertTemplates(List<Template> templates) {
+        if (templates == null) {
+            return null;
+        }
+        List<TemplateDto> templateDtos = new ArrayList<>(templates.size());
+        for (Template oneTemplateUrl : templates) {
+            templateDtos.add(convertTemplate(oneTemplateUrl));
+        }
+        return templateDtos;
+    }
     @Override
+    @Transactional
     public TemplateDto getGlobalTemplate() throws AppException {
         Template template = templateDao.getGlobalTemplate();
-        return null;
+        return convertTemplate(template);
     }
 
     @Override
+    @Transactional
     public List<TemplateDto> getStateTemplates() throws AppException {
-        // TODO Auto-generated method stub
-        return null;
+        List<Template> templates = templateDao.getAllStateTemplates();
+        return convertTemplates(templates);
     }
 
 }

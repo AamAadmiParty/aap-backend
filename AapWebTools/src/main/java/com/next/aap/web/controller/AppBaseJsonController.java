@@ -401,7 +401,7 @@ public class AppBaseJsonController extends BaseController{
         StateDto stateDto = locationCacheDbImpl.getStatesByDomain(httpServletRequest.getServerName());
         Long stateId = 0L;
         if (stateDto != null) {
-
+            stateId = stateDto.getId();
         }
         TemplateUrlDto templateUrlDto = templateCache.getStateTemplate(stateId, url);
         System.out.println("templateUrlDto : " + templateUrlDto);

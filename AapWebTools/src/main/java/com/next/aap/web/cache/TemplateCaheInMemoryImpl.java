@@ -63,6 +63,8 @@ public class TemplateCaheInMemoryImpl implements TemplateCache {
     }
     @Override
     public TemplateUrlDto getStateTemplate(Long stateId, String url) {
+        System.out.println("Getting Template for State : " + stateId);
+        System.out.println("templateCache : " + templateCache);
         Map<String, TemplateUrlDto> templates = templateCache.get(stateId);
         if (templates == null) {
             templates = templateCache.get(0L);

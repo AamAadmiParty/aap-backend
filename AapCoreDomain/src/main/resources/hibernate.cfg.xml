@@ -54,6 +54,9 @@
 		<mapping class="com.next.aap.core.persistance.Role" />
 		<mapping class="com.next.aap.core.persistance.State" />
 		<mapping class="com.next.aap.core.persistance.StateRole" />
+		<mapping class="com.next.aap.core.persistance.Template" />
+		<mapping class="com.next.aap.core.persistance.TemplateUrl" />
+		<mapping class="com.next.aap.core.persistance.TemplateUrlType" />
 		<mapping class="com.next.aap.core.persistance.Tweet" />
 		<mapping class="com.next.aap.core.persistance.TwitterAccount" />
 		<mapping class="com.next.aap.core.persistance.User" />

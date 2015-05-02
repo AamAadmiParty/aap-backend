@@ -46,7 +46,7 @@ public class Template {
     @Column(name = "global")
     private boolean global;
 
-    @OneToMany(mappedBy = "interestGroup", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "template", fetch = FetchType.EAGER)
     private List<TemplateUrl> templateUrls;
     
     

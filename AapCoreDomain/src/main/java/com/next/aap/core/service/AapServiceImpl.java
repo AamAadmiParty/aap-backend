@@ -6732,6 +6732,9 @@ public class AapServiceImpl implements AapService, Serializable {
     }
 
     private TemplateDto convertTemplate(Template template) {
+        if (template == null) {
+            return null;
+        }
         TemplateDto templateDto = new TemplateDto();
         BeanUtils.copyProperties(template, templateDto);
         templateDto.setStateDto(convertState(template.getState()));
@@ -6740,6 +6743,9 @@ public class AapServiceImpl implements AapService, Serializable {
     }
 
     private TemplateUrlDto convertTemplateUrl(TemplateUrl templateUrl) {
+        if (templateUrl == null) {
+            return null;
+        }
         TemplateUrlDto templateUrlDto = new TemplateUrlDto();
         BeanUtils.copyProperties(templateUrl, templateUrlDto);
         return templateUrlDto;

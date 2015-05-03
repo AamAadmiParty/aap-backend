@@ -42,6 +42,17 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 	Map<Long, List<Long>> countryRegionItemDtos = new HashMap<>();
 	static Map<Long, Long> longCache = new HashMap<>();
 	
+    protected void clearAllCache() {
+        cacheByLanguage = new HashMap<>();
+        allGlobalItemIds = new ArrayList<>();
+        acItemDtos = new HashMap<>();
+        districtItemDtos = new HashMap<>();
+        pcItemDtos = new HashMap<>();
+
+        stateItemDtos = new HashMap<>();
+        countryItemDtos = new HashMap<>();
+        countryRegionItemDtos = new HashMap<>();
+    }
 	public void addCacheItem(String language,ItemType newsItem, Long key, boolean global){
 		Map<Long, ItemType> languageCacheItems = cacheByLanguage.get(language);
 		if(languageCacheItems == null){

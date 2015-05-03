@@ -31,6 +31,7 @@ public class NewsItemCacheImpl extends BasItemCacheImpl<NewsDto>  {
 	
 	@Override
 	public void refreshFullCache() {
+        clearAllCache();
 		List<NewsDto> allNewsDtos = aapService.getAllPublishedNews();
         logger.info("Total News : " + allNewsDtos.size());
 		for(NewsDto oneNewsDto:allNewsDtos){

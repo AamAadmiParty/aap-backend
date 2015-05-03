@@ -205,7 +205,8 @@ public class AppBaseController extends BaseController{
 		}
 		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
 		ItemList<NewsDto> newsItems = newsItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, 
-				votingPcId, nriCountryId, nriCountryRegionId,  pageNumber);
+ votingPcId, nriCountryId, nriCountryRegionId,
+                pageNumber, 7);
 		mv.getModel().put("newsItems", newsItems);
 		mv.getModel().put("pageNumber", pageNumber);
 	}

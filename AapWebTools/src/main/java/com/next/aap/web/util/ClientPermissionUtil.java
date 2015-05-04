@@ -82,6 +82,12 @@ public class ClientPermissionUtil {
 				|| isAllowed(AppPermission.UPDATE_GLOBAL_MEMBER, userRolePermissionDto, locationId, locationType)
 				|| isAllowed(AppPermission.UPDATE_MEMBER, userRolePermissionDto, locationId, locationType));
 	}
+
+    public static boolean isWebDeveloperAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType) {
+        return checkLocationType(locationType, locationId)
+                && (userRolePermissionDto.isSuperUser() || isAllowed(AppPermission.WEB_ADMIN, userRolePermissionDto, locationId, locationType) || isAllowed(AppPermission.WEB_ADMIN_DRAFT,
+                        userRolePermissionDto, locationId, locationType));
+    }
 	public static boolean isTreasuryAllowed(UserRolePermissionDto userRolePermissionDto, Long locationId, PostLocationType locationType){
 		return checkLocationType(locationType, locationId) &&
 				(userRolePermissionDto.isSuperUser() || 

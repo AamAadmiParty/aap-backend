@@ -520,4 +520,8 @@ public interface AapService {
     TemplateDto getGlobalTemplate() throws AppException;
 
     List<TemplateDto> getStateTemplates() throws AppException;
+
+    List<TemplateDto> getAllTemplates(PostLocationType locationType, Long locationId) throws AppException;
+
+    TemplateDto saveTemplate(TemplateDto templateDto) throws AppException;
 }

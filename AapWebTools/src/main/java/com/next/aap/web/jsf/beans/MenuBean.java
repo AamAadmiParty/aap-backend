@@ -11,11 +11,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-
 import com.next.aap.core.service.AapService;
-import com.next.aap.web.controller.BaseController;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.CountryDto;
 import com.next.aap.web.dto.CountryRegionAreaDto;
@@ -60,15 +56,18 @@ public class MenuBean extends BaseJsfBean {
 	public static HttpServletRequest getHttpServletRequest() {
 		return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 	}
-	public UserRolePermissionDto getUserRolePermissionInSesion(){
+	@Override
+    public UserRolePermissionDto getUserRolePermissionInSesion(){
 		HttpServletRequest httpServletRequest = getHttpServletRequest();
 		return getUserRolePermissionInSesion(httpServletRequest);
 	}
-	protected UserDto getLoggedInUser() {
+	@Override
+    protected UserDto getLoggedInUser() {
 		return getLoggedInUser(false, "");
 	}
 
-	protected UserDto getLoggedInUser(boolean redirect, String url) {
+	@Override
+    protected UserDto getLoggedInUser(boolean redirect, String url) {
 		HttpServletRequest httpServletRequest = getHttpServletRequest();
 		UserDto user = getLoggedInUserFromSesion(httpServletRequest);
 		if (user == null) {
@@ -399,6 +398,14 @@ public class MenuBean extends BaseJsfBean {
 		}
 	}
 
+    public void goToHtmlTemplatePage() {
+        if (isWebDeveloperRoleAllowed()) {
+            buildAndRedirect("/admin/templates");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
 	public boolean isCampaignAllowed() {
 		return isVoiceOfAapFbAllowed() || isVoiceOfAapTwitterAllowed() || isEmailAllowed() || isSmsAllowed() || isGlobalDonationCampaignAllowed()
 				|| isCandidateAllowed();
@@ -478,10 +485,19 @@ public class MenuBean extends BaseJsfBean {
 		return isManageUserRoleAllowed() || isEditOfficeDetailAllowed();
 	}
 
+    public boolean isDeveloperAllowed() {
+        return isWebDeveloperRoleAllowed();
+    }
+
 	public boolean isManageUserRoleAllowed() {
 		UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
 		return ClientPermissionUtil.isManageUserRoleAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
 	}
+
+    public boolean isWebDeveloperRoleAllowed() {
+        UserRolePermissionDto userRolePermissionDto = getUserRolePermissionInSesion();
+        return ClientPermissionUtil.isWebDeveloperAllowed(userRolePermissionDto, adminSelectedLocationId, locationType);
+    }
 
 	public PostLocationType getLocationType() {
 		return locationType;

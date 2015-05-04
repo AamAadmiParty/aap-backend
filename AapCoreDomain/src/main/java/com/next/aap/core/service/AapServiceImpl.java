@@ -6748,4 +6748,45 @@ public class AapServiceImpl implements AapService, Serializable {
         return convertTemplates(templates);
     }
 
+    @Override
+    @Transactional
+    public List<TemplateDto> getAllTemplates(PostLocationType locationType, Long locationId) throws AppException {
+        List<Template> templates = null;
+        switch (locationType) {
+        case Global:
+            templates = templateDao.getAllGlobalTemplates();
+            break;
+        case STATE:
+            templates = templateDao.getAllTemplatesOfState(locationId);
+            break;
+        }
+        return convertTemplates(templates);
+    }
+
+    @Override
+    @Transactional
+    public TemplateDto saveTemplate(TemplateDto templateDto) throws AppException {
+        Template template = null;
+        if (templateDto.getId() != null && templateDto.getId() > 0) {
+            template = templateDao.getTemplateById(templateDto.getId());
+        }
+        if (template == null) {
+            template = new Template();
+            template.setDateCreated(new Date());
+        }
+        template.setDateModified(new Date());
+        template.setGlobal(templateDto.isGlobal());
+        template.setName(templateDto.getName());
+        template.setStatus(templateDto.getStatus());
+
+        if (templateDto.getStateDto() != null) {
+            State state = stateDao.getStateById(templateDto.getStateDto().getId());
+            template.setState(state);
+        }
+
+        template = templateDao.saveTemplate(template);
+
+        return convertTemplate(template);
+    }
+
 }

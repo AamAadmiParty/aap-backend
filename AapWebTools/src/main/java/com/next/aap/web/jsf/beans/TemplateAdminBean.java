@@ -1,0 +1,85 @@
+package com.next.aap.web.jsf.beans;
+
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import org.springframework.util.StringUtils;
+
+import com.next.aap.web.dto.AppPermission;
+import com.next.aap.web.dto.LoginAccountDto;
+import com.next.aap.web.dto.NewsDto;
+import com.next.aap.web.dto.TemplateDto;
+import com.next.aap.web.dto.TemplateUrlDto;
+import com.ocpsoft.pretty.faces.annotation.URLAction;
+import com.ocpsoft.pretty.faces.annotation.URLBeanName;
+import com.ocpsoft.pretty.faces.annotation.URLMapping;
+
+@ManagedBean
+//@Scope("session")
+@ViewScoped
+@URLMapping(id = "templateAdminBean", beanName = "newsAdminBean", pattern = "/admin/templates", viewId = "/WEB-INF/jsf/admin_news.xhtml")
+@URLBeanName("templateAdminBean")
+public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
+
+	private static final long serialVersionUID = 1L;
+
+    private List<TemplateDto> templates;
+    private TemplateDto selectedTemplate;
+	
+    private boolean showTemplateList = true;
+    private List<TemplateUrlDto> templateUrls;
+    private TemplateUrlDto selectedTemplateUrl;
+	private boolean showEditor;
+	
+	private List<NewsDto> newsList;
+	public TemplateAdminBean(){
+        super("/admin/templates", AppPermission.WEB_ADMIN, AppPermission.WEB_ADMIN_DRAFT);
+		showEditor = true;
+	}
+	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
+	@URLAction(onPostback=false)
+	public void init() throws Exception {
+		if(!checkUserAccess()){
+			return;
+		}
+		refreshTemplateList();
+	}
+	private void refreshTemplateList(){
+        try {
+            templates = aapService.getAllTemplates(menuBean.getLocationType(), menuBean.getAdminSelectedLocationId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	}
+
+	public LoginAccountDto getLoginAccounts() {
+		return getLoggedInAccountsFromSesion();
+	}
+
+    public void createTemplate() {
+        selectedTemplate = new TemplateDto();
+        showTemplateList = false;
+    }
+
+    public void cancel() {
+        showTemplateList = true;
+    }
+
+    public void saveTemplate() {
+        if (StringUtils.isEmpty(selectedTemplate.getName())) {
+            sendErrorMessageToJsfScreen("Please enter Name for this template");
+        }
+        if (isValidInput()) {
+            try {
+                selectedTemplate = aapService.saveTemplate(selectedTemplate);
+                refreshTemplateList();
+                cancel();
+            } catch (Exception e) {
+                sendErrorMessageToJsfScreen(e);
+            }
+        }
+    }
+
+}

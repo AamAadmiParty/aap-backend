@@ -19,7 +19,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 @ManagedBean
 //@Scope("session")
 @ViewScoped
-@URLMapping(id = "templateAdminBean", beanName = "newsAdminBean", pattern = "/admin/templates", viewId = "/WEB-INF/jsf/admin_news.xhtml")
+@URLMapping(id = "templateAdminBean", beanName = "newsAdminBean", pattern = "/admin/templates", viewId = "/WEB-INF/jsf/admin_template.xhtml")
 @URLBeanName("templateAdminBean")
 public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 

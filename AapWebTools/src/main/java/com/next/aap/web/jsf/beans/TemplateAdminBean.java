@@ -9,7 +9,6 @@ import org.springframework.util.StringUtils;
 
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.LoginAccountDto;
-import com.next.aap.web.dto.NewsDto;
 import com.next.aap.web.dto.TemplateDto;
 import com.next.aap.web.dto.TemplateUrlDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
@@ -19,7 +18,7 @@ import com.ocpsoft.pretty.faces.annotation.URLMapping;
 @ManagedBean
 //@Scope("session")
 @ViewScoped
-@URLMapping(id = "templateAdminBean", beanName = "newsAdminBean", pattern = "/admin/templates", viewId = "/WEB-INF/jsf/admin_template.xhtml")
+@URLMapping(id = "templateAdminBean", beanName = "templateAdminBean", pattern = "/admin/templates", viewId = "/WEB-INF/jsf/admin_template.xhtml")
 @URLBeanName("templateAdminBean")
 public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 
@@ -31,12 +30,9 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
     private boolean showTemplateList = true;
     private List<TemplateUrlDto> templateUrls;
     private TemplateUrlDto selectedTemplateUrl;
-	private boolean showEditor;
 	
-	private List<NewsDto> newsList;
 	public TemplateAdminBean(){
         super("/admin/templates", AppPermission.WEB_ADMIN, AppPermission.WEB_ADMIN_DRAFT);
-		showEditor = true;
 	}
 	//@URLActions(actions = { @URLAction(mappingId = "userProfileBean") })
 	@URLAction(onPostback=false)
@@ -80,6 +76,46 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
                 sendErrorMessageToJsfScreen(e);
             }
         }
+    }
+
+    public List<TemplateDto> getTemplates() {
+        return templates;
+    }
+
+    public void setTemplates(List<TemplateDto> templates) {
+        this.templates = templates;
+    }
+
+    public TemplateDto getSelectedTemplate() {
+        return selectedTemplate;
+    }
+
+    public void setSelectedTemplate(TemplateDto selectedTemplate) {
+        this.selectedTemplate = selectedTemplate;
+    }
+
+    public boolean isShowTemplateList() {
+        return showTemplateList;
+    }
+
+    public void setShowTemplateList(boolean showTemplateList) {
+        this.showTemplateList = showTemplateList;
+    }
+
+    public List<TemplateUrlDto> getTemplateUrls() {
+        return templateUrls;
+    }
+
+    public void setTemplateUrls(List<TemplateUrlDto> templateUrls) {
+        this.templateUrls = templateUrls;
+    }
+
+    public TemplateUrlDto getSelectedTemplateUrl() {
+        return selectedTemplateUrl;
+    }
+
+    public void setSelectedTemplateUrl(TemplateUrlDto selectedTemplateUrl) {
+        this.selectedTemplateUrl = selectedTemplateUrl;
     }
 
 }

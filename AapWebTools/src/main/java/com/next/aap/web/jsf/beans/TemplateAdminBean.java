@@ -92,6 +92,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setSelectedTemplate(TemplateDto selectedTemplate) {
         this.selectedTemplate = selectedTemplate;
+        showTemplateList = false;
     }
 
     public boolean isShowTemplateList() {

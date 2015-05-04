@@ -37,7 +37,7 @@
 	<!-- menu ends -->
 	<div style="width: 800px; margin: 0 auto;">
 		<div style="width: 800px; margin: 0;">
-			<p:blockUI block="adminTemplateForm" trigger=":adminTemplateForm:saveTemplate,:adminTemplateForm:saveTemplateAndPublish,:adminTemplateForm:publish">
+			<p:blockUI block="adminTemplateForm" trigger=":adminTemplateForm:saveTemplate">
 			Saving Profile<br />
 				<p:graphicImage value="/images/ajax-loader.gif" />
 			</p:blockUI>
@@ -48,7 +48,7 @@
 
 						<p:commandButton value="Create Template" actionListener="#{templateAdminBean.createTemplate}" update=":adminTemplateForm:mainPanel">
 						</p:commandButton>
-						<p:dataTable id="listOfTemplate" var="oneTemplate" value="#{templateAdminBean.newsList}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
+						<p:dataTable id="listOfTemplate" var="oneTemplate" value="#{templateAdminBean.templates}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
 							emptyMessage="No Template" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">Template</f:facet>

@@ -29,7 +29,7 @@ public class SpringVoiceOfAapFacebookLoginController extends BaseSocialLoginCont
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	private String appPermissions = "email,user_birthday,offline_access";
+    private String appPermissions = "email,user_birthday";
 
 
 	@Value("${voa_facebook_app_id}")

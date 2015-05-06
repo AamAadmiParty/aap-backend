@@ -28,7 +28,7 @@
 			<ul>
 			     <!-- 
 				<li><a href="#">Donate</a></li>
-				<li><a href="${contextPath}/login?v4d_redirect_url=/profile.html">Join US</a></li>
+				<li><a href="${contextPath}/login?sa_redirect_url=/profile.html">Join US</a></li>
 				 -->
 				
 				<!-- <li><a href="#">Register</a></li> -->

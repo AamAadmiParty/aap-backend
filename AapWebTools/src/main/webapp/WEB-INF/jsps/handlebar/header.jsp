@@ -58,7 +58,7 @@
 		<div class="toplinks-sign">
 			<!--toplinks-sign-->
 			<ul>
-				<li class="signin"><a href="${contextPath}/login?v4d_redirect_url=/index.html">Sign In</a></li>
+				<li class="signin"><a href="${contextPath}/login?sa_redirect_url=/index.html">Sign In</a></li>
 				<li class="guest">Guest</li>
 			</ul>
 		</div>

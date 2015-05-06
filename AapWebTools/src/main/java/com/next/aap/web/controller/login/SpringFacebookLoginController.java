@@ -1,6 +1,5 @@
 package com.next.aap.web.controller.login;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +32,7 @@ public class SpringFacebookLoginController extends BaseSocialLoginController<Fac
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	//private static final String appPermissions = "email,user_birthday,user_hometown,user_location,user_photos,offline_access";
-	private static final String appPermissions = "email,user_birthday,offline_access";
+    private static final String appPermissions = "email,user_birthday";
 
 	@Value("${aap_facebook_app_id}")
 	private String appFacebokAppId;

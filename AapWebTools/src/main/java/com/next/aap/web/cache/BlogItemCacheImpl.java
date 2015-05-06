@@ -31,6 +31,7 @@ public class BlogItemCacheImpl extends BasItemCacheImpl<BlogDto>  {
 	
 	@Override
 	public void refreshFullCache() {
+        clearAllCache();
 		List<BlogDto> allBlogDtos = aapService.getAllPublishedBlogs();
 		logger.info("Total Blog : " + allBlogDtos.size());
 		for(BlogDto oneBlogDto:allBlogDtos){

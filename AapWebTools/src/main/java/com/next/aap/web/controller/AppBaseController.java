@@ -26,6 +26,7 @@ import com.next.aap.web.cache.NewsItemCacheImpl;
 import com.next.aap.web.cache.PollItemCacheImpl;
 import com.next.aap.web.cache.VideoItemCacheImpl;
 import com.next.aap.web.cache.dto.PollStatsDto;
+import com.next.aap.web.controller.bean.LocationContext;
 import com.next.aap.web.dto.AssemblyConstituencyDto;
 import com.next.aap.web.dto.BlogDto;
 import com.next.aap.web.dto.CandidateDto;
@@ -161,51 +162,70 @@ public class AppBaseController extends BaseController{
 		}
 		return null;
 	}
+
+    protected LocationContext deriveLocationContext(HttpServletRequest httpServletRequest) {
+        LocationContext locationContext = new LocationContext();
+        long livingAcId = 0;
+        long votingAcId = 0;
+        long livingPcId = 0;
+        long votingPcId = 0;
+        long nriCountryId = 0;
+        long nriCountryRegionId = 0;
+        long nriCountryRegionAreaId = 0;
+        StateDto state = locationCacheDbImpl.getStatesByDomain(httpServletRequest.getServerName().toLowerCase());
+        if (state != null) {
+            locationContext.setDomainStateId(state.getId());
+        } else {
+            UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
+            if (loggedInUser != null) {
+                if (loggedInUser.getAssemblyConstituencyLivingId() != null) {
+                    livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
+                }
+                if (loggedInUser.getAssemblyConstituencyVotingId() != null) {
+                    votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
+                }
+                if (loggedInUser.getParliamentConstituencyLivingId() != null) {
+                    livingPcId = loggedInUser.getParliamentConstituencyLivingId();
+                }
+                if (loggedInUser.getParliamentConstituencyVotingId() != null) {
+                    votingPcId = loggedInUser.getParliamentConstituencyVotingId();
+                }
+                if (loggedInUser.getNriCountryId() != null) {
+                    nriCountryId = loggedInUser.getNriCountryId();
+                }
+                if (loggedInUser.getNriCountryRegionId() != null) {
+                    nriCountryRegionId = loggedInUser.getNriCountryRegionId();
+                }
+                if (loggedInUser.getNriCountryRegionAreaId() != null) {
+                    nriCountryRegionAreaId = loggedInUser.getNriCountryRegionAreaId();
+                }
+            } else {
+                // get it from Cookies
+                livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
+                livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
+                votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
+                votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
+                nriCountryId = CookieUtil.getUserNriCountryIdCookie(httpServletRequest);
+                nriCountryRegionId = CookieUtil.getUserNriCountryRegionIdCookie(httpServletRequest);
+                nriCountryRegionAreaId = CookieUtil.getUserNriCountryRegionAreaIdCookie(httpServletRequest);
+            }
+        }
+
+
+        locationContext.setLivingAcId(livingAcId);
+        locationContext.setLivingPcId(livingPcId);
+        locationContext.setNriCountryId(nriCountryId);
+        locationContext.setNriCountryRegionAreaId(nriCountryRegionAreaId);
+        locationContext.setNriCountryRegionId(nriCountryRegionId);
+        locationContext.setVotingAcId(votingAcId);
+        locationContext.setVotingPcId(votingPcId);
+        return locationContext;
+    }
 	protected void addNewsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
-		long livingAcId = 0;
-		long votingAcId = 0;
-		long livingPcId = 0;
-		long votingPcId = 0;
-		long nriCountryId = 0;
-		long nriCountryRegionId = 0;
-		long nriCountryRegionAreaId = 0;
-		
-		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
-		if(loggedInUser != null){
-			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
-				livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
-			}
-			if(loggedInUser.getAssemblyConstituencyVotingId() != null){
-				votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
-			}
-			if(loggedInUser.getParliamentConstituencyLivingId() != null){
-				livingPcId = loggedInUser.getParliamentConstituencyLivingId();
-			}
-			if(loggedInUser.getParliamentConstituencyVotingId() != null){
-				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
-			}
-			if(loggedInUser.getNriCountryId() != null){
-				nriCountryId = loggedInUser.getNriCountryId();
-			}
-			if(loggedInUser.getNriCountryRegionId() != null){
-				nriCountryRegionId = loggedInUser.getNriCountryRegionId();
-			}
-			if(loggedInUser.getNriCountryRegionAreaId() != null){
-				nriCountryRegionAreaId = loggedInUser.getNriCountryRegionAreaId();
-			}
-		}else{
-			//get it from Cookies
-			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
-			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
-			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
-			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
-			nriCountryId = CookieUtil.getUserNriCountryIdCookie(httpServletRequest);
-			nriCountryRegionId = CookieUtil.getUserNriCountryRegionIdCookie(httpServletRequest);
-			nriCountryRegionAreaId = CookieUtil.getUserNriCountryRegionAreaIdCookie(httpServletRequest);
-		}
+        LocationContext locationContext = deriveLocationContext(httpServletRequest);
 		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
-		ItemList<NewsDto> newsItems = newsItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, 
- votingPcId, nriCountryId, nriCountryRegionId,
+        ItemList<NewsDto> newsItems = newsItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, locationContext.getDomainStateId(), locationContext.getLivingAcId(),
+                locationContext.getVotingAcId(), locationContext.getLivingPcId(), locationContext.getVotingPcId(), locationContext.getNriCountryId(), locationContext.getNriCountryRegionId(),
                 pageNumber, 7);
 		mv.getModel().put("newsItems", newsItems);
 		mv.getModel().put("pageNumber", pageNumber);
@@ -233,150 +253,33 @@ public class AppBaseController extends BaseController{
 	}
 	
 	protected void addVideosInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
-		long livingAcId = 0;
-		long votingAcId = 0;
-		long livingPcId = 0;
-		long votingPcId = 0;
-		long nriCountryId = 0;
-		long nriCountryRegionId = 0;
-		long nriCountryRegionAreaId = 0;
-		
-		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
-		if(loggedInUser != null){
-			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
-				livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
-			}
-			if(loggedInUser.getAssemblyConstituencyVotingId() != null){
-				votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
-			}
-			if(loggedInUser.getParliamentConstituencyLivingId() != null){
-				livingPcId = loggedInUser.getParliamentConstituencyLivingId();
-			}
-			if(loggedInUser.getParliamentConstituencyVotingId() != null){
-				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
-			}
-			if(loggedInUser.getNriCountryId() != null){
-				nriCountryId = loggedInUser.getNriCountryId();
-			}
-			if(loggedInUser.getNriCountryRegionId() != null){
-				nriCountryRegionId = loggedInUser.getNriCountryRegionId();
-			}
-			if(loggedInUser.getNriCountryRegionAreaId() != null){
-				nriCountryRegionAreaId = loggedInUser.getNriCountryRegionAreaId();
-			}
-		}else{
-			//get it from Cookies
-			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
-			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
-			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
-			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
-			nriCountryId = CookieUtil.getUserNriCountryIdCookie(httpServletRequest);
-			nriCountryRegionId = CookieUtil.getUserNriCountryRegionIdCookie(httpServletRequest);
-			nriCountryRegionAreaId = CookieUtil.getUserNriCountryRegionAreaIdCookie(httpServletRequest);
-		}
+        LocationContext locationContext = deriveLocationContext(httpServletRequest);
 		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
-		ItemList<VideoDto> videoItems = videoItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, 
-				nriCountryId, nriCountryRegionId, pageNumber);
+        ItemList<VideoDto> videoItems = videoItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, locationContext.getDomainStateId(), locationContext.getLivingAcId(),
+                locationContext.getVotingAcId(), locationContext.getLivingPcId(), locationContext.getVotingPcId(), locationContext.getNriCountryId(), locationContext.getNriCountryRegionId(),
+                pageNumber, 7);
 		mv.getModel().put("videoItems", videoItems);
 		mv.getModel().put("pageNumber", pageNumber);
 		
 	}
 	
 	protected void addPollsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
-		long livingAcId = 0;
-		long votingAcId = 0;
-		long livingPcId = 0;
-		long votingPcId = 0;
-		long nriCountryId = 0;
-		long nriCountryRegionId = 0;
-		long nriCountryRegionAreaId = 0;
-		
-		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
-		if(loggedInUser != null){
-			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
-				livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
-			}
-			if(loggedInUser.getAssemblyConstituencyVotingId() != null){
-				votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
-			}
-			if(loggedInUser.getParliamentConstituencyLivingId() != null){
-				livingPcId = loggedInUser.getParliamentConstituencyLivingId();
-			}
-			if(loggedInUser.getParliamentConstituencyVotingId() != null){
-				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
-			}
-			if(loggedInUser.getNriCountryId() != null){
-				nriCountryId = loggedInUser.getNriCountryId();
-			}
-			if(loggedInUser.getNriCountryRegionId() != null){
-				nriCountryRegionId = loggedInUser.getNriCountryRegionId();
-			}
-			if(loggedInUser.getNriCountryRegionAreaId() != null){
-				nriCountryRegionAreaId = loggedInUser.getNriCountryRegionAreaId();
-			}
-		}else{
-			//get it from Cookies
-			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
-			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
-			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
-			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
-			nriCountryId = CookieUtil.getUserNriCountryIdCookie(httpServletRequest);
-			nriCountryRegionId = CookieUtil.getUserNriCountryRegionIdCookie(httpServletRequest);
-			nriCountryRegionAreaId = CookieUtil.getUserNriCountryRegionAreaIdCookie(httpServletRequest);
-		}
+        LocationContext locationContext = deriveLocationContext(httpServletRequest);
 		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
-		ItemList<PollQuestionDto> pollItems = pollItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, 
-				nriCountryId, nriCountryRegionId, pageNumber);
+        ItemList<PollQuestionDto> pollItems = pollItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, locationContext.getDomainStateId(), locationContext.getLivingAcId(),
+                locationContext.getVotingAcId(), locationContext.getLivingPcId(), locationContext.getVotingPcId(), locationContext.getNriCountryId(), locationContext.getNriCountryRegionId(),
+                pageNumber, 7);
 		mv.getModel().put("pollItems", pollItems);
 		mv.getModel().put("pageNumber", pageNumber);
 		
 	}
 	
 	protected void addBlogsInModel(HttpServletRequest httpServletRequest, ModelAndView mv){
-		long livingAcId = 0;
-		long votingAcId = 0;
-		long livingPcId = 0;
-		long votingPcId = 0;
-		long nriCountryId = 0;
-		long nriCountryRegionId = 0;
-		long nriCountryRegionAreaId = 0;
-		
-		UserDto loggedInUser = getLoggedInUserFromSesion(httpServletRequest);
-		if(loggedInUser != null){
-			if(loggedInUser.getAssemblyConstituencyLivingId() != null){
-				livingAcId = loggedInUser.getAssemblyConstituencyLivingId();
-			}
-			if(loggedInUser.getAssemblyConstituencyVotingId() != null){
-				votingAcId = loggedInUser.getAssemblyConstituencyVotingId();
-			}
-			if(loggedInUser.getParliamentConstituencyLivingId() != null){
-				livingPcId = loggedInUser.getParliamentConstituencyLivingId();
-			}
-			if(loggedInUser.getParliamentConstituencyVotingId() != null){
-				votingPcId = loggedInUser.getParliamentConstituencyVotingId();
-			}
-			if(loggedInUser.getNriCountryId() != null){
-				nriCountryId = loggedInUser.getNriCountryId();
-			}
-			if(loggedInUser.getNriCountryRegionId() != null){
-				nriCountryRegionId = loggedInUser.getNriCountryRegionId();
-			}
-			if(loggedInUser.getNriCountryRegionAreaId() != null){
-				nriCountryRegionAreaId = loggedInUser.getNriCountryRegionAreaId();
-			}
-		}else{
-			//get it from Cookies
-			livingAcId = CookieUtil.getUserLivingAcIdCookie(httpServletRequest);
-			livingPcId = CookieUtil.getUserLivingPcIdCookie(httpServletRequest);
-			votingAcId = CookieUtil.getUserVotingAcIdCookie(httpServletRequest);
-			votingPcId = CookieUtil.getUserVotingPcIdCookie(httpServletRequest);
-			nriCountryId = CookieUtil.getUserNriCountryIdCookie(httpServletRequest);
-			nriCountryRegionId = CookieUtil.getUserNriCountryRegionIdCookie(httpServletRequest);
-			nriCountryRegionAreaId = CookieUtil.getUserNriCountryRegionAreaIdCookie(httpServletRequest);
-		}
+        LocationContext locationContext = deriveLocationContext(httpServletRequest);
 		int pageNumber = getIntPramater(httpServletRequest, PARAM_PAGE_NUMBER, 1);
-		ItemList<BlogDto> blogItems = blogItemCacheImpl.getItemsFromCache(BlogItemCacheImpl.DEFAULT_LANGUAGE, livingAcId, votingAcId, livingPcId, votingPcId, 
-				nriCountryId, nriCountryRegionId, pageNumber);
+        ItemList<BlogDto> blogItems = blogItemCacheImpl.getItemsFromCache(AapDataCacheDbImpl.DEFAULT_LANGUAGE, locationContext.getDomainStateId(), locationContext.getLivingAcId(),
+                locationContext.getVotingAcId(), locationContext.getLivingPcId(), locationContext.getVotingPcId(), locationContext.getNriCountryId(), locationContext.getNriCountryRegionId(),
+                pageNumber, 7);
 		mv.getModel().put("blogItems", blogItems);
 		mv.getModel().put("pageNumber", pageNumber);
 	}

@@ -84,19 +84,20 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 	}
 	
 	@Override
-	public ItemList<ItemType> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
+    public ItemList<ItemType> getItemsFromCache(String lang, Long domainStateId, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
 			long livingCountryRegionId) {
 		return getItemsFromCache(lang, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId, 1);
 	}
 
 	@Override
-	public ItemList<ItemType> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
+    public ItemList<ItemType> getItemsFromCache(String lang, Long domainStateId, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
 			long livingCountryRegionId, int pageNumber) {
         logger.debug("Getting Items for livingAcId=" + livingAcId + ",votingAcId=" + votingAcId + ",livingPcId=" + livingPcId + ",votingPcId" + votingPcId +
 				",livingCountryId="+livingCountryId +",livingCountryRegionId="+livingCountryRegionId+",pageNumber="+pageNumber);
-		return getItemsFromCache(lang, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId, pageNumber, pageSize);
+        return getItemsFromCache(lang, domainStateId, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId, pageNumber, pageSize);
 	}
-	public ItemList<ItemType> getItemsFromCache(String language, Long livingAcId, Long votingAcId, Long livingPcId, Long votingPcId, 
+
+    public ItemList<ItemType> getItemsFromCache(String language, Long domainStateId, Long livingAcId, Long votingAcId, Long livingPcId, Long votingPcId,
 			Long livingCountryId,Long livingCountryRegionId, int pageNumber, int pageSize){
 		//Make sure the first page number is always 1, i.e. 1,2,3,4 etc
 		if(pageNumber <= 0){
@@ -106,7 +107,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		int endItemCount = startItemCount + pageSize;
         // logger.info("startItemCount = {}, endItemCount={}", startItemCount, endItemCount);
 		//get all Cache item Ids for user's location
-		Set<Long> locationCacheItemIds =  getAllCacheItemIdsforLocation(language, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId);
+        Set<Long> locationCacheItemIds = getAllCacheItemIdsforLocation(language, domainStateId, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId);
 		
 		//Now create actual cache item List 
 		List<ItemType> cacheItemListForLocation = new ArrayList<>(locationCacheItemIds.size());
@@ -165,7 +166,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 	}
 	public abstract ItemType getCacheItemFromDbById(Long id);
 	
-	private Set<Long> getAllCacheItemIdsforLocation(String language, Long livingAcId, Long votingAcId, Long livingPcId, Long votingPcId,
+    private Set<Long> getAllCacheItemIdsforLocation(String language, Long domainStateId, Long livingAcId, Long votingAcId, Long livingPcId, Long votingPcId,
 			Long livingCountryId,Long livingCountryRegionId){
 		Set<Long> returnList = new HashSet<>(allGlobalItemIds.size());
 		returnList.addAll(allGlobalItemIds);
@@ -176,7 +177,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		addItems(returnList, livingPcId, pcItemDtos);
 		addItems(returnList, livingCountryId, countryItemDtos);
 		addItems(returnList, livingCountryRegionId, countryRegionItemDtos);
-		
+        addItems(returnList, domainStateId, stateItemDtos);
 		addDistrictItems(returnList, votingAcId);
 		addDistrictItems(returnList, livingAcId);
         // logger.info("return List : {}", returnList);

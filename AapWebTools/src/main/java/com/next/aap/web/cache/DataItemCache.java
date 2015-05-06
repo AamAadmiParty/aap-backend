@@ -33,7 +33,7 @@ public interface DataItemCache<T> {
 	 * @param votingPcId
 	 * @return
 	 */
-	public abstract ItemList<T> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId, long livingCountryRegionId);
+    public abstract ItemList<T> getItemsFromCache(String lang, Long domainStateId, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId, long livingCountryRegionId);
 	
 	/**
 	 * This function will return a List of T type Items from Cache with page number and pageSize of a particular language and pageNumber
@@ -45,7 +45,8 @@ public interface DataItemCache<T> {
 	 * @param pageNumber
 	 * @return
 	 */
-	public abstract ItemList<T> getItemsFromCache(String lang, long livingAcId, long votingAcId, long livingPcId, long votingPcId,long livingCountryId, long livingCountryRegionId, int pageNumber);
+    public abstract ItemList<T> getItemsFromCache(String lang, Long domainStateId, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
+            long livingCountryRegionId, int pageNumber);
 
 	
 	/**

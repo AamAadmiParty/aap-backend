@@ -172,7 +172,9 @@ public class AppBaseController extends BaseController{
         long nriCountryId = 0;
         long nriCountryRegionId = 0;
         long nriCountryRegionAreaId = 0;
+        logger.info("Getting State for server name {}", httpServletRequest.getServerName());
         StateDto state = locationCacheDbImpl.getStatesByDomain(httpServletRequest.getServerName().toLowerCase());
+        logger.info("state =  {}", state);
         if (state != null) {
             locationContext.setDomainStateId(state.getId());
         } else {

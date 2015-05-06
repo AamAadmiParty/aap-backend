@@ -259,6 +259,7 @@ public class LocationCacheDbImpl {
     }
     
     public StateDto getStatesByDomain(String domainName) {
+        logger.info("allStatesMapByDomain = {}" + allStatesMapByDomain.keySet());
         return allStatesMapByDomain.get(domainName.toLowerCase());
     }
     

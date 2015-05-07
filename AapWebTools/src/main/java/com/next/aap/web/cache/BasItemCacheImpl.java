@@ -86,7 +86,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 	@Override
     public ItemList<ItemType> getItemsFromCache(String lang, Long domainStateId, long livingAcId, long votingAcId, long livingPcId, long votingPcId, long livingCountryId,
 			long livingCountryRegionId) {
-		return getItemsFromCache(lang, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId, 1);
+        return getItemsFromCache(lang, domainStateId, livingAcId, votingAcId, livingPcId, votingPcId, livingCountryId, livingCountryRegionId, 1);
 	}
 
 	@Override

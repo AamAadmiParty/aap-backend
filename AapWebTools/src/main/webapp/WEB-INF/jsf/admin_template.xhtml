@@ -85,6 +85,7 @@
 							</p:column>
 						</p:dataTable>
 					</p:outputPanel>
+					
 					<p:outputPanel id="formView" rendered="#{!templateAdminBean.showTemplateList}">
 						<p:panelGrid columns="2">
 							<p:outputLabel value="Name"></p:outputLabel>
@@ -102,16 +103,17 @@
 						<br></br>
 						<p:outputPanel id="tweetPanel">
 							<p:outputPanel>
+							
 								<p:commandButton value="Cancel" update=":adminTemplateForm:mainPanel"
 									actionListener="#{templateAdminBean.cancel}" styleClass="ui-priority-primary">
 								</p:commandButton>
-								<p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel"
+								<p:commandButton id="saveTemplateOpenDraft" value="Save Template" update=":adminTemplateForm:mainPanel"
 									actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
-									onclick="window.open('#{templateAdminBean.draftUrl}');" rendered="#{! empty templateAdminBean.draftUrl}">
+									onclick="window.open('#{templateAdminBean.draftUrl}');" rendered="#{empty templateAdminBean.draftUrl}">
 								</p:commandButton>
 								<p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel"
                                     actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
-                                    rendered="#{empty templateAdminBean.draftUrl}">
+                                    rendered="#{!empty templateAdminBean.draftUrl}">
                                 </p:commandButton>
 							</p:outputPanel>
 

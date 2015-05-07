@@ -80,8 +80,8 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         if (selectedTemplateUrl == null) {
             selectedTemplateUrl = new TemplateUrlDto();
             selectedTemplateUrl.setUrl(selectedUrl);
-            draftUrl = "http://www.swarajabhiyan.org/index.html?draft=1";
         }
+        draftUrl = "http://www.swarajabhiyan.org/index.html?draft=1";
     }
 
     public void createTemplate() {

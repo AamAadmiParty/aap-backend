@@ -1,6 +1,8 @@
 package com.next.aap.web.jsf.beans;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -11,6 +13,7 @@ import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.LoginAccountDto;
 import com.next.aap.web.dto.TemplateDto;
 import com.next.aap.web.dto.TemplateUrlDto;
+import com.next.aap.web.dto.TemplateUrlTypeDto;
 import com.ocpsoft.pretty.faces.annotation.URLAction;
 import com.ocpsoft.pretty.faces.annotation.URLBeanName;
 import com.ocpsoft.pretty.faces.annotation.URLMapping;
@@ -28,8 +31,9 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
     private TemplateDto selectedTemplate;
 	
     private boolean showTemplateList = true;
-    private List<TemplateUrlDto> templateUrls;
     private TemplateUrlDto selectedTemplateUrl;
+    private String selectedUrl;
+    private Map<String, String> urls;
 	
 	public TemplateAdminBean(){
         super("/admin/templates", AppPermission.WEB_ADMIN, AppPermission.WEB_ADMIN_DRAFT);
@@ -41,6 +45,11 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 			return;
 		}
 		refreshTemplateList();
+        urls = new HashMap<String, String>();
+        List<TemplateUrlTypeDto> templateUrlTypeDtos = aapService.getAllTemplateUrlTypes();
+        for (TemplateUrlTypeDto oneTemplateUrlTypeDto : templateUrlTypeDtos) {
+            urls.put(oneTemplateUrlTypeDto.getUrl(), oneTemplateUrlTypeDto.getUrl());
+        }
 	}
 	private void refreshTemplateList(){
         try {
@@ -53,6 +62,22 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 	public LoginAccountDto getLoginAccounts() {
 		return getLoggedInAccountsFromSesion();
 	}
+
+    public void handleUrlSelection() {
+
+        selectedTemplateUrl = null;
+        for (TemplateUrlDto oneTemplateUrlDto : selectedTemplate.getTemplateUrlDtos()) {
+            logger.info("oneTemplateUrlDto.getUrl()={}, selectedUrl={}", oneTemplateUrlDto.getUrl(), selectedUrl);
+            if (oneTemplateUrlDto.getUrl().equals(selectedUrl)) {
+                selectedTemplateUrl = oneTemplateUrlDto;
+                break;
+            }
+        }
+        if (selectedTemplateUrl == null) {
+            selectedTemplateUrl = new TemplateUrlDto();
+            selectedTemplateUrl.setUrl(selectedUrl);
+        }
+    }
 
     public void createTemplate() {
         selectedTemplate = new TemplateDto();
@@ -70,6 +95,10 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         if (isValidInput()) {
             try {
                 selectedTemplate = aapService.saveTemplate(selectedTemplate);
+                if (selectedTemplateUrl != null) {
+                    selectedTemplateUrl.setTemplateId(selectedTemplate.getId());
+                    aapService.saveTemplateUrl(selectedTemplateUrl);
+                }
                 refreshTemplateList();
                 cancel();
             } catch (Exception e) {
@@ -103,20 +132,20 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         this.showTemplateList = showTemplateList;
     }
 
-    public List<TemplateUrlDto> getTemplateUrls() {
-        return templateUrls;
-    }
-
-    public void setTemplateUrls(List<TemplateUrlDto> templateUrls) {
-        this.templateUrls = templateUrls;
-    }
-
     public TemplateUrlDto getSelectedTemplateUrl() {
         return selectedTemplateUrl;
     }
 
     public void setSelectedTemplateUrl(TemplateUrlDto selectedTemplateUrl) {
         this.selectedTemplateUrl = selectedTemplateUrl;
+    }
+
+    public String getSelectedUrl() {
+        return selectedUrl;
+    }
+
+    public void setSelectedUrl(String selectedUrl) {
+        this.selectedUrl = selectedUrl;
     }
 
 }

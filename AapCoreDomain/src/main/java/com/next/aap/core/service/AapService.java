@@ -53,6 +53,8 @@ import com.next.aap.web.dto.RoleDto;
 import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TemplateDto;
+import com.next.aap.web.dto.TemplateUrlDto;
+import com.next.aap.web.dto.TemplateUrlTypeDto;
 import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -524,4 +526,8 @@ public interface AapService {
     List<TemplateDto> getAllTemplates(PostLocationType locationType, Long locationId) throws AppException;
 
     TemplateDto saveTemplate(TemplateDto templateDto) throws AppException;
+    
+    TemplateUrlDto saveTemplateUrl(TemplateUrlDto templateUrlDto) throws AppException;
+
+    List<TemplateUrlTypeDto> getAllTemplateUrlTypes() throws AppException;
 }

@@ -173,14 +173,23 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
         logger.info("Getting Cache for domainStateId={},votingAcId={},livingAcId={},votingPcId={},livingPcId={},livingCountryId={},livingCountryRegionId={}", domainStateId, votingAcId, livingAcId,
                 votingPcId, livingPcId, livingCountryId, livingCountryRegionId);
 		addItems(returnList, votingAcId, acItemDtos);
+        logger.info("returnList={}", returnList);
 		addItems(returnList, livingAcId, acItemDtos);
+        logger.info("returnList={}", returnList);
 		addItems(returnList, votingPcId, pcItemDtos);
+        logger.info("returnList={}", returnList);
 		addItems(returnList, livingPcId, pcItemDtos);
+        logger.info("returnList={}", returnList);
 		addItems(returnList, livingCountryId, countryItemDtos);
+        logger.info("returnList={}", returnList);
 		addItems(returnList, livingCountryRegionId, countryRegionItemDtos);
+        logger.info("returnList={}", returnList);
         addItems(returnList, domainStateId, stateItemDtos);
+        logger.info("returnList={}", returnList);
 		addDistrictItems(returnList, votingAcId);
+        logger.info("returnList={}", returnList);
 		addDistrictItems(returnList, livingAcId);
+        logger.info("returnList={}", returnList);
         // logger.info("return List : {}", returnList);
 		return returnList;
 	}

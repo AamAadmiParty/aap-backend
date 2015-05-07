@@ -98,6 +98,7 @@ import com.next.aap.core.persistance.State;
 import com.next.aap.core.persistance.StateRole;
 import com.next.aap.core.persistance.Template;
 import com.next.aap.core.persistance.TemplateUrl;
+import com.next.aap.core.persistance.TemplateUrlType;
 import com.next.aap.core.persistance.Tweet;
 import com.next.aap.core.persistance.TwitterAccount;
 import com.next.aap.core.persistance.User;
@@ -151,6 +152,8 @@ import com.next.aap.core.persistance.dao.RoleDao;
 import com.next.aap.core.persistance.dao.StateDao;
 import com.next.aap.core.persistance.dao.StateRoleDao;
 import com.next.aap.core.persistance.dao.TemplateDao;
+import com.next.aap.core.persistance.dao.TemplateUrlDao;
+import com.next.aap.core.persistance.dao.TemplateUrlTypeDao;
 import com.next.aap.core.persistance.dao.TweetDao;
 import com.next.aap.core.persistance.dao.TwitterAccountDao;
 import com.next.aap.core.persistance.dao.UserDao;
@@ -207,6 +210,7 @@ import com.next.aap.web.dto.SearchMemberResultDto;
 import com.next.aap.web.dto.StateDto;
 import com.next.aap.web.dto.TemplateDto;
 import com.next.aap.web.dto.TemplateUrlDto;
+import com.next.aap.web.dto.TemplateUrlTypeDto;
 import com.next.aap.web.dto.TweetDto;
 import com.next.aap.web.dto.TwitterAccountDto;
 import com.next.aap.web.dto.UserDto;
@@ -334,6 +338,10 @@ public class AapServiceImpl implements AapService, Serializable {
     private ElectionDao electionDao;
     @Autowired
     private TemplateDao templateDao;
+    @Autowired
+    private TemplateUrlTypeDao templateUrlTypeDao;
+    @Autowired
+    private TemplateUrlDao templateUrlDao;
 
     @Value("${voa_facebook_app_id}")
     private String voiceOfAapAppId;
@@ -6710,6 +6718,10 @@ public class AapServiceImpl implements AapService, Serializable {
         }
         TemplateUrlDto templateUrlDto = new TemplateUrlDto();
         BeanUtils.copyProperties(templateUrl, templateUrlDto);
+        if (templateUrl.getTemplate() != null) {
+            templateUrlDto.setTemplateId(templateUrl.getTemplate().getId());    
+        }
+        
         return templateUrlDto;
     }
 
@@ -6787,6 +6799,64 @@ public class AapServiceImpl implements AapService, Serializable {
         template = templateDao.saveTemplate(template);
 
         return convertTemplate(template);
+    }
+
+    @Override
+    @Transactional
+    public List<TemplateUrlTypeDto> getAllTemplateUrlTypes() throws AppException {
+        List<TemplateUrlType> templateUrlTypes = templateUrlTypeDao.getAllTemplateUrlTypes();
+        return convertTemplateUrlTypes(templateUrlTypes);
+    }
+
+    private TemplateUrlTypeDto convertTemplateUrlType(TemplateUrlType templateUrlType) {
+        if (templateUrlType == null) {
+            return null;
+        }
+        TemplateUrlTypeDto templateUrlTypeDto = new TemplateUrlTypeDto();
+        BeanUtils.copyProperties(templateUrlType, templateUrlTypeDto);
+        return templateUrlTypeDto;
+    }
+
+    private List<TemplateUrlTypeDto> convertTemplateUrlTypes(List<TemplateUrlType> templateUrlTypes) {
+        if (templateUrlTypes == null) {
+            return null;
+        }
+        List<TemplateUrlTypeDto> templateDtos = new ArrayList<>(templateUrlTypes.size());
+        for (TemplateUrlType oneTemplateUrl : templateUrlTypes) {
+            templateDtos.add(convertTemplateUrlType(oneTemplateUrl));
+        }
+        return templateDtos;
+    }
+
+    @Override
+    @Transactional
+    public TemplateUrlDto saveTemplateUrl(TemplateUrlDto templateUrlDto) throws AppException {
+        if (templateUrlDto.getTemplateId() == null) {
+            throw new AppException("Template ID mist be provided");
+        }
+
+        TemplateUrl templateUrl = null;
+        if (templateUrlDto.getId() != null && templateUrlDto.getId() > 0) {
+            templateUrl = templateUrlDao.getTemplateUrlById(templateUrlDto.getId());
+        }
+        if (templateUrl == null) {
+            templateUrl = new TemplateUrl();
+            templateUrl.setDateCreated(new Date());
+        }
+        templateUrl.setDateModified(new Date());
+        templateUrl.setDraftContent(templateUrlDto.getDraftContent());
+        templateUrl.setPublishedContent(templateUrlDto.getPublishedContent());
+        templateUrl.setUrl(templateUrlDto.getUrl());
+
+        Template template = templateDao.getTemplateById(templateUrlDto.getTemplateId());
+        if (template == null) {
+            throw new AppException("No Such Template[id=" + templateUrlDto.getTemplateId() + "] found");
+        }
+        templateUrl.setTemplate(template);
+
+        templateUrl = templateUrlDao.saveTemplateUrl(templateUrl);
+
+        return convertTemplateUrl(templateUrl);
     }
 
 }

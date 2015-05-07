@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
 	<title>Template - Admin Panel</title>
 	<style>
@@ -26,7 +27,7 @@
 	width: 100px;
 }
 
-.ui-widget,.ui-widget .ui-widget {
+.ui-widget, .ui-widget .ui-widget {
 	font-size: 90% !important;
 }
 </style>
@@ -46,10 +47,12 @@
 				<p:outputPanel id="mainPanel">
 					<p:outputPanel id="listView" rendered="#{templateAdminBean.showTemplateList}">
 
-						<p:commandButton value="Create Template" actionListener="#{templateAdminBean.createTemplate}" update=":adminTemplateForm:mainPanel">
+						<p:commandButton value="Create Template" actionListener="#{templateAdminBean.createTemplate}"
+							update=":adminTemplateForm:mainPanel">
 						</p:commandButton>
-						<p:dataTable id="listOfTemplate" var="oneTemplate" value="#{templateAdminBean.templates}" paginator="true" rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false"
-							emptyMessage="No Template" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						<p:dataTable id="listOfTemplate" var="oneTemplate" value="#{templateAdminBean.templates}" paginator="true"
+							rows="25" paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Template"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 							rowsPerPageTemplate="5,10,15">
 							<f:facet name="header">Template</f:facet>
 							<p:column>
@@ -75,7 +78,8 @@
 									<h:outputText value="Update" />
 								</f:facet>
 								<p:commandLink update=":adminTemplateForm:mainPanel" title="Update Post">
-									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png" height="20" />
+									<p:graphicImage value="https://cdn3.iconfinder.com/data/icons/tango-icon-library/48/edit-redo-48.png"
+										height="20" />
 									<f:setPropertyActionListener value="#{oneTemplate}" target="#{templateAdminBean.selectedTemplate}" />
 								</p:commandLink>
 							</p:column>
@@ -86,14 +90,20 @@
 							<p:outputLabel value="Name"></p:outputLabel>
 							<p:inputText value="#{templateAdminBean.selectedTemplate.name}" style="width:600px">
 							</p:inputText>
+							<p:selectOneMenu value="#{templateAdminBean.selectedUrl}">
+								<f:selectItem itemLabel="Select Page" itemValue="" />
+								<f:selectItems value="#{templateAdminBean.urls}" />
+								<p:ajax event="change" update="@form:formView" listener="#{templateAdminBean.handleUrlSelection}" />
+							</p:selectOneMenu>
 						</p:panelGrid>
 						<br></br>
 						<p:outputPanel id="tweetPanel">
-							<p:outputPanel >
-								<p:commandButton value="Cancel" update=":adminTemplateForm:mainPanel" actionListener="#{templateAdminBean.cancel}" styleClass="ui-priority-primary">
+							<p:outputPanel>
+								<p:commandButton value="Cancel" update=":adminTemplateForm:mainPanel"
+									actionListener="#{templateAdminBean.cancel}" styleClass="ui-priority-primary">
 								</p:commandButton>
-								<p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel" actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
-									rendered="#{templateAdminBean.saveDraft}">
+								<p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel"
+									actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary">
 								</p:commandButton>
 							</p:outputPanel>
 

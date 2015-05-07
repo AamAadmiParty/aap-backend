@@ -90,11 +90,14 @@
 							<p:outputLabel value="Name"></p:outputLabel>
 							<p:inputText value="#{templateAdminBean.selectedTemplate.name}" style="width:600px">
 							</p:inputText>
+							<p:outputLabel value="Url"></p:outputLabel>
 							<p:selectOneMenu value="#{templateAdminBean.selectedUrl}">
 								<f:selectItem itemLabel="Select Page" itemValue="" />
 								<f:selectItems value="#{templateAdminBean.urls}" />
-								<p:ajax event="change" update="@form:formView" listener="#{templateAdminBean.handleUrlSelection}" />
+								<p:ajax event="change" update=":adminTemplateForm:formView" listener="#{templateAdminBean.handleUrlSelection}" />
 							</p:selectOneMenu>
+							<p:outputLabel value="Template"></p:outputLabel>
+							<p:inputTextarea rows="6" cols="100" value="#{templateAdminBean.selectedTemplateUrl.draftContent}"/>
 						</p:panelGrid>
 						<br></br>
 						<p:outputPanel id="tweetPanel">
@@ -103,8 +106,13 @@
 									actionListener="#{templateAdminBean.cancel}" styleClass="ui-priority-primary">
 								</p:commandButton>
 								<p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel"
-									actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary">
+									actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
+									onclick="window.open('#{templateAdminBean.draftUrl}');" rendered="#{! empty templateAdminBean.draftUrl}">
 								</p:commandButton>
+								<p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel"
+                                    actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
+                                    rendered="#{empty templateAdminBean.draftUrl}">
+                                </p:commandButton>
 							</p:outputPanel>
 
 						</p:outputPanel>

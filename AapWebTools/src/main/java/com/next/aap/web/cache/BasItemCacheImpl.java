@@ -213,7 +213,7 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
 		addItems(returnList, district.getStateId(), stateItemDtos);
 	}
 	private void addItems(Set<Long> returnList, Long locationId, Map<Long, List<Long>> cacheItemsOfLocation){
-		if(locationId != null && locationId != null){
+        if (locationId != null && locationId > 0) {
 			List<Long> ids = cacheItemsOfLocation.get(locationId);
 			if(ids != null){
 				returnList.addAll(ids);	

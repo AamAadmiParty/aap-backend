@@ -34,6 +34,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
     private TemplateUrlDto selectedTemplateUrl;
     private String selectedUrl;
     private Map<String, String> urls;
+    private String draftUrl;
 	
 	public TemplateAdminBean(){
         super("/admin/templates", AppPermission.WEB_ADMIN, AppPermission.WEB_ADMIN_DRAFT);
@@ -45,6 +46,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 			return;
 		}
 		refreshTemplateList();
+        draftUrl = null;
         urls = new HashMap<String, String>();
         List<TemplateUrlTypeDto> templateUrlTypeDtos = aapService.getAllTemplateUrlTypes();
         for (TemplateUrlTypeDto oneTemplateUrlTypeDto : templateUrlTypeDtos) {
@@ -64,7 +66,9 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 	}
 
     public void handleUrlSelection() {
-
+        if (selectedUrl == null || selectedUrl.equals("")) {
+            draftUrl = null;
+        }
         selectedTemplateUrl = null;
         for (TemplateUrlDto oneTemplateUrlDto : selectedTemplate.getTemplateUrlDtos()) {
             logger.info("oneTemplateUrlDto.getUrl()={}, selectedUrl={}", oneTemplateUrlDto.getUrl(), selectedUrl);
@@ -76,6 +80,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         if (selectedTemplateUrl == null) {
             selectedTemplateUrl = new TemplateUrlDto();
             selectedTemplateUrl.setUrl(selectedUrl);
+            draftUrl = "http://www.swarajabhiyan.org/index.html?draft=1";
         }
     }
 
@@ -154,6 +159,14 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
 
     public void setUrls(Map<String, String> urls) {
         this.urls = urls;
+    }
+
+    public String getDraftUrl() {
+        return draftUrl;
+    }
+
+    public void setDraftUrl(String draftUrl) {
+        this.draftUrl = draftUrl;
     }
 
 }

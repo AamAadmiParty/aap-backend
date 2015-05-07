@@ -28,22 +28,7 @@ public class TemplateCaheInMemoryImpl implements TemplateCache {
     public void init(){
         logger.info("init");
 
-        try {
-            TemplateDto globalTemplate = aapService.getGlobalTemplate();
-            List<TemplateDto> stateTemplates = aapService.getStateTemplates();
-
-            templateCache = new HashMap<Long, Map<String, TemplateUrlDto>>();
-
-            addTemplateToCache(globalTemplate);    
-            
-            if (stateTemplates != null) {
-                for (TemplateDto oneTemplateDto : stateTemplates) {
-                    addTemplateToCache(oneTemplateDto);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        refreshCache();
     }
 
     private void addTemplateToCache(TemplateDto templateDto) {
@@ -74,6 +59,26 @@ public class TemplateCaheInMemoryImpl implements TemplateCache {
             templateUrlDto = templates.get(url);
         }
         return templateUrlDto;
+    }
+
+    @Override
+    public void refreshCache() {
+        try {
+            TemplateDto globalTemplate = aapService.getGlobalTemplate();
+            List<TemplateDto> stateTemplates = aapService.getStateTemplates();
+
+            templateCache = new HashMap<Long, Map<String, TemplateUrlDto>>();
+
+            addTemplateToCache(globalTemplate);
+
+            if (stateTemplates != null) {
+                for (TemplateDto oneTemplateDto : stateTemplates) {
+                    addTemplateToCache(oneTemplateDto);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

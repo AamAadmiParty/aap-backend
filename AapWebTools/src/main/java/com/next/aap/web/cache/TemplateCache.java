@@ -5,4 +5,6 @@ import com.next.aap.web.dto.TemplateUrlDto;
 public interface TemplateCache {
 
     TemplateUrlDto getStateTemplate(Long stateId, String url);
+
+    void refreshCache();
 }

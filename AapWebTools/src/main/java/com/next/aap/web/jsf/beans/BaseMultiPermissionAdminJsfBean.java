@@ -6,6 +6,7 @@ import com.next.aap.core.service.AapService;
 import com.next.aap.web.cache.AapDataCache;
 import com.next.aap.web.cache.BlogItemCacheImpl;
 import com.next.aap.web.cache.NewsItemCacheImpl;
+import com.next.aap.web.cache.TemplateCache;
 import com.next.aap.web.dto.AppPermission;
 import com.next.aap.web.dto.UserDto;
 import com.next.aap.web.dto.UserRolePermissionDto;
@@ -27,6 +28,9 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 
 	@ManagedProperty("#{menuBean}")
 	protected MenuBean menuBean;
+
+    @ManagedProperty("#{templateCaheInMemoryImpl}")
+    protected TemplateCache templateCache;
 
 	AppPermission[] appPermissions;
 	String url;

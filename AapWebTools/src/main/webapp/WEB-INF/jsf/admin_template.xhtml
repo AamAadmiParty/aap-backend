@@ -109,11 +109,11 @@
 								</p:commandButton>
 								<p:commandButton id="saveTemplateOpenDraft" value="Save Template" update=":adminTemplateForm:mainPanel"
 									actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
-									onclick="window.open('#{templateAdminBean.draftUrl}');" rendered="#{empty templateAdminBean.draftUrl}">
+									oncomplete="window.open('#{templateAdminBean.draftUrl}');" rendered="#{!empty templateAdminBean.draftUrl}">
 								</p:commandButton>
 								<p:commandButton id="saveTemplate" value="Save Template" update=":adminTemplateForm:mainPanel"
                                     actionListener="#{templateAdminBean.saveTemplate}" styleClass="ui-priority-primary"
-                                    rendered="#{!empty templateAdminBean.draftUrl}">
+                                    rendered="#{empty templateAdminBean.draftUrl}">
                                 </p:commandButton>
 							</p:outputPanel>
 

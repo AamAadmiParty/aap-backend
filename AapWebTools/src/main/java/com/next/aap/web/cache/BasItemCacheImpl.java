@@ -169,7 +169,10 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
     private Set<Long> getAllCacheItemIdsforLocation(String language, Long domainStateId, Long livingAcId, Long votingAcId, Long livingPcId, Long votingPcId,
 			Long livingCountryId,Long livingCountryRegionId){
 		Set<Long> returnList = new HashSet<>(allGlobalItemIds.size());
-		returnList.addAll(allGlobalItemIds);
+        if (domainStateId == null || domainStateId == 0) {
+            returnList.addAll(allGlobalItemIds);
+        }
+
         logger.info("Getting Cache for domainStateId={},votingAcId={},livingAcId={},votingPcId={},livingPcId={},livingCountryId={},livingCountryRegionId={}", domainStateId, votingAcId, livingAcId,
                 votingPcId, livingPcId, livingCountryId, livingCountryRegionId);
 		addItems(returnList, votingAcId, acItemDtos);

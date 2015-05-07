@@ -104,6 +104,7 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
                     selectedTemplateUrl.setTemplateId(selectedTemplate.getId());
                     aapService.saveTemplateUrl(selectedTemplateUrl);
                 }
+                templateCache.refreshCache();
                 refreshTemplateList();
                 cancel();
             } catch (Exception e) {

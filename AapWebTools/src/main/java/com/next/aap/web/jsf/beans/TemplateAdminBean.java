@@ -148,4 +148,12 @@ public class TemplateAdminBean extends BaseMultiPermissionAdminJsfBean {
         this.selectedUrl = selectedUrl;
     }
 
+    public Map<String, String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(Map<String, String> urls) {
+        this.urls = urls;
+    }
+
 }

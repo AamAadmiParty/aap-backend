@@ -93,4 +93,12 @@ public class BaseMultiPermissionAdminJsfBean extends BaseJsfBean{
 	public void setBlogItemCacheImpl(BlogItemCacheImpl blogItemCacheImpl) {
 		this.blogItemCacheImpl = blogItemCacheImpl;
 	}
+
+    public TemplateCache getTemplateCache() {
+        return templateCache;
+    }
+
+    public void setTemplateCache(TemplateCache templateCache) {
+        this.templateCache = templateCache;
+    }
 }

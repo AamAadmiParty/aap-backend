@@ -1210,6 +1210,8 @@ public class AapServiceImpl implements AapService, Serializable {
         user.setAddress(userDto.getAddress());
         user.setVoterId(userDto.getVoterId());
         user.setPassportNumber(userDto.getPassportNumber());
+        user.setIdentityNumber(userDto.getIdentityNumber());
+        user.setIdentityType(userDto.getIdentityType());
         if (user.isNri()) {
             if (userDto.getNriCountryId() != null && userDto.getNriCountryId() > 0) {
                 Country country = countryDao.getCountryById(userDto.getNriCountryId());

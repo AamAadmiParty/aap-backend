@@ -46,6 +46,8 @@ public class UserDto implements Serializable{
 	private Date dateModified;
 
     private VolunteerDto volunteerDto;
+    private String identityNumber;
+    private String identityType;
 
 
 	public Long getId() {
@@ -362,6 +364,22 @@ public class UserDto implements Serializable{
 
     public void setUserInterestDtos(List<UserInterestDto> userInterestDtos) {
         this.userInterestDtos = userInterestDtos;
+    }
+
+    public String getIdentityNumber() {
+        return identityNumber;
+    }
+
+    public void setIdentityNumber(String identityNumber) {
+        this.identityNumber = identityNumber;
+    }
+
+    public String getIdentityType() {
+        return identityType;
+    }
+
+    public void setIdentityType(String identityType) {
+        this.identityType = identityType;
     }
 
     @Override

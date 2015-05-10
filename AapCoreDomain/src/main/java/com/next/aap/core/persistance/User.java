@@ -274,6 +274,12 @@ public class User {
 	@Column(name = "passport_number")
 	private String passportNumber;
 
+    @Column(name = "identity_number")
+    private String identityNumber;
+
+    @Column(name = "identity_type")
+    private String identityType;
+
 	@Column(name = "voter_id")
 	private String voterId;
 	
@@ -795,7 +801,23 @@ public class User {
 		this.legacyMembershipNumber = legacyMembershipNumber;
 	}
 
-	@Override
+    public String getIdentityNumber() {
+        return identityNumber;
+    }
+
+    public void setIdentityNumber(String identityNumber) {
+        this.identityNumber = identityNumber;
+    }
+
+    public String getIdentityType() {
+        return identityType;
+    }
+
+    public void setIdentityType(String identityType) {
+        this.identityType = identityType;
+    }
+
+    @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;

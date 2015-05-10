@@ -418,11 +418,21 @@
 							<form:option value="Female">Female</form:option>
 						</form:select>
 					</div>
-
 					<div class="blockdiv">
-						<label>Passport Number</label>
-						<form:input path="passportNumber" class="textbox" title="Enter your passport number, compulsory for NRIs" />
-					</div>
+                        <label>Identity Card Type</label>
+                        <form:select path="identityType" title="Choose Your Indetity Card type">
+                            <form:option value="select"> Select</form:option>
+                            <form:option value="Driving Licence">Driving Licence</form:option>
+                            <form:option value="Passport">Passport</form:option>
+                            <form:option value="Adhar Card">Adhar Card</form:option>
+                            <form:option value="Rashan Card">Rashan Card</form:option>
+                            <form:option value="Others">Others</form:option>
+                        </form:select>
+                    </div>
+                    <div class="blockdiv">
+                        <label>Identity Card Number</label>
+                        <form:input path="identityNumber" class="textbox" title="Enter your identity card Number" />
+                    </div>
 
 					<div class="blockdiv">
 						<label>Mobile</label>
@@ -450,6 +460,10 @@
 						<form:checkbox path="nri" class="textbox" title="Select if you are currently living outside India" />
 					</div>
 					<div id="nriDiv">
+						<div class="blockdiv">
+	                        <label>Passport Number</label>
+	                        <form:input path="passportNumber" class="textbox" title="Enter your passport number, compulsory for NRIs" />
+	                    </div>
 						<div class="editprofile">NRI Living Location</div>
 						<div class="blockdiv">
 							<label>Country </label>
@@ -621,15 +635,16 @@
                         
                     <div id="volunteerDiv">
                     <div class="blockdiv">
-                        <label>Have you volunteered with any political/public interest organization in the past?</label>
+                        <b>Have you volunteered with any political/public interest organization in the past?</b>
                         <form:checkbox path="volunteerDto.pastVolunteer" />
                     </div>
+                    <br></br>
                     <div class="blockdiv">
                         <label>If yes, Which organization</label>
                         <form:input path="volunteerDto.pastOrganisation" class="textbox" title="If yes, Which organization" />
                     </div>
                     <div class="blockdiv">
-                        <label>Do you know someone associated with Swaraj Abhiyan?</label>
+                        <b>Do you know someone associated with Swaraj Abhiyan?</b>
                         <form:checkbox path="volunteerDto.knowExistingMember" />
                     </div>
                     <div class="blockdiv">

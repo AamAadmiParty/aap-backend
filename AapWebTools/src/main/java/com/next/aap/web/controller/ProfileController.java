@@ -76,6 +76,7 @@ public class ProfileController extends AppBaseController {
             }
 
             List<InterestGroupDto> interestGroups = aapService.getAllVolunterInterests();
+            System.out.println("${interestGroups} = " + interestGroups);
             mv.getModel().put("interestGroups", interestGroups);
             List<UserInterestDto> userInterestDtos = new ArrayList<UserInterestDto>();
             for (InterestGroupDto oneInterestGroupDto : interestGroups) {

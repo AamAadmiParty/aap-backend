@@ -1,5 +1,7 @@
 package com.next.aap.web.controller;
 
+import java.util.Map.Entry;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -18,7 +20,10 @@ public class NewsController extends AppBaseController {
 		addSingleNewsInModel(httpServletRequest, mv, newsId);
         //addUserAcCandidateInModel(httpServletRequest, mv);
         mv.setViewName(design + "/news");
-        System.out.println("HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE=" + mv.getModel().get("HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE"));
+        System.out.println("org.springframework.web.servlet.HandlerMapping.uriTemplateVariables=" + mv.getModel().get("HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE"));
+        for (Entry<String, Object> oneEntry : mv.getModel().entrySet()) {
+            System.out.println(oneEntry.getKey() + " = " + oneEntry.getValue());
+        }
 		return mv;
 		
 	}

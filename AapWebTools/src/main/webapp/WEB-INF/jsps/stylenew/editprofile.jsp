@@ -392,7 +392,7 @@
 			<!--form-leftarea-->
 			<div class="divarticle">
 				<h1>Be a part of the change. Volunteer for the Swaraj Abhiyan</h1>
-				<h3>Yor profile has been saved succesfully.</h3>
+				<h3>${message}</h3>
 			</div>
 			<br />
 			<div class="formwrapper">
@@ -620,6 +620,23 @@
 					
                         
                     <div id="volunteerDiv">
+                    <div class="blockdiv">
+                        <label>Have you volunteered with any political/public interest organization in the past?</label>
+                        <form:checkbox path="volunteerDto.pastVolunteer" />
+                    </div>
+                    <div class="blockdiv">
+                        <label>If yes, Which organization</label>
+                        <form:input path="volunteerDto.pastOrganisation" class="textbox" title="If yes, Which organization" />
+                    </div>
+                    <div class="blockdiv">
+                        <label>Do you know someone associated with Swaraj Abhiyan?</label>
+                        <form:checkbox path="volunteerDto.knowExistingMember" />
+                    </div>
+                    <div class="blockdiv">
+                        <label>If yes, Provide Name & Mobile No.</label>
+                        <form:input path="volunteerDto.existingMember" class="textbox" title="If yes, Provide Name & Mobile No." />
+                    </div>
+                    
                     <c:set var="count" scope="session" value="0"/>
 
                     <c:forEach items="${interestGroups}" var="oneInterestGroup">

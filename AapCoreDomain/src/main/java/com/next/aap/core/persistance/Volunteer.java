@@ -55,6 +55,14 @@ public class Volunteer {
 	private String infoRecordedBy;
 	@Column(name = "info_recorded_at")
 	private String infoRecordedAt;
+    @Column(name = "past_volunteer")
+    private boolean pastVolunteer;
+    @Column(name = "past_organisation", length = 128)
+    private String pastOrganisation;
+    @Column(name = "know_existing_member")
+    private boolean knowExistingMember;
+    @Column(name = "existingMember", length = 256)
+    private String existingMember;
 	
 	@ManyToOne( cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
     @JoinColumn(name="user_id")
@@ -182,6 +190,37 @@ public class Volunteer {
 		this.interests = interests;
 	}
 
+    public boolean isPastVolunteer() {
+        return pastVolunteer;
+    }
+
+    public void setPastVolunteer(boolean pastVolunteer) {
+        this.pastVolunteer = pastVolunteer;
+    }
+
+    public String getPastOrganisation() {
+        return pastOrganisation;
+    }
+
+    public void setPastOrganisation(String pastOrganisation) {
+        this.pastOrganisation = pastOrganisation;
+    }
+
+    public boolean isKnowExistingMember() {
+        return knowExistingMember;
+    }
+
+    public void setKnowExistingMember(boolean knowExistingMember) {
+        this.knowExistingMember = knowExistingMember;
+    }
+
+    public String getExistingMember() {
+        return existingMember;
+    }
+
+    public void setExistingMember(String existingMember) {
+        this.existingMember = existingMember;
+    }
     @Override
     public String toString() {
         return "Volunteer [id=" + id + ", ver=" + ver + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified + ", creatorId=" + creatorId + ", modifierId=" + modifierId + ", education="

@@ -18,6 +18,10 @@ public class VolunteerDto implements Serializable{
 	private String infoRecordedAt;
 	
 	private Long userId;
+    private boolean pastVolunteer;
+    private String pastOrganisation;
+    private boolean knowExistingMember;
+    private String existingMember;
 
 	public Long getId() {
 		return id;
@@ -107,11 +111,43 @@ public class VolunteerDto implements Serializable{
 		this.userId = userId;
 	}
 
+    public boolean isPastVolunteer() {
+        return pastVolunteer;
+    }
+
+    public void setPastVolunteer(boolean pastVolunteer) {
+        this.pastVolunteer = pastVolunteer;
+    }
+
+    public String getPastOrganisation() {
+        return pastOrganisation;
+    }
+
+    public void setPastOrganisation(String pastOrganisation) {
+        this.pastOrganisation = pastOrganisation;
+    }
+
+    public boolean isKnowExistingMember() {
+        return knowExistingMember;
+    }
+
+    public void setKnowExistingMember(boolean knowExistingMember) {
+        this.knowExistingMember = knowExistingMember;
+    }
+
+    public String getExistingMember() {
+        return existingMember;
+    }
+
+    public void setExistingMember(String existingMember) {
+        this.existingMember = existingMember;
+    }
+
     @Override
     public String toString() {
         return "VolunteerDto [id=" + id + ", education=" + education + ", professionalBackground=" + professionalBackground + ", domainExpertise=" + domainExpertise + ", offences=" + offences
                 + ", emergencyContactName=" + emergencyContactName + ", emergencyContactRelation=" + emergencyContactRelation + ", emergencyContactNo=" + emergencyContactNo + ", infoRecordedBy="
-                + infoRecordedBy + ", infoRecordedAt=" + infoRecordedAt + ", userId=" + userId + "]";
+                + infoRecordedBy + ", infoRecordedAt=" + infoRecordedAt + ", userId=" + userId + ", pastVolunteer=" + pastVolunteer + ", pastOrganisation=" + pastOrganisation + "]";
     }
 	
 

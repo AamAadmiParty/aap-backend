@@ -4231,6 +4231,9 @@ public class AapServiceImpl implements AapService, Serializable {
         if (user == null) {
             throw new AppException("No User found");
         }
+        if (volunteerDto.isPastVolunteer() && StringUtils.isEmpty(volunteerDto.getPastOrganisation())) {
+            throw new AppException("Please Enter previous organisation name");
+        }
 
         Volunteer volunteer = volunteerDao.getVolunteersByUserId(user.getId());
         if (volunteer == null) {
@@ -4249,6 +4252,10 @@ public class AapServiceImpl implements AapService, Serializable {
         volunteer.setProfessionalBackground(volunteerDto.getProfessionalBackground());
         volunteer.setUser(user);
         volunteer.setUserId(user.getId());
+        volunteer.setPastOrganisation(volunteerDto.getPastOrganisation());
+        volunteer.setPastVolunteer(volunteerDto.isPastVolunteer());
+        volunteer.setKnowExistingMember(volunteerDto.isKnowExistingMember());
+        volunteer.setExistingMember(volunteerDto.getExistingMember());
         System.out.println("Saving Volunteer : " + volunteer);
         volunteer = volunteerDao.saveVolunteer(volunteer);
 

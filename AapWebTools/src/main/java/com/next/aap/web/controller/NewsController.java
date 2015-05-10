@@ -18,6 +18,7 @@ public class NewsController extends AppBaseController {
 		addSingleNewsInModel(httpServletRequest, mv, newsId);
         //addUserAcCandidateInModel(httpServletRequest, mv);
         mv.setViewName(design + "/news");
+        System.out.println("HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE=" + mv.getModel().get("HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE"));
 		return mv;
 		
 	}

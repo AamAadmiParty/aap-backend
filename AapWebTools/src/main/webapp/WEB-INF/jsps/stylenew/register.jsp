@@ -16,7 +16,6 @@
 $(function() {
    $( "#user" ).submit(function( event ) {
 	   var countryData = $("#mobileNumber").intlTelInput("getSelectedCountryData");
-	   alert(countryData +" , "+ countryData.dialCode);
 	  $("#countryCode").val(countryData.dialCode);
 	});
 });

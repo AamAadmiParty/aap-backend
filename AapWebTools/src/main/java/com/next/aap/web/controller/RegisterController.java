@@ -201,11 +201,14 @@ public class RegisterController extends AppBaseController {
 
                 System.out.println("saving Volunteer Detail");
                 List<Long> selectedInterests = new ArrayList<Long>();
-                for (UserInterestDto oneInterestDto : user.getUserInterestDtos()) {
-                    if (oneInterestDto.isSelected()) {
-                        selectedInterests.add(oneInterestDto.getId());
+                if (user.getUserInterestDtos() != null) {
+                    for (UserInterestDto oneInterestDto : user.getUserInterestDtos()) {
+                        if (oneInterestDto.isSelected()) {
+                            selectedInterests.add(oneInterestDto.getId());
+                        }
                     }
                 }
+
                 VolunteerDto selectedVolunteer = user.getVolunteerDto();
                 selectedVolunteer.setInfoRecordedAt("Self Service Portal");
                 selectedVolunteer.setInfoRecordedBy("Self");

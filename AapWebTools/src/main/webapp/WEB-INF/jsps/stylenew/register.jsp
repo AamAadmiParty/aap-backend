@@ -415,8 +415,8 @@ $(function() {
 					</div>
 
 					<div class="blockdiv">
-						<label>Voter ID</label>
-						<form:input path="voterId" class="textbox" title="Please Enter Your Voter ID" />
+						<label>Email</label>
+						<form:input path="email" class="textbox" title="Please Enter Your Email" />
 					</div>
 
 					<div class="blockdiv">

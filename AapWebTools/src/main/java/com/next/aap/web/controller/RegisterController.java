@@ -208,14 +208,15 @@ public class RegisterController extends AppBaseController {
                         }
                     }
                 }
-
-                VolunteerDto selectedVolunteer = user.getVolunteerDto();
-                selectedVolunteer.setInfoRecordedAt("Self Service Portal");
-                selectedVolunteer.setInfoRecordedBy("Self");
-                selectedVolunteer.setUserId(user.getId());
-                selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
-                user.setVolunteerDto(selectedVolunteer);
-                System.out.println("Volunteer Saved");
+                if (user.isVolunteer()) {
+                    VolunteerDto selectedVolunteer = user.getVolunteerDto();
+                    selectedVolunteer.setInfoRecordedAt("Self Service Portal");
+                    selectedVolunteer.setInfoRecordedBy("Self");
+                    selectedVolunteer.setUserId(user.getId());
+                    selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
+                    user.setVolunteerDto(selectedVolunteer);
+                    System.out.println("Volunteer Saved");
+                }
                 mv.getModel().put("message", "Profile Saved succesfully");
             } catch (Exception ex) {
                 ex.printStackTrace();

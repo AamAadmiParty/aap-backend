@@ -196,6 +196,7 @@ public class RegisterController extends AppBaseController {
         if (isValidInput(mv)) {
             try {
                 System.out.println("saving User " + user);
+                user.setCountryCode("91");
                 user = aapService.saveUser(user);
 
                 System.out.println("saving Volunteer Detail");

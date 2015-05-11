@@ -17,8 +17,7 @@ $(function() {
    $( "#user" ).submit(function( event ) {
 	   var countryData = $("#mobileNumber").intlTelInput("getSelectedCountryData");
 	   alert(countryData +" , "+ countryData.dialCode);
-	  $("#countryCode").value = countryData.dialCode;
-	  event.preventDefault();
+	  $("#countryCode").val(countryData.dialCode);
 	});
 });
 	
@@ -746,7 +745,7 @@ $(function() {
 
 	<jsp:include page="footer.jsp" />
 <script>
-  $("#mobileNumber").intlTelInput({defaultCountry:'in',preferredCountries:['in'],onlyCountries=['in']});
+  $("#mobileNumber").intlTelInput({defaultCountry:'in',preferredCountries:['in'],onlyCountries:['in']});
   $("#nriMobileNumber").intlTelInput({defaultCountry:'us',preferredCountries:['us','gb']});
 </script>
 

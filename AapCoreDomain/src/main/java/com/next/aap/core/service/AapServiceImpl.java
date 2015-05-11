@@ -1122,6 +1122,26 @@ public class AapServiceImpl implements AapService, Serializable {
 
     @Override
     @Transactional
+    public UserDto registerUser(UserDto userDto) throws AppException {
+        String email = userDto.getEmail();
+        if (!StringUtils.isEmpty(email)) {
+            Email existingEmail = emailDao.getEmailByEmail(email);
+            if (existingEmail != null) {
+                throw new AppException("Email " + email + " already registered");
+            }
+        }
+        String mobileNumber = userDto.getMobileNumber();
+        if (!StringUtils.isEmpty(mobileNumber)) {
+            Phone existingPhone = phoneDao.getPhoneByPhone(mobileNumber, userDto.getCountryCode());
+            if (existingPhone != null) {
+                throw new AppException("Phone/Mobile " + mobileNumber + " already registered");
+            }
+        }
+        return saveUser(userDto);
+    }
+
+    @Override
+    @Transactional
     public UserDto saveUser(UserDto userDto) throws AppException {
         User user;
         System.out.println("userDto.getId = " + userDto.getId());

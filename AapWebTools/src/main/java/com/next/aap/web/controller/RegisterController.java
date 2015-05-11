@@ -197,7 +197,7 @@ public class RegisterController extends AppBaseController {
             try {
                 System.out.println("saving User " + user);
                 user.setCountryCode("91");
-                user = aapService.saveUser(user);
+                user = aapService.registerUser(user);
 
                 System.out.println("saving Volunteer Detail");
                 List<Long> selectedInterests = new ArrayList<Long>();

@@ -112,6 +112,8 @@ public interface AapService {
 	
 	UserDto saveUser(UserDto userDto) throws AppException ;
 	
+    UserDto registerUser(UserDto userDto) throws AppException;
+
 	UserDto saveUserFromAdmiPanel(UserDto userDto, VolunteerDto volunteerDto, List<Long> interests) throws AppException ;
 	
 	FacebookAppPermissionDto getFacebookPermission(long facebookAppId, long facebookAccountId);

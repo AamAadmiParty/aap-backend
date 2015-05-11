@@ -13,6 +13,13 @@
 <link rel="stylesheet" type="text/css" href="<c:out value='${staticDirectory}'/>/styles/intlTelInput.css" />
 <script src="<c:out value='${staticDirectory}'/>/js/intlTelInput.min.js"></script>
 <script>
+   $( "#user" ).submit(function( event ) {
+	   var countryData = $("#mobileNumber").intlTelInput("getSelectedCountryData");
+	   alert(countryData +" , "+ countryData.dialCode);
+	  $("#countryCode").value = countryData.dialCode;
+	  event.preventDefault();
+	});
+	
 	$(function() {
 		$("select#stateLivingId")
 				.change(
@@ -498,6 +505,7 @@
 						<div class="blockdiv">
 							<label>Mobile</label>
 							<form:input path="nriMobileNumber" class="textbox" title="Enter you outside india mobile number" />
+							<form:hidden path="countryCode" />
 						</div>
 					</div>
 					<div id="indianLocationDiv">

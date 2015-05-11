@@ -53,7 +53,7 @@ public class RegisterController extends AppBaseController {
             user = new UserDto();
         }
 
-        mv = new ModelAndView(design + "/editprofile", "user", user);
+        mv = new ModelAndView(design + "/register", "user", user);
         mv = preparePage(httpServletRequest, user, mv);
 
         return mv;
@@ -145,14 +145,13 @@ public class RegisterController extends AppBaseController {
     @RequestMapping(value = "/register.html", method = RequestMethod.POST)
     public ModelAndView saveUserProfile(@ModelAttribute("user") UserDto user, BindingResult result, ModelAndView mv, HttpServletRequest httpServletRequest) {
         printVolunteerDetail(user);
-        mv = new ModelAndView(design + "/editprofile", "user", user);
+        mv = new ModelAndView(design + "/register", "user", user);
         if (result.hasErrors()) {
             System.out.println("Has Errors " + result);
             preparePage(httpServletRequest, user, mv);
             return mv;
         }
         System.out.println("No Erros found [" + user.getName() + "," + httpServletRequest.getParameter("name") + "]");
-
         if (!user.isNri()) {
             if (user.getStateLivingId() == null || user.getStateLivingId() == 0) {
                 addErrorInModel(mv, "Please select State where you are living currently");

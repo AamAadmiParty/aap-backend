@@ -13,12 +13,14 @@
 <link rel="stylesheet" type="text/css" href="<c:out value='${staticDirectory}'/>/styles/intlTelInput.css" />
 <script src="<c:out value='${staticDirectory}'/>/js/intlTelInput.min.js"></script>
 <script>
+$(function() {
    $( "#user" ).submit(function( event ) {
 	   var countryData = $("#mobileNumber").intlTelInput("getSelectedCountryData");
 	   alert(countryData +" , "+ countryData.dialCode);
 	  $("#countryCode").value = countryData.dialCode;
 	  event.preventDefault();
 	});
+});
 	
 	$(function() {
 		$("select#stateLivingId")
@@ -744,8 +746,8 @@
 
 	<jsp:include page="footer.jsp" />
 <script>
-  $("#mobileNumber").intlTelInput({defaultCountry:'in',preferredCountries:['in','us','gb']});
-  $("#nriMobileNumber").intlTelInput({defaultCountry:'in',preferredCountries:['in','us','gb']});
+  $("#mobileNumber").intlTelInput({defaultCountry:'in',preferredCountries:['in'],onlyCountries=['in']});
+  $("#nriMobileNumber").intlTelInput({defaultCountry:'us',preferredCountries:['us','gb']});
 </script>
 
 </body>

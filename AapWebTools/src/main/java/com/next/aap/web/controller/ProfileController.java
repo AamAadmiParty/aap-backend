@@ -155,6 +155,11 @@ public class ProfileController extends AppBaseController {
         UserDto editingUser = new UserDto();
         BeanUtils.copyProperties(loggedInUserUser, editingUser);
 
+        editingUser.setName(user.getName());
+        editingUser.setVoterId(user.getVoterId());
+        editingUser.setIdentityType(user.getIdentityType());
+        editingUser.setIdentityNumber(user.getIdentityNumber());
+
         editingUser.setAddress(user.getAddress());
         editingUser.setAssemblyConstituencyLivingId(user.getAssemblyConstituencyLivingId());
         editingUser.setAssemblyConstituencyVotingId(user.getAssemblyConstituencyVotingId());

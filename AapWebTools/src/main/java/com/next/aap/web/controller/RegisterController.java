@@ -212,13 +212,14 @@ public class RegisterController extends AppBaseController {
                 selectedVolunteer = aapService.saveVolunteerDetails(selectedVolunteer, selectedInterests);
                 user.setVolunteerDto(selectedVolunteer);
                 System.out.println("Volunteer Saved");
+                mv.getModel().put("message", "Profile Saved succesfully");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 addErrorInModel(mv, ex.getMessage());
             }
         }
         System.out.println("Preparing Page");
-        mv.getModel().put("message", "Profile Saved succesfully");
+
         mv = preparePage(httpServletRequest, user, mv);
         return mv;
     }

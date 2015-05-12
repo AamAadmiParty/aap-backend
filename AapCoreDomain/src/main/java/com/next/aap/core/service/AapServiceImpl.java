@@ -1137,6 +1137,14 @@ public class AapServiceImpl implements AapService, Serializable {
                 throw new AppException("Phone/Mobile " + mobileNumber + " already registered");
             }
         }
+
+        String nriMobileNumber = userDto.getNriMobileNumber();
+        if (!StringUtils.isEmpty(nriMobileNumber)) {
+            Phone existingPhone = phoneDao.getPhoneByPhone(mobileNumber, userDto.getCountryCode());
+            if (existingPhone != null) {
+                throw new AppException("Phone/Mobile " + mobileNumber + " already registered");
+            }
+        }
         return saveUser(userDto);
     }
 
@@ -1307,7 +1315,8 @@ public class AapServiceImpl implements AapService, Serializable {
                     }
                 }
                 if (onePhone == null) {
-                    onePhone = userPhones.get(0);
+                    onePhone = new Phone();
+                    onePhone.setDateCreated(new Date());
                 }
                 if (user.getNriCountry() == null) {
                     onePhone.setCountryCode("91");

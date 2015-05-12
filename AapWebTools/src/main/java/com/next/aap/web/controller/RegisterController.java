@@ -218,6 +218,7 @@ public class RegisterController extends AppBaseController {
                     System.out.println("Volunteer Saved");
                 }
                 mv.getModel().put("message", "Profile Saved succesfully");
+                mv.setViewName(design + "/registerconfirmation");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 addErrorInModel(mv, ex.getMessage());

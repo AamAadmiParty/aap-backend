@@ -37,7 +37,9 @@
 		<div class="form-leftarea">
 			<!--form-leftarea-->
 			<div class="divarticle">
-				<h1>Profile Saved</h1>
+				<h1>Thanks for Registration</h1>
+				
+				<h4>Your details have been saved successfully, we will be in touch soon</h4>
 			</div>
 			<br />
 		</div>

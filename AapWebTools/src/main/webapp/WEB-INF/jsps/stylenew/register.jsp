@@ -326,6 +326,22 @@ $(function() {
             $('#volunteerDiv').hide();
         }
 
+        $('#volunteerDto.knowExistingMember').click(function() {
+            if ($('#volunteerDto.pastVolunteer').prop('checked')) {
+                $('#saDetail').show();
+            } else {
+                $('#saDetail').hide();
+            }
+        });
+        
+        $('#volunteerDto.pastVolunteer').click(function() {
+            if ($('#volunteerDto.pastVolunteer').prop('checked')) {
+                $('#organisationDetail').show();
+            } else {
+                $('#organisationDetail').hide();
+            }
+        });
+        
 		$('#nri1').click(function() {
 			if ($('#nri1').prop('checked')) {
 				$('#nriDiv').show();
@@ -649,7 +665,7 @@ $(function() {
                         <form:checkbox path="volunteerDto.pastVolunteer" />
                     </div>
                     <br></br>
-                    <div class="blockdiv">
+                    <div class="blockdiv" id="organisationDetail">
                         <label>If yes, Which organization</label>
                         <form:input path="volunteerDto.pastOrganisation" class="textbox" title="If yes, Which organization" />
                     </div>
@@ -657,7 +673,7 @@ $(function() {
                         <b>Do you know someone associated with Swaraj Abhiyan?</b>
                         <form:checkbox path="volunteerDto.knowExistingMember" />
                     </div>
-                    <div class="blockdiv">
+                    <div class="blockdiv" id="saDetail">
                         <label>If yes, Provide Name & Mobile No.</label>
                         <form:input path="volunteerDto.existingMember" class="textbox" title="If yes, Provide Name & Mobile No." />
                     </div>

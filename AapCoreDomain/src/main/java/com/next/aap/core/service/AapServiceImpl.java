@@ -1140,9 +1140,17 @@ public class AapServiceImpl implements AapService, Serializable {
 
         String nriMobileNumber = userDto.getNriMobileNumber();
         if (!StringUtils.isEmpty(nriMobileNumber)) {
-            Phone existingPhone = phoneDao.getPhoneByPhone(mobileNumber, userDto.getCountryCode());
-            if (existingPhone != null) {
-                throw new AppException("Phone/Mobile " + mobileNumber + " already registered");
+            Country country = null;
+            if (userDto.isNri()) {
+                if (userDto.getNriCountryId() != null && userDto.getNriCountryId() > 0) {
+                    country = countryDao.getCountryById(userDto.getNriCountryId());
+                }
+            }
+            if (country != null) {
+                Phone existingPhone = phoneDao.getPhoneByPhone(nriMobileNumber, country.getIsdCode());
+                if (existingPhone != null) {
+                    throw new AppException("NRI Phone/Mobile " + country.getIsdCode() + " - " + nriMobileNumber + " already registered");
+                }
             }
         }
         return saveUser(userDto);

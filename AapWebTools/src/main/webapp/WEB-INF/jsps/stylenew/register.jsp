@@ -313,14 +313,14 @@ $(function() {
 		$("#dateOfBirth").datepicker("option", "autoSize", "true");
 	});
 	$(document).ready(function() {
-		if ('${loggedInUser.nri}' == 'true') {
+		if ('${user.nri}' == 'true') {
 			$('#indianLocationDiv').hide();
 			$('#nriDiv').show();
 		} else {
 			$('#nriDiv').hide();
 			$('#indianLocationDiv').show();
 		}
-		if ('${loggedInUser.volunteer}' == 'true') {
+		if ('${user.volunteer}' == 'true') {
             $('#volunteerDiv').show();
         } else {
             $('#volunteerDiv').hide();
@@ -485,7 +485,7 @@ $(function() {
 						<div class="blockdiv">
 							<label>Region/State</label>
 							<form:select path="nriCountryRegionId"
-								disabled="${empty loggedInUser.nriCountryRegionId or loggedInUser.nriCountryRegionId le 0 }"
+								disabled="${empty user.nriCountryRegionId or user.nriCountryRegionId le 0 }"
 								title="Select your country region">
 								<form:option value="0" label="Select Region" />
 								<form:options items="${nriCountryRegions}" itemValue="id" itemLabel="name" />
@@ -495,7 +495,7 @@ $(function() {
 						<div class="blockdiv">
 							<label>Area/City</label>
 							<form:select path="nriCountryRegionAreaId"
-								disabled="${empty loggedInUser.nriCountryRegionAreaId or loggedInUser.nriCountryRegionAreaId le 0 }"
+								disabled="${empty user.nriCountryRegionAreaId or user.nriCountryRegionAreaId le 0 }"
 								title="Select your country region area">
 								<form:option value="0" label="Select Area" />
 								<form:options items="${nriCountryRegionAreas}" itemValue="id" itemLabel="name" />
@@ -520,7 +520,7 @@ $(function() {
 						<div class="blockdiv">
 							<label>District</label>
 							<form:select path="districtLivingId"
-								disabled="${empty loggedInUser.districtLivingId or loggedInUser.districtLivingId le 0 }"
+								disabled="${empty user.districtLivingId or user.districtLivingId le 0 }"
 								title="Choose District where you live currently">
 								<form:option value="0" label="Select District" />
 								<form:options items="${livingDistricts}" itemValue="id" itemLabel="name" />
@@ -529,7 +529,7 @@ $(function() {
 						<div class="blockdiv">
 							<label>Parliament Constituency</label>
 							<form:select path="parliamentConstituencyLivingId"
-								disabled="${empty loggedInUser.parliamentConstituencyLivingId or loggedInUser.parliamentConstituencyLivingId le 0 }"
+								disabled="${empty user.parliamentConstituencyLivingId or user.parliamentConstituencyLivingId le 0 }"
 								title="Choose Parliament Constituency where you live currently">
 								<form:option value="0" label="Select Parliament Constituency" />
 								<form:options items="${livingPcs}" itemValue="id" itemLabel="name" />
@@ -538,7 +538,7 @@ $(function() {
 						<div class="blockdiv">
 							<label>Assembly Constituency</label>
 							<form:select path="assemblyConstituencyLivingId"
-								disabled="${empty loggedInUser.assemblyConstituencyLivingId or loggedInUser.assemblyConstituencyLivingId le 0 }"
+								disabled="${empty user.assemblyConstituencyLivingId or user.assemblyConstituencyLivingId le 0 }"
 								title="Choose Assembly Constituency where you live currently">
 								<form:option value="0" label="Select Assembly Constituency" />
 								<form:options items="${livingAcs}" itemValue="id" itemLabel="name" />
@@ -556,7 +556,7 @@ $(function() {
 					<div class="blockdiv">
 						<label>District</label>
 						<form:select path="districtVotingId"
-							disabled="${empty loggedInUser.districtVotingId or loggedInUser.districtVotingId le 0 }"
+							disabled="${empty user.districtVotingId or user.districtVotingId le 0 }"
 							title="Choose District where you registered as Voter or your indian address District">
 							<form:option value="0" label="Select District" />
 							<form:options items="${votingDistricts}" itemValue="id" itemLabel="name" />
@@ -565,7 +565,7 @@ $(function() {
 					<div class="blockdiv">
 						<label>Parliament Constituency</label>
 						<form:select path="parliamentConstituencyVotingId"
-							disabled="${empty loggedInUser.parliamentConstituencyVotingId or loggedInUser.parliamentConstituencyVotingId le 0 }"
+							disabled="${empty user.parliamentConstituencyVotingId or user.parliamentConstituencyVotingId le 0 }"
 							title="Choose Parliament Constituency where you registered as Voter or your indian address Parliament Constituency">
 							<form:option value="0" label="Select Parliament Constituency" />
 							<form:options items="${votingPcs}" itemValue="id" itemLabel="name" />
@@ -574,25 +574,25 @@ $(function() {
 					<div class="blockdiv">
 						<label>Assembly Constituency</label>
 						<form:select path="assemblyConstituencyVotingId"
-							disabled="${empty loggedInUser.assemblyConstituencyVotingId or loggedInUser.assemblyConstituencyVotingId le 0 }"
+							disabled="${empty user.assemblyConstituencyVotingId or user.assemblyConstituencyVotingId le 0 }"
 							title="Choose Assembly Constituency where you registered as Voter or your indian address Assembly Constituency">
 							<form:option value="0" label="Select Assembly Constituency" />
 							<form:options items="${votingAcs}" itemValue="id" itemLabel="name" />
 						</form:select>
 					</div>
 					<!-- 
-					<c:if test="${loggedInUser.member}">
+					<c:if test="${user.member}">
 						<div class="blockdiv">
-							<label>Membership Number</label> <label><c:out value="${loggedInUser.membershipNumber}" /> <c:if test="${!empty loggedInUser.legacyMembershipNumber}">
-							/ <c:out value="${loggedInUser.legacyMembershipNumber}" />
+							<label>Membership Number</label> <label><c:out value="${user.membershipNumber}" /> <c:if test="${!empty user.legacyMembershipNumber}">
+							/ <c:out value="${user.legacyMembershipNumber}" />
 								</c:if> </label>
 						</div>
 						<div class="blockdiv">
-							<label>Membership Status</label> <label><c:out value="${loggedInUser.membershipStatus}" /> </label>
+							<label>Membership Status</label> <label><c:out value="${user.membershipStatus}" /> </label>
 						</div>
 					</c:if>
 					-->
-					<c:if test="${!loggedInUser.member}">
+					<c:if test="${!user.member}">
 						<!-- 
 						<div class="partymemberdiv">
 							<form:checkbox path="member" />

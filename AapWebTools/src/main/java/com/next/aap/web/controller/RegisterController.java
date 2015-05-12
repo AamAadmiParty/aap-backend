@@ -145,6 +145,7 @@ public class RegisterController extends AppBaseController {
     @RequestMapping(value = "/register.html", method = RequestMethod.POST)
     public ModelAndView saveUserProfile(@ModelAttribute("user") UserDto user, BindingResult result, ModelAndView mv, HttpServletRequest httpServletRequest) {
         printVolunteerDetail(user);
+        VolunteerDto inputVolunteerDetail = user.getVolunteerDto();
         mv = new ModelAndView(design + "/register", "user", user);
         if (result.hasErrors()) {
             System.out.println("Has Errors " + result);
@@ -193,6 +194,7 @@ public class RegisterController extends AppBaseController {
         if (StringUtil.isEmptyOrWhitespace(user.getName())) {
             addErrorInModel(mv, "Please enter your full name");
         }
+        boolean error = true;
         if (isValidInput(mv)) {
             try {
                 System.out.println("saving User " + user);
@@ -219,14 +221,24 @@ public class RegisterController extends AppBaseController {
                 }
                 mv.getModel().put("message", "Profile Saved succesfully");
                 mv.setViewName(design + "/registerconfirmation");
+                error = false;
             } catch (Exception ex) {
                 ex.printStackTrace();
                 addErrorInModel(mv, ex.getMessage());
+                error = true;
             }
         }
         System.out.println("Preparing Page");
 
         mv = preparePage(httpServletRequest, user, mv);
+        if (error) {
+            if (inputVolunteerDetail == null) {
+                user.setVolunteerDto(new VolunteerDto());
+            } else {
+                user.setVolunteerDto(inputVolunteerDetail);
+            }
+
+        }
         return mv;
     }
 

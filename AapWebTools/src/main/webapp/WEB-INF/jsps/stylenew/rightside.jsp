@@ -33,7 +33,7 @@
 	<c:if test="${empty loggedInUser}">
 		<div class="joincommunity">
 			<!--joincommunity-->
-			<a href="${contextPath}/profile.html"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
+			<a href="${contextPath}/register.html"><img src="<c:out value='${staticDirectory}'/>/images/joincommunity.jpg" border="0" /></a>
 			<ul>
 				<li>To participate in polls</li>
 				<li>To track your donation network</li>

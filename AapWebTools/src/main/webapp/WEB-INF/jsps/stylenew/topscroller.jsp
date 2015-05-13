@@ -8,8 +8,8 @@
 				<li><a href="${contextPath}/voa.html">Swaraj ki Awaz</a></li>
 				<li><a href="${contextPath}/mydonations.html">My Donations</a></li>
 				<li><a href="${contextPath}/ripple.html">My Ripple</a></li>
+				<li><a href="${contextPath}/register.html">My Profile</a></li>
 				-->
-                <li><a href="${contextPath}/profile.html">My Profile</a></li>
 				<c:if test="${admin}">
 					<li><a href="${contextPath}/admin/home">Admin</a></li>
 				</c:if>

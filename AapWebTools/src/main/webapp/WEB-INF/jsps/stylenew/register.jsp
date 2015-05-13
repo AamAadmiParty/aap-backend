@@ -431,7 +431,7 @@ $(function() {
 					</div>
 
 					<div class="blockdiv">
-						<label>Email</label>
+						<label>Email*</label>
 						<form:input path="email" class="textbox" title="Please Enter Your Email" />
 					</div>
 
@@ -460,8 +460,8 @@ $(function() {
                     </div>
 
 					<div class="blockdiv">
-						<label>Mobile</label>
-						<form:input path="mobileNumber" class="textbox" title="Enter your indian mobile number, 10 digits only" />
+						<label>Mobile*</label>
+						<form:input path="mobileNumber" class="textbox" title="Enter your indian mobile number, 10 digits only, with out 0 or +91 or 0091<br> if you are NRI then use NRI mobile field" />
 					</div>
 
 					<div class="blockdiv">
@@ -519,7 +519,7 @@ $(function() {
 						</div>
 
 						<div class="blockdiv">
-							<label>Mobile</label>
+							<label>Mobile*</label>
 							<form:input path="nriMobileNumber" class="textbox" title="Enter you outside india mobile number" />
 							<form:hidden path="countryCode" />
 						</div>

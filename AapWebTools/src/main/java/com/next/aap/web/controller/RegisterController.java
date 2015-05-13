@@ -160,9 +160,11 @@ public class RegisterController extends AppBaseController {
             if (user.getDistrictLivingId() == null || user.getDistrictLivingId() == 0) {
                 addErrorInModel(mv, "Please select District where you are living currently");
             }
+            /*
             if (user.getAssemblyConstituencyLivingId() == null || user.getAssemblyConstituencyLivingId() == 0) {
                 addErrorInModel(mv, "Please select Assembly Constituency where you are living currently");
             }
+            */
             if (user.getParliamentConstituencyLivingId() == null || user.getParliamentConstituencyLivingId() == 0) {
                 addErrorInModel(mv, "Please select Parliament Constituency where you are living currently");
             }
@@ -174,9 +176,11 @@ public class RegisterController extends AppBaseController {
         if (user.getDistrictVotingId() == null || user.getDistrictVotingId() == 0) {
             addErrorInModel(mv, "Please select District where you are registered as Voter");
         }
+        /*
         if (user.getAssemblyConstituencyVotingId() == null || user.getAssemblyConstituencyVotingId() == 0) {
             addErrorInModel(mv, "Please select Assembly Constituency where you registered as Voter");
         }
+        */
         if (user.getParliamentConstituencyVotingId() == null || user.getParliamentConstituencyVotingId() == 0) {
             addErrorInModel(mv, "Please select Parliament Constituency where you registered as Voter");
         }

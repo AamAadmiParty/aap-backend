@@ -367,6 +367,14 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
         if (interests != null && !interests.isEmpty()) {
             queryBuilder.append(", Volunteer volunteer join volunteer.interests vi ");
         }
+        logger.info("livingAcId : " + livingAcId);
+        logger.info("livingDistrictId : " + livingDistrictId);
+        logger.info("livingStateId : " + livingStateId);
+        logger.info("livingCountryId : " + livingCountryId);
+        logger.info("livingCountryRegionId : " + livingCountryRegionId);
+        logger.info("livingCountryRegionAreaId : " + livingCountryRegionAreaId);
+        logger.info("votingAcId : " + votingAcId);
+        logger.info("interests : " + interests);
         Map<String, Object> params = new HashMap<String, Object>();
         appendQueryParameter(queryBuilder, params, "nriCountryId", "=", livingCountryId, "user");
         appendQueryParameter(queryBuilder, params, "nriCountryRegionId", "=", livingCountryRegionId, "user");
@@ -376,7 +384,6 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
         appendQueryParameter(queryBuilder, params, "assemblyConstituencyLivingId", "=", livingAcId, "user");
         appendVolunteerQueryParameter(queryBuilder, params, interests);
         String query = queryBuilder.toString();
-        System.out.println("Query : " + query);
         logger.info("Query : " + query);
         return executeQueryGetList(query, params);
     }

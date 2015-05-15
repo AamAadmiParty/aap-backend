@@ -105,6 +105,7 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
 			return;
 		}
 		searchedUser = new UserDto();
+		/*
 		searchedUser.setStateLivingId(loggedInAdminUser.getStateLivingId());
 		searchedUser.setDistrictLivingId(loggedInAdminUser.getDistrictLivingId());
 		searchedUser.setAssemblyConstituencyLivingId(loggedInAdminUser.getAssemblyConstituencyLivingId());
@@ -117,10 +118,11 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 1981);
 		searchedUser.setDateOfBirth(cal.getTime());
+		*/
 
 		//Copy Logged In user to selectedUserForEditing
 		selectedUserForEditing = new UserDto();
-		selectedUserForEditing.setDateOfBirth(cal.getTime());
+        // selectedUserForEditing.setDateOfBirth(cal.getTime());
 		if (searchedUser.getStateVotingId() != null) {
 			enableDistrictCombo = true;
 			enableParliamentConstituencyCombo = true;
@@ -334,11 +336,16 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
 			if (searchedUser.getStateVotingId() == 0 || searchedUser.getStateVotingId() == null) {
 				enableDistrictCombo = false;
 				enableParliamentConstituencyCombo = false;
+                enableAssemblyConstituencyCombo = false;
 				districtList = new ArrayList<>();
 				parliamentConstituencyList = new ArrayList<>();
+                searchedUser.setAssemblyConstituencyVotingId(0L);
+                searchedUser.setDistrictVotingId(0L);
 			} else {
 				districtList = aapService.getAllDistrictOfState(searchedUser.getStateVotingId());
 				parliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(searchedUser.getStateVotingId());
+                searchedUser.setAssemblyConstituencyVotingId(0L);
+                searchedUser.setDistrictVotingId(0L);
 				enableDistrictCombo = true;
 				enableParliamentConstituencyCombo = true;
 				enableAssemblyConstituencyCombo = false;
@@ -353,10 +360,15 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
 			if (searchedUser.getStateLivingId() == 0 || searchedUser.getStateLivingId() == null) {
 				enableLivingDistrictCombo = false;
 				enableLivingParliamentConstituencyCombo = false;
+                enableLivingAssemblyConstituencyCombo = false;
 				livingDistrictList = new ArrayList<>();
+                searchedUser.setAssemblyConstituencyLivingId(0L);
+                searchedUser.setDistrictLivingId(0L);
 			} else {
 				livingParliamentConstituencyList = aapService.getAllParliamentConstituenciesOfState(searchedUser.getStateLivingId());
 				livingDistrictList = aapService.getAllDistrictOfState(searchedUser.getStateLivingId());
+                searchedUser.setAssemblyConstituencyLivingId(0L);
+                searchedUser.setDistrictLivingId(0L);
 				enableLivingParliamentConstituencyCombo = true;
 				enableLivingDistrictCombo = true;
 				enableLivingAssemblyConstituencyCombo = false;

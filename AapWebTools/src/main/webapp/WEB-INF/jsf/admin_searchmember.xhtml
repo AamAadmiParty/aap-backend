@@ -67,7 +67,7 @@
 							<p:panelGrid columns="2" cellpadding="5" style="width:495px;">
 								<f:facet name="header">Select Living Place of Member</f:facet>
 
-								<h:outputLabel for="livingState" value="State*" />
+								<h:outputLabel for="livingState" value="State" />
 								<p:selectOneMenu id="livingState" value="#{adminSearchMemberBean.searchedUser.stateLivingId}" effect="fold" editable="false">
 									<f:selectItem itemLabel="Select State" itemValue="0" />
 									<f:selectItems value="#{adminSearchMemberBean.livingStateList}" var="oneState" itemLabel="#{oneState.name}" itemValue="#{oneState.id}" />
@@ -75,7 +75,7 @@
 									<p:ajax event="change" update=":userProfileForm:livingDistrict,:userProfileForm:livingParliamentConstituency,:userProfileForm:livingAssemblyConstituency"
 										listener="#{adminSearchMemberBean.handleLivingStateChange}" />
 								</p:selectOneMenu>
-								<h:outputLabel for="livingDistrict" value="District*" />
+								<h:outputLabel for="livingDistrict" value="District" />
 								<p:selectOneMenu id="livingDistrict" disabled="#{!adminSearchMemberBean.enableLivingDistrictCombo}" value="#{adminSearchMemberBean.searchedUser.districtLivingId}"
 									effect="fold" editable="false">
 									<f:selectItem itemLabel="Select District" itemValue="0" />

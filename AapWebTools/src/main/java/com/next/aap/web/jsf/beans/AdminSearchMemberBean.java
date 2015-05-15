@@ -280,7 +280,7 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
 	public void searchMember(){
         logger.info("Search Member Clicked");
         searchedUser.setVolunteerDto(volunteerBean.getSelectedVolunteer());
-        searchMemberResult = aapService.searchMemberVolunteers(searchedUser, volunteerBean.getSelectedInterestIds());
+        searchMemberResult = aapService.searchMemberVolunteers(searchedUser, searchVolunteerBean.getSelectedInterestIds());
 		showResult = true;
 	}
 	

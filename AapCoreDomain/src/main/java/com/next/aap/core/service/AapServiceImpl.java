@@ -2794,9 +2794,10 @@ public class AapServiceImpl implements AapService, Serializable {
         if (searchMemberResult == null) {
             searchMemberResult = new SearchMemberResultDto();
         } else {
+            logger.info("Existing User Found");
             return searchMemberResult;
         }
-
+        logger.info("Searching Users");
         if (!StringUtil.isEmpty(searchUserDto.getName())) {
             List<User> users = userDao.searchUsers(searchUserDto.getAssemblyConstituencyLivingId(), searchUserDto.getDistrictLivingId(), searchUserDto.getStateLivingId(),
                     searchUserDto.getNriCountryId(), searchUserDto.getNriCountryRegionId(), searchUserDto.getNriCountryRegionAreaId(), searchUserDto.getAssemblyConstituencyVotingId(), interests);

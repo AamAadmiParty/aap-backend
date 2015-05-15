@@ -377,6 +377,7 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
         appendVolunteerQueryParameter(queryBuilder, params, interests);
         String query = queryBuilder.toString();
         System.out.println("Query : " + query);
+        logger.info("Query : " + query);
         return executeQueryGetList(query, params);
     }
 

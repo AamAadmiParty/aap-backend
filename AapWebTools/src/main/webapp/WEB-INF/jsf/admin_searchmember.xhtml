@@ -203,8 +203,8 @@
 
 						<br></br>
 						<p:outputLabel value="Search Volunteer"></p:outputLabel>
-                            <p:selectBooleanCheckbox id="volunteer" value="#{adminSearchMemberBean.searchedUser.volunteer}">
-                                <p:ajax update=":userProfileForm:volunteerSearchPanel" listener="#{adminSearchMemberBean.showSearchVolunteerPanel}" />
+                            <p:selectBooleanCheckbox id="searchVolunteer" value="#{adminSearchMemberBean.searchedUser.volunteer}">
+                                <p:ajax update=":userProfileForm:volunteerSearchPanel" listener="#{adminSearchMemberBean.onClickSearchVolunteer}" />
                             </p:selectBooleanCheckbox>
 
                         <p:outputPanel id="volunteerSearchPanel">
@@ -474,15 +474,6 @@
 								<p:ajax update=":userProfileForm" listener="#{adminSearchMemberBean.onClickVolunteer}" />
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
-
-						<p:outputPanel id="volunteerPanel">
-							<p:outputPanel rendered="#{adminSearchMemberBean.showVolunteerPanel}">
-								<ui:include src="common/volunteer.xhtml">
-									<ui:param name="param_VolunteerBean" value="#{adminSearchMemberBean.volunteerBean}" />
-								</ui:include>
-
-							</p:outputPanel>
-						</p:outputPanel>
 
 						<p:blockUI block="userProfileForm" trigger=":userProfileForm:saveMember">
 						Saving Profile<br />

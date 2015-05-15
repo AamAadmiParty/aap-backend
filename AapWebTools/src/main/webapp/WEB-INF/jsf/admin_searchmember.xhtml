@@ -204,7 +204,7 @@
 						<br></br>
 						<p:outputLabel value="Search Volunteer"></p:outputLabel>
                             <p:selectBooleanCheckbox id="volunteer" value="#{adminSearchMemberBean.searchedUser.volunteer}">
-                                <p:ajax update=":volunteerSearchPanel" listener="#{adminSearchMemberBean.showSearchVolunteerPanel}" />
+                                <p:ajax update=":userProfileForm:volunteerSearchPanel" listener="#{adminSearchMemberBean.showSearchVolunteerPanel}" />
                             </p:selectBooleanCheckbox>
 
                         <p:outputPanel id="volunteerSearchPanel">

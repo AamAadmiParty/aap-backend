@@ -689,4 +689,12 @@ public class AdminSearchMemberBean extends BaseMultiPermissionAdminJsfBean {
         this.searchVolunteerBean = searchVolunteerBean;
     }
 
+    public boolean isShowSearchVolunteerPanel() {
+        return showSearchVolunteerPanel;
+    }
+
+    public void setShowSearchVolunteerPanel(boolean showSearchVolunteerPanel) {
+        this.showSearchVolunteerPanel = showSearchVolunteerPanel;
+    }
+
 }

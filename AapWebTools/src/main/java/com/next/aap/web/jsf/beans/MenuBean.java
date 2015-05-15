@@ -374,6 +374,14 @@ public class MenuBean extends BaseJsfBean {
 		}
 	}
 
+    public void goToSearchMemberPage() {
+        if (isManageMemberAllowed()) {
+            buildAndRedirect("/admin/search");
+        } else {
+            buildAndRedirect("/admin/notallowed");
+        }
+    }
+
 	public void goToTreasuryPage() {
 		if (isTreasuryAllowed()) {
 			buildAndRedirect("/admin/treasury");

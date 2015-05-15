@@ -219,6 +219,8 @@ public interface AapService {
 	
 	SearchMemberResultDto searchMembers(UserDto searchUserDto);
 	
+    SearchMemberResultDto searchMemberVolunteers(UserDto searchUserDto, List<Long> interests);
+
 	DistrictDto saveDistrict(DistrictDto districtWeb) ;
 	
 	DistrictDto getDistrictByNameAndStateId(String name, Long stateId) ;

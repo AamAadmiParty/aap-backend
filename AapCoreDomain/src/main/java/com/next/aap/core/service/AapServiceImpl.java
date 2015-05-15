@@ -2789,6 +2789,31 @@ public class AapServiceImpl implements AapService, Serializable {
 
     @Override
     @Transactional
+    public SearchMemberResultDto searchMemberVolunteers(UserDto searchUserDto, List<Long> interests) {
+        SearchMemberResultDto searchMemberResult = searchExistingUser(searchUserDto);
+        if (searchMemberResult == null) {
+            searchMemberResult = new SearchMemberResultDto();
+        } else {
+            return searchMemberResult;
+        }
+
+        if (!StringUtil.isEmpty(searchUserDto.getName())) {
+            List<User> users = userDao.searchUsers(searchUserDto.getAssemblyConstituencyLivingId(), searchUserDto.getDistrictLivingId(), searchUserDto.getStateLivingId(),
+                    searchUserDto.getNriCountryId(), searchUserDto.getNriCountryRegionId(), searchUserDto.getNriCountryRegionAreaId(), searchUserDto.getAssemblyConstituencyVotingId(), interests);
+            if (users != null) {
+                searchMemberResult.getUsers().addAll(convertUsers(users));
+                searchMemberResult.setUserAlreadyExists(false);
+                searchMemberResult.setUserAlreadyExistsMessage("Similar member found in this area, check manually if member already exists");
+                return searchMemberResult;
+            }
+        }
+        searchMemberResult.setUserAlreadyExists(false);
+        searchMemberResult.setUserAlreadyExistsMessage("No Member found");
+        return searchMemberResult;
+    }
+
+    @Override
+    @Transactional
     public AssemblyConstituencyDto saveAssemblyConstituency(AssemblyConstituencyDto assemblyConstituencyDto) {
         AssemblyConstituency dbAssemblyConstituency;
         if (assemblyConstituencyDto.getId() == null || assemblyConstituencyDto.getId() <= 0) {

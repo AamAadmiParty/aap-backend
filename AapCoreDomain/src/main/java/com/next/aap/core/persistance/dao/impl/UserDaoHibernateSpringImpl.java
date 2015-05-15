@@ -71,7 +71,7 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 
 	@Override
 	public User getUserById(Long id) {
-		return (User) getObjectById(User.class, id);
+		return getObjectById(User.class, id);
 	}
 
 	@Override
@@ -359,4 +359,54 @@ public class UserDaoHibernateSpringImpl extends BaseDaoHibernateSpring<User> imp
 		}
 		return parseLegacyMembership(list.get(0));
 	}
+
+    @Override
+    public List<User> searchUsers(Long livingAcId, Long livingDistrictId, Long livingStateId, Long livingCountryId, Long livingCountryRegionId, Long livingCountryRegionAreaId,
+            Long votingAcId, List<Long> interests) {
+        StringBuilder queryBuilder = new StringBuilder("select user from User user");
+        if (interests != null && !interests.isEmpty()) {
+            queryBuilder.append(", Volunteer volunteer join volunteer.interests vi ");
+        }
+        Map<String, Object> params = new HashMap<String, Object>();
+        appendQueryParameter(queryBuilder, params, "nriCountryId", "=", livingCountryId, "user");
+        appendQueryParameter(queryBuilder, params, "nriCountryRegionId", "=", livingCountryRegionId, "user");
+        appendQueryParameter(queryBuilder, params, "nriCountryRegionAreaId", "=", livingCountryRegionAreaId, "user");
+        appendQueryParameter(queryBuilder, params, "stateLivingId", "=", livingStateId, "user");
+        appendQueryParameter(queryBuilder, params, "districtLivingId", "=", livingDistrictId, "user");
+        appendQueryParameter(queryBuilder, params, "assemblyConstituencyLivingId", "=", livingAcId, "user");
+        appendVolunteerQueryParameter(queryBuilder, params, interests);
+        String query = queryBuilder.toString();
+        System.out.println("Query : " + query);
+        return executeQueryGetList(query, params);
+    }
+
+    private void appendQueryParameter(StringBuilder queryBuilder, Map<String, Object> params, String paramName, String operator, Long value, String tableAlias) {
+        if (value == null || value <= 0) {
+            return;
+        }
+        if (!queryBuilder.toString().contains("where")) {
+            queryBuilder.append(" where ");
+        } else {
+            queryBuilder.append(" and ");
+        }
+        queryBuilder.append(tableAlias + "." + paramName);
+        queryBuilder.append(" " + operator + " :");
+        queryBuilder.append(paramName);
+
+        params.put(paramName, value);
+    }
+
+    private void appendVolunteerQueryParameter(StringBuilder queryBuilder, Map<String, Object> params, List<Long> interests) {
+        if (interests == null || interests.isEmpty()) {
+            return;
+        }
+        if (!queryBuilder.toString().contains("where")) {
+            queryBuilder.append(" where ");
+        } else {
+            queryBuilder.append(" and ");
+        }
+        queryBuilder.append("user.id = volunteer.userId and vi.id in :interests");
+        params.put("interests", interests);
+    }
+
 }

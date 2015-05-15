@@ -745,7 +745,7 @@ $(function() {
                     
                     </div>
                     
-                    <input name="" type="submit" class="button" value="Save Profile" />
+                    <input name="" type="submit" class="button" value="Register" />
                     
 				</form:form>
 			</div>

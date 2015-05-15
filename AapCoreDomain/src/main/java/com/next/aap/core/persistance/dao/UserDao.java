@@ -2,6 +2,7 @@ package com.next.aap.core.persistance.dao;
 
 import java.util.List;
 
+import com.next.aap.core.exception.AppException;
 import com.next.aap.core.persistance.LegacyMembership;
 import com.next.aap.core.persistance.User;
 
@@ -72,6 +73,8 @@ public interface UserDao {
 
 	List<User> searchUserOfAssemblyConstituency(String name,Long livingAcId,Long votingAcId);
 	
+    List<User> searchUsers(Long livingAcId, Long livingDistrictId, Long livingStateId, Long livingCountryId, Long livingCountryRegionId, Long livingCountryRegionAreaId, Long votingAcId,
+            List<Long> interests);
 	
 	List<Long> getAllAdminUserForGlobalTreasur();
 	

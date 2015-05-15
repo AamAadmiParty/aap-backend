@@ -173,8 +173,8 @@ public abstract class BasItemCacheImpl<ItemType> implements DataItemCache<ItemTy
             returnList.addAll(allGlobalItemIds);
         }
 
-        logger.info("Getting Cache for domainStateId={},votingAcId={},livingAcId={},votingPcId={},livingPcId={},livingCountryId={},livingCountryRegionId={}", domainStateId, votingAcId, livingAcId,
-                votingPcId, livingPcId, livingCountryId, livingCountryRegionId);
+        // logger.info("Getting Cache for domainStateId={},votingAcId={},livingAcId={},votingPcId={},livingPcId={},livingCountryId={},livingCountryRegionId={}", domainStateId, votingAcId,
+        // livingAcId,votingPcId, livingPcId, livingCountryId, livingCountryRegionId);
 		addItems(returnList, votingAcId, acItemDtos);
 		addItems(returnList, livingAcId, acItemDtos);
 		addItems(returnList, votingPcId, pcItemDtos);

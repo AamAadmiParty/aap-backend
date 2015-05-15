@@ -96,7 +96,7 @@ public class BaseDaoHibernateSpring<T> implements Serializable{
 			hibernateQuery.setFirstResult((pageNumber - 1) * pageSize);
 		}
 		
-		return (List<T>)hibernateQuery.list();
+		return hibernateQuery.list();
 	}
 	public List<Long> executeSqlQueryGetListOfLong(String query){
 		return executeSqlQueryGetListOfLong(query, null);

@@ -1,0 +1,25 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "23:30"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: net.sf.ehcache:ehcache
+    versions:
+    - 2.10.6
+    - 2.10.8
+  - dependency-name: com.fasterxml.jackson.core:jackson-databind
+    versions:
+    - 2.12.1
+    - 2.12.2
+  - dependency-name: com.fasterxml.jackson.core:jackson-core
+    versions:
+    - 2.12.1
+    - 2.12.2
+  - dependency-name: com.fasterxml.jackson.core:jackson-annotations
+    versions:
+    - 2.12.1
+    - 2.12.2
